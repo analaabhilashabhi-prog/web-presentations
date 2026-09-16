@@ -4,6 +4,16 @@ import * as authService from '../services/authService.js';
 import { navigate } from '../utils/router.js';
 import { toastError } from '../components/Toast.js';
 
+/* The three decks, as shown on the sign-in page. Static on purpose: the orgs
+   endpoint needs a session and this page is where you get one. Colours are the
+   same values as config/themes.js — keep the two in step. The third carries no
+   slogan because none has been given; its full name is the line instead. */
+const ORG_TILES = [
+  { mark: 'NGI', name: 'NGI', tag: 'Engineering depth, industry ready.', bg: '#008638', fg: '#FFBB00' },
+  { mark: 'T', name: 'Torii', tag: 'Step in. Stand out.', bg: '#000000', fg: '#E95A22' },
+  { mark: 'N', name: 'NCET', tag: 'Nagarjuna College of Engineering & Technology', bg: '#047738', fg: '#D6AB30' },
+];
+
 /** Role-aware sign-in. Admin lands on content control, presenter on the deck. */
 export function LoginPage(container) {
   let role = 'admin';
@@ -79,7 +89,7 @@ export function LoginPage(container) {
             h(
               'h1',
               { class: 'login__headline' },
-              'Two organizations. One projector-ready story.',
+              'Three organizations. One projector-ready story.',
             ),
             h(
               'p',
@@ -90,36 +100,17 @@ export function LoginPage(container) {
           h(
             'div',
             { class: 'login__orgs' },
-            h(
+            ...ORG_TILES.map((o) => h(
               'div',
               { class: 'login__org' },
-              h(
-                'span',
-                { class: 'login__swatch', style: { background: '#000000', color: '#E95A22' } },
-                'T',
-              ),
+              h('span', { class: 'login__swatch', style: { background: o.bg, color: o.fg } }, o.mark),
               h(
                 'span',
                 {},
-                h('div', { class: 'login__org-name' }, 'Torii'),
-                h('div', { class: 'login__org-tag' }, 'Step in. Stand out.'),
+                h('div', { class: 'login__org-name' }, o.name),
+                h('div', { class: 'login__org-tag' }, o.tag),
               ),
-            ),
-            h(
-              'div',
-              { class: 'login__org' },
-              h(
-                'span',
-                { class: 'login__swatch', style: { background: '#008638', color: '#FFBB00' } },
-                'TH',
-              ),
-              h(
-                'span',
-                {},
-                h('div', { class: 'login__org-name' }, 'Technical Hub'),
-                h('div', { class: 'login__org-tag' }, 'Engineering depth, industry ready.'),
-              ),
-            ),
+            )),
           ),
         ),
         h(

@@ -54,16 +54,21 @@ export function justifyRows(items, width, targetH, gap = GAP, maxH = Infinity) {
   let row = [];
   let arSum = 0;
 
-  const solveRow = (items_) => {
+  const solveRow = (items_, fills, ceiling = Infinity) => {
     if (!items_.length) return null;
     const avail = width - gap * (items_.length - 1);
     const arTotal = items_.reduce((n, it) => n + (it.w / it.h || 1), 0);
     const solved = arTotal > 0 ? avail / arTotal : targetH;
     // Cap height at maxH (stage height) so super tall single images don't overflow the viewport
-    const height = Math.min(solved, maxH > 0 ? maxH : solved);
+    const height = Math.min(solved, maxH > 0 ? maxH : solved, ceiling);
     return {
       height,
-      full: true,
+      /* Whether the row really reaches the right margin. It used to be hardcoded
+         true, which made every row claim to be full — including the leftover tail
+         and any row the stage height had shrunk. The class that flag drives is
+         what decides between filling and centring, and with the tiles no longer
+         free to stretch, a wrong answer is visible. */
+      full: Boolean(fills) && height === solved,
       items: items_.map((it) => ({ ...it, dw: height * (it.w / it.h || 1), dh: height })),
     };
   };
@@ -73,14 +78,21 @@ export function justifyRows(items, width, targetH, gap = GAP, maxH = Infinity) {
     row.push(it);
     arSum += it.w / it.h;
     if (arSum * targetH + gap * (row.length - 1) >= width) {
-      const res = solveRow(row);
+      const res = solveRow(row, true);
       if (res) rows.push(res);
       row = [];
       arSum = 0;
     }
   });
+  /* The tail. It has no obligation to reach the margin, and must not be told it
+     does — but it does have to belong to the rows above it. Justified freely, one
+     wide card left over stood 589px tall next to a row of 328px cards, because
+     filling 1560px of width is what its own aspect ratio demanded. So it takes
+     the height of the row above and is centred under it. With no row above,
+     nothing is being matched and it may solve for the full width. */
   if (row.length) {
-    const res = solveRow(row);
+    const ceiling = rows.length ? rows[rows.length - 1].height : Infinity;
+    const res = solveRow(row, false, ceiling);
     if (res) rows.push(res);
   }
 
@@ -102,6 +114,10 @@ const countLabel = (n, kind) => {
 
 export function PlacementWall(block, { editing = false } = {}) {
   const chapters = (block.chapters || []).filter((c) => c.groups?.length);
+  /* Which folder under /uploads the sources hang off. Placements is the default
+     because it was the only caller for a long time. */
+  const base = String(block.base || 'Placements').replace(/^\/+|\/+$/g, '');
+  const srcFor = (src) => media(`/uploads/${base}/${String(src).split('/').map(encodeURIComponent).join('/')}`);
   const root = h('div', { class: 'pw-root ph-root' });
 
   if (!chapters.length) {
@@ -200,7 +216,7 @@ export function PlacementWall(block, { editing = false } = {}) {
     if (!it) return;
     /* The full file, at its own resolution — this is the one place the image is
        shown at native size, so it is the answer to "does the quality survive". */
-    lightImg.src = media(`/uploads/Placements/${it.src.split('/').map(encodeURIComponent).join('/')}`);
+    lightImg.src = srcFor(it.src);
     lightImg.alt = it.label || it.group?.name || '';
     lightCap.textContent = it.label || it.group?.name || '';
     lightMeta.textContent = `${it.w} × ${it.h}`;
@@ -294,8 +310,21 @@ export function PlacementWall(block, { editing = false } = {}) {
   const chips = h('div', { class: 'pw-chips' });
   const rail = h('div', { class: 'pw-rail' });
 
+  /**
+   * What a chapter opens on.
+   *
+   * `null` means every group in it, which is what the "everything" chip selects.
+   * A chapter that has turned that chip off has no way to express `null`, so it
+   * opens on its first named group instead — otherwise it would start in a state
+   * none of its chips is showing as active.
+   */
+  const openingGroupFor = (c) => {
+    if (c.allChip !== false) return null;
+    return c.groups.find((g) => g.name)?.name ?? null;
+  };
+
   let activeChapter = chapters[0];
-  let activeGroup = null; // null means every group in the chapter
+  let activeGroup = openingGroupFor(activeChapter);
   let lastStageH = 0;     // the stage height the current rows were solved against
 
   /* --------------------------------------------------------------- render */
@@ -375,7 +404,7 @@ export function PlacementWall(block, { editing = false } = {}) {
           onclick: () => openLight(index, figure),
         },
           h('img', {
-            src: media(`/uploads/Placements/${it.src.split('/').map(encodeURIComponent).join('/')}`),
+            src: srcFor(it.src),
             alt: it.label || it.group?.name || '',
             // The intrinsic size, so the browser reserves the right box.
             width: it.w, height: it.h,
@@ -405,13 +434,25 @@ export function PlacementWall(block, { editing = false } = {}) {
       onclick: () => { activeGroup = value; drawChips(); drawStage(); },
     }, h('span', {}, label), h('em', {}, String(count)));
 
-    chips.appendChild(chip('All companies', null,
-      activeChapter.groups.reduce((n, g) => n + g.images.length, 0)));
+    /* The "everything" chip earns its place only where the sets are alternatives
+       to each other — twenty companies, where seeing the whole year at once is
+       the point. Where a chapter is two named activities the combined view is
+       not a third thing anyone wants, and the chip reads as a category the two
+       belong to, which they do not. A chapter can turn it off, and then one of
+       the named chips is always the active one instead. */
+    if (activeChapter.allChip !== false) {
+      chips.appendChild(chip(block.allLabel || 'All companies', null,
+        activeChapter.groups.reduce((n, g) => n + g.images.length, 0)));
+    }
     named.forEach((g) => chips.appendChild(chip(g.name, g.name, g.images.length)));
   }
 
   function drawRail() {
     rail.textContent = '';
+    /* One chapter is not a choice, and a lone pill reads as a control that does
+       nothing. Campus Events is a single wall filtered by its chips. */
+    rail.hidden = chapters.length < 2;
+    if (rail.hidden) return;
     chapters.forEach((c, i) => {
       const btn = h('button', {
         class: `pw-tab${c === activeChapter ? ' is-on' : ''}`,
@@ -420,7 +461,7 @@ export function PlacementWall(block, { editing = false } = {}) {
         onclick: () => {
           if (c === activeChapter) return;
           activeChapter = c;
-          activeGroup = null;
+          activeGroup = openingGroupFor(c);
           drawRail(); drawChips(); drawStage();
         },
       },

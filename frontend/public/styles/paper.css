@@ -1,0 +1,261 @@
+/* ==========================================================================
+   Paper tabs — Executive Summary as three panels
+   The translucent sheet is ThreeUI's ThreeDPaper, variant `original`, ported
+   from the registered source bundle
+   (src/shaders/3d-paper/sources/3d-paper.html, SHA-256 8ec1b71c0dbc…c7353,
+   verified against the fetched bytes before anything here was written).
+
+   The authored page owns the viewport: its layers are `position: fixed` over
+   `100%` of the window and its ground is near-black. Here the same stack is
+   scoped to one block of a slide and turned the other way up, because the
+   brief asks for white. The layer order, the blur, the grain and the giant
+   wordmark behind the sheet are all the authored ones.
+   ========================================================================== */
+
+.slide--hero .canvas-block--paper-tabs {
+  height: 100% !important;
+  min-height: var(--slide-h, 860px) !important;
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  grid-row: 1 / -1 !important;
+}
+
+/* Same trap as the book shelf: the app puts `flex: 1` on every canvas-block
+   child, and `flex-basis: 0%` leaves the panel with no definite height for
+   the absolutely-positioned layers inside it to resolve against. */
+.slide--hero .canvas-block--paper-tabs > .paper-tabs {
+  flex: 0 0 auto !important;
+  height: var(--slide-h, 860px) !important;
+}
+
+/* The authored ground: near-black, which is what the whole thing was drawn
+   for. The sheet is lit glass — it reads as glass because there is darkness
+   behind it for the rim light and the frost to stand against. On a pale
+   ground the same material has nothing to be translucent against and flattens
+   to grey card, which is why every earlier lightening of it fought back. */
+.paper-tabs {
+  --paper-ink: #08080a;
+  --paper-text: #f2f2f0;
+  position: relative;
+  height: var(--slide-h, 860px);
+  max-height: var(--slide-h, 860px);
+  overflow: hidden;
+  background: var(--paper-ink);
+}
+
+.paper-tabs__panels,
+.paper-tabs__panel {
+  position: absolute;
+  inset: 0;
+}
+
+.paper-tabs__panel[hidden] { display: none !important; }
+
+.paper-tabs__hero,
+.paper-tabs__hero > * {
+  height: 100%;
+}
+
+/* ------------------------------------------------------------------- bar */
+.paper-tabs__bar {
+  position: absolute;
+  z-index: 20;
+  top: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  padding: 5px;
+  border-radius: 999px;
+  /* Both grounds the bar rides over are dark now — the film on one tab, the
+     near-black stage on the other two — so it is a dark chip with pale type
+     rather than a white slab punched through the picture. */
+  background: rgba(18, 18, 22, .74);
+  border: 1px solid rgba(242, 242, 240, .12);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, .38);
+  animation: paper-bar-in 620ms cubic-bezier(.2, .78, .2, 1) both;
+  animation-delay: var(--intro-hold, 0s);
+}
+
+@keyframes paper-bar-in {
+  from { opacity: 0; transform: translate(-50%, -14px); }
+  to { opacity: 1; transform: translateX(-50%); }
+}
+
+.paper-tabs__tab {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 9px 20px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(242, 242, 240, .56);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 240ms ease, color 240ms ease;
+}
+
+.paper-tabs__tab:hover { color: rgba(242, 242, 240, .9); background: rgba(242, 242, 240, .06); }
+
+/* The selected tab is named in orange rather than filled with it — orange as
+   a text colour, which is where it belongs on this ground. */
+.paper-tabs__tab[aria-selected="true"] {
+  background: rgba(242, 242, 240, .10);
+  color: #F6872A;
+}
+
+.paper-tabs__tab[aria-selected="true"] .paper-tabs__no { color: #F6872A; }
+
+.paper-tabs__tab:focus-visible {
+  outline: 2px solid #F6872A;
+  outline-offset: 2px;
+}
+
+.paper-tabs__no {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: rgba(242, 242, 240, .34);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ----------------------------------------------------------- the sheet */
+.paper-stage {
+  position: absolute;
+  inset: 0;
+  /* The wordmark is sized in container units so it scales with the block
+     rather than with the window — the slide is laid out at a nominal 1600
+     wide and then transform-scaled, so `vw` would read the wrong box. */
+  container-type: size;
+  overflow: hidden;
+  /* The authored composition — two soft pools over a vertical fall — with the
+     Nocturne palette's olive and brown washes taken out for neutral ones, so
+     the ground is the black of the reference rather than a warm brown. */
+  background:
+    radial-gradient(circle at 49% 84%, rgba(255, 255, 255, .05), transparent 34%),
+    radial-gradient(circle at 14% 4%, rgba(255, 255, 255, .035), transparent 28%),
+    linear-gradient(180deg, #141419 0%, var(--paper-ink, #08080a) 48%, #0d0d11 100%);
+  color: var(--paper-text, #f2f2f0);
+  touch-action: none;
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* One giant word behind the paper, nothing else — the authored background.
+   Black, on instruction. The authored value is the same idea inverted: a pale
+   wordmark at .125 on near-black. */
+.paper-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.paper-word {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -.055em;
+  /* The authored size is 18.6cqw, set for "NOCTURNE" — eight characters, which
+     at that size runs nearly the full width so the sheet floats over its
+     middle and the word reads on both sides of it. "NCET" is four characters
+     and at the same size lands almost entirely behind the paper, where the
+     translucency washes it out and all that is left is a grey smudge under
+     the type. Sized up, it spans the stage the way the original does and the
+     black reads clear of the sheet on either side. */
+  font-size: clamp(120px, 30cqw, 620px);
+  line-height: .8;
+  white-space: nowrap;
+  /* Black, as asked. The authored value is .125 of a near-white on near-black;
+     the same weight of presence on a white page, once the halo in front of it
+     was brought down, measures out around .22. */
+  /* The authored value — a pale ghost of the wordmark on the dark ground,
+     which is exactly what "NOCTURNE" does behind the original sheet. */
+  color: rgba(242, 242, 240, .125);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Depth of field, as authored — a shallow blur of whatever is behind the
+   sheet, tinted to the ground rather than away from it. */
+.paper-dof {
+  position: absolute;
+  inset: -30px;
+  z-index: 2;
+  pointer-events: none;
+  backdrop-filter: blur(2.4px);
+  -webkit-backdrop-filter: blur(2.4px);
+  background: rgba(8, 8, 10, .05);
+}
+
+.paper-gl {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+  display: block;
+}
+
+/* Grain and vignette, both as authored: the grain keeps a large dark field
+   from banding, the vignette pulls the corners down so the sheet is the
+   brightest thing on the slide. */
+.paper-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: .05;
+  mix-blend-mode: overlay;
+  background-repeat: repeat;
+  background-size: 160px 160px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.paper-vig {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: radial-gradient(120% 90% at 50% 45%, rgba(0, 0, 0, 0) 42%, rgba(0, 0, 0, .52) 100%);
+}
+
+.paper-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 42px;
+  z-index: 6;
+  pointer-events: none;
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: rgba(242, 242, 240, .30);
+  opacity: 0;
+  transition: opacity .8s ease;
+}
+
+.paper-hint b { font-weight: 500; color: rgba(242, 242, 240, .58); }
+
+@media (hover: none) {
+  .paper-hint__ptr { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .paper-tabs__bar { animation: none; opacity: 1; }
+  .paper-hint { transition: none; }
+}

@@ -43,6 +43,21 @@ export const BLOCK_TYPES = [
   'event-reel',
   'certification-wall',
   'video-resume',
+  'council-grid',
+  'roster',
+  'hub',
+  'stat-wall',
+  'book-shelf',
+  'paper-tabs',
+  'alliance-accordion',
+  'skew-carousel',
+  'tilted-tiles',
+  'card-fan',
+  'photo-ring',
+  'event-orbit',
+  'training-shelf',
+  'photo-collage',
+  'thread-board',
 ];
 
 export const CARD_VARIANTS = ['plain', 'team', 'partner', 'program', 'placement', 'certification'];
@@ -81,6 +96,21 @@ const DEFAULT_SIZE = {
   'course-deck': { w: 12, h: 15 },
   'drift-wall': { w: 12, h: 15 },
   'platforms': { w: 12, h: 15 },
+  'council-grid': { w: 12, h: 15 },
+  'roster': { w: 12, h: 15 },
+  'hub': { w: 12, h: 15 },
+  'stat-wall': { w: 12, h: 15 },
+  'book-shelf': { w: 12, h: 15 },
+  'paper-tabs': { w: 12, h: 22 },
+  'alliance-accordion': { w: 12, h: 15 },
+  'skew-carousel': { w: 12, h: 15 },
+  'tilted-tiles': { w: 12, h: 15 },
+  'card-fan': { w: 12, h: 15 },
+  'photo-ring': { w: 12, h: 15 },
+  'event-orbit': { w: 12, h: 15 },
+  'training-shelf': { w: 12, h: 15 },
+  'photo-collage': { w: 12, h: 15 },
+  'thread-board': { w: 12, h: 15 },
 };
 
 const oneOf = (value, allowed, fallback) => (allowed.includes(value) ? value : fallback);
@@ -260,6 +290,23 @@ function normalizeBlock(raw, index = 0, depth = 0) {
       block.source = raw.source === 'url' ? 'url' : 'upload';
       block.assetId = raw.assetId || null;
       block.videoUrl = text(raw.videoUrl, 600).trim();
+      /* Seconds into the film the hero should open on, and loop back to. A
+         brand film that opens on a title card or a logo sting has nothing on
+         screen for the first few seconds, which is exactly the moment the slide
+         is doing its work. Capped at an hour so a bad value cannot park the
+         film past its own end. */
+      block.start = clampInt(raw.start, 0, 3600, 0);
+      /* How far past the frame the film is scaled. The stylesheet's own figure
+         is 1.325, which exists to push the black bars of a 2.34:1 film exported
+         inside a 16:9 frame out of sight. A film that is honestly 16:9 has no
+         bars to hide and that scale simply crops a third of it away, so a block
+         can set its own. 0 means "leave it to the stylesheet". */
+      block.zoom = Math.min(2, Math.max(0, Math.round((Number(raw.zoom) || 0) * 1000) / 1000));
+      /* The colour the `[gold:…]` spans in this hero's copy are set in. Unset
+         falls through to the stylesheet's NCET orange, which is what the two
+         decks that were here first are written against. Never invented: it is
+         measured off the organization's own mark. */
+      block.accent = hexColor(raw.accent);
       block.alt = text(raw.alt, 240);
       block.overlay = clampInt(raw.overlay, 0, 90, 45);
       block.align = oneOf(raw.align, ['left', 'center', 'right'], 'left');
@@ -368,6 +415,192 @@ function normalizeBlock(raw, index = 0, depth = 0) {
     /* A wall of panels, one per chapter, that open one at a time. `accent` is
        a per-panel colour from the organization's board rather than a theme
        token, so it is validated as a hex literal and dropped if it is not one. */
+    /* A council read as a grid of faces: one card per member, each carrying a
+       name the designer may break over two lines with 
+, a role, and a
+       portrait. Deliberately flat — no summary, no highlights — because the
+       page is a board, not a narrative. */
+    /* A roll of names with no photographs: a governing body, a council, a
+       committee. Each entry carries the person's own position separately from
+       the seat they hold on the body, because the source material distinguishes
+       them and collapsing the two loses which is which. `note` is the footing
+       a minutes sheet usually carries. */
+    /* A chooser: a small set of doors onto the pages beneath this one. The
+       target is a section id, resolved by the client at click time, because a
+       hub is only ever built against sections in its own organization. */
+    /* A wall of figures, each in its own tile with a drawing of itself.
+       `viz` picks the drawing: a counted total, a bar set, a two-way split or
+       a ratio. Percentages are carried rather than derived, because the source
+       document rounds them and re-deriving would silently disagree with it. */
+    case 'stat-wall':
+      block.kicker = text(raw.kicker, 140);
+      block.standfirst = text(raw.standfirst, 200);
+      block.note = text(raw.note, 200);
+      block.tiles = (Array.isArray(raw.tiles) ? raw.tiles : [])
+        .map((tile) => ({
+          title: text(tile?.title, 80),
+          caption: text(tile?.caption, 160),
+          viz: oneOf(tile?.viz, ['count', 'bars', 'split', 'donut', 'rings', 'pie', 'ratio'], 'count'),
+          value: text(tile?.value, 24),
+          span: Math.min(6, Math.max(1, Number(tile?.span) || 2)),
+          series: (Array.isArray(tile?.series) ? tile.series : [])
+            .map((point) => ({
+              label: text(point?.label, 40),
+              value: text(point?.value, 16),
+              percent: text(point?.percent, 8),
+            }))
+            .filter((point) => point.label)
+            .slice(0, 6),
+        }))
+        .filter((tile) => tile.title)
+        .slice(0, 8);
+      break;
+
+    /* A shelf of books, one per sheet of figures, each opening onto its own
+       table and nothing else. Three is not arbitrary: the showcase's authored
+       geometry places exactly three volumes, one centre and one leaning in
+       from either side, so a fourth has nowhere to stand.
+
+       The table is carried as rows of cells rather than as typed columns
+       because each sheet has its own columns — a programme list and a research
+       register share no fields — and a schema that named them would have to
+       name every sheet the deck will ever hold. `total` marks the row the
+       source document itself sets apart as a summation; it is a property of
+       the sheet, not something derived here, so a sheet whose printed total
+       disagrees with its own column still shows what the sheet says. */
+    /* Three panels behind one nav row. A tab is either the film — the hero
+       block carried through whole, with the same fields it always had, so
+       nothing about its art direction is re-specified here — or a sheet
+       printed on the translucent paper.
+
+       A sheet's body is a list of entries because both shapes it has to take
+       are lists: a roll of recognitions, where the label is empty and the
+       body is the line; and a set of named statements, where the label is
+       "Vision" or "Mission". `layout` says which of the two to draw rather
+       than leaving the renderer to infer it from whether labels happen to be
+       present. Bold runs ride inside the body as **…**, because canvas has no
+       rich text and the source sheets bold a phrase mid-sentence. */
+    case 'paper-tabs':
+      block.wordmark = text(raw.wordmark, 24);
+      block.tabs = (Array.isArray(raw.tabs) ? raw.tabs : [])
+        .map((tab) => {
+          const kind = oneOf(tab?.kind, ['hero', 'sheet'], 'sheet');
+          const out = { label: text(tab?.label, 60), kind };
+          if (kind === 'hero') {
+            const hero = tab?.hero || {};
+            out.hero = {
+              kicker: text(hero.kicker, 120),
+              heading: text(hero.heading, 240),
+              subheading: text(hero.subheading, 600),
+              media: oneOf(hero.media, ['color', 'image', 'video'], 'color'),
+              source: hero.source === 'url' ? 'url' : 'upload',
+              assetId: hero.assetId || null,
+              videoUrl: text(hero.videoUrl, 600).trim(),
+              alt: text(hero.alt, 240),
+              overlay: clampInt(hero.overlay, 0, 90, 45),
+              align: oneOf(hero.align, ['left', 'center', 'right'], 'left'),
+              height: oneOf(hero.height, ['sm', 'md', 'lg', 'full'], 'md'),
+              buttons: normalizeButtons(hero.buttons),
+            };
+            out.sheet = null;
+          } else {
+            const sheet = tab?.sheet || {};
+            out.hero = null;
+            out.sheet = {
+              eyebrow: text(sheet.eyebrow, 60),
+              title: text(sheet.title, 80),
+              layout: oneOf(sheet.layout, ['bullets', 'sections'], 'bullets'),
+              mark: text(sheet.mark, 24),
+              markNote: text(sheet.markNote, 80),
+              edgeTag: text(sheet.edgeTag, 24),
+              entries: (Array.isArray(sheet.entries) ? sheet.entries : [])
+                .map((entry) => ({
+                  label: text(entry?.label, 40),
+                  body: text(entry?.body, 600),
+                }))
+                .filter((entry) => entry.body)
+                .slice(0, 20),
+            };
+          }
+          return out;
+        })
+        .filter((tab) => tab.label)
+        .slice(0, 4);
+      break;
+
+    case 'book-shelf':
+      block.books = (Array.isArray(raw.books) ? raw.books : [])
+        .map((book) => ({
+          title: text(book?.title, 60),
+          kicker: text(book?.kicker, 40),
+          subtitle: text(book?.subtitle, 60),
+          footer: text(book?.footer, 60),
+          coverColor: text(book?.coverColor, 24),
+          coverAssetId: book?.coverAssetId || null,
+          motionAssetId: book?.motionAssetId || null,
+          note: text(book?.note, 240),
+          columns: (Array.isArray(book?.columns) ? book.columns : [])
+            .map((column) => text(column, 60))
+            .filter(Boolean)
+            .slice(0, 5),
+          rows: (Array.isArray(book?.rows) ? book.rows : [])
+            .map((row) => ({
+              total: row?.total === true,
+              cells: (Array.isArray(row?.cells) ? row.cells : [])
+                .map((cell) => text(cell, 120))
+                .slice(0, 5),
+            }))
+            .filter((row) => row.cells.some(Boolean))
+            .slice(0, 24),
+        }))
+        .filter((book) => book.title)
+        .slice(0, 3);
+      break;
+
+    case 'hub':
+      block.kicker = text(raw.kicker, 140);
+      block.standfirst = text(raw.standfirst, 200);
+      block.logoAssetId = raw.logoAssetId || null;
+      block.doors = (Array.isArray(raw.doors) ? raw.doors : [])
+        .map((door) => ({
+          label: text(door?.label, 60),
+          targetId: text(door?.targetId, 64),
+        }))
+        .filter((door) => door.label)
+        .slice(0, 6);
+      break;
+
+    case 'roster':
+      block.kicker = text(raw.kicker, 140);
+      // One mark for the whole roll: every card carries the institution's
+      // emblem, not the person's own employer.
+      block.logoAssetId = raw.logoAssetId || null;
+      block.meta = text(raw.meta, 80);
+      block.standfirst = text(raw.standfirst, 200);
+      block.note = text(raw.note, 200);
+      block.entries = (Array.isArray(raw.entries) ? raw.entries : [])
+        .map((entry) => ({
+          name: text(entry?.name, 120),
+          affiliation: text(entry?.affiliation, 200),
+          role: text(entry?.role, 60),
+        }))
+        .filter((entry) => entry.name)
+        .slice(0, 40);
+      break;
+
+    case 'council-grid':
+      block.kicker = text(raw.kicker, 140);
+      block.standfirst = text(raw.standfirst, 200);
+      block.members = (Array.isArray(raw.members) ? raw.members : [])
+        .map((member) => ({
+          name: text(member?.name, 80),
+          role: text(member?.role, 60),
+          assetId: member?.assetId || null,
+        }))
+        .filter((member) => member.name)
+        .slice(0, 8);
+      break;
+
     case 'leadership-panels':
       block.kicker = text(raw.kicker, 140);
       block.titleLines = (Array.isArray(raw.titleLines) ? raw.titleLines : [])
@@ -576,6 +809,72 @@ function normalizeBlock(raw, index = 0, depth = 0) {
         .slice(0, 12);
       break;
 
+    /* An accordion of alliance photographs: one panel is open, the rest are
+       collapsed to a slat, and moving across them opens whichever is under the
+       pointer. Ported from a React/GSAP sketch (reactbits AccordionGallery) —
+       see AllianceAccordion.js for what changed and why.
+
+       Panels carry an `assetId`, never a path, for the reason gallery-wall does:
+       a path resolves against whichever machine is serving, so the wall would be
+       complete for whoever authored it and empty for everyone opening the
+       deployed link. */
+    case 'alliance-accordion':
+      block.eyebrow = text(raw.eyebrow, 120);
+      block.title = text(raw.title, 160);
+      block.subtitle = text(raw.subtitle, 280);
+      block.panels = (Array.isArray(raw.panels) ? raw.panels : [])
+        .map((p) => ({
+          /* Optional. An agreement whose photograph has not been supplied still
+             gets a card — set as type on a plate in its own colour — rather than
+             being dropped, which would silently shorten the row and leave the
+             deck claiming fewer MOUs than there are. */
+          assetId: p?.assetId || null,
+          /* The caption on the open panel. `kicker` sits above it in the accent
+             and `note` under it — an alliance is a partner, a kind of agreement
+             and what it gives the student, and one line cannot hold all three. */
+          kicker: text(p?.kicker, 40),
+          label: text(p?.label, 80),
+          note: text(p?.note, 160),
+          /* What the panel is called while it is closed, set up the slat. It
+             falls back to `label`, which is right for a partner — "Pega" reads
+             fine either way — but not for the lead panel, whose label is the
+             section's own title and far too long to stand on a 140px slat. */
+          slat: text(p?.slat, 24),
+          alt: text(p?.alt, 240),
+          /* The lead panel sets the section's own title in the caption slot and
+             is the one open on arrival, so the slide never opens on a row of
+             identical slats with nothing said. It is a flag rather than a
+             separate block field because which panel leads is a content
+             decision, and the publisher already orders the panels. */
+          /* 'intro' is the card the row rests on and returns to: no photograph
+             at all, a heading and a line of prose. Anything else is an
+             agreement. `lead` is the older spelling of the same idea and is
+             still honoured so stored content keeps working. */
+          kind: oneOf(text(p?.kind, 8), ['intro', 'mou'], p?.lead ? 'intro' : 'mou'),
+          heading: text(p?.heading, 90),
+          body: text(p?.body, 300),
+          // The partner's own colour, for the plate. Never invented — it comes
+          // off the partner's own mark, the way the centres' colours do.
+          tint: hexColor(p?.tint),
+          /* The initials on that plate, when deriving them from the name gets it
+             wrong — "Institute of Advanced Energy (IAE)" reduces to INA, which
+             is not what anyone calls it. */
+          mono: text(p?.mono, 4),
+          href: safeHref(p?.href),
+        }))
+        .filter((p) => p.assetId || p.label || p.heading)
+        .slice(0, 8);
+      /* Clamped to the panel list rather than stored blind: a defaultIndex left
+         past the end of a shortened list would open nothing, which is exactly
+         the dead-looking slide the lead panel exists to prevent. */
+      block.defaultIndex = clampInt(raw.defaultIndex, 0, Math.max(0, block.panels.length - 1), 0);
+      /* The share of the row the open panel takes. The sketch's 0.2–0.9 range is
+         kept: below 0.2 opening one changes nothing, above 0.9 the others vanish. */
+      block.expandRatio = clampInt(Math.round(Number(raw.expandRatio ?? 0.52) * 100), 20, 90, 52) / 100;
+      block.trigger = oneOf(text(raw.trigger, 8), ['hover', 'click'], 'hover');
+      block.grayscale = raw.grayscale !== false;
+      break;
+
     case 'testimonial-wall':
       block.eyebrow = text(raw.eyebrow, 120);
       block.title = text(raw.title, 160);
@@ -664,10 +963,80 @@ function normalizeBlock(raw, index = 0, depth = 0) {
         .slice(0, 40);
       break;
 
+    /* Events as a ring turned by hand. One group is one event: a poster (its
+       first picture) on the ring, and the whole set behind it when the card is
+       clicked. Paths are relative to `base`, the way the placement wall and the
+       event reel store theirs. */
+    case 'event-orbit':
+      block.eyebrow = text(raw.eyebrow, 120);
+      block.title = text(raw.title, 160);
+      block.base = text(raw.base, 120);
+      block.groups = (Array.isArray(raw.groups) ? raw.groups : [])
+        .map((g) => ({
+          title: text(g?.title, 160),
+          images: (Array.isArray(g?.images) ? g.images : [])
+            .map((im) => ({
+              src: text(im?.src, 240),
+              label: text(im?.label, 160),
+              w: Number(im?.w) || null,
+              h: Number(im?.h) || null,
+            }))
+            .filter((im) => im.src)
+            .slice(0, 60),
+        }))
+        /* The ring solves its radius from the count, so it widens rather than
+           overlapping as events are added; past two dozen the cards are edge-on
+           to each other whatever the radius. A display limit, not a storage one. */
+        .filter((g) => g.title && g.images.length)
+        .slice(0, 24);
+      break;
+
+    /* Cards standing on a turntable. Pictures are stored as paths relative to
+       `base`, the way the placement wall and the event reel store theirs — a set
+       arrives as a folder and a manifest, not as an upload each. */
+    case 'photo-ring': {
+      block.eyebrow = text(raw.eyebrow, 120);
+      block.title = text(raw.title, 160);
+      block.lead = text(raw.lead, 400);
+      block.base = text(raw.base, 120);
+      /* What the "everything" filter is called. Only ever shown when there is
+         more than one set to combine. */
+      block.allLabel = text(raw.allLabel, 60);
+
+      /* Past a couple of dozen the cards stand behind each other however wide
+         the fan gets. A display limit, not a storage one. */
+      const shotList = (arr) => (Array.isArray(arr) ? arr : [])
+        .map((s) => ({
+          src: text(s?.src, 200),
+          label: text(s?.label, 160),
+          w: Number(s?.w) || null,
+          h: Number(s?.h) || null,
+        }))
+        .filter((s) => s.src)
+        .slice(0, 24);
+
+      /* The sets behind the filters. A block written before the filters existed
+         carries a flat `shots` list instead, and both are kept: dropping the
+         flat one here would empty every ring saved before this. */
+      block.groups = (Array.isArray(raw.groups) ? raw.groups : [])
+        .map((g) => ({
+          key: text(g?.key, 40),
+          name: text(g?.name, 80),
+          shots: shotList(g?.shots),
+        }))
+        .filter((g) => g.name && g.shots.length)
+        .slice(0, 12);
+      block.shots = shotList(raw.shots);
+      break;
+    }
+
     case 'event-reel':
       block.eyebrow = text(raw.eyebrow, 120);
       block.title = text(raw.title, 160);
       block.lead = text(raw.lead, 400);
+      /* The folder under /uploads that photograph entries are stored relative
+         to. Films do not use it; an all-film reel can leave it unset. */
+      block.base = text(raw.base, 120);
       block.chapters = (Array.isArray(raw.chapters) ? raw.chapters : [])
         .map((c) => ({
           key: text(c?.key, 40),
@@ -689,8 +1058,24 @@ function normalizeBlock(raw, index = 0, depth = 0) {
                 }))
                 .filter((f) => f.youtube || f.src)
                 .slice(0, 24),
+              /* An entry may be a folder of photographs instead of a film: not
+                 every event was filmed. Paths are relative to the block's `base`
+                 and carry their true pixel dimensions, the way the placement
+                 wall stores them, so the grid can lay them out without waiting
+                 for each file to decode. */
+              images: (Array.isArray(g?.images) ? g.images : [])
+                .map((p) => ({
+                  src: text(p?.src, 200),
+                  label: text(p?.label, 160),
+                  w: Number(p?.w) || null,
+                  h: Number(p?.h) || null,
+                }))
+                .filter((p) => p.src)
+                .slice(0, 60),
             }))
-            .filter((g) => g.title && g.films.length)
+            /* Either kind makes an entry. The old films-only test would have
+               dropped every photographed event on the next save. */
+            .filter((g) => g.title && (g.films.length || g.images.length))
             .slice(0, 60),
         }))
         .filter((c) => c.key && c.name && c.groups.length)
@@ -707,6 +1092,22 @@ function normalizeBlock(raw, index = 0, depth = 0) {
       block.eyebrow = text(raw.eyebrow, 120);
       block.title = text(raw.title, 160);
       block.lead = text(raw.lead, 400);
+      /* The folder under /uploads every `src` in this block hangs off. It was
+         hardcoded to Placements in the component, which is what kept this
+         gallery — justified rows that never crop, a filter built from the group
+         names, the staggered reveal — from being usable by anything else. Campus
+         Events is the second caller. Restricted to a plain relative path: it is
+         joined onto a URL, so a `..` or a leading slash would be a way out of
+         the uploads folder. */
+      /* What the chip that clears the filter says. It was the literal string
+         "All companies", which is right for placements and wrong the moment the
+         groups are anything else — on Campus Events it announced forty-three
+         photographs of workshops and graduations as companies. */
+      block.allLabel = text(raw.allLabel, 40) || 'All companies';
+      block.base = (() => {
+        const raw_ = text(raw.base, 80).replace(/^\/+|\/+$/g, '');
+        return /^[A-Za-z0-9][A-Za-z0-9 _-]*(\/[A-Za-z0-9][A-Za-z0-9 _-]*)*$/.test(raw_) ? raw_ : 'Placements';
+      })();
       block.chapters = (Array.isArray(raw.chapters) ? raw.chapters : [])
         .map((c) => ({
           key: text(c?.key, 40),
@@ -715,6 +1116,11 @@ function normalizeBlock(raw, index = 0, depth = 0) {
           // 'poster' is a designed card that must never be cropped; 'photo' is
           // a photograph; 'journey' is a tall infographic read on its own.
           kind: oneOf(text(c?.kind, 12), ['poster', 'photo', 'journey'], 'photo'),
+          /* Whether this chapter offers the "everything" chip. Default on, which
+             is what every chapter had before the flag existed; a chapter of two
+             named activities turns it off, because their combined view is not a
+             third thing anyone is looking for. */
+          allChip: c?.allChip !== false,
           icon: iconKey(c?.icon),
           groups: (Array.isArray(c?.groups) ? c.groups : [])
             .map((g) => ({
@@ -736,6 +1142,259 @@ function normalizeBlock(raw, index = 0, depth = 0) {
         .filter((c) => c.key && c.groups.length)
         .slice(0, 8);
       break;
+
+    /* A tilted wall of drifting photographs with one button in the middle of
+       it, and behind that button the same set filed and filterable. The gallery
+       half is not a second implementation: the component hands `groups` to
+       `PlacementWall`, which is where justified rows, the chips and the
+       scrolling stage already live. So this block carries both — `tiles` for
+       the wall and `groups` for the gallery — and they are deliberately allowed
+       to differ: the wall wants a spread of the best photographs, the gallery
+       wants every one of them. */
+    case 'tilted-tiles':
+      block.eyebrow = text(raw.eyebrow, 120);
+      block.title = text(raw.title, 160);
+      block.lead = text(raw.lead, 400);
+      /* What the one button in the middle says, and what the way back says. */
+      block.ctaLabel = text(raw.ctaLabel, 48) || 'See the infrastructure';
+      block.backLabel = text(raw.backLabel, 48) || 'Back to the campus';
+      block.allLabel = text(raw.allLabel, 40) || 'All facilities';
+      /* The folder under /uploads every `src` here hangs off — same guard as
+         placement-wall's, and for the same reason: it is joined onto a URL, so
+         a `..` or a leading slash would be a way out of the uploads folder. */
+      block.base = (() => {
+        const raw_ = text(raw.base, 80).replace(/^\/+|\/+$/g, '');
+        return /^[A-Za-z0-9][A-Za-z0-9 _-]*(\/[A-Za-z0-9][A-Za-z0-9 _-]*)*$/.test(raw_) ? raw_ : 'Infrastructure';
+      })();
+      block.tiles = (Array.isArray(raw.tiles) ? raw.tiles : [])
+        .map((t) => ({
+          src: text(t?.src, 240),
+          alt: text(t?.alt, 200),
+          w: clampInt(t?.w, 1, 20000, 0),
+          h: clampInt(t?.h, 1, 20000, 0),
+        }))
+        // A tile with no dimensions has no height the column can give it.
+        .filter((t) => t.src && t.w && t.h)
+        .slice(0, 80);
+      block.groups = (Array.isArray(raw.groups) ? raw.groups : [])
+        .map((g) => ({
+          name: text(g?.name, 80),
+          images: (Array.isArray(g?.images) ? g.images : [])
+            .map((im) => ({
+              src: text(im?.src, 240),
+              label: text(im?.label, 80),
+              w: clampInt(im?.w, 1, 20000, 0),
+              h: clampInt(im?.h, 1, 20000, 0),
+            }))
+            .filter((im) => im.src && im.w && im.h)
+            .slice(0, 120),
+        }))
+        .filter((g) => g.images.length)
+        .slice(0, 40);
+      break;
+
+    /* A headline over a hand of cards arching up out of the bottom edge, built
+       to a layout the user supplied as a reference image. The title carries its
+       own line breaks — the reference sets two lines and the component reveals
+       them one after the other, so where it breaks is a content decision. */
+    case 'card-fan':
+      block.eyebrow = text(raw.eyebrow, 80);
+      block.title = text(raw.title, 200);
+      /* The colour of the orbs behind the cards. A hex value tints them, the
+         string 'none' turns them off, and unset leaves the stylesheet's own —
+         which is the organization's accent. Never invented: where one is set it
+         is measured off the organization's own mark. */
+      block.glow = text(raw.glow, 8) === 'none' ? 'none' : hexColor(raw.glow);
+      block.base = (() => {
+        const raw_ = text(raw.base, 80).replace(/^\/+|\/+$/g, '');
+        return /^[A-Za-z0-9][A-Za-z0-9 _-]*(\/[A-Za-z0-9][A-Za-z0-9 _-]*)*$/.test(raw_) ? raw_ : '';
+      })();
+      /* Two at most, as the reference has: one filled and one outlined. Each
+         opens the viewer at a card, so a button on this slide always does
+         something and always does the same kind of thing. */
+      block.buttons = (Array.isArray(raw.buttons) ? raw.buttons : [])
+        .map((b) => ({
+          label: text(b?.label, 32),
+          kind: oneOf(text(b?.kind, 8), ['solid', 'ghost'], 'solid'),
+          target: clampInt(b?.target, 0, 79, 0),
+        }))
+        .filter((b) => b.label)
+        .slice(0, 2);
+      block.cards = (Array.isArray(raw.cards) ? raw.cards : [])
+        .map((c) => ({
+          src: text(c?.src, 240),
+          // What the viewer captions it with.
+          name: text(c?.name, 120),
+          w: clampInt(c?.w, 1, 20000, 0),
+          h: clampInt(c?.h, 1, 20000, 0),
+        }))
+        .filter((c) => c.src)
+        /* The hand's edges are fixed and the cards stand closer the more of
+           them there are; past fifteen each shows too little of itself. */
+        .slice(0, 15);
+      /* A second, smaller set behind one more pill — dealt as a hand of its
+         own over the fan. Optional; nothing is drawn when it is absent. */
+      block.deck = (() => {
+        const d = raw.deck && typeof raw.deck === 'object' ? raw.deck : null;
+        if (!d) return null;
+        const photos = (Array.isArray(d.photos) ? d.photos : [])
+          .map((p) => ({
+            src: text(p?.src, 240),
+            name: text(p?.name, 120),
+            w: clampInt(p?.w, 1, 20000, 0),
+            h: clampInt(p?.h, 1, 20000, 0),
+          }))
+          .filter((p) => p.src)
+          .slice(0, 24);
+        if (!photos.length) return null;
+        return {
+          label: text(d.label, 40),
+          eyebrow: text(d.eyebrow, 60),
+          title: text(d.title, 80),
+          photos,
+        };
+      })();
+      break;
+
+    /* The trainings as a shelf of books. Built to a reference image: two zones
+       split by a shelf, the trainings standing on it as books, and under it —
+       where the reference puts a row of bestsellers — the selected training's
+       own information. One list, therefore, not two: a training is both the
+       book and what is written about it. */
+    case 'training-shelf':
+      block.eyebrow = text(raw.eyebrow, 80);
+      block.title = text(raw.title, 80);
+      block.lead = text(raw.lead, 240);
+      block.openLabel = text(raw.openLabel, 40);
+      block.backLabel = text(raw.backLabel, 40);
+      block.teachLabel = text(raw.teachLabel, 40);
+      block.photosLabel = text(raw.photosLabel, 40);
+      /* The folder under /uploads a programme's photographs hang off. Same
+         guard as placement-wall's: it is joined onto a URL. */
+      block.base = (() => {
+        const raw_ = text(raw.base, 80).replace(/^\/+|\/+$/g, '');
+        return /^[A-Za-z0-9][A-Za-z0-9 _-]*(\/[A-Za-z0-9][A-Za-z0-9 _-]*)*$/.test(raw_) ? raw_ : 'Trainings';
+      })();
+      /* No search, no vertical label and no outcome list any more: under the
+         shelf there is a name and a paragraph, and that is the whole of it. The
+         per-training `track`, `duration`, `level`, `mode`, `outcomes` and
+         `tools` are kept in the schema — the covers still set the track and the
+         length on themselves, and the rest is content already written down that
+         a later cut may want back. */
+      block.trainings = (Array.isArray(raw.trainings) ? raw.trainings : [])
+        .map((t) => ({
+          name: text(t?.name, 90),
+          track: text(t?.track, 40),
+          duration: text(t?.duration, 40),
+          level: text(t?.level, 40),
+          mode: text(t?.mode, 40),
+          blurb: text(t?.blurb, 400),
+          /* The cover's colour. White into red is the design; this is which
+             red, so a shelf reads as a set of related books rather than as one
+             book printed a dozen times. */
+          tint: hexColor(t?.tint),
+          /* What is actually taught in it — the syllabus, set as one
+             dot-separated line under the description. This replaced `outcomes`
+             and `tools`, which were two lists nobody had written and which the
+             shelf stopped showing. */
+          subjects: (Array.isArray(t?.subjects) ? t.subjects : [])
+            .map((o) => text(o, 60)).filter(Boolean).slice(0, 10),
+          /* Further points for the open page — what it is for, who it is for,
+             what it ends in. Drawn only when supplied. */
+          highlights: (Array.isArray(t?.highlights) ? t.highlights : [])
+            .map((x) => ({ label: text(x?.label, 40), text: text(x?.text, 240) }))
+            .filter((x) => x.text).slice(0, 4),
+          /* Photographs of the programme, shown under its open page and
+             reached by scrolling. Dimensions travel with each one so the rows
+             are solved before a byte of image has landed. */
+          photos: (Array.isArray(t?.photos) ? t.photos : [])
+            .map((p) => ({
+              src: text(p?.src, 240),
+              alt: text(p?.alt, 120),
+              w: clampInt(p?.w, 1, 20000, 0),
+              h: clampInt(p?.h, 1, 20000, 0),
+            }))
+            .filter((p) => p.src && p.w && p.h).slice(0, 24),
+        }))
+        .filter((t) => t.name)
+        .slice(0, 24);
+      break;
+
+    /* A headline beside a staggered collage of photographs, built to a
+       reference image. Nine fixed slots; the photographs are dealt into them in
+       order, so the publisher's order IS the layout. `focus` is where a card
+       looks within its photograph — a tall card on a wide group shot has to be
+       told where the people are. */
+    case 'photo-collage':
+      block.eyebrow = text(raw.eyebrow, 80);
+      block.title = text(raw.title, 120);
+      block.lead = text(raw.lead, 300);
+      block.ctaLabel = text(raw.ctaLabel, 40);
+      /* The two colours of the blobs behind the collage. 'none' turns them off;
+         unset leaves the stylesheet's own, which are the organization's. Never
+         invented — both are measured off its own material. */
+      block.glow = text(raw.glow, 8) === 'none' ? 'none' : hexColor(raw.glow);
+      block.glow2 = hexColor(raw.glow2);
+      block.base = (() => {
+        const raw_ = text(raw.base, 80).replace(/^\/+|\/+$/g, '');
+        return /^[A-Za-z0-9][A-Za-z0-9 _-]*(\/[A-Za-z0-9][A-Za-z0-9 _-]*)*$/.test(raw_) ? raw_ : '';
+      })();
+      block.points = (Array.isArray(raw.points) ? raw.points : [])
+        .map((p) => text(p, 60)).filter(Boolean).slice(0, 5);
+      {
+        const photo = (p) => ({
+          src: text(p?.src, 240),
+          name: text(p?.name, 120),
+          /* An object-position, and only that: two percentages or keywords. */
+          focus: /^\s*(\d{1,3}%|left|center|right)\s+(\d{1,3}%|top|center|bottom)\s*$/.test(String(p?.focus || ''))
+            ? String(p.focus).trim() : '',
+          w: clampInt(p?.w, 1, 20000, 0),
+          h: clampInt(p?.h, 1, 20000, 0),
+        });
+        /* The collage: nine fixed slots, so nine. */
+        block.photos = (Array.isArray(raw.photos) ? raw.photos : [])
+          .map(photo).filter((p) => p.src).slice(0, 9);
+        /* The wall under it — every further photograph, in justified rows. They
+           need `w` and `h` to be laid out, and the component drops any without. */
+        block.more = (Array.isArray(raw.more) ? raw.more : [])
+          .map(photo).filter((p) => p.src && p.w && p.h).slice(0, 60);
+        block.moreLabel = text(raw.moreLabel, 40);
+        block.topLabel = text(raw.topLabel, 40);
+      }
+      break;
+
+    case 'thread-board': {
+      /* A film, then a board of photographs pinned along a thread. Two
+         screens: the film's own words, then the board's. */
+      const safePath = (v) => {
+        const t = text(v, 240).replace(/^\/+/, '');
+        return /^[A-Za-z0-9][A-Za-z0-9 _.-]*(\/[A-Za-z0-9][A-Za-z0-9 _.-]*)*$/.test(t) ? t : '';
+      };
+      block.base = (() => {
+        const raw_ = text(raw.base, 80).replace(/^\/+|\/+$/g, '');
+        return /^[A-Za-z0-9][A-Za-z0-9 _-]*(\/[A-Za-z0-9][A-Za-z0-9 _-]*)*$/.test(raw_) ? raw_ : '';
+      })();
+      block.video = safePath(raw.video);
+      block.videoEyebrow = text(raw.videoEyebrow, 60);
+      block.videoTitle = text(raw.videoTitle, 80);
+      block.videoCta = text(raw.videoCta, 40);
+      block.eyebrow = text(raw.eyebrow, 60);
+      block.title = text(raw.title, 120);
+      block.lead = text(raw.lead, 320);
+      block.note = text(raw.note, 60);
+      /* The photographs need `w` and `h`: a card is as wide as its picture is at
+         the row's height, and nothing is ever cropped to a slot. */
+      block.photos = (Array.isArray(raw.photos) ? raw.photos : [])
+        .map((p) => ({
+          src: safePath(p?.src),
+          name: text(p?.name, 120),
+          w: clampInt(p?.w, 1, 20000, 0),
+          h: clampInt(p?.h, 1, 20000, 0),
+        }))
+        .filter((p) => p.src && p.w && p.h)
+        .slice(0, 60);
+      break;
+    }
 
     case 'program-deck':
       block.eyebrow = text(raw.eyebrow, 120);
@@ -780,13 +1439,53 @@ function normalizeBlock(raw, index = 0, depth = 0) {
       block.stories = (Array.isArray(raw.stories) ? raw.stories : [])
         .map((s) => ({
           photo: text(s?.photo, 200),
-          name: text(s?.name, 80),
+          /* A card may hold a film instead of a photograph — the student
+             testimonials are filmed, not photographed. Same shape and the same
+             path under /uploads; only the element that plays it differs. */
+          video: text(s?.video, 200),
+          /* The rest of that achievement's photographs. The card carries one of
+             them; these fill the wall behind it while the card is centred, so a
+             folder of six pictures shows all six rather than hiding five. A
+             folder with a single photograph has none, and the wall keeps its own
+             gradient — which is the designed default, not a fallback. */
+          backdrop: (Array.isArray(s?.backdrop) ? s.backdrop : [])
+            .map((b) => text(b, 200)).filter(Boolean).slice(0, 8),
+          name: text(s?.name, 120),
           role: text(s?.role, 120),
           body: text(s?.body, 900),
           quote: text(s?.quote, 600),
         }))
-        .filter((s) => s.photo)
+        /* Either is enough to make a card. Keeping the old photo-only test here
+           would silently drop every film on the next save. */
+        .filter((s) => s.photo || s.video)
         .slice(0, 80);
+      break;
+
+    /* The team, as a skewed ribbon. Members carry a `photo` path under
+       /uploads rather than an assetId, the way the story wall and the placement
+       wall do: these arrive as a folder of two dozen files at once, which is a
+       copy and a manifest rather than two dozen uploads, and the wall is only
+       ever served by the same server that holds them. */
+    case 'skew-carousel':
+      block.eyebrow = text(raw.eyebrow, 120);
+      block.title = text(raw.title, 160);
+      block.lead = text(raw.lead, 300);
+      /* The colour the ground and the plates are built from. The component
+         derives the deep end and the glow from it, so one value dresses the
+         whole section — and it is measured off the photographs rather than
+         invented: it is the red of the shirt everybody in them is wearing. */
+      block.tint = hexColor(raw.tint);
+      block.members = (Array.isArray(raw.members) ? raw.members : [])
+        .map((m) => ({
+          photo: text(m?.photo, 200),
+          name: text(m?.name, 80),
+          /* Optional, and blank until it is supplied. A card with a name and no
+             title is a person whose title nobody has written down yet; an
+             invented one is worse than a missing one. */
+          role: text(m?.role, 80),
+        }))
+        .filter((m) => m.photo || m.name)
+        .slice(0, 60);
       break;
 
     case 'coe-wall':
@@ -915,6 +1614,20 @@ export function hydrateBlocks(blocks) {
           : null,
       };
     }
+    /* Same contract as gallery-wall: ids in, real /uploads URLs out, and a panel
+       whose asset has been deleted is dropped rather than rendered as a hole in
+       the row — the accordion solves its widths off the panel count, so a broken
+       one would take a slat's width and show nothing in it. */
+    if (block.type === 'alliance-accordion') {
+      const ids = (block.panels || []).map((p) => p.assetId).filter(Boolean);
+      const byId = new Map(assetService.resolveMany(ids).filter(Boolean).map((a) => [a.id, a]));
+      /* Unlike gallery-wall, a panel with no asset is kept: here the picture is
+         optional and its absence is a designed state, not a broken tile. */
+      return {
+        ...block,
+        panels: (block.panels || []).map((p) => ({ ...p, asset: byId.get(p.assetId) || null })),
+      };
+    }
     if (block.type === 'drift-wall') {
       const ids = (block.items || []).map((i) => i.assetId).filter(Boolean);
       const byId = new Map(assetService.resolveMany(ids).filter(Boolean).map((a) => [a.id, a]));
@@ -945,6 +1658,67 @@ export function hydrateBlocks(blocks) {
     }
     // Each panel carries its own optional photograph, so the whole set is
     // resolved in one lookup rather than one per panel.
+    // The film tab needs its asset resolved the same way a standalone hero
+    // does, or the video has no src and the tab opens on a black rectangle.
+    if (block.type === 'paper-tabs') {
+      const ids = (block.tabs || []).map((tab) => tab.hero?.assetId).filter(Boolean);
+      const byId = new Map(assetService.resolveMany(ids).filter(Boolean).map((a) => [a.id, a]));
+      return {
+        ...block,
+        tabs: (block.tabs || []).map((tab) => {
+          if (!tab.hero) return tab;
+          const usingLink = tab.hero.media === 'video' && tab.hero.source === 'url'
+            && Boolean(tab.hero.videoUrl);
+          return {
+            ...tab,
+            hero: {
+              ...tab.hero,
+              asset: tab.hero.assetId ? byId.get(tab.hero.assetId) || null : null,
+              link: usingLink ? parseVideoUrl(tab.hero.videoUrl) : null,
+            },
+          };
+        }),
+      };
+    }
+    // Each volume carries two pieces of media — a still cover and the loop that
+    // plays over it — so both ids for all three books resolve in one lookup.
+    if (block.type === 'book-shelf') {
+      const ids = (block.books || [])
+        .flatMap((book) => [book.coverAssetId, book.motionAssetId])
+        .filter(Boolean);
+      const byId = new Map(assetService.resolveMany(ids).filter(Boolean).map((a) => [a.id, a]));
+      return {
+        ...block,
+        books: (block.books || []).map((book) => ({
+          ...book,
+          cover: book.coverAssetId ? byId.get(book.coverAssetId) || null : null,
+          motion: book.motionAssetId ? byId.get(book.motionAssetId) || null : null,
+        })),
+      };
+    }
+    if (block.type === 'hub') {
+      return {
+        ...block,
+        logo: block.logoAssetId ? assetService.resolveMany([block.logoAssetId])[0] || null : null,
+      };
+    }
+    if (block.type === 'roster') {
+      return {
+        ...block,
+        logo: block.logoAssetId ? assetService.resolveMany([block.logoAssetId])[0] || null : null,
+      };
+    }
+    if (block.type === 'council-grid') {
+      const ids = (block.members || []).map((member) => member.assetId).filter(Boolean);
+      const byId = new Map(assetService.resolveMany(ids).filter(Boolean).map((a) => [a.id, a]));
+      return {
+        ...block,
+        members: (block.members || []).map((member) => ({
+          ...member,
+          asset: member.assetId ? byId.get(member.assetId) || null : null,
+        })),
+      };
+    }
     if (block.type === 'leadership-panels') {
       const ids = (block.panels || []).map((panel) => panel.assetId).filter(Boolean);
       const byId = new Map(assetService.resolveMany(ids).filter(Boolean).map((a) => [a.id, a]));
@@ -1079,6 +1853,10 @@ export async function create(orgId, payload = {}) {
     key: slugify(payload.key || title, 'section'),
     title,
     subtitle: text(payload.subtitle, 240),
+    // A title card shown once when the slide opens: it fades up, holds, fades
+    // away, and only then does the page behind it animate in. Empty means no
+    // card and the page arrives immediately, which is the old behaviour.
+    intro: text(payload.intro, 120),
     icon: text(payload.icon, 8),
     // Navigation mark: a name from the shared icon library, or an uploaded
     // PNG/SVG asset that takes precedence over it.
@@ -1105,6 +1883,7 @@ export async function update(id, payload = {}) {
     patch.title = title;
   }
   if (payload.subtitle !== undefined) patch.subtitle = text(payload.subtitle, 240);
+  if (payload.intro !== undefined) patch.intro = text(payload.intro, 120);
   if (payload.icon !== undefined) patch.icon = text(payload.icon, 8);
   if (payload.iconKey !== undefined) patch.iconKey = iconKey(payload.iconKey);
   if (payload.parentId !== undefined) {
@@ -1148,6 +1927,7 @@ export async function duplicate(id, payload = {}) {
   return create(source.orgId, {
     title,
     subtitle: source.subtitle,
+    intro: source.intro,
     icon: source.icon,
     iconKey: source.iconKey,
     iconAssetId: source.iconAssetId,

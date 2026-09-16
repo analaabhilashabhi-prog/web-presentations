@@ -77,7 +77,7 @@ function titleLines(raw) {
 }
 
 export function StoryWall(block, { editing = false } = {}) {
-  const stories = (block.stories || []).filter((s) => s.photo);
+  const stories = (block.stories || []).filter((s) => s.photo || s.video);
   const root = h('div', { class: 'sw-root ph-root' });
 
   if (!stories.length) {
@@ -92,15 +92,32 @@ export function StoryWall(block, { editing = false } = {}) {
   }
 
   const src = (story) => media(`/uploads/${encodeURI(story.photo)}`);
+  /* A card may hold a film instead of a photograph. The path is stored the same
+     way — relative to /uploads — so the two share one resolver and differ only in
+     which element ends up playing them. */
+  const isFilm = (story) => Boolean(story.video);
+  const filmSrc = (story) => media(`/uploads/${encodeURI(story.video)}`);
   const count = stories.length;
   let centre = 0;
   let open = false;
+  const titleEl = h('h2', { class: 'sw-title' });
+  /* What the headline currently says, so a step that does not change it does not
+     rebuild it — otherwise every arrow press replays the entrance animation on a
+     word that is not moving. */
+  let lastTitle = null;
 
   /* ------------------------------------------------------------ the viewer */
   /* Portalled to the body: FitSlide scales the slide with a transform, and a
      transformed ancestor becomes the containing block for fixed descendants, so
      inside the slide `inset: 0` would resolve to the slide and not the screen. */
   const bigImg = h('img', { class: 'sw-view__img', alt: '' });
+  /* The film's own element, sitting beside the photograph's rather than replacing
+     it. One of the two is shown per opening; keeping both built means stepping
+     from a picture to a film does not rebuild the frame around them. */
+  const bigVid = h('video', {
+    class: 'sw-view__img sw-view__vid', hidden: true,
+    controls: true, playsinline: true, preload: 'metadata',
+  });
   const bigCap = h('p', { class: 'sw-view__cap' });
   const viewer = h('div', {
     class: 'sw-view', hidden: true,
@@ -108,14 +125,24 @@ export function StoryWall(block, { editing = false } = {}) {
   },
     h('button', { class: 'sw-view__close', type: 'button', 'aria-label': 'Close' },
       icon('close', { class: 'ic ic--sm' })),
-    h('figure', { class: 'sw-view__frame' }, bigImg, h('figcaption', {}, bigCap)),
+    h('figure', { class: 'sw-view__frame' }, bigImg, bigVid, h('figcaption', {}, bigCap)),
   );
   document.body.appendChild(viewer);
 
   function shut() {
     viewer.hidden = true;
     viewer.classList.remove('is-on');
+    /* A film carries on playing behind a closed viewer otherwise — the element is
+       only hidden, and hidden audio is worse than none at all in a hall. */
+    stopFilm();
     document.removeEventListener('keydown', onViewKey, true);
+  }
+  function stopFilm() {
+    if (bigVid.hidden) return;
+    bigVid.pause();
+    bigVid.removeAttribute('src');
+    bigVid.load();
+    bigVid.hidden = true;
   }
   function onViewKey(e) {
     if (e.key === 'Escape') { e.stopPropagation(); shut(); }
@@ -123,8 +150,19 @@ export function StoryWall(block, { editing = false } = {}) {
   function view(i) {
     const story = stories[i];
     if (!story) return;
-    bigImg.src = src(story);
-    bigImg.alt = story.name || '';
+    stopFilm();
+    if (isFilm(story)) {
+      bigImg.hidden = true;
+      bigVid.hidden = false;
+      bigVid.src = filmSrc(story);
+      /* Sound is the point of a testimonial, so it opens unmuted — which is also
+         why it cannot autoplay: a browser blocks that, and a player that silently
+         refuses to start reads as broken. The presenter presses play. */
+    } else {
+      bigImg.hidden = false;
+      bigImg.src = src(story);
+      bigImg.alt = story.name || '';
+    }
     bigCap.textContent = story.name || '';
     viewer.hidden = false;
     requestAnimationFrame(() => viewer.classList.add('is-on'));
@@ -133,18 +171,41 @@ export function StoryWall(block, { editing = false } = {}) {
 
   /* -------------------------------------------------------------- the cards */
   const cards = stories.map((story, i) => {
-    const shot = h('img', {
-      class: 'sw-c__img', src: src(story), alt: story.name || '',
-      loading: i < 6 ? 'eager' : 'lazy', decoding: 'async',
-    });
-    /* Capped at twice its own pixels once the file has decoded — max-width alone
-       would not do it, because the image is sized by the card, not by itself. */
-    shot.addEventListener('load', () => {
-      const { naturalWidth: nw, naturalHeight: nh } = shot;
-      if (!nw || !nh) return;
-      shot.style.maxWidth = `min(100%, ${nw * MAX_ENLARGE}px)`;
-      shot.style.maxHeight = `min(100%, ${nh * MAX_ENLARGE}px)`;
-    });
+    const film = isFilm(story);
+    let shot;
+    if (film) {
+      /* No poster file is produced on upload unless ffmpeg is installed, so the
+         card shows the film's own first frame: `preload="metadata"` fetches just
+         enough for the browser to paint it, and a muted element is allowed to do
+         that without a gesture. The frame is the thumbnail — nothing to generate,
+         nothing to keep in step with the file. */
+      shot = h('video', {
+        class: 'sw-c__img sw-c__film', src: filmSrc(story),
+        preload: 'metadata', playsinline: true, tabindex: '-1',
+        'aria-label': story.name || 'Success story film',
+      });
+      shot.muted = true;
+      /* These films open on a fade from black, so frame zero is a black
+         rectangle — a card showing nothing but its play badge. A short step in
+         lands on picture instead. It is a seek, not playback: the element stays
+         paused, and the server answers ranges, so it costs one small request. */
+      shot.addEventListener('loadedmetadata', () => {
+        if (shot.duration > 1.2) shot.currentTime = 1;
+      }, { once: true });
+    } else {
+      shot = h('img', {
+        class: 'sw-c__img', src: src(story), alt: story.name || '',
+        loading: i < 6 ? 'eager' : 'lazy', decoding: 'async',
+      });
+      /* Capped at twice its own pixels once the file has decoded — max-width alone
+         would not do it, because the image is sized by the card, not by itself. */
+      shot.addEventListener('load', () => {
+        const { naturalWidth: nw, naturalHeight: nh } = shot;
+        if (!nw || !nh) return;
+        shot.style.maxWidth = `min(100%, ${nw * MAX_ENLARGE}px)`;
+        shot.style.maxHeight = `min(100%, ${nh * MAX_ENLARGE}px)`;
+      });
+    }
 
     /* The clip stays outside the swaying body, because a clip does not swing —
        the card hangs from it. Putting it inside would have the whole fixture
@@ -162,13 +223,22 @@ export function StoryWall(block, { editing = false } = {}) {
           '--sway-delay': `-${(i * 431) % 3300}ms`,
         },
       },
-        h('div', { class: 'sw-c__shot' }, shot),
+        h('div', { class: `sw-c__shot${film ? ' sw-c__shot--film' : ''}` },
+          shot,
+          /* A still frame gives no sign that it is a film. The badge says so
+             before anything is clicked, which is the whole of its job — it is
+             not a control, so the card's own click still does the opening. */
+          film
+            ? h('span', { class: 'sw-c__play', 'aria-hidden': 'true' },
+                icon('play', { class: 'ic ic--sm' }))
+            : null,
+        ),
         h('div', { class: 'sw-c__foot' },
           h('p', { class: 'sw-c__name' }, story.name || 'Untitled'),
           h('button', {
             class: 'sw-c__view', type: 'button',
             onclick: (e) => { e.stopPropagation(); view(i); },
-          }, 'View', icon('arrow-right', { class: 'ic ic--xs' })),
+          }, film ? 'Play' : 'View', icon('arrow-right', { class: 'ic ic--xs' })),
         ),
       ),
     );
@@ -208,6 +278,29 @@ export function StoryWall(block, { editing = false } = {}) {
     }),
   );
   const deck = h('div', { class: 'sw-deck' }, wire, ...cards);
+
+  /* ----------------------------------------------------------- the backdrop
+     The photographs an achievement has beyond the one on its card. They fill the
+     wall behind the deck while that card is centred, one set per achievement,
+     crossfading as the collection is stepped through.
+
+     Only while the deck is dealt. Folded, the section is a poster — its own
+     gradient and the headline — and that is what it should arrive as; the
+     photographs belong to the act of going through the collection.
+
+     An achievement with a single photograph has no set at all, so the gradient
+     stands, which is what was asked for rather than a fallback. */
+  const bgSets = stories.map((story) => h(
+    'div',
+    { class: 'sw-bg__set' },
+    ...(story.backdrop || []).slice(0, 6).map((path, i) => h('img', {
+      src: media(`/uploads/${encodeURI(path)}`),
+      alt: '', loading: i < 2 ? 'eager' : 'lazy', decoding: 'async',
+      // A backdrop that 404s should leave the gradient, not a grey panel.
+      onerror: (e) => e.currentTarget.remove(),
+    })),
+  ));
+  const backdrop = h('div', { class: 'sw-bg', 'aria-hidden': 'true' }, ...bgSets);
 
   /**
    * One placement rule for both states.
@@ -250,6 +343,35 @@ export function StoryWall(block, { editing = false } = {}) {
     prev.disabled = open && centre === 0;
     next.disabled = open && centre === count - 1;
     counter.textContent = `${String(centre + 1).padStart(2, '0')} / ${count}`;
+    bgSets.forEach((set, i) => {
+      set.classList.toggle('is-on', open && i === centre && set.childElementCount > 0);
+    });
+    paintTitle();
+  }
+
+  /**
+   * The headline names whatever is in front of you.
+   *
+   * Folded it is the section's own title, set as the poster line it was designed
+   * as. Dealt, it becomes the centred achievement's name and changes as the
+   * collection is stepped through. The elements are rebuilt rather than having
+   * their text swapped, because the entrance animation is on the element — a new
+   * node replays it, so the name arrives rather than blinking.
+   */
+  function paintTitle() {
+    const now = open ? (stories[centre]?.name || '').trim() : '';
+    if (now === lastTitle) return;
+    lastTitle = now;
+    titleEl.textContent = '';
+    titleEl.classList.toggle('is-now', Boolean(now));
+    if (now) {
+      titleEl.appendChild(h('span', { class: 'sw-title__now' }, now));
+      return;
+    }
+    const { lead, accent, name } = titleLines(block.title);
+    if (lead) titleEl.appendChild(h('span', { class: 'sw-title__lead' }, lead));
+    if (accent) titleEl.appendChild(h('span', { class: 'sw-title__accent' }, accent));
+    if (name) titleEl.appendChild(h('span', { class: 'sw-title__name' }, name));
   }
 
   const go = (i) => { centre = Math.max(0, Math.min(count - 1, i)); place(); };
@@ -282,13 +404,8 @@ export function StoryWall(block, { editing = false } = {}) {
   );
 
   /* ------------------------------------------------------------------ header */
-  const { lead, accent, name } = titleLines(block.title);
   const head = h('div', { class: 'sw-head' },
-    h('h2', { class: 'sw-title' },
-      lead ? h('span', { class: 'sw-title__lead' }, lead) : null,
-      accent ? h('span', { class: 'sw-title__accent' }, accent) : null,
-      name ? h('span', { class: 'sw-title__name' }, name) : null,
-    ),
+    titleEl,
     h('button', {
       class: 'sw-open', type: 'button',
       onclick: () => (open ? fold() : deal()),
@@ -298,6 +415,7 @@ export function StoryWall(block, { editing = false } = {}) {
     ),
   );
 
+  root.appendChild(backdrop);
   root.appendChild(head);
   root.appendChild(deck);
   root.appendChild(nav);

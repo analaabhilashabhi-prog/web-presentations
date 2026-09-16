@@ -525,8 +525,6 @@ a {
 
 
 
-
-
 /* Corner wedge only — kept clear of the logo and tagline so brand-coloured
    text never lands on a brand-coloured fill. */
 
@@ -4130,6 +4128,19 @@ body.is-presenting .fit-slide__inner .slide--hero {
   to {
     transform: scale(1.03) translate3d(0.7%, 0, 0);
   }
+}
+
+/* NGI's brand film is a 2.34:1 picture exported inside a 16:9 frame, so it
+   carries 130px of black at the top and 131px at the bottom as real pixels.
+   object-fit cannot crop what is part of the image, so the element is scaled
+   past the frame until those rows sit outside the hero. 1.325 = 1080/819 plus a
+   rounding margin.
+   It is the default rather than the rule: Torii's film is honestly 1920x1080
+   with no bars anywhere in it — measured across five frames — and this scale
+   simply threw a third of the picture away. A block that knows its own film
+   sets `--hero-zoom`; see `hero.zoom`. */
+.hero video.hero__media {
+  transform: scale(var(--hero-zoom, 1.325));
 }
 
 .hero__media--embed {
@@ -10418,11 +10429,21 @@ body.is-presenting .pg-player { z-index: 30; }
 .pw-root {
   display: flex;
   flex-direction: column;
-  /* A fixed minimum rather than a percentage. The root's height comes from this
-     min-height, so its computed height is `auto` and any percentage height on a
-     child resolves to auto too — the trap that left a dead band under the
-     Platforms wall. Flex gives the stage the leftover space without one. */
-  min-height: 860px;
+  /* A definite height, not a minimum.
+     `.canvas-block > *` sets `flex: 1`, and its `flex-basis: 0%` beats `height`
+     on the main axis — so a root with only a `min-height` grows to its content
+     instead of letting the stage inside it scroll, and FitSlide then scales the
+     whole slide down to fit. With 43 photographs on Campus Events this root
+     measured 3068px and the slide was drawn at 0.294 — a postage stamp in the
+     middle of the screen. It only looked right while presenting, because the
+     presenting rule below pins the height with `--slide-h`.
+     `flex: 0 0 auto` is what gives it a basis of its own. Same arrangement as
+     `.ev-root`, and for the same reason.
+     A percentage cannot stand in: the root's parent is `auto`, so a percentage
+     resolves to auto and the child's scroller never gets a box to scroll in. */
+  flex: 0 0 auto;
+  height: 860px;
+  max-height: 860px;
   overflow: hidden;
   border-radius: var(--radius-lg);
   background: var(--surface);
@@ -10521,7 +10542,16 @@ body.is-presenting .pg-player { z-index: 30; }
   overflow-x: hidden;
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
-  scroll-behavior: smooth;
+  /* Deliberately NOT `scroll-behavior: smooth`.
+     The wheel handler in PlacementWall scrolls this element by hand
+     (`stage.scrollTop += e.deltaY`), and with smooth scrolling on, reading
+     `scrollTop` back returns the *current animated position* rather than the
+     target — so every tick of a trackpad flick added its delta to a value that
+     was still catching up, and each new assignment restarted the animation.
+     Measured: a flick asking for 800px moved 138px of the 350 available, which
+     is what "I can't scroll" looked like from the outside. Instant assignment
+     accumulates exactly. */
+  overscroll-behavior: contain;
   pointer-events: auto;
   touch-action: pan-y;
 }
@@ -10537,20 +10567,68 @@ body.is-presenting .pg-player { z-index: 30; }
 .pw-stage::-webkit-scrollbar { width: 6px; }
 .pw-stage::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.25); border-radius: 4px; }
 
-.pw-row { display: flex; align-items: stretch; justify-content: space-between; margin-bottom: 12px; width: 100%; }
-.pw-row--short { justify-content: space-between; }
+/* The solver hands every tile an exact width derived from that image's own
+   aspect ratio, and the row's gaps are set inline — so the row only has to lay
+   them out left to right. `space-between` was harmless while the tiles could
+   stretch; it is not now. */
+.pw-row { display: flex; align-items: stretch; justify-content: flex-start; margin-bottom: 12px; width: 100%; }
+/* A tail row does not reach the margin. Centred it reads as composition; pushed
+   apart by `space-between` it read as two images that had fallen to the edges. */
+.pw-row--short { justify-content: center; }
+
+/* ==========================================================================
+   Never stretch a placement card
+   ==========================================================================
+   `flex: 1 1 auto` let a tile grow past the width the row solver gave it, to
+   fill whatever space was left over. On a full row that is invisible; on the
+   leftover tail it is not — one wide card alone on a row was being pulled from
+   1048px to the full 1560 while its height stayed put, and `object-fit: cover`
+   then cropped 40% of the picture away to cover the box. Measured at 229% off
+   its true aspect ratio on the company-wise wall.
+
+   These are designed cards with a student's name, their branch and their
+   package set into them. A crop takes a name off. The solved width is final. */
+/* The cards arrive with depth rather than just fading up: each one starts tipped
+   back and a little below its place, then stands up into the row. The perspective
+   has to live on the row, not the card — on the card itself every tile gets its
+   own vanishing point and the ones at the edges of a wide row visibly skew. */
+.pw-row { perspective: 1400px; perspective-origin: 50% 40%; }
 
 .pw-tile {
-  position: relative; flex: 1 1 auto; padding: 0;
+  position: relative; flex: 0 0 auto; padding: 0;
   border: 0; border-radius: var(--radius-sm); overflow: hidden;
   background: #f3f4f6; cursor: zoom-in;
-  opacity: 0; transform: translateY(16px) scale(0.985);
-  transition: opacity 520ms cubic-bezier(.2,.7,.3,1),
-              transform 520ms cubic-bezier(.2,.7,.3,1),
+  opacity: 0; transform: translateY(26px) scale(0.94) rotateX(12deg);
+  transform-origin: 50% 100%;
+  transition: opacity 620ms cubic-bezier(.2,.7,.3,1),
+              transform 620ms cubic-bezier(.2,.7,.3,1),
               box-shadow 200ms ease;
 }
 .pw-tile.is-in { opacity: 1; transform: none; }
-.pw-tile:hover { box-shadow: 0 12px 30px rgb(0 0 0 / 0.16); z-index: 2; }
+
+/* A sheen that crosses the card as it lands, and again when it is pointed at.
+   It is a gradient on a pseudo-element rather than a filter, so it costs one
+   composited layer and not a repaint of the picture — which matters at fifty
+   cards on a wall that is already animating all of them. */
+.pw-tile::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(105deg, transparent 38%, rgb(255 255 255 / 0.42) 50%, transparent 62%);
+  transform: translateX(-120%);
+  pointer-events: none;
+  /* Under the company tag, which has to stay legible over it. */
+  z-index: 1;
+}
+.pw-tile.is-in::after { animation: pw-sheen 900ms cubic-bezier(.2,.7,.3,1) 160ms 1; }
+.pw-tile:hover::after { animation: pw-sheen 720ms cubic-bezier(.2,.7,.3,1) 1; }
+@keyframes pw-sheen {
+  from { transform: translateX(-120%); }
+  to   { transform: translateX(120%); }
+}
+
+.pw-tile:hover {
+  box-shadow: 0 18px 38px rgb(0 0 0 / 0.22); z-index: 2;
+  transform: translateY(-4px) scale(1.012);
+}
 .pw-tile img {
   display: block; width: 100%; height: 100%;
   /* The box was solved from this image's own width and height, so cover has
@@ -10565,6 +10643,8 @@ body.is-presenting .pg-player { z-index: 30; }
   background: linear-gradient(to top, rgb(0 0 0 / 0.72), transparent);
   color: #fff; font-size: 11.5px; font-weight: 700; letter-spacing: 0.01em;
   text-align: left; opacity: 0; transition: opacity 200ms ease;
+  /* Above the sheen, or the company name flashes white as it passes. */
+  z-index: 2;
 }
 .pw-tile:hover .pw-tile__tag, .pw-tile:focus-visible .pw-tile__tag { opacity: 1; }
 
@@ -10606,7 +10686,11 @@ body.is-presenting .pg-player { z-index: 30; }
 @media (prefers-reduced-motion: reduce) {
   .pw-rule, .pw-tab { animation: none; }
   .pw-tile { opacity: 1; transform: none; transition: none; }
+  .pw-tile:hover { transform: none; }
   .pw-tile:hover img { transform: none; }
+  /* The sheen is decoration only — nothing is communicated by it, so it goes
+     entirely rather than being slowed down. */
+  .pw-tile::after { display: none; }
   .pw-light, .pw-light__frame { transition: none; }
 }
 
@@ -11680,6 +11764,29 @@ body.is-presenting .pg-player { z-index: 30; }
    and a fixed crop would slice the ends off the wide ones. */
 .sw-c__img { display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; }
 
+/* --- cards that hold a film --------------------------------------------- */
+/* Contained rather than cropped, like every other card here, so the speaker is
+   never the part that gets cut. The padding goes and the ground turns dark: a
+   film sits in its own frame the way it would in a player, and the letterbox a
+   16:9 clip leaves in a squarer card should read as black bars, not as a card
+   with grey margins. */
+.sw-c__shot--film { position: relative; padding: 0; background: #0D1117; }
+.sw-c__film { width: 100%; height: 100%; max-width: 100%; max-height: 100%; }
+/* Sits over the still frame, not over the controls — there are none on the card;
+   the film only plays in the viewer. Pointer events off, so the click passes
+   through to the card, which is what opens it. */
+.sw-c__play {
+  position: absolute; inset: 0; margin: auto;
+  display: grid; place-items: center;
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.9); color: #111827;
+  box-shadow: 0 6px 18px -6px rgb(11 18 32 / 0.6);
+  pointer-events: none;
+  transition: transform .2s ease, background .2s ease;
+}
+.sw-c:hover .sw-c__play, .sw-c.is-centre .sw-c__play { transform: scale(1.08); background: #fff; }
+
 .sw-c__foot {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   padding: 16px 18px 18px;
@@ -11766,6 +11873,24 @@ body.is-presenting .pg-player { z-index: 30; }
   max-width: 100%; max-height: calc(100vh - 18vh);
   border-radius: 14px; background: #111;
 }
+/* A film fills the frame, where a photograph is left at its own pixels. The
+   sources here are 873px and 1280px wide, and held to that a testimonial plays
+   as a small window in the middle of a projector screen. Enlarging a film is not
+   the same bargain as enlarging a photograph: the motion carries it, and the
+   audience is across a hall. The width is whatever a 16:9 clip needs to use the
+   height available, so anything wider than that is limited by the frame instead
+   and nothing can overflow either way. */
+.sw-view__vid {
+  width: min(100%, calc((100vh - 18vh) * 16 / 9));
+  height: auto;
+  max-height: calc(100vh - 18vh);
+  background: #000;
+}
+/* Both carry `display: block` from .sw-view__img, which outranks a bare [hidden]
+   and would leave the one that is off still drawn. Said here at two classes of
+   specificity so whichever is hidden actually goes. */
+.sw-view__img[hidden], .sw-view__vid[hidden] { display: none; }
+
 .sw-view__cap { margin: 0; color: #fff; font-size: 14px; font-weight: 600; }
 .sw-view__close {
   position: absolute; top: 22px; right: 24px;
@@ -12115,6 +12240,12 @@ body.is-presenting .vc {
   min-height: 0;
   display: flex;
   flex-direction: column;
+  /* `safe` is what makes this usable with both a full chapter and a short one:
+     a chapter of two entries is centred in the band instead of clinging to the
+     top under a screen of white, and one of twenty-three — which overflows and
+     scrolls — falls back to flex-start rather than centring its overflow and
+     putting the first row out of reach above the scroll origin. */
+  justify-content: safe center;
   gap: 20px;
   padding: 14px 30px 28px;
   overflow-y: auto !important;
@@ -12176,6 +12307,22 @@ body.is-presenting .vc {
 }
 .ev-card:hover .ev-card__play .ic {
   background: var(--nav-accent, #008638); transform: scale(1.12);
+}
+
+/* --- entries that are photographs, not film ------------------------------ */
+/* The card keeps the 16:9 poster shape the grid solves its columns from, so a
+   folder of square photographs sits in the same row as the film posters without
+   the row changing height. The first picture is cropped to that frame here and
+   only here — the viewer it opens shows every one of them whole. */
+.ev-card__shot--photos .fs-poster { object-fit: cover; }
+/* The count sits in the corner rather than under the title, because the title
+   row is already solved for two lines of event name and a run of part chips. */
+.ev-card__count {
+  position: absolute; right: 8px; bottom: 8px;
+  min-width: 22px; padding: 2px 7px; border-radius: 999px;
+  background: rgba(8, 10, 13, 0.62); color: #fff;
+  font-size: 11px; font-weight: 700; line-height: 1.5; text-align: center;
+  letter-spacing: 0.02em;
 }
 .ev-card__foot {
   flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; gap: 6px;
@@ -13627,6 +13774,323 @@ body.is-presenting .vc {
 
 
 /* ==========================================================================
+   Photo ring — cards standing on a turntable
+   ==========================================================================
+   Cards placed around a vertical axis and seen in perspective. The ring holds
+   on each card and then turns by exactly one, so there is always a subject
+   rather than a drift. Placement, idle turn and hover are on three different
+   elements because one `transform` cannot carry all three.
+   ========================================================================== */
+.pr-root {
+  position: relative;
+  display: flex; flex-direction: column;
+  height: 860px;
+  padding: 44px 30px 0;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 50% 0%, var(--nav-accent-soft, rgb(233 90 34 / 0.10)) 0%, transparent 62%),
+    var(--page-bg, #F8FAFC);
+}
+
+.pr-head { flex: 0 0 auto; text-align: center; }
+.pr-eyebrow {
+  margin: 0 0 8px;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--nav-accent, var(--accent));
+}
+.pr-title {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 54px; line-height: 1.02; letter-spacing: -0.015em;
+  color: var(--text);
+}
+.pr-lead {
+  margin: 12px auto 0; max-width: 780px;
+  font-size: 15px; line-height: 1.55; color: var(--text-muted, #4B5563);
+}
+
+/* --- the filters ---------------------------------------------------------- */
+.pr-tabs {
+  flex: 0 0 auto;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+  margin: 20px 0 0;
+}
+.pr-tab {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 18px;
+  border: 1px solid rgb(11 18 32 / 0.14); border-radius: 999px;
+  background: var(--surface, #fff); color: var(--text);
+  font-family: inherit; font-size: 13px; font-weight: 600; letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background 200ms ease, color 200ms ease, border-color 200ms ease, transform 200ms ease;
+  animation: pr-tab-in 460ms cubic-bezier(.2, .7, .3, 1) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+.pr-tab:hover { transform: translateY(-1px); border-color: rgb(11 18 32 / 0.3); }
+.pr-tab.is-on {
+  background: var(--nav-accent, var(--accent));
+  /* `--nav-on-accent`, not `--nav-accent-ink`: the two are easy to confuse and
+     only one is right here. The *ink* is a darkened shade of the brand colour,
+     for brand-coloured text on a light ground; on the accent fill itself it is
+     the same hue twice and measures 1.5:1. The *on-accent* is the one the deck
+     picks for contrast against that fill — white on Torii's orange, dark on
+     Technical Hub's gold — which is what a pill filled with the brand colour
+     needs. */
+  color: var(--nav-on-accent, var(--on-accent, #fff));
+  border-color: transparent;
+}
+/* The count rides inside the chip, so a filter says how much is behind it
+   before it is pressed. */
+.pr-tab__n {
+  min-width: 18px; padding: 1px 6px; border-radius: 999px;
+  background: rgb(11 18 32 / 0.08);
+  font-size: 11px; font-weight: 700; text-align: center;
+}
+.pr-tab.is-on .pr-tab__n { background: rgb(255 255 255 / 0.22); }
+@keyframes pr-tab-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* The perspective lives on the stage, not the ring: put it on the element that
+   is itself rotating and the vanishing point rotates with it, which flattens the
+   whole effect at a quarter turn. `perspective-origin` sits above centre so the
+   ring is read slightly from above, the way the reference is drawn. */
+.pr-stage {
+  flex: 1 1 auto; position: relative;
+  display: grid; place-items: center;
+  perspective: 1500px;
+  perspective-origin: 50% 42%;
+}
+
+.pr-ring {
+  position: relative;
+  width: 520px; height: 340px;
+  transform-style: preserve-3d;
+}
+
+.pr-slot {
+  position: absolute; top: 0; left: 50%;
+  width: 520px; margin-left: -260px;
+  display: block; padding: 0; border: 0; background: none;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  /* Each card carries its own move, because they do not travel together: on a
+     step the front card leaves to one side while the next arrives from the
+     other, and both are the same eased transition running on different values.
+     Eased at both ends so a step starts and settles rather than snapping — this
+     is the whole of the "one by one" motion. */
+  transition:
+    transform var(--turn, 1100ms) cubic-bezier(.34, .08, .18, 1),
+    opacity var(--turn, 1100ms) ease;
+  will-change: transform;
+}
+
+.pr-card {
+  position: relative;
+  display: flex; flex-direction: column; gap: 10px;
+  /* Resting size. Cards sit back a little so that pointing at one is a change
+     rather than the whole ring already being at full size. Each step further
+     round the ring takes a little more off, to a floor, so depth reads as depth
+     and the back of the ring never disappears entirely. */
+  transform: scale(calc(0.86 - min(var(--away, 0), 3) * 0.045));
+  opacity: calc(1 - min(var(--away, 0), 3) * 0.2);
+  transition: transform 420ms cubic-bezier(.2, .7, .3, 1), opacity 420ms ease;
+  will-change: transform;
+}
+.pr-slot.is-front .pr-card { transform: scale(1); opacity: 1; }
+/* Pointed at, a card comes up past full size. The ring has already stopped and
+   brought it to the front by this point, so this is the only growth left. */
+.pr-slot:hover .pr-card,
+.pr-slot:focus-visible .pr-card { transform: scale(1.12); opacity: 1; }
+
+/* The entrance, replayed whenever the filter changes. The cards are rebuilt on a
+   swap, so the animation runs again by itself — no class to add and remove, and
+   no chance of it being left on. The stagger runs along the fan, so a set
+   arrives card by card rather than appearing all at once. */
+.pr-card__in {
+  animation: pr-card-in 640ms cubic-bezier(.2, .7, .3, 1) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+@keyframes pr-card-in {
+  from { opacity: 0; transform: translateY(26px) scale(0.9); filter: blur(6px); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+
+/* One height for every card, width from the picture's own ratio — so the fan
+   stands on a single line and no photograph is letterboxed into a frame that is
+   not its shape. Capped, or a panorama would reach across the whole slide. */
+.pr-card__frame {
+  position: relative;
+  height: 300px; width: auto; aspect-ratio: var(--ar, 16 / 9);
+  max-width: 520px;
+  margin: 0 auto;
+  border-radius: 16px; overflow: hidden;
+  background: #0D1117;
+  box-shadow: 0 26px 54px -22px rgb(11 18 32 / 0.55);
+  transition: box-shadow 420ms ease;
+}
+.pr-slot.is-front .pr-card__frame { box-shadow: 0 38px 76px -26px rgb(11 18 32 / 0.62); }
+/* Contained, never cropped — the deck's rule everywhere else, and these are
+   designed cards whose own titles would be the first thing a crop cut off. */
+.pr-card__img {
+  display: block; width: 100%; height: 100%;
+  object-fit: contain;
+}
+.pr-card__label {
+  margin: 0; text-align: center;
+  font-size: 13px; font-weight: 600; letter-spacing: -0.005em;
+  color: var(--text);
+  /* Only the front card names itself. Six labels around a ring is a list of
+     captions nobody can read, and it competes with the headline. */
+  opacity: 0; transition: opacity 320ms ease;
+}
+.pr-slot.is-front .pr-card__label { opacity: 1; }
+
+.pr-empty {
+  flex: 1 1 auto; display: grid; place-content: center; gap: 10px; text-align: center;
+}
+.pr-hint { margin: 0; font-size: 13px; color: var(--text-muted, #4B5563); }
+
+@media (prefers-reduced-motion: reduce) {
+  /* No turning at all, and no growth on hover — the fan is then a still
+     arrangement that can still be filtered and clicked through. JS already
+     refuses to start the timer under the same query; this covers the rest. */
+  .pr-slot, .pr-card, .pr-card__frame, .pr-card__label, .pr-tab { transition: none; }
+  .pr-slot:hover .pr-card, .pr-slot:focus-visible .pr-card { transform: scale(1); }
+  /* The swap still has to *show*, or a filter press looks like nothing happened
+     — so it keeps a plain fade and loses the movement and the blur. */
+  .pr-card__in { animation: pr-card-in-still 200ms ease both; animation-delay: 0ms; }
+  .pr-tab { animation: none; }
+}
+@keyframes pr-card-in-still {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+
+/* ==========================================================================
+   Event orbit — a ring of events you turn with your hand
+   ==========================================================================
+   Panels standing at every angle, seen in perspective. Drag across to turn it,
+   up and down to tip it, click a card to open that event's photographs. The
+   ground is the deck's own page colour: every other section in the deck stands
+   on it, and a black panel in the middle of them read as a different product
+   rather than as a different section.
+   ========================================================================== */
+.eo-root {
+  position: relative;
+  display: flex; flex-direction: column;
+  /* `.canvas-block > *` sets `flex: 1`, whose `flex-basis: 0%` beats `height` on
+     the main axis — without a basis of its own this root collapses to its
+     content, which for a ring whose cards are absolutely positioned is almost
+     nothing: it measured 220px inside an 848px slide and the ring was clipped
+     against the top edge. Every other full-bleed root in the deck pins the
+     basis the same way. */
+  flex: 0 0 auto;
+  height: 860px;
+  padding: 30px 30px 0;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 50% 0%, var(--nav-accent-soft, rgb(233 90 34 / 0.10)) 0%, transparent 62%),
+    var(--page-bg, #F8FAFC);
+  color: var(--text);
+}
+
+.eo-title {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 52px; line-height: 1.02; letter-spacing: -0.015em;
+  color: var(--text);
+}
+
+/* The perspective is on the stage, not the ring: put it on the element that is
+   itself rotating and the vanishing point rotates with it, which flattens the
+   whole thing a quarter turn in. */
+.eo-stage {
+  flex: 1 1 auto; position: relative;
+  display: grid; place-items: center;
+  /* Deeper than the fan's, because a closed ring is twice as long front to back
+     and a short perspective blows the near cards up past the frame. */
+  /* Deep. At 1700 the near card was magnified 1.46x and ran past the bottom of
+     the panel; this holds it to about 1.3x, which still reads as depth. */
+  perspective: 2200px;
+  /* Dead centre. Lifting the vanishing point above the middle pushes the whole
+     ring visibly down the panel and leaves the top third empty. */
+  perspective-origin: 50% 50%;
+  cursor: grab;
+  touch-action: none;   /* the drag is ours, not the browser's scroll */
+  outline: none;
+}
+.eo-stage.is-held { cursor: grabbing; }
+
+.eo-ring {
+  position: relative;
+  width: 300px; height: 190px;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.eo-card {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  padding: 0; border: 0; background: none;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  /* The far half of the ring is turned away from the viewer, and drawing it
+     means drawing the backs of those cards — which renders their photographs
+     and their names mirrored. Reversed type reads as a fault, not as depth, so
+     a card facing away is not drawn at all. `--away` still dims the ones
+     turning through the sides, so the ring keeps its falloff. */
+  backface-visibility: hidden;
+  opacity: calc(1 - var(--away, 0) * 0.72);
+  transition: opacity 180ms linear;
+  outline: none;
+}
+.eo-card__shot {
+  position: relative; display: block;
+  width: 300px; height: 168px;
+  border-radius: 10px; overflow: hidden;
+  background: #0d1117;
+  box-shadow: 0 22px 46px -20px rgb(11 18 32 / 0.5);
+  /* A hairline edge so a pale photograph does not dissolve into the page. */
+  border: 1px solid rgb(11 18 32 / 0.1);
+  transition: border-color 200ms ease, box-shadow 200ms ease, transform 260ms cubic-bezier(.2,.7,.3,1);
+}
+.eo-card__img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.eo-card:hover .eo-card__shot,
+.eo-card:focus-visible .eo-card__shot {
+  border-color: var(--nav-accent, #E95A22);
+  box-shadow: 0 30px 58px -18px rgb(11 18 32 / 0.6), 0 0 0 3px rgb(233 90 34 / 0.3);
+  transform: translateZ(26px) scale(1.04);
+}
+.eo-card__foot {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 9px 4px 0;
+}
+.eo-card__name {
+  font-size: 12.5px; font-weight: 700; letter-spacing: 0.01em;
+  color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.eo-card__n {
+  flex: 0 0 auto;
+  min-width: 18px; padding: 1px 6px; border-radius: 999px;
+  background: rgb(11 18 32 / 0.08);
+  font-size: 10.5px; font-weight: 700; color: var(--text-muted, #4B5563);
+}
+
+.eo-empty { flex: 1 1 auto; display: grid; place-content: center; gap: 10px; text-align: center; }
+.eo-hint { margin: 0; font-size: 13px; color: var(--text-muted, #4B5563); }
+
+@media (prefers-reduced-motion: reduce) {
+  /* No idle drift — the JS refuses to start its loop under the same query, so
+     the ring is a still arrangement that can still be dragged and clicked. */
+  .eo-card, .eo-card__shot { transition: none; }
+  .eo-card:hover .eo-card__shot, .eo-card:focus-visible .eo-card__shot { transform: none; }
+}
+
+
+/* ==========================================================================
    Sections must not be shorter than their slide
    ==========================================================================
    A slide in presentation mode is not 16:9 — it is the *screen's* shape. FitSlide
@@ -13659,7 +14123,16 @@ body.is-presenting .fit-slide__inner .tw-root,
 body.is-presenting .fit-slide__inner .ev-root,
 body.is-presenting .fit-slide__inner .vr-root,
 body.is-presenting .fit-slide__inner .cs-root,
-body.is-presenting .fit-slide__inner .pw-root {
+body.is-presenting .fit-slide__inner .pw-root,
+body.is-presenting .fit-slide__inner .sk-root,
+body.is-presenting .fit-slide__inner .tt-root,
+body.is-presenting .fit-slide__inner .cf-root,
+body.is-presenting .fit-slide__inner .ts-root,
+body.is-presenting .fit-slide__inner .pc-root,
+body.is-presenting .fit-slide__inner .tb-root,
+body.is-presenting .fit-slide__inner .pr-root,
+body.is-presenting .fit-slide__inner .eo-root,
+body.is-presenting .fit-slide__inner .aa-root {
   /* !important because the per-section rules use it, and !important beats
      specificity however deep this selector is. */
   height: var(--slide-h, 860px) !important;
@@ -13687,11 +14160,4900 @@ body.is-presenting .fit-slide__inner .vr-root,
 body.is-presenting .fit-slide__inner .ev-root,
 body.is-presenting .fit-slide__inner .pw-root,
 body.is-presenting .fit-slide__inner .sw-root,
-body.is-presenting .fit-slide__inner .pf-root {
+body.is-presenting .fit-slide__inner .pf-root,
+/* The accordion's captions sit at the foot of each panel, which is the second
+   kind of content the bar covers: a caption, not a full-bleed photograph that
+   carries its own scrim. */
+body.is-presenting .fit-slide__inner .aa-root {
   padding-bottom: var(--deck-bar-clear);
 }
+/* The ribbon takes the same clearance on its stage rather than on its root. Its
+   stage is absolutely positioned, and an absolutely positioned child resolves
+   against the padding box — which includes the padding — so padding on the root
+   would move nothing at all. See `.sk-stage`. */
 /* The head can give up some of its padding once the bar has taken a strip off
    the bottom — the deck between them is what has a card in it. */
 body.is-presenting .fit-slide__inner .sw-head {
   padding-top: 16px;
+}
+
+/* ==========================================================================
+   Executive Summary hero — presentation placement
+   Scoped to the right-aligned full-bleed hero, which is the only one in the
+   deck. Each rule is here rather than edited into the base so the original
+   treatment is one deletion away.
+   ========================================================================== */
+
+/* Controls to the top corner. They sat bottom-right, which is where the
+   paragraph now ends; the top is empty and clears the presenter bar outright. */
+.hero__vc .vc,
+body.is-presenting .hero__vc .vc {
+  top: 22px;
+  bottom: auto;
+}
+
+/* The copy sits on the floor of the frame rather than its middle, so the film
+   carries the upper two thirds and the words close the slide. */
+.slide--hero .hero--right {
+  justify-content: flex-end;
+}
+
+/* And the floor is above the presenter bar, not under it. Sitting on the hero's
+   own 44px padding, the last line of the paragraph ran straight through the
+   bar — measured at 739 x 39px of overlap on all three decks, which is the
+   second kind of collision the bar makes: a full-bleed photograph behind the
+   bar is the design and carries its own scrim, a sentence behind it is a
+   sentence nobody can read. The bar is 83 *real* pixels whatever the slide is
+   scaled to, which is why the clearance is the scaled figure and not a flat
+   one. */
+body.is-presenting .fit-slide__inner .slide--hero .hero--right {
+  padding-bottom: var(--deck-bar-clear);
+}
+
+/* A deeper panel on the reading side. The old ramp never dropped below 0.3, so
+   it greyed the whole picture to light the text; this one is heavier where the
+   words are and clears completely on the left, which keeps the film clean. */
+.hero--right .hero__scrim {
+  background: linear-gradient(270deg,
+    rgba(0, 0, 0, 0.96) 0%,
+    rgba(0, 0, 0, 0.92) 34%,
+    rgba(0, 0, 0, 0.74) 56%,
+    rgba(0, 0, 0, 0.38) 76%,
+    rgba(0, 0, 0, 0) 100%) !important;
+}
+
+/* A wider measure: the paragraph was turning at 48rem and running to seven
+   lines. */
+.hero--right .hero__content {
+  max-width: 64rem;
+}
+
+/* The paragraph carries its own 48rem cap, and the column shrinks to its widest
+   child — so widening the column alone did nothing. This is the rule that
+   actually lets the line run. */
+.hero--right .hero__subheading {
+  max-width: 64rem;
+}
+
+/* --------------------------------------------------------------------------
+   NCET palette — Executive Summary hero only
+   Orange, navy and white only. Green is reserved and used solely on request.
+   Navy is absent here by necessity, not by choice: it is the brand ground
+   colour and measures 1.19:1 on this dark hero — invisible. That leaves white
+   to carry the name and orange to carry the accent, which is how the site
+   itself sets white headings over navy with orange for anything active.
+   Scoped to .hero so the rest of the deck is untouched until we convert it.
+   -------------------------------------------------------------------------- */
+
+/* The name in white. 12.63:1 — the strongest reading on this backdrop. */
+.hero .text-brand-green {
+  color: #FFFFFF !important;
+}
+
+/* NCET Orange at full strength. 5.06:1, fine at 52px. A hero that sets
+   `--hero-accent` — measured off its own organization's mark — uses that
+   instead; the value here is the default the two decks written first depend
+   on, not a rule. */
+.hero .text-brand-gold,
+.hero .text-brand-green-line {
+  color: var(--hero-accent, #F6872A) !important;
+}
+
+/* At 21px the NCET brand sheet calls for the lighter orange: "#FFB070 — orange
+   text on navy grounds, where #F6872A loses contrast". 3.06:1 against 2.20:1.
+   A hero with its own accent keeps it at both sizes rather than taking NCET's
+   lightened one — Torii's #F05D29 measures 5.25:1 against its own black ground
+   and has nothing to fix. */
+.hero__subheading .text-brand-gold,
+.hero__subheading .text-brand-green {
+  color: var(--hero-accent, #FFB070) !important;
+}
+
+/* The rule under the year stays inside the orange family. */
+.hero .text-brand-green-line::after {
+  background: linear-gradient(90deg, #F6872A 0%, #FFB070 100%) !important;
+}
+
+/* ==========================================================================
+   Governance council — a 2x2 wall of faces
+   Each card is split: portrait on the left, name and role on the right, with
+   no overlap between them. Card grounds alternate on the diagonal so the grid
+   still reads as a checkerboard. Palette is orange, navy and white only.
+   ========================================================================== */
+
+/* The wall must be allowed to fill the slide. `.canvas-block > * { flex: 1 }`
+   gives its child flex-basis 0, which beats a declared height, so without this
+   the block collapses to its content and the slide letterboxes. The hero has
+   the same override for the same reason. */
+.slide--hero .canvas-block--council-grid {
+  height: 100% !important;
+  min-height: var(--slide-h, 860px) !important;
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  grid-row: 1 / -1 !important;
+}
+
+.council {
+  --council-navy: #0E2455;
+  --council-tint: #EAF0FF;
+  --council-orange: #F6872A;
+  /* One readable derivative of NCET Orange for anything that is *text* on a
+     light ground. Raw #F6872A measures 2.49:1 on white and 2.19:1 on the tint,
+     under the 3.0 a display line needs; this measures 3.86 and 3.38. */
+  --council-orange-ink: #D45F06;
+  height: var(--slide-h, 860px);
+  max-height: var(--slide-h, 860px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.council__head {
+  padding: 14px 30px 10px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.council__kicker {
+  margin: 0;
+  /* 19px, so the label clears 18.66px bold and is judged as large text at 3.0
+     rather than as body copy at 4.5. */
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--council-orange-ink);
+}
+
+.council__standfirst {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(14, 36, 85, 0.62);
+}
+
+.council__grid {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  /* No gap: the cards butt together, so the grid reads as one plane. */
+  gap: 0;
+  min-height: 0;
+}
+
+/* Portrait left, words right. No padding on the leading edge — the figure runs
+   to the card edge rather than floating with air around it. */
+.council-card {
+  --card-bg: #FFFFFF;
+  position: relative;
+  overflow: hidden;
+  background: var(--card-bg);
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  height: 100%;
+  min-height: 0;
+  animation: block-in 0.62s cubic-bezier(0.16, 1, 0.3, 1) both;
+  /* One after another, in reading order. */
+  animation-delay: calc(var(--intro-hold, 0s) + var(--i, 0) * 170ms);
+}
+
+/* The diagonal: cards 2 and 3 carry the tint. */
+.council-card:nth-child(2),
+.council-card:nth-child(3) {
+  --card-bg: var(--council-tint);
+}
+
+/* Every portrait is drawn into this one box, whatever it arrived as: `cover`
+   crops the overflow and the top anchor keeps the head in frame, because these
+   are portraits and a centred crop takes the forehead. */
+.council-card__photo {
+  flex: 0 0 auto;
+  width: 44%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0%;
+  display: block;
+  /* The portraits are shot on white, so they sit on the white card with no
+     seam; on the tinted card `multiply` drops the white away rather than
+     leaving a pale rectangle around the figure. */
+  mix-blend-mode: multiply;
+  animation: council-rise 0.72s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--intro-hold, 0s) + var(--i, 0) * 170ms + 120ms);
+}
+
+@keyframes council-rise {
+  from { opacity: 0; transform: translateY(30px) scale(1.02); }
+  to   { opacity: 1; transform: none; }
+}
+
+.council-card__photo--empty {
+  background: rgba(14, 36, 85, 0.06);
+  border: 1px dashed rgba(14, 36, 85, 0.25);
+  mix-blend-mode: normal;
+}
+
+.council-card__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px 30px 20px 34px;
+}
+
+/* The seat number — the thing that tells the eye which card to read next. */
+.council-card__index {
+  font-size: clamp(14px, 1.15vw, 19px);
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  color: var(--council-orange-ink);
+  animation: block-in 0.5s cubic-bezier(0.22, 0.68, 0, 1) both;
+  animation-delay: calc(var(--intro-hold, 0s) + var(--i, 0) * 170ms + 260ms);
+}
+
+.council-card__name {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 0.96;
+  font-weight: 900;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  font-size: clamp(20px, 2.9vw, 52px);
+  animation: block-in 0.55s cubic-bezier(0.22, 0.68, 0, 1) both;
+  animation-delay: calc(var(--intro-hold, 0s) + var(--i, 0) * 170ms + 200ms);
+}
+
+/* Two-tone, as in the supplied reference: the given name in the dark neutral,
+   the family name in the accent. Navy stands in for the reference's black —
+   white would be invisible on these light cards, which is why the reference
+   itself sets its first line dark. A one-line name stays navy rather than
+   coming out entirely in accent. */
+.council-card__name-line {
+  color: var(--council-navy);
+}
+
+.council-card__name-line:not(:first-child) {
+  color: var(--council-orange-ink);
+}
+
+/* The accent rule draws itself, as the rest of the deck does. */
+.council-card__rule {
+  width: 70px;
+  height: 4px;
+  border-radius: 99px;
+  background: var(--council-orange-ink);
+  transform-origin: left center;
+  animation: council-draw 0.5s cubic-bezier(0.22, 0.68, 0, 1) both;
+  animation-delay: calc(var(--intro-hold, 0s) + var(--i, 0) * 170ms + 340ms);
+}
+
+@keyframes council-draw {
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 1; }
+}
+
+.council-card__role {
+  font-size: clamp(15px, 1.7vw, 29px);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--council-navy);
+  line-height: 1.3;
+  animation: block-in 0.5s cubic-bezier(0.22, 0.68, 0, 1) both;
+  animation-delay: calc(var(--intro-hold, 0s) + var(--i, 0) * 170ms + 400ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .council-card,
+  .council-card__photo,
+  .council-card__rule,
+  .council-card__index,
+  .council-card__name,
+  .council-card__role {
+    animation: none;
+  }
+}
+
+/* ==========================================================================
+   Slide title card
+   A section with an `intro` opens on its title: the words fade up, hold, and
+   fade away, and only then does the page behind them arrive. Set the field on
+   any section and it gets this; leave it empty and the page arrives at once,
+   which is what every other section still does.
+   ========================================================================== */
+
+/* The whole card, start to finish. Every entrance animation on an intro slide
+   adds this to its own delay, so one number moves the entire sequence and the
+   page can never begin before the title has left. */
+.slide--intro {
+  --intro-hold: 3s;
+}
+
+/* Laid over the slide, not in it: an in-flow title card would add height and
+   could flip FitSlide out of filling the display. */
+.slide-intro {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  background: #FFFFFF;
+  pointer-events: none;
+  /* 0.9s up, held to 1.9s, gone by 2.5s. `both` so it is invisible from the
+     first painted frame rather than flashing at full opacity before the
+     animation takes hold. */
+  animation: slide-intro-card 3s cubic-bezier(0.22, 0.68, 0, 1) both;
+}
+
+.slide-intro__text {
+  /* A starting value only — fitToWidth measures the text and scales it so the
+     title fills the card whatever its length. */
+  font-size: 120px;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+  text-align: center;
+  text-transform: uppercase;
+  /* Black, on instruction: the title card is the one place the deck steps
+     outside orange, navy and white. */
+  color: #000000;
+  /* One line, so the fit can size to the full width instead of wrapping. */
+  white-space: nowrap;
+  padding: 0 4%;
+}
+
+
+/* The card itself only needs to be opaque, then not. Holding full opacity to
+   76% and clearing by the end is what lets the page behind it start moving
+   underneath while the card is still on its way out. */
+@keyframes slide-intro-card {
+  0%   { opacity: 1; }
+  76%  { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+}
+
+
+/* Reduced motion: the title card is the whole point of the slide's opening, so
+   it still appears and still clears — it simply does so without travel, and
+   quickly. */
+@media (prefers-reduced-motion: reduce) {
+  .slide--intro {
+    --intro-hold: 1.2s;
+  }
+
+  .slide-intro {
+    animation: slide-intro-card 1.2s linear both;
+  }
+
+  .slide-intro__text {
+    animation: none;
+  }
+}
+
+
+
+
+/* ==========================================================================
+   Roster — a roll of names as a bento wall
+   The card follows the supplied infographic: a coloured bar down the leading
+   edge, the seat number set large beside it, the mark opposite, then the
+   person — name in the bar's colour, position beneath in grey.
+   Palette is orange, navy and white only.
+   ========================================================================== */
+
+/* Allowed to fill the slide, the same override the hero and the council wall
+   carry: `.canvas-block > * { flex: 1 }` gives its child flex-basis 0, which
+   beats a declared height. */
+.slide--hero .canvas-block--roster {
+  height: 100% !important;
+  min-height: var(--slide-h, 860px) !important;
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  grid-row: 1 / -1 !important;
+}
+
+.roster {
+  --roster-navy: #0E2455;
+  --roster-tint: #EAF0FF;
+  --roster-orange: #F6872A;
+  --roster-orange-ink: #D45F06;
+  --roster-line: #E9EDF4;
+  --roster-chip: #F3F5F9;
+  height: var(--slide-h, 860px);
+  max-height: var(--slide-h, 860px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  /* The tiles are white, so the wall behind them is not. */
+  background: #F7F9FC;
+  padding: 16px 26px 18px;
+}
+
+.roster__head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--roster-line);
+}
+
+.roster__kicker {
+  margin: 0;
+  /* 19px, so the label clears 18.66px bold and is judged as large text at 3.0
+     rather than as body copy at 4.5. */
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--roster-orange-ink);
+}
+
+.roster__standfirst {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(14, 36, 85, 0.62);
+}
+
+/* One module, repeated. Equal columns and equal rows, so no card is a
+   different size from any other. */
+.roster__grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 16px;
+  align-content: stretch;
+}
+
+/* ------------------------------------------------------------------ card */
+.rcard {
+  --bar: var(--roster-orange-ink);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  /* The reference's card is not flat white but lifts very slightly to a cool
+     grey at its foot. */
+  background: #FFFFFF;
+  border-radius: 28px;
+  overflow: hidden;
+  /* Even padding now the bar has gone, and more of it: the crowding was the
+     bar pushing the copy into two thirds of the card. */
+  padding: 20px 24px 16px;
+  box-shadow: 0 1px 2px rgba(14, 36, 85, 0.03), 0 6px 18px rgba(14, 36, 85, 0.045);
+  transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Cinematic entrance: slow, eased, and one card at a time. `backwards`, not
+     `both` — a filled animation keeps applying its final transform after it
+     ends and an animation beats a hover rule in the cascade, which would stop
+     the card lifting on hover. */
+  animation: rcard-in 1s cubic-bezier(0.33, 1, 0.68, 1) backwards;
+  animation-delay: calc(var(--intro-hold, 0s) + var(--i, 0) * 145ms);
+}
+
+/* The reference gives every row its own hue. Three colours only here, so the
+   bar alternates down the reading order — enough to separate one card from the
+   next without inventing a fourth. */
+.rcard--navy {
+  --bar: var(--roster-navy);
+}
+
+/* Slow, soft and from below, with the focus pulling in — the card settles
+   rather than snapping into place. */
+@keyframes rcard-in {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.965);
+    filter: blur(7px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+.rcard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 2px 4px rgba(14, 36, 85, 0.05), 0 16px 34px rgba(14, 36, 85, 0.12);
+}
+
+.rcard__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 13px;
+}
+
+/* "No." over the numeral, as the reference sets "Option" over its number. */
+.rcard__index {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.rcard__indexLabel {
+  font-size: clamp(9px, 0.68vw, 12px);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(14, 36, 85, 0.38);
+  margin-bottom: 3px;
+}
+
+.rcard__indexNo {
+  font-size: clamp(22px, 2.1vw, 36px);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: rgba(14, 36, 85, 0.22);
+}
+
+/* The institution's mark, in a ring. The reference puts a line icon here; the
+   brief is the mark and nothing else. */
+.rcard__mark {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid #F1F4F9;
+  background: #FFFFFF;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+.rcard__mark img {
+  width: 78%;
+  height: 78%;
+  object-fit: contain;
+  display: block;
+}
+
+/* The person, picked out in the bar's colour — the reference's coloured lead-in
+   to a grey paragraph. */
+.rcard__name {
+  flex: 0 0 auto;
+  margin: 0;
+  /* 21, not 23: at 23 the longest name ("Dr. K N Balasubramanya Murthy")
+     broke to a third line in a 297px card and pushed the position text out of
+     the box. Two points buys the line back. */
+  font-size: clamp(15px, 1.22vw, 21px);
+  font-weight: 800;
+  line-height: 1.16;
+  letter-spacing: -0.01em;
+  color: var(--bar);
+}
+
+/* The person's own position, set quieter than the name: it is context, not
+   the entry itself. */
+.rcard__where {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  margin: 6px 0 0;
+  font-size: clamp(10px, 0.88vw, 15px);
+  font-weight: 500;
+  line-height: 1.38;
+  color: rgba(14, 36, 85, 0.55);
+}
+
+/* The seat is the whole footing — the hairline already says a new register
+   begins, so it needs no label beside it. */
+.rcard__foot {
+  flex: 0 0 auto;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #F1F4F9;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Outlined rather than solid, so the bar and the name carry the card's colour
+   and the footing does not compete with them. */
+.rcard__seat {
+  flex: 0 1 auto;
+  max-width: 100%;
+  white-space: nowrap;
+  font-size: clamp(9px, 0.7vw, 12px);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bar);
+  background: transparent;
+  border: 1px solid currentColor;
+  opacity: 0.78;
+  border-radius: 999px;
+  padding: 6px 12px;
+  text-align: center;
+  line-height: 1.15;
+}
+
+/* ------------------------------------------------------- the note tile */
+/* The one dark block in a white grid, closing the last row. */
+.rnote {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  min-height: 0;
+  border-radius: 26px;
+  padding: 22px 28px;
+  background: var(--roster-navy);
+  box-shadow: 0 1px 2px rgba(14, 36, 85, 0.04), 0 10px 30px rgba(14, 36, 85, 0.12);
+  animation: rcard-in 1s cubic-bezier(0.33, 1, 0.68, 1) backwards;
+  animation-delay: calc(var(--intro-hold, 0s) + var(--i, 0) * 145ms);
+}
+
+.rnote__text {
+  margin: 0;
+  font-size: clamp(13px, 1.12vw, 20px);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  color: #FFFFFF;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rcard,
+  .rnote {
+    animation: none;
+  }
+
+  .rcard {
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   Hub — a chooser of doors onto the pages beneath this one
+   The supplied design: a bracket of brand colour behind one corner, a 45°
+   chamfer cut from the opposite foot, a giant outlined numeral bled off the
+   side, a badge, and the label revealed letter by letter.
+   ========================================================================== */
+
+.slide--hero .canvas-block--hub {
+  height: 100% !important;
+  min-height: var(--slide-h, 860px) !important;
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  grid-row: 1 / -1 !important;
+}
+
+.hub {
+  --navy: #0E2455;
+  --navy-light: #15306A;
+  --navy-grad-end: #0C1F49;
+  --orange: #F6872A;
+  --orange-ink: #D45F06;
+  --card-a: #FFFFFF;
+  --card-b: #F2F4F7;
+  --r: 30px;
+  --r-accent: 46px;
+  --chamfer: 30px;
+  --band: 19px;
+  --hub-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  height: var(--slide-h, 860px);
+  max-height: var(--slide-h, 860px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #F3F5F9;
+  padding: 18px 30px 22px;
+}
+
+.hub__head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding-bottom: 10px;
+  margin-bottom: 6px;
+}
+
+.hub__kicker {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--orange-ink);
+}
+
+.hub__standfirst {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(14, 36, 85, 0.62);
+}
+
+/* The brackets sit outside their cards, so the grid needs room around each
+   cell for them to show. */
+.hub__grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 54px 62px;
+  padding: 26px 30px;
+  align-content: stretch;
+}
+
+/* ------------------------------------------------------------------ cell */
+/* The cell owns the shadow so it follows the chamfer rather than the box. */
+.hub-door {
+  position: relative;
+  min-height: 0;
+  cursor: pointer;
+  filter: drop-shadow(0 16px 24px rgba(14, 36, 85, 0.14));
+  transition: filter 0.55s var(--hub-ease);
+}
+
+.hub-door:hover,
+.hub-door:focus-visible {
+  filter: drop-shadow(0 26px 38px rgba(14, 36, 85, 0.22));
+  outline: none;
+}
+
+/* ------------------------------------------------------------- bracket */
+.hub-door__accent {
+  position: absolute;
+  width: 56%;
+  height: 62%;
+  background: linear-gradient(135deg, var(--navy-light), var(--navy-grad-end));
+  opacity: 0;
+  transition: opacity 0.75s var(--hub-ease), transform 0.75s var(--hub-ease),
+              top 0.45s var(--hub-ease), left 0.45s var(--hub-ease),
+              right 0.45s var(--hub-ease), bottom 0.45s var(--hub-ease);
+}
+
+.hub-door[data-corner="tl"] .hub-door__accent {
+  top: calc(var(--band) * -1); left: calc(var(--band) * -1);
+  border-radius: var(--r-accent) 0 0 0;
+  transform-origin: top left; transform: scale(0.7);
+}
+.hub-door[data-corner="tr"] .hub-door__accent {
+  top: calc(var(--band) * -1); right: calc(var(--band) * -1);
+  border-radius: 0 var(--r-accent) 0 0;
+  transform-origin: top right; transform: scale(0.7);
+}
+.hub-door[data-corner="bl"] .hub-door__accent {
+  bottom: calc(var(--band) * -1); left: calc(var(--band) * -1);
+  border-radius: 0 0 0 var(--r-accent);
+  transform-origin: bottom left; transform: scale(0.7);
+}
+.hub-door[data-corner="br"] .hub-door__accent {
+  bottom: calc(var(--band) * -1); right: calc(var(--band) * -1);
+  border-radius: 0 0 var(--r-accent) 0;
+  transform-origin: bottom right; transform: scale(0.7);
+}
+
+.hub-door[data-corner="tl"]:hover .hub-door__accent { top: -27px; left: -27px; }
+.hub-door[data-corner="tr"]:hover .hub-door__accent { top: -27px; right: -27px; }
+.hub-door[data-corner="bl"]:hover .hub-door__accent { bottom: -27px; left: -27px; }
+.hub-door[data-corner="br"]:hover .hub-door__accent { bottom: -27px; right: -27px; }
+
+/* ---------------------------------------------------------------- card */
+/* Three rounded corners and one 45-degree chamfer, cut with a mask so the
+   cell's drop-shadow follows the cut instead of the box. */
+.hub-door__card {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  min-height: 0;
+  padding: 30px 32px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: linear-gradient(150deg, var(--card-a) 42%, var(--card-b));
+  opacity: 0;
+  transform: translateY(30px) scale(0.975);
+  transition: transform 0.6s var(--hub-ease), opacity 0.6s var(--hub-ease);
+}
+
+.hub-door[data-chamfer="br"] .hub-door__card {
+  border-radius: var(--r) var(--r) 0 var(--r);
+  -webkit-mask-image: linear-gradient(315deg, transparent var(--chamfer), #000 0);
+          mask-image: linear-gradient(315deg, transparent var(--chamfer), #000 0);
+}
+.hub-door[data-chamfer="bl"] .hub-door__card {
+  border-radius: var(--r) var(--r) var(--r) 0;
+  -webkit-mask-image: linear-gradient(45deg, transparent var(--chamfer), #000 0);
+          mask-image: linear-gradient(45deg, transparent var(--chamfer), #000 0);
+}
+
+.hub-door:hover .hub-door__card { transform: translateY(-9px); }
+
+/* ------------------------------------------------------------- numeral */
+/* No webfont: the deck runs with no internet at presentation time, so the
+   reference's Anton falls back to whatever condensed face is on the machine. */
+.hub-door__numeral {
+  position: absolute;
+  top: 50%;
+  font-family: Anton, Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  font-size: clamp(150px, 17vw, 250px);
+  line-height: 0.78;
+  color: transparent;
+  -webkit-text-stroke: 1.4px rgba(14, 36, 85, 0.48);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 1.05s var(--hub-ease), -webkit-text-stroke-color 0.45s var(--hub-ease);
+}
+
+@supports not (-webkit-text-stroke: 1px #000) {
+  .hub-door__numeral { color: rgba(14, 36, 85, 0.13); }
+}
+
+.hub-door[data-side="left"] .hub-door__numeral { left: 14px; transform: translateY(-50%) skewX(-9deg); }
+.hub-door[data-side="right"] .hub-door__numeral { right: -6px; transform: translateY(-50%) skewX(-9deg); }
+.hub-door:hover .hub-door__numeral { -webkit-text-stroke-color: rgba(246, 135, 42, 0.75); }
+
+/* --------------------------------------------------------------- badge */
+/* The institution's mark, not a per-card line icon — the rule this deck keeps
+   on every other card. */
+.hub-door__badge {
+  position: absolute;
+  top: 24px;
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 7px rgba(255, 255, 255, 0.92), 0 10px 20px -8px rgba(14, 36, 85, 0.35);
+  z-index: 3;
+  opacity: 0;
+  transform: scale(0.4) rotate(-25deg);
+  transition: opacity 0.6s var(--hub-ease), transform 0.6s var(--hub-ease),
+              box-shadow 0.45s var(--hub-ease);
+}
+
+.hub-door__badge img { width: 76%; height: 76%; object-fit: contain; display: block; }
+.hub-door[data-icon="right"] .hub-door__badge { right: 28px; }
+.hub-door[data-icon="left"] .hub-door__badge { left: 28px; }
+
+.hub-door:hover .hub-door__badge {
+  transform: scale(1.09) rotate(-8deg);
+  box-shadow: 0 0 0 7px rgba(255, 255, 255, 0.92), 0 16px 28px -8px rgba(246, 135, 42, 0.75);
+}
+
+.hub-door__badge::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--orange);
+  opacity: 0;
+}
+
+.hub-door:hover .hub-door__badge::after { animation: hub-ring 1.5s var(--hub-ease) infinite; }
+
+@keyframes hub-ring {
+  0% { opacity: 0.5; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.75); }
+}
+
+/* --------------------------------------------------------------- label */
+.hub-door__content { position: relative; z-index: 2; width: 58%; text-align: right; }
+.hub-door[data-side="left"] .hub-door__content { margin-left: auto; }
+.hub-door[data-side="right"] .hub-door__content { margin-right: auto; }
+
+.hub-door__label {
+  margin: 0;
+  font-size: clamp(16px, 1.7vw, 26px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--navy);
+  line-height: 1.28;
+}
+
+.hub-door__bar {
+  display: block;
+  height: 2px; width: 0;
+  margin: 14px 0 0 auto;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--orange));
+  transition: width 0.5s var(--hub-ease);
+}
+
+.hub-door:hover .hub-door__bar { width: 82px; }
+
+/* ------------------------------------------------- per-letter reveal */
+.hub-door__jit { display: inline-block; }
+.hub-door__word { display: inline-block; white-space: nowrap; margin-right: 0.28em; }
+
+.hub-door__ltr {
+  display: inline-block;
+  transform: translateZ(0) scale(2);
+  opacity: 0;
+  filter: blur(20px);
+  /* The reset is instant, never reversed. */
+  transition-property: none;
+  transition-duration: 0ms;
+}
+
+/* ------------------------------------------------------------ arrival */
+/* Everything waits out the slide's title card, then the doors deal in. */
+.hub-door {
+  animation: hub-cell-in 0.01s linear both;
+  animation-delay: calc(var(--intro-hold, 0s) + var(--d, 0s));
+}
+
+@keyframes hub-cell-in { to { opacity: 1; } }
+
+.hub-door.is-in .hub-door__accent {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--d) + 0.08s);
+}
+
+.hub-door.is-in .hub-door__card {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.8s var(--hub-ease) var(--d), transform 0.8s var(--hub-ease) var(--d);
+}
+
+.hub-door.is-in .hub-door__numeral {
+  clip-path: inset(0 0 0 0);
+  transition-delay: calc(var(--d) + 0.16s), 0s;
+}
+
+.hub-door.is-in .hub-door__badge {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--d) + 0.3s), calc(var(--d) + 0.3s), 0s;
+}
+
+.hub-door.is-in .hub-door__ltr {
+  opacity: 1;
+  transform: translateZ(0) scale(1);
+  filter: blur(0px);
+  transition-property: opacity, transform, filter;
+  transition-duration: 900ms;
+  transition-timing-function: var(--hub-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hub-door,
+  .hub-door__accent,
+  .hub-door__card,
+  .hub-door__badge,
+  .hub-door__numeral,
+  .hub-door__ltr {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .hub-door__card,
+  .hub-door__accent,
+  .hub-door__badge { opacity: 1 !important; transform: none !important; }
+  .hub-door__numeral { clip-path: none !important; }
+  .hub-door__ltr { opacity: 1 !important; transform: none !important; filter: none !important; }
+}
+
+/* ==========================================================================
+   Stat wall — a bento of figures, each with a drawing of itself
+   The supplied reference's structure: a tinted panel carrying the drawing, the
+   figure's name beneath, a line of context under that. Drawn in the deck's own
+   orange, navy and white rather than the reference's blues.
+   ========================================================================== */
+
+.slide--hero .canvas-block--stat-wall {
+  height: 100% !important;
+  min-height: var(--slide-h, 860px) !important;
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  grid-row: 1 / -1 !important;
+}
+
+.statwall {
+  --navy: #0E2455;
+  --navy-soft: #1A3A5C;
+  --orange: #F6872A;
+  --orange-ink: #D45F06;
+  --tint: #EAF0FF;
+  --tint-2: #F3F6FD;
+  --line: #E9EDF4;
+  --sw-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  height: var(--slide-h, 860px);
+  max-height: var(--slide-h, 860px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #F7F9FC;
+  padding: 16px 26px 14px;
+}
+
+.statwall__head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.statwall__kicker {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--orange-ink);
+}
+
+.statwall__standfirst {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(14, 36, 85, 0.62);
+}
+
+/* Six columns, so the reference's 2-up row and 3-up row both divide exactly. */
+.statwall__grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 16px;
+  align-content: stretch;
+}
+
+.statwall__note {
+  flex: 0 0 auto;
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: clamp(12px, 1vw, 16px);
+  font-weight: 700;
+  color: var(--navy);
+}
+
+/* ------------------------------------------------------------------ tile */
+.stat-tile {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: #FFFFFF;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 14px 16px 16px;
+  box-shadow: 0 1px 2px rgba(14, 36, 85, 0.03), 0 6px 18px rgba(14, 36, 85, 0.045);
+  opacity: 0;
+  transform: translateY(22px) scale(0.98);
+  transition: transform 0.5s var(--sw-ease), box-shadow 0.4s var(--sw-ease);
+  animation: sw-in 0.85s var(--sw-ease) backwards;
+  animation-delay: calc(var(--intro-hold, 0s) + var(--i, 0) * 130ms);
+}
+
+@keyframes sw-in {
+  from { opacity: 0; transform: translateY(22px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+.stat-tile.is-in { opacity: 1; transform: none; }
+
+.stat-tile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 2px 4px rgba(14, 36, 85, 0.05), 0 14px 30px rgba(14, 36, 85, 0.12);
+}
+
+/* The tinted panel the drawing sits in — the reference's illustration well. */
+.stat-tile__panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  border-radius: 16px;
+  background: linear-gradient(160deg, var(--tint) 0%, var(--tint-2) 62%, #FFFFFF 100%);
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.stat-tile__title {
+  margin: 0;
+  font-size: clamp(14px, 1.2vw, 21px);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.18;
+  color: var(--navy);
+}
+
+.stat-tile__caption {
+  margin: 5px 0 0;
+  font-size: clamp(10px, 0.86vw, 14px);
+  font-weight: 500;
+  line-height: 1.35;
+  color: rgba(14, 36, 85, 0.55);
+}
+
+.stat-viz { width: 100%; height: 100%; display: grid; place-items: center; position: relative; }
+
+/* -------------------------------------------------------------- count */
+.stat-count { position: relative; z-index: 2; }
+
+.stat-count__no {
+  font-size: clamp(44px, 6vw, 108px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--navy);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Two rings that breathe, permanently — the loop the brief asks for. Slow and
+   low-contrast, so it reads as life in the tile rather than as a distraction
+   on a slide someone is talking over. */
+.stat-count__ring {
+  position: absolute;
+  width: 156px; height: 156px;
+  border-radius: 50%;
+  border: 2px solid rgba(246, 135, 42, 0.32);
+  animation: sw-breathe 4.2s ease-in-out infinite;
+}
+
+.stat-count__ring--2 {
+  width: 202px; height: 202px;
+  border-color: rgba(14, 36, 85, 0.14);
+  animation-delay: -2.1s;
+}
+
+@keyframes sw-breathe {
+  0%, 100% { transform: scale(0.94); opacity: 0.55; }
+  50% { transform: scale(1.06); opacity: 1; }
+}
+
+/* --------------------------------------------------------------- bars */
+.stat-viz--bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 26px;
+  width: 100%;
+  height: 100%;
+  padding: 6px 8% 0;
+}
+
+.stat-bar {
+  flex: 1 1 0;
+  max-width: 132px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  min-width: 0;
+}
+
+.stat-bar__no {
+  font-size: clamp(14px, 1.3vw, 24px);
+  font-weight: 800;
+  color: var(--navy);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-bar__track {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(14, 36, 85, 0.055);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Grows to its share once the tile arrives, then a slow sheen runs up it. */
+.stat-bar__fill {
+  width: 100%;
+  height: 0;
+  border-radius: 10px;
+  background: linear-gradient(180deg, var(--orange) 0%, var(--orange-ink) 100%);
+  transition: height 1.05s var(--sw-ease);
+  transition-delay: calc(var(--intro-hold, 0s) + var(--i, 0) * 130ms + var(--j, 0) * 110ms + 260ms);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-tile.is-in .stat-bar__fill { height: var(--h, 0%); }
+
+.stat-bar__fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.45) 50%, transparent 100%);
+  transform: translateY(100%);
+  animation: sw-sheen 3.6s ease-in-out infinite;
+  animation-delay: calc(var(--j, 0) * 0.5s);
+}
+
+@keyframes sw-sheen {
+  0% { transform: translateY(100%); }
+  55%, 100% { transform: translateY(-100%); }
+}
+
+.stat-bar__label {
+  font-size: clamp(9px, 0.72vw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(14, 36, 85, 0.5);
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* -------------------------------------------------------------- split */
+.stat-viz--split {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  padding: 0 6px;
+}
+
+.stat-split__rail {
+  display: flex;
+  width: 100%;
+  height: 30px;
+  border-radius: 99px;
+  overflow: hidden;
+  background: rgba(14, 36, 85, 0.055);
+}
+
+.stat-split__seg {
+  width: 0;
+  transition: width 1.05s var(--sw-ease);
+  transition-delay: calc(var(--intro-hold, 0s) + var(--i, 0) * 130ms + var(--j, 0) * 140ms + 260ms);
+}
+
+.stat-tile.is-in .stat-split__seg { width: var(--w, 0%); }
+
+.stat-split__seg--0 { background: linear-gradient(90deg, var(--navy), var(--navy-soft)); }
+.stat-split__seg--1 { background: linear-gradient(90deg, var(--orange), var(--orange-ink)); }
+
+.stat-split__keys { display: flex; gap: 16px; flex-wrap: wrap; }
+.stat-split__key { display: flex; align-items: center; gap: 8px; min-width: 0; }
+
+.stat-split__dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+  animation: sw-pip 3s ease-in-out infinite;
+  animation-delay: calc(var(--j, 0) * 0.6s);
+}
+
+.stat-split__key--0 .stat-split__dot { background: var(--navy); }
+.stat-split__key--1 .stat-split__dot { background: var(--orange); }
+
+@keyframes sw-pip {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.28); opacity: 1; }
+}
+
+.stat-split__line { display: flex; align-items: baseline; gap: 5px; }
+
+.stat-split__no {
+  font-size: clamp(15px, 1.35vw, 24px);
+  font-weight: 900;
+  color: var(--navy);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.stat-split__pct {
+  font-size: clamp(9px, 0.76vw, 13px);
+  font-weight: 700;
+  color: var(--orange-ink);
+}
+
+.stat-split__label {
+  display: block;
+  font-size: clamp(9px, 0.74vw, 12px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(14, 36, 85, 0.5);
+  line-height: 1.2;
+}
+
+/* -------------------------------------------------------------- ratio */
+.stat-viz--ratio {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.stat-ratio__value {
+  font-size: clamp(28px, 3.4vw, 58px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--navy);
+  line-height: 1;
+}
+
+.stat-ratio__field { display: flex; align-items: center; gap: 10px; }
+
+/* The one, against the field it teaches. */
+.stat-ratio__one {
+  width: 19px; height: 19px;
+  border-radius: 50%;
+  background: var(--orange);
+  flex: 0 0 auto;
+  animation: sw-pip 2.6s ease-in-out infinite;
+}
+
+.stat-ratio__dots {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 6px;
+  max-width: 190px;
+}
+
+.stat-ratio__dot {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: rgba(14, 36, 85, 0.28);
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 0.4s var(--sw-ease), transform 0.4s var(--sw-ease);
+  transition-delay: calc(var(--intro-hold, 0s) + var(--i, 0) * 130ms + var(--j, 0) * 45ms + 320ms);
+}
+
+.stat-tile.is-in .stat-ratio__dot { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .stat-tile,
+  .stat-count__ring,
+  .stat-bar__fill,
+  .stat-bar__fill::after,
+  .stat-split__seg,
+  .stat-split__dot,
+  .stat-ratio__one,
+  .stat-ratio__dot {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .stat-tile { opacity: 1 !important; transform: none !important; }
+  .stat-bar__fill { height: var(--h, 0%) !important; }
+  .stat-split__seg { width: var(--w, 0%) !important; }
+  .stat-ratio__dot { opacity: 1 !important; transform: none !important; }
+}
+
+/* ------------------------------------------------------------- donut */
+/* A ring rather than a divided rail: a rail states a proportion, a ring shows
+   it as an amount of a circle. The panel is wider than tall, so the ring takes
+   the left and the figures stand beside it. */
+.stat-viz--donut {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 2vw, 34px);
+  width: 100%;
+  padding: 0 6px;
+}
+
+.stat-donut {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(110px, 12vw, 178px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.stat-donut__svg { width: 100%; height: 100%; display: block; }
+
+.stat-donut__track {
+  stroke: rgba(14, 36, 85, 0.07);
+  stroke-width: 15;
+}
+
+/* Swept round from nothing by dash length, in reading order. */
+.stat-donut__seg {
+  stroke-width: 15;
+  stroke-linecap: butt;
+  transform: rotate(-90deg);
+  transform-origin: 60px 60px;
+  stroke-dasharray: 0 999;
+  stroke-dashoffset: var(--off, 0);
+  transition: stroke-dasharray 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(var(--intro-hold, 0s) + var(--i, 0) * 130ms + var(--j, 0) * 240ms + 300ms);
+}
+
+.stat-tile.is-in .stat-donut__seg { stroke-dasharray: var(--len) var(--gap); }
+
+.stat-donut__seg--0 { stroke: #0E2455; }
+.stat-donut__seg--1 { stroke: #F6872A; }
+
+/* The centre carries the whole the halves are shares of — the one number true
+   of both, privileging neither. */
+.stat-donut__hole {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  pointer-events: none;
+}
+
+.stat-donut__total {
+  font-size: clamp(20px, 2.1vw, 36px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #0E2455;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-donut__cap {
+  font-size: clamp(8px, 0.64vw, 11px);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(14, 36, 85, 0.42);
+}
+
+.stat-donut__keys {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.4vw, 20px);
+  min-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stat-donut__seg { transition: none !important; stroke-dasharray: var(--len) var(--gap) !important; }
+}
+
+/* ------------------------------------------------------------- rings */
+/* Concentric rings — one per item, each an arc of the same whole, so two
+   shares can be read against one another without following a single circle
+   past a join. Geometry is the supplied component's: 250 / 18 / 8. */
+.stat-viz--rings {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 2vw, 34px);
+  width: 100%;
+  padding: 0 6px;
+}
+
+.stat-rings {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(120px, 13.5vw, 196px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.stat-rings__svg { width: 100%; height: 100%; display: block; }
+
+.stat-rings__track {
+  stroke: rgba(14, 36, 85, 0.07);
+  stroke-width: 18;
+}
+
+/* Swept round from nothing, outer ring first. */
+.stat-rings__arc {
+  stroke-width: 18;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 125px 125px;
+  stroke-dasharray: 0 9999;
+  transition: stroke-dasharray 1.15s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(var(--intro-hold, 0s) + var(--i, 0) * 130ms + var(--j, 0) * 260ms + 300ms);
+}
+
+.stat-tile.is-in .stat-rings__arc { stroke-dasharray: var(--len) var(--gap); }
+
+.stat-rings__arc--0 { stroke: #0E2455; }
+.stat-rings__arc--1 { stroke: #F6872A; }
+
+@media (prefers-reduced-motion: reduce) {
+  .stat-rings__arc { transition: none !important; stroke-dasharray: var(--len) var(--gap) !important; }
+}
+
+/* --------------------------------------------------------------- pie */
+/* Hatched wedges rather than flat fills: the deck has two colours to spend,
+   and two solid wedges of navy and orange say there is a split without saying
+   which is which at the join. A ruled wedge against a barred one stays legible
+   where they meet. */
+.stat-viz--pie {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 2vw, 34px);
+  width: 100%;
+  padding: 0 6px;
+}
+
+.stat-pie {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(118px, 13vw, 190px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  /* A slow breath, the same loop the total's rings carry. */
+  animation: sw-breathe-soft 5.4s ease-in-out infinite;
+}
+
+@keyframes sw-breathe-soft {
+  0%, 100% { transform: scale(0.985); }
+  50% { transform: scale(1.015); }
+}
+
+.stat-pie__svg { width: 100%; height: 100%; display: block; overflow: visible; }
+
+/* Each wedge grows out of the centre in turn. transform-box is what makes the
+   origin resolve against the viewBox rather than the element's own bounds. */
+.stat-pie__slice,
+.stat-pie__edge {
+  transform-box: view-box;
+  transform-origin: 100px 100px;
+  opacity: 0;
+  transform: scale(0.25);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(var(--intro-hold, 0s) + var(--i, 0) * 130ms + var(--j, 0) * 220ms + 320ms);
+}
+
+.stat-tile.is-in .stat-pie__slice,
+.stat-tile.is-in .stat-pie__edge { opacity: 1; transform: none; }
+
+/* The legend swatch carries the same hatching as its wedge. */
+.stat-pie__swatch {
+  width: 16px; height: 16px;
+  border-radius: 4px;
+  flex: 0 0 auto;
+  border: 1.5px solid #0E2455;
+  background-repeat: repeat;
+}
+
+.stat-pie__swatch--0 {
+  border-color: #0E2455;
+  background-image: repeating-linear-gradient(45deg, #0E2455 0 1.6px, transparent 1.6px 6px);
+}
+
+.stat-pie__swatch--1 {
+  border-color: #F6872A;
+  background-image: repeating-linear-gradient(0deg, #F6872A 0 1.6px, transparent 1.6px 6px);
+}
+
+.stat-pie__key--0,
+.stat-pie__key--1 { display: flex; align-items: center; gap: 8px; min-width: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .stat-pie { animation: none !important; }
+  .stat-pie__slice,
+  .stat-pie__edge {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   Industry Alliances — the accordion of alliance photographs
+   ==========================================================================
+   Ported from the reactbits AccordionGallery stylesheet. The behaviour it
+   describes is unchanged; what moved is where the values come from.
+
+   The sketch hard-coded `#060010` for the scrim and `#ffffff` for the accent.
+   Both are org tokens here, so the same section reads black-and-orange for
+   Torii and green-and-gold for Technical Hub without a second stylesheet.
+
+   The caption sits on the dark end of a scrim, which is the one ground the
+   design rules allow the raw brand accent on: the gold that measures 1.7:1 on
+   white is well clear of 4.5:1 over this.
+   ========================================================================== */
+.aa-root {
+  --aa-gap: 12px;
+  --aa-radius: var(--radius-lg);
+  --aa-media: 320px;
+  --aa-grow: 4;
+  --aa-dur: 0.6s;
+  --aa-stagger: 0.06s;
+  /* power3.out. The sketch's default easing, as its cubic-bezier — the curve is
+     the character of the whole interaction, so it is worth carrying over
+     exactly rather than settling for `ease-out`. */
+  --aa-ease: cubic-bezier(0.215, 0.61, 0.355, 1);
+  /* The scrim's colour. Near-black with a little blue in it, so a photograph
+     darkens towards ink rather than towards a flat grey. */
+  --aa-shade: #0B0F14;
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  /* Definite, and taken from the slide rather than written flat. `.canvas-block
+     > *` sets `flex: 1`, whose `flex-basis: 0%` beats `height` on the main axis,
+     so without this the root grows to its content and FitSlide scales the whole
+     slide down to fit. 860 is the admin canvas; presenting publishes the real
+     figure, which is the screen's shape and not 16:9. */
+  height: 100%;
+  min-height: 860px;
+  max-height: 860px;
+  padding: 30px 40px 34px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+/* Deliberately tight. Every row the head takes comes straight off the cards,
+   which are the section — so it carries an eyebrow, a title and a rule, and
+   stops. */
+.aa-head { flex: 0 0 auto; text-align: center; padding-bottom: 2px; }
+
+/* No rule under the heading, and none anywhere else in this section. Asked for
+   directly: no accent underlines. The heading carries itself on type alone. */
+
+/* The heading arrives the way the card captions do — same easing, same duration,
+   a fade off a small offset — so the section reveals itself in one language
+   rather than two. It rises rather than sliding in from the left, which is what
+   a caption pinned to the left edge of a card does; on a centred heading the
+   same sideways move reads as a drift. */
+.aa-eyebrow,
+.aa-title,
+.aa-sub {
+  animation: aa-reveal calc(var(--aa-dur, 0.6s) * 0.8) var(--aa-ease) backwards;
+}
+.aa-eyebrow { animation-delay: 0.04s; }
+.aa-title   { animation-delay: 0.14s; }
+.aa-sub     { animation-delay: 0.30s; }
+
+@keyframes aa-reveal {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.aa-eyebrow {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  /* The readable derivative, not the raw accent: this line is on white. */
+  color: var(--accent-ink, var(--brand-accent));
+}
+
+.aa-title {
+  margin: 0;
+  font-family: var(--font-display, inherit);
+  font-size: clamp(30px, 3vw, 48px);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: 0.005em;
+  color: var(--text);
+}
+
+.aa-sub {
+  margin: 8px auto 0;
+  max-width: 88ch;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- the row
+   The perspective lives here, on the shared parent, so every panel turns about
+   the same vanishing point. Set on each panel instead, each one would get its
+   own and the row would read as a strip of unrelated cards. */
+.aa-row {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: row;
+  gap: var(--aa-gap);
+  min-height: 0;
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+}
+
+.aa-panel {
+  position: relative;
+  /* `flex-basis: 0` is what makes the grow weights read as shares of the row —
+     with `auto`, the image's own width would be in the sum and the open panel
+     would never measure the ratio it was solved for. */
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: var(--aa-radius);
+  cursor: pointer;
+  display: block;
+  text-decoration: none;
+  outline: none;
+  transform: rotateY(var(--aa-rot, 0deg));
+  transform-style: preserve-3d;
+  transform-origin: center center;
+  background: var(--aa-shade);
+  box-shadow: 0 14px 34px -20px rgba(0, 0, 0, 0.75);
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    flex-grow var(--aa-dur) var(--aa-ease),
+    transform var(--aa-dur) var(--aa-ease);
+}
+
+.aa-panel.is-open { flex-grow: var(--aa-grow); }
+
+.aa-panel:focus-visible {
+  box-shadow:
+    0 0 0 3px var(--brand-accent),
+    0 14px 34px -20px rgba(0, 0, 0, 0.75);
+}
+
+.aa-panel__frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+/* Wider than the panel on purpose — the overhang is what the parallax drifts
+   through. At the panel's own width the image's edge would walk into frame on
+   the first shift. */
+.aa-panel__media {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--aa-media);
+  height: 100%;
+  transform: translate(calc(-50% + var(--aa-shift, 0px)), -50%);
+  filter: grayscale(1);
+  transition:
+    transform var(--aa-dur) var(--aa-ease),
+    filter var(--aa-dur) var(--aa-ease);
+}
+
+.aa-panel.is-open .aa-panel__media { filter: grayscale(0); }
+.aa-row--colour .aa-panel__media { filter: none; }
+
+.aa-panel__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Legibility for the caption, always on. A scrim over a photograph is the one
+   place the no-gradients rule gives way — the alternative is a flat plate that
+   hides more of the picture than the text needs. */
+.aa-panel__scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(11, 15, 20, 0) 42%, rgba(11, 15, 20, 0.86) 100%);
+}
+
+/* The only thing separating a closed panel from the open one, and the only part
+   of the two that moves. */
+.aa-panel__dim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--aa-shade);
+  opacity: 0.42;
+  transition: opacity var(--aa-dur) var(--aa-ease);
+}
+
+.aa-panel.is-open .aa-panel__dim { opacity: 0; }
+
+/* ---------------------------------------------------------- collapsed labels
+   Set up the slat, so the row is never a line of anonymous grey bars from the
+   back of a room. It fades as the panel opens and the real caption takes over. */
+.aa-panel__slat {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%) rotate(180deg);
+  writing-mode: vertical-rl;
+  max-height: calc(100% - 44px);
+  overflow: hidden;
+  font-family: var(--font-display, inherit);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity calc(var(--aa-dur) * 0.5) var(--aa-ease);
+}
+
+.aa-panel.is-open .aa-panel__slat { opacity: 0; }
+
+/* ------------------------------------------------------------- open caption */
+.aa-panel__cap {
+  position: absolute;
+  left: 26px;
+  right: 26px;
+  bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.aa-panel__bar {
+  flex: 0 0 auto;
+  width: 4px;
+  align-self: stretch;
+  min-height: 34px;
+  border-radius: 4px;
+  /* Raw accent, on a dark ground — the one place the design rules allow it. */
+  background: var(--brand-accent);
+  opacity: 0;
+  transform: translateX(-14px);
+  transition:
+    opacity calc(var(--aa-dur) * 0.6) var(--aa-ease),
+    transform calc(var(--aa-dur) * 0.6) var(--aa-ease);
+}
+
+.aa-panel__lines {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  opacity: 0;
+  transform: translateX(-14px);
+  transition:
+    opacity calc(var(--aa-dur) * 0.6) var(--aa-ease),
+    transform calc(var(--aa-dur) * 0.6) var(--aa-ease);
+}
+
+/* The stagger. In the sketch this was GSAP's `stagger` on a two-element tween;
+   the bar leads and the text follows it in. */
+.aa-panel.is-open .aa-panel__bar,
+.aa-panel.is-open .aa-panel__lines {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.aa-panel.is-open .aa-panel__lines { transition-delay: var(--aa-stagger); }
+
+.aa-panel__kicker {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--brand-accent);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.aa-panel__text {
+  font-family: var(--font-display, inherit);
+  font-weight: 600;
+  font-size: clamp(20px, 1.9vw, 30px);
+  line-height: 1.12;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+}
+
+.aa-panel__note {
+  margin-top: 2px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.86);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+  /* Two lines, then clipped. The caption sits over someone's photograph and a
+     third line starts covering the thing it is describing. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* The lead panel carries the section's own title, so it is set a size up. */
+.aa-panel--lead .aa-panel__text { font-size: clamp(26px, 2.5vw, 40px); }
+
+/* ----------------------------------------------------------------- entrance
+   Reading order, left to right, the way the rest of the deck arrives. */
+.aa-panel {
+  animation: aa-arrive 0.5s var(--aa-ease) backwards;
+  animation-delay: calc(var(--aa-i, 0) * 0.07s);
+}
+
+@keyframes aa-arrive {
+  from { opacity: 0; transform: translateY(18px) rotateY(var(--aa-rot, 0deg)); }
+  to   { opacity: 1; transform: translateY(0) rotateY(var(--aa-rot, 0deg)); }
+}
+
+/* ------------------------------------------------------------------- narrow
+   Under 520px the row becomes a column and the 3D goes: a rotated slat 60px
+   wide has nothing left to show. */
+@media (max-width: 520px) {
+  .aa-root { height: auto; min-height: 0; max-height: none; padding: 20px; }
+  .aa-row { flex-direction: column; perspective: none; }
+  .aa-panel { min-height: 92px; transform: none !important; }
+  .aa-panel__media { width: 100%; }
+  .aa-panel__slat {
+    writing-mode: horizontal-tb;
+    transform: none;
+    left: 26px;
+    bottom: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aa-panel,
+  .aa-panel__media,
+  .aa-panel__dim,
+  .aa-panel__slat,
+  .aa-panel__bar,
+  .aa-panel__lines {
+    transition: none !important;
+    animation: none !important;
+  }
+  /* The tilt is motion too — with the transition gone it would still be a
+     permanently skewed row. */
+  .aa-panel { transform: none !important; }
+}
+
+/* ==========================================================================
+   Industry Alliances — the intro card, the plates and the controls
+   ==========================================================================
+   Added after the row stopped being a wall of photographs. Three things the
+   original port did not have to carry:
+
+     - a card with no picture on it at all, which is where the row rests;
+     - a plate for an agreement whose photograph has not arrived yet;
+     - a black plate under the institute's name, because a gradient alone stops
+       working the moment a photograph is bright at the bottom.
+   ========================================================================== */
+
+/* -------------------------------------------------------------- the intro card
+   No photograph, no scrim to fight: the brand's own ink, and type on it. */
+.aa-panel--intro .aa-panel__frame {
+  background: var(--aa-shade);
+}
+
+/* The accent, held well back. It gives the card a centre of gravity without
+   becoming a gradient in its own right — the design rule bans those as
+   decoration, and at 0.10 this reads as a lit corner rather than a wash. */
+.aa-panel--intro .aa-panel__frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    78% 62% at 14% 8%,
+    color-mix(in srgb, var(--brand-accent) 10%, transparent) 0%,
+    transparent 64%
+  );
+}
+
+/* The intro card is never dimmed to a photograph's depth — it has no photograph
+   to hide, and at 0.42 its own type went with it. */
+.aa-panel--intro .aa-panel__dim { opacity: 0.24; }
+.aa-panel--intro.is-open .aa-panel__dim { opacity: 0; }
+.aa-panel--intro .aa-panel__scrim { display: none; }
+
+.aa-intro {
+  position: absolute;
+  left: 46px;
+  right: 46px;
+  bottom: 0;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  pointer-events: none;
+  /* Clipped to the panel, so the words are not legible down the side of a slat
+     that is 140px wide. */
+  overflow: hidden;
+}
+
+/* Every line starts down and out, and is brought up by `.is-open`. Written on
+   the shared selector so a line added later inherits the behaviour. */
+.aa-intro > * {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity calc(var(--aa-dur) * 0.8) var(--aa-ease),
+    transform calc(var(--aa-dur) * 0.8) var(--aa-ease);
+}
+
+/* Reading order, one line after another. These are the delays that make it read
+   as typing itself in rather than appearing all at once — and because they hang
+   off `.is-open`, the whole thing replays every time the pointer leaves the row
+   and the card comes home. */
+.aa-panel--intro.is-open .aa-intro > * { opacity: 1; transform: translateY(0); }
+.aa-panel--intro.is-open .aa-intro__kicker { transition-delay: 0.04s; }
+.aa-panel--intro.is-open .aa-intro__head   { transition-delay: 0.14s; }
+.aa-panel--intro.is-open .aa-intro__body   { transition-delay: 0.36s; }
+
+.aa-intro__kicker {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  /* Raw accent on a dark ground — the one place the design rules allow it. */
+  color: var(--brand-accent);
+}
+
+.aa-intro__head {
+  margin-top: 12px;
+  font-family: var(--font-display, inherit);
+  font-weight: 600;
+  font-size: clamp(30px, 3.1vw, 52px);
+  line-height: 1.06;
+  letter-spacing: 0.005em;
+  color: #ffffff;
+  text-wrap: balance;
+}
+
+
+
+.aa-intro__body {
+  max-width: 30ch;
+  font-size: clamp(15px, 1.15vw, 18px);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+/* ------------------------------------------------------- a plate, not a photo
+   What an agreement wears until its photograph is supplied. */
+.aa-panel__plate {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--aa-tint, var(--aa-shade));
+}
+
+/* Only on the open card. On a 140px slat a 72px monogram is two clipped
+   letter-halves, and seven of them across the row read as one smeared word
+   rather than as seven marks. */
+.aa-panel__mono {
+  opacity: 0;
+  transition: opacity calc(var(--aa-dur) * 0.5) var(--aa-ease);
+  font-family: var(--font-display, inherit);
+  font-weight: 600;
+  font-size: clamp(36px, 4.4vw, 72px);
+  letter-spacing: 0.04em;
+  /* On the partner's own colour, which can be anything from Snowflake's pale
+     blue to o9's near-black, so the mark is set in the ground's own tone at low
+     alpha rather than in a fixed white that would vanish on half of them. */
+  color: rgba(255, 255, 255, 0.26);
+  mix-blend-mode: overlay;
+}
+
+/* A plate has no photograph to grey out, so the desaturation would only mute
+   the partner's colour for no reason. */
+.aa-panel__plate { filter: none; }
+
+.aa-panel.is-open .aa-panel__mono { opacity: 1; }
+
+/* ------------------------------------------------- the black plate, on the photo
+   "A small black overlay, and on it the institute and the MOU." A gradient
+   cannot do this job on its own: three of these photographs are bright right
+   down to the bottom edge. */
+.aa-panel__cap {
+  padding: 16px 20px 18px;
+  border-radius: 14px;
+  background: rgba(6, 9, 12, 0.74);
+  /* A cheap frost where it is supported; where it is not, the flat 74% still
+     carries the text on its own. */
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  backdrop-filter: blur(10px) saturate(120%);
+  box-shadow: 0 16px 40px -24px rgba(0, 0, 0, 0.9);
+  /* The plate arrives with the text rather than sitting there empty while the
+     panel is still opening. */
+  opacity: 0;
+  transition: opacity calc(var(--aa-dur) * 0.6) var(--aa-ease);
+}
+
+.aa-panel.is-open .aa-panel__cap { opacity: 1; transition-delay: calc(var(--aa-dur) * 0.25); }
+
+/* With a plate behind it, the shadows the text used to need are noise. */
+.aa-panel__text,
+.aa-panel__note { text-shadow: none; }
+
+/* ------------------------------------------------------------- the controls
+   A pill in the row's top-right corner. Inside the row on purpose: reaching for
+   it must not read as leaving the cards. */
+.aa-nav {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+  border-radius: 999px;
+  background: rgba(6, 9, 12, 0.62);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 28px -18px rgba(0, 0, 0, 0.9);
+}
+
+.aa-nav__btn {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.86);
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.aa-nav__btn:hover,
+.aa-nav__btn:focus-visible {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  outline: none;
+}
+
+.aa-nav__btn .ic { width: 17px; height: 17px; }
+
+.aa-nav__count {
+  min-width: 46px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+/* The row needs to be the positioning context for the pill, and it is also what
+   the pointer leaves to send the card home. */
+.aa-row { position: relative; }
+
+@media (max-width: 520px) {
+  .aa-intro { left: 22px; right: 22px; }
+  .aa-nav { top: 10px; right: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aa-eyebrow,
+  .aa-title,
+  .aa-sub,
+  .aa-intro > *,
+  .aa-panel__cap {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   The organization switcher
+   ==========================================================================
+   Three decks share the pane. One tab per organization sits between the brand
+   head and the section tree, the current one filled in its own brand ink.
+
+   A filled active state, deliberately, where the section rows below are colour
+   rather than fill: those are places in one deck and this is a switch between
+   decks. The two must not look like the same kind of thing, or the pane reads
+   as one long list with the top three oddly highlighted. There is no bar under
+   the active tab — it is the fill that says which is current.
+   ========================================================================== */
+.sidenav__orgs {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 4px;
+  margin: 0 14px 4px;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--nav-sunken);
+}
+
+.sidenav__org {
+  height: 34px;
+  min-width: 0;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--nav-ink-soft);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease;
+}
+
+.sidenav__org:hover {
+  color: var(--nav-ink);
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.sidenav__org:focus-visible {
+  outline: 2px solid var(--nav-accent-ink, var(--accent-ink));
+  outline-offset: 1px;
+}
+
+/* The ink, not the raw accent: this fill carries white text, and `inkFor`
+   already steps every brand colour to where white reads on it. */
+.sidenav__org.is-active {
+  background: var(--nav-accent-ink, var(--accent-ink));
+  color: #ffffff;
+  cursor: default;
+}
+
+/* Collapsed: a column of short names on the dark rail. The initial alone was
+   not enough — NGI and NCET share one. */
+.sidenav--rail .sidenav__orgs {
+  grid-auto-flow: row;
+  gap: 3px;
+  margin: 0 8px 6px;
+  padding: 3px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.sidenav--rail .sidenav__org {
+  height: 26px;
+  padding: 0 4px;
+  border-radius: 7px;
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.sidenav--rail .sidenav__org:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Gold on green, orange on black — the same pairing the selected glyph uses. */
+.sidenav--rail .sidenav__org.is-active {
+  background: var(--nav-rail-active, var(--nav-second, var(--brand-accent)));
+  color: #14161a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidenav__org { transition: none; }
+}
+
+/* ==========================================================================
+   Student Achievements — the backdrop, and a headline that follows the card
+   ==========================================================================
+   An achievement's other photographs fill the wall behind its card while that
+   card is centred. The set crossfades as the collection is stepped through, and
+   an achievement holding a single photograph has no set — the wall keeps its own
+   gradient, which is the designed state rather than a fallback.
+
+   Absolutely positioned on purpose: `.sw-root` is a three-row grid (head, deck,
+   nav) and a fourth child in flow would add a fourth row. Out of flow it covers
+   the whole wall and adds nothing to the layout. It also has to beat
+   `.sw-root > * { position: relative; z-index: 1 }`, which is why position and
+   z-index are both restated here.
+   ========================================================================== */
+.sw-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.sw-bg__set {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  opacity: 0;
+  transition: opacity 680ms cubic-bezier(.2,.7,.3,1);
+}
+
+.sw-bg__set.is-on { opacity: 1; }
+
+/* Equal columns, each filling its own full height. Two photographs make two
+   halves, six make six strips — the set fills the wall whatever it holds. */
+.sw-bg__set img {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  object-fit: cover;
+  /* Blurred and pushed past the edges: scaled up so the blur has material to
+     work with at the seams instead of fading into the background. The cards are
+     white and sit on top of this, so it has to read as light and texture, not as
+     a second picture competing with the one on the card. */
+  filter: blur(16px) saturate(1.18);
+  transform: scale(1.14);
+}
+
+/* The veil belongs to the set, not to the layer. On the layer it would wash the
+   wall's own gradient out on every achievement that has no backdrop. */
+.sw-bg__set::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.80) 0%, rgb(255 255 255 / 0.62) 45%, rgb(244 247 249 / 0.78) 100%);
+}
+
+/* ------------------------------------------------------- the current name
+   Dealt, the headline is the achievement's own name rather than the section's.
+   These names are sentences — "ECE students secured Runner Up Position in the
+   Inter Departmental Throw ball Competition" — so they are set well down from
+   the 70px poster line and allowed to wrap, which the poster line never has to.
+   `text-wrap: balance` keeps two lines even rather than leaving one word alone
+   on the second. */
+.sw-title.is-now { display: block; }
+
+.sw-title__now {
+  display: block;
+  max-width: 26ch;
+  margin: 0 auto;
+  font-family: var(--display);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: clamp(20px, 2.2vw, 34px);
+  line-height: 1.12;
+  letter-spacing: 0.005em;
+  text-wrap: balance;
+  color: var(--sw-green);
+  animation: sw-in 620ms cubic-bezier(.2,.7,.3,1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sw-bg__set { transition: none; }
+  .sw-bg__set img { filter: blur(16px); transform: scale(1.14); }
+  .sw-title__now { animation: none; }
+}
+
+/* ==========================================================================
+   The team — a skewed ribbon of cards  (SkewCarousel.js)
+   ==========================================================================
+   A row of leaning slabs on a red wall, with the centred person's name set
+   across the wall behind them. The slab leans; the photograph inside it is
+   counter-skewed so the face does not. The ribbon shears into a diagonal only
+   while it is moving — `--sk-shear` and `--sk-heat` are written by the
+   component, off the speed, and are both zero at rest.
+   ========================================================================== */
+.sk-root {
+  --sk-red: #D91823;
+  --sk-deep: #2b0206;
+  --sk-mid: #6a0710;
+  --sk-glow: rgba(217, 24, 35, 0.5);
+  --sk-veil: rgba(217, 24, 35, 0.16);
+  --sk-card-w: 300px;
+  --sk-card-h: 404px;
+  --sk-shear: 0deg;
+  --sk-heat: 0;
+  /* The ribbon's own lean, which is there whether or not anything is moving. */
+  --sk-tilt: -3.2deg;
+  /* The slab's lean, and the counter that stands the photograph back up. */
+  --sk-skew: -8deg;
+  /* Where the row begins. Proportional, not fixed: a slide in presentation mode
+     is the screen's shape, so an offset that leaves air under the head on one
+     display puts the cards through it on the next. The name behind them is hung
+     off the same figure, which is what keeps the two overlapping by the same
+     amount whether or not the deck bar has taken a strip off the bottom. */
+  --sk-stage-top: clamp(200px, 28%, 290px);
+
+  position: relative;
+  /* A definite height, not a minimum: `.canvas-block > *` sets `flex: 1`, whose
+     `flex-basis: 0%` beats `height` on the main axis, so a root with only a
+     minimum grows to its content and FitSlide scales the slide down to fit.
+     Same arrangement as `.pw-root` and `.ev-root`, and for the same reason. */
+  flex: 0 0 auto;
+  height: 860px;
+  max-height: 860px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  /* Near-black with the red in it rather than under it, so the vignette falls
+     off to something that is still part of the same colour. */
+  background: var(--sk-deep);
+  color: #fff;
+  isolation: isolate;
+}
+
+/* The ground. Kept on its own element so the heat can be turned up while the
+   ribbon moves without touching anything the content is painted on. */
+.sk-wash {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    /* the lit centre, behind the card that is being shown */
+    radial-gradient(58% 52% at 50% 62%, var(--sk-glow) 0%, rgba(0, 0, 0, 0) 72%),
+    /* a second, wider one that warms the whole wall */
+    radial-gradient(90% 70% at 50% 18%, var(--sk-veil) 0%, rgba(0, 0, 0, 0) 76%),
+    linear-gradient(168deg, var(--sk-mid) 0%, var(--sk-deep) 58%, #120103 100%);
+  /* Brighter the faster it is going. `--sk-heat` runs 0 to 1 and is written on
+     the root every frame the ribbon is in motion. */
+  filter: saturate(calc(1 + var(--sk-heat) * 0.5)) brightness(calc(1 + var(--sk-heat) * 0.16));
+  transition: filter 220ms linear;
+}
+/* The vignette, which belongs over the washes rather than in them: mixed into
+   the same layer it would darken the lit centre by the same amount. */
+.sk-wash::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 96% at 50% 46%, rgba(0, 0, 0, 0) 42%, rgba(0, 0, 0, 0.72) 100%);
+}
+
+/* --------------------------------------------------------------- the head */
+.sk-head {
+  position: absolute;
+  z-index: 3;
+  top: 42px;
+  left: 54px;
+  right: 54px;
+  pointer-events: none;
+}
+.sk-eyebrow {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+.sk-title {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 1.04;
+  letter-spacing: 0.004em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.sk-lead {
+  margin: 10px 0 0;
+  max-width: 46ch;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+/* ------------------------------------------------------- the name behind it */
+/* Big enough to be the wall rather than a caption on it, and sized to the wall
+   by `fitToWidth` so a long name and a short one land at the same optical
+   size. It sits above the cards and runs a little way behind them, which is
+   what makes it read as being *behind* rather than above. */
+.sk-ghost {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  /* Just above where the cards start, so the foot of the word runs behind them.
+     That overlap is the whole point of it: clear of the row it would read as a
+     second headline rather than as the wall the row is standing against. */
+  top: calc(var(--sk-stage-top) - 30px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  text-align: center;
+}
+.sk-ghost__word {
+  display: block;
+  font-family: var(--display);
+  font-weight: 700;
+  line-height: 0.86;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  /* Light enough to stay behind the faces, strong enough to read from the back
+     of a room. The stroke is what keeps it legible where a card crosses it:
+     a flat fill alone disappears into the plate's own red. */
+  color: rgba(255, 255, 255, 0.14);
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.16);
+}
+/* The reveal gives every word a trailing 0.28em so words never touch. On a
+   centred single line that margin is width the glyphs do not have, and it pulls
+   the name a third of a letter to the left of the slide it is centred on.
+   `!important` because the margin is written as an inline style. */
+.sk-ghost__word > span > span:last-child { margin-right: 0 !important; }
+
+/* ------------------------------------------------------------- the ribbon */
+.sk-stage {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  top: var(--sk-stage-top);
+  /* The deck bar floats over the slide, and what is under it here is a card's
+     own name and the two arrows — content covered up, not a full-bleed
+     photograph carrying its own scrim. Padding on the root cannot do this: the
+     stage is positioned, and an absolutely positioned child resolves against the
+     padding box, which *includes* the padding. Unset — not presenting — it is
+     0 and the row takes the whole height. */
+  bottom: var(--deck-bar-clear, 0px);
+  overflow: hidden;
+  perspective: 1500px;
+  perspective-origin: 50% 44%;
+  outline: none;
+  /* The ribbon is dragged, so the browser's own drag-to-select is in the way. */
+  user-select: none;
+  cursor: grab;
+  touch-action: pan-y;
+}
+.sk-stage.is-dragging { cursor: grabbing; }
+
+.sk-track {
+  position: absolute;
+  left: 50%;
+  /* The card centre, on the stage's own middle rather than at a measured offset
+     down from its top — the stage is whatever height the display leaves, and
+     the component sizes the cards to fit inside it. */
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  /* The constant lean, and the shear that only exists while it is moving. A
+     skew is a 2D transform and does not flatten the 3D scene inside it. */
+  transform: rotate(var(--sk-tilt)) skewY(var(--sk-shear));
+  transition: transform 140ms linear;
+}
+
+.sk-card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--sk-card-w);
+  height: var(--sk-card-h);
+  margin-left: calc(var(--sk-card-w) / -2);
+  margin-top: calc(var(--sk-card-h) / -2);
+  /* Every card's transform is written by the component each frame — the turn,
+     the sink, the depth and the scale are all one function of how far it is
+     from the centre — so there is nothing to interpolate here. */
+  transform-style: preserve-3d;
+  will-change: transform;
+  cursor: pointer;
+  /* The arrival: the ribbon glides in from the right while the cards fade up in
+     reading order. Opacity only, because the transform belongs to the ribbon. */
+  animation: sk-arrive 560ms cubic-bezier(0.22, 0.7, 0.28, 1) both;
+  animation-delay: calc(var(--sk-i, 0) * 42ms + var(--intro-hold, 0s));
+}
+@keyframes sk-arrive {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* The slab. This is the part that leans. */
+.sk-card__slab {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  border-radius: 20px;
+  transform: skewX(var(--sk-skew));
+  box-shadow:
+    0 42px 70px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  transition: box-shadow 240ms ease;
+}
+.sk-card.is-now .sk-card__slab {
+  box-shadow:
+    0 52px 92px rgba(0, 0, 0, 0.62),
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+}
+
+/* Lit at the top and deep at the bottom, which is the whole reason the plate is
+   a gradient and not a fill: everybody in these photographs wears the same red
+   polo, and against a flat red the shirt disappears into the ground. The head
+   sits in the light and the shirt sits in the dark. */
+.sk-card__plate {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(178deg,
+      color-mix(in srgb, var(--sk-red) 88%, #fff) 0%,
+      var(--sk-red) 26%,
+      var(--sk-mid) 62%,
+      #1a0205 100%);
+}
+/* A soft sheen down the lit edge, so the slab reads as a surface rather than a
+   printed rectangle. */
+.sk-card__plate::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(104deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 42%);
+}
+
+/* The figure. Counter-skewed, so the slab leans and the person does not. */
+.sk-card__shot {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform: skewX(calc(var(--sk-skew) * -1));
+}
+.sk-card__shot img {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  /* The stylesheet caps every image at the width of its box. That cap is right
+     nearly everywhere and wrong here: the figure is deliberately wider than the
+     card, and capped it was drawn 300px wide in a 416px-tall box — a 28%
+     horizontal squeeze on two dozen faces. */
+  max-width: none;
+  /* Taller than the card and bottom-aligned: the source is a square with the
+     figure standing in the middle of it, so at the card's own width the person
+     would sit in the upper half with a third of the plate empty under them. */
+  height: 103%;
+  width: auto;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.4));
+}
+
+/* The name on the card. Counter-skewed like the figure, and padded wide enough
+   that the slab's own slant cannot cut into it. */
+.sk-card__foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: block;
+  padding: 44px 40px 20px;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(10, 1, 2, 0) 0%, rgba(10, 1, 2, 0.78) 62%, rgba(10, 1, 2, 0.92) 100%);
+}
+.sk-card__name,
+.sk-card__role {
+  display: block;
+  transform: skewX(calc(var(--sk-skew) * -1));
+}
+.sk-card__name {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 21px;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.sk-card__role {
+  margin-top: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+/* The dim on everything but the centre card. A real element rather than an
+   `opacity` on the card, because the card carries the arrival animation and the
+   two would fight over the same property. */
+.sk-card__dim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(6, 0, 1, 0.55) 0%, rgba(6, 0, 1, 0.8) 100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------- the controls */
+.sk-nav {
+  position: absolute;
+  z-index: 4;
+  right: 40px;
+  bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 6px;
+  border-radius: 999px;
+  background: rgba(12, 2, 4, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(8px);
+}
+.sk-nav__btn {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  transition: background 180ms ease;
+}
+.sk-nav__btn:hover { background: rgba(255, 255, 255, 0.14); }
+.sk-nav__btn .ic { width: 19px; height: 19px; }
+.sk-nav__count {
+  min-width: 56px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-card { animation: none; }
+  .sk-track { transition: none; }
+  .sk-wash { transition: none; }
+}
+
+/* ==========================================================================
+   Campus Infrastructure — the tilted wall  (TiltedTiles.js)
+   ==========================================================================
+   Two states in one slide. The wall is columns of photographs leaning across
+   the frame, adjacent columns drifting in opposite directions, with the
+   section's name and one button held still in the middle. The button swaps in
+   the filtered gallery, which is `PlacementWall` — not a second implementation
+   of anything.
+   ========================================================================== */
+.tt-root {
+  --tt-ink: #0A0E13;
+  --tt-tilt: -14deg;
+  --tt-cover: 1.55;
+  --tt-col-w: 300px;
+  --tt-gap: 22px;
+
+  position: relative;
+  /* A definite height, not a minimum: `.canvas-block > *` sets `flex: 1`, whose
+     `flex-basis: 0%` beats `height` on the main axis, so a root with only a
+     minimum grows to its content and FitSlide scales the slide down to fit.
+     Same arrangement as `.pw-root` and `.ev-root`. */
+  flex: 0 0 auto;
+  height: 860px;
+  max-height: 860px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--tt-ink);
+  color: #fff;
+  isolation: isolate;
+}
+
+/* ------------------------------------------------------------------ the wall */
+/* Inset well past the frame, because a rotated box has to be bigger than the
+   box it is rotated inside or its corners walk into view. */
+.tt-wall {
+  position: absolute;
+  inset: -36%;
+  z-index: 0;
+  display: flex;
+  justify-content: center;
+  gap: var(--tt-gap);
+  transform: rotate(var(--tt-tilt)) scale(var(--tt-cover));
+  transform-origin: 50% 50%;
+}
+
+.tt-col {
+  flex: 0 0 auto;
+  width: var(--tt-col-w);
+  height: 100%;
+  /* The run is drawn twice and wrapped on its own height; the column is the
+     window that wrap is invisible through. */
+  overflow: hidden;
+}
+.tt-col__track {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tt-gap);
+  will-change: transform;
+}
+
+.tt-tile {
+  margin: 0;
+  flex: 0 0 auto;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+}
+/* The tile's height is its own ratio times the column width — written on the
+   element by the component — so the photograph fills it exactly and `cover`
+   never has anything to crop. These files are small, 284 to 1920px wide, so
+   they are scaled up rather than down and a soft one is the file, not the
+   layout. */
+.tt-tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The veil. Two layers: a flat one that pushes the whole wall back behind the
+   copy, and a pool of ink under the middle where the name and the button sit. */
+.tt-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(64% 58% at 50% 50%, rgba(6, 9, 13, 0.92) 0%, rgba(6, 9, 13, 0.45) 62%, rgba(6, 9, 13, 0.2) 100%),
+    linear-gradient(180deg, rgba(6, 9, 13, 0.62) 0%, rgba(6, 9, 13, 0.46) 40%, rgba(6, 9, 13, 0.72) 100%);
+  transition: opacity 420ms ease;
+}
+
+/* ---------------------------------------------------------------- the middle */
+.tt-centre {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 40px 64px;
+  text-align: center;
+  transition: opacity 320ms ease, transform 420ms cubic-bezier(0.22, 0.7, 0.28, 1);
+}
+.tt-eyebrow {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+.tt-title {
+  margin: 0;
+  max-width: 18ch;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(44px, 4.6vw, 74px);
+  line-height: 1.02;
+  letter-spacing: 0.004em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.tt-lead {
+  margin: 2px 0 0;
+  max-width: 54ch;
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* The one control on the wall. Filled in the accent, because it is the only
+   thing on this slide that does anything. */
+.tt-cta {
+  margin-top: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 26px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--brand-accent, #FFBB00);
+  color: var(--on-accent, #111827);
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.45);
+  transition: transform 220ms cubic-bezier(0.22, 0.7, 0.28, 1), box-shadow 220ms ease;
+}
+.tt-cta:hover,
+.tt-cta:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.55);
+}
+.tt-cta .ic {
+  width: 18px;
+  height: 18px;
+  transition: transform 220ms cubic-bezier(0.22, 0.7, 0.28, 1);
+}
+.tt-cta:hover .ic { transform: translateX(4px); }
+
+/* --------------------------------------------------------------- the gallery */
+.tt-gallery {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  background: var(--surface);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(14px);
+  transition: opacity 320ms ease, transform 420ms cubic-bezier(0.22, 0.7, 0.28, 1);
+}
+.tt-root.is-open .tt-gallery {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+/* Open, the wall is still there and still moving — it is just no longer what
+   the slide is about. */
+.tt-root.is-open .tt-centre {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.97);
+}
+
+/* The gallery's own root is the full-height one this deck gives every wall, so
+   it fills the slide it has been dropped into. The strip at the top is the way
+   back: without it the button sat on the first filter chip, which is the one
+   that clears the filter and the one most likely to be pressed. */
+.tt-gallery .pw-root {
+  height: 100%;
+  max-height: 100%;
+  padding-top: 56px;
+  border-radius: inherit;
+}
+
+/* The way back. Top-left, where the gallery's own chapter rail is not. */
+.tt-back {
+  position: absolute;
+  z-index: 4;
+  top: 14px;
+  left: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px 9px 10px;
+  border: 1px solid var(--line, rgba(17, 24, 39, 0.12));
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink, #111827);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 180ms ease, transform 180ms ease;
+}
+.tt-back:hover { transform: translateX(-2px); }
+.tt-back .ic { width: 17px; height: 17px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tt-centre,
+  .tt-gallery,
+  .tt-cta,
+  .tt-cta .ic,
+  .tt-back { transition: none; }
+}
+
+/* ==========================================================================
+   NT Square — a headline over a fan of cards  (CardFan.js)
+   ==========================================================================
+   Built to a layout supplied as a reference image: eyebrow, two-line headline,
+   two pills, and under them a hand of rounded cards arching up out of the
+   bottom edge — the middle one highest and square on, the rest stepping down
+   and leaning away, every one of them cut off by the floor.
+
+   Three layers per card, because three things move and they would otherwise be
+   three rules fighting over one `transform`: `.cf-card` is the fan (written
+   once by JS), `.cf-card__rise` is the entrance, `.cf-card__face` is the hover.
+   ========================================================================== */
+.cf-root {
+  --cf-card-w: 500px;
+  --cf-card-h: 500px;
+  --cf-sink: 80px;
+
+  position: relative;
+  /* A definite height, not a minimum: `.canvas-block > *` sets `flex: 1`, whose
+     `flex-basis: 0%` beats `height` on the main axis. Same arrangement as
+     `.pw-root` and `.tt-root`. */
+  flex: 0 0 auto;
+  height: 860px;
+  max-height: 860px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--ink, #111827);
+}
+
+/* ------------------------------------------------------------------ the head */
+.cf-head {
+  position: absolute;
+  z-index: 200;
+  /* The head takes the top of the frame down to where the hand begins. The
+     reference sets its eyebrow at an eighth of the way down and closes its
+     buttons just before the cards; this lands in the same place. */
+  top: 13%;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding: 0 64px;
+  text-align: center;
+  pointer-events: none;
+}
+.cf-head .cf-cta { pointer-events: auto; }
+
+.cf-eyebrow {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--ink, #111827);
+  animation: cf-in 520ms cubic-bezier(0.22, 0.7, 0.28, 1) both;
+  animation-delay: var(--intro-hold, 0s);
+}
+/* The little mark the reference sets before its eyebrow. Drawn, not an icon:
+   it is a shape, not a symbol that has to mean anything. */
+.cf-eyebrow__mark {
+  width: 15px;
+  height: 13px;
+  border-radius: 3px 3px 3px 7px;
+  background: currentColor;
+}
+
+.cf-title {
+  margin: 0;
+  max-width: 20ch;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(42px, 4.6vw, 74px);
+  line-height: 1.06;
+  letter-spacing: -0.028em;
+}
+.cf-title__line {
+  display: block;
+}
+
+.cf-cta {
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cf-btn {
+  padding: 13px 26px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 200ms cubic-bezier(0.22, 0.7, 0.28, 1), background 200ms ease, border-color 200ms ease;
+  animation: cf-in 520ms cubic-bezier(0.22, 0.7, 0.28, 1) both;
+  animation-delay: calc(var(--intro-hold, 0s) + 620ms + var(--cf-btn-i, 0) * 70ms);
+}
+.cf-btn--solid {
+  background: var(--ink, #111827);
+  color: var(--surface, #fff);
+}
+.cf-btn--ghost {
+  background: transparent;
+  border-color: var(--line, rgba(17, 24, 39, 0.16));
+  color: var(--ink, #111827);
+}
+.cf-btn:hover { transform: translateY(-2px); }
+.cf-btn--ghost:hover { border-color: var(--ink, #111827); }
+
+@keyframes cf-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ----------------------------------------------------------------- the light */
+/* Three orbs under the hand, so the cards are standing in light rather than on
+   a sheet of white. Deliberately faint: measured against the white it sits on,
+   the strongest of them drops the ground by about four percent — enough that
+   the corners of the slide read as cooler than its middle, not enough that
+   anybody looks at it instead of the photographs. The colour is the
+   organization's own, passed in by the block and measured off its mark. */
+.cf-glow {
+  --cf-glow: var(--brand-accent, #F05D29);
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.cf-orb {
+  position: absolute;
+  border-radius: 50%;
+  /* `closest-side` makes the stop land on the circle's own edge, so the orb
+     fades out exactly where it ends and there is no seam to see. */
+  background: radial-gradient(closest-side, var(--cf-glow) 0%, transparent 100%);
+  /* The drift is 20px over half a minute. At this opacity it is not a movement
+     anybody can point at; it is the reason the slide does not look like a
+     still. */
+  animation: cf-drift 34s ease-in-out infinite alternate both;
+}
+/* Positioned by their centres, not their corners. The first cut hung them off
+   the edges, which put every core off screen or behind a card and left the
+   visible ground 0.7% off white — there, but not there enough to be worth
+   having. A radial is strongest at exactly one point, so that point has to be
+   somewhere the eye can reach. */
+.cf-orb {
+  transform: translate(-50%, -50%);
+}
+.cf-orb--a {
+  width: 900px;
+  height: 900px;
+  left: 16%;
+  top: 56%;
+  opacity: 0.06;
+  animation-duration: 38s;
+}
+/* The middle one sits low, so its core is behind the hand and what shows is the
+   halo either side of it — light coming out from behind the cards. */
+.cf-orb--b {
+  width: 1120px;
+  height: 1120px;
+  left: 50%;
+  top: 64%;
+  opacity: 0.09;
+  animation-delay: -12s;
+}
+.cf-orb--c {
+  width: 780px;
+  height: 780px;
+  left: 86%;
+  top: 45%;
+  opacity: 0.055;
+  animation-duration: 29s;
+  animation-delay: -6s;
+}
+/* The drift keeps the centring translate — an animation replaces the whole
+   `transform`, so leaving it out would snap every orb a half-width down and to
+   the right the moment the animation took hold. */
+@keyframes cf-drift {
+  from { transform: translate(-50%, -50%) translate3d(-14px, 8px, 0) scale(1); }
+  to { transform: translate(-50%, -50%) translate3d(14px, -10px, 0) scale(1.05); }
+}
+
+/* ------------------------------------------------------------------- the fan */
+/* Anchored to the floor and hung below it, so every card is cut by the bottom
+   edge and only its top half is ever on screen. */
+.cf-fan {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: calc(var(--cf-sink) * -1);
+  width: 0;
+  height: 0;
+}
+
+.cf-card {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: var(--cf-card-w);
+  height: var(--cf-card-h);
+  margin-left: calc(var(--cf-card-w) / -2);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  /* The fan's own transform is written by the component and never animated;
+     everything that moves is on a layer inside. */
+  transform-origin: 50% 100%;
+}
+
+/* The entrance: up from under the floor, in a stagger that runs outward from
+   the middle of the hand. */
+.cf-card__rise {
+  width: 100%;
+  height: 100%;
+  animation: cf-rise 820ms cubic-bezier(0.19, 0.84, 0.28, 1) both;
+  animation-delay: calc(var(--intro-hold, 0s) + 260ms + var(--cf-delay, 0ms));
+}
+@keyframes cf-rise {
+  from { opacity: 0; transform: translateY(300px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* The face: the card itself, and the only thing the hover touches. */
+.cf-card__face {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--panel, #F3F4F6);
+  box-shadow: 0 16px 36px rgba(17, 24, 39, 0.16);
+  transition: transform 260ms cubic-bezier(0.22, 0.7, 0.28, 1), box-shadow 260ms ease;
+}
+.cf-card__face img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* The card is square because seven of these nine photographs are, so seven of
+     them are shown whole and only the two 16:9 ones give up anything — and they
+     give it up at the sides, where a wide group shot has the least in it. The
+     whole picture is one press away in the viewer either way. */
+  object-position: 50% 50%;
+}
+
+/* Hover: one card clear of its neighbours. The lift is on the face, so it does
+   not disturb the fan underneath it. */
+.cf-card:hover,
+.cf-card:focus-visible {
+  z-index: 300 !important;
+  outline: none;
+}
+.cf-card:hover .cf-card__face,
+.cf-card:focus-visible .cf-card__face {
+  transform: translateY(-30px) scale(1.04);
+  box-shadow: 0 34px 64px rgba(17, 24, 39, 0.3);
+}
+/* And the rest of the hand steps back, so the one being pointed at is the one
+   being read. */
+.cf-fan:hover .cf-card:not(:hover) .cf-card__face {
+  transform: translateY(6px) scale(0.985);
+  box-shadow: 0 10px 24px rgba(17, 24, 39, 0.12);
+}
+
+/* ------------------------------------------------------------------ the deck */
+/* One more pill after the reference's two, with the count set into it. */
+.cf-btn--deck { display: inline-flex; align-items: center; gap: 10px; }
+.cf-btn__count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--ink, #111827);
+  color: var(--surface, #fff);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The panel over the hand. Frosted rather than dark: the slide is white and the
+   hand should still be sensed under it. */
+.cf-deck {
+  position: absolute;
+  inset: 0;
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.86);
+  -webkit-backdrop-filter: blur(18px) saturate(1.1);
+          backdrop-filter: blur(18px) saturate(1.1);
+  outline: none;
+  opacity: 0;
+  animation: cf-deck-in 360ms ease both;
+}
+@keyframes cf-deck-in { to { opacity: 1; } }
+.cf-deck.is-closing { animation: cf-deck-out 420ms ease both; }
+@keyframes cf-deck-out { from { opacity: 1; } to { opacity: 0; } }
+
+.cf-deck__head {
+  position: absolute;
+  top: 9%;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  pointer-events: none;
+}
+.cf-deck__eyebrow { animation: none; }
+.cf-deck__title {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 48px;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+}
+.cf-deck__hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted, rgba(17, 24, 39, 0.6));
+}
+
+/* The hand. Every card is positioned at the same spot — the pile — and turned
+   about a pivot far below the frame; the turn is what spreads them, the way a
+   hand of cards spreads. Dealt: `--cf-deal` is each card's own lean, and the
+   transition from zero to it, staggered outward from the middle, is the deal. */
+.cf-deck__hand {
+  position: absolute;
+  left: 50%;
+  top: 25%;
+  width: 0;
+  height: 0;
+}
+.cf-deck__card {
+  position: absolute;
+  left: -150px;
+  top: 0;
+  width: 300px;
+  height: 300px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transform-origin: 50% 900px;
+  transform: rotate(0deg);
+  transition: transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--cf-deal-delay, 0ms);
+}
+.cf-deck.is-dealt .cf-deck__card { transform: rotate(var(--cf-deal, 0deg)); }
+.cf-deck__card:focus-visible { outline: none; }
+.cf-deck__card:hover,
+.cf-deck__card:focus-visible { z-index: 200 !important; }
+.cf-deck__face {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--panel, #F3F4F6);
+  box-shadow:
+    0 1px 2px rgba(17, 24, 39, 0.06),
+    0 14px 32px rgba(17, 24, 39, 0.16);
+  /* A hairline of white, so cards on the pile read as a stack of cards and not
+     as one thick card. */
+  outline: 2px solid #fff;
+  outline-offset: -1px;
+  transition: transform 300ms cubic-bezier(0.22, 0.7, 0.28, 1), box-shadow 300ms ease;
+}
+.cf-deck__card:hover .cf-deck__face,
+.cf-deck__card:focus-visible .cf-deck__face {
+  transform: translateY(-46px) scale(1.08);
+  box-shadow: 0 34px 64px rgba(17, 24, 39, 0.3);
+}
+.cf-deck__face img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.cf-deck__back {
+  position: absolute;
+  left: 50%;
+  bottom: calc(40px + var(--deck-bar-clear, 0px));
+  transform: translateX(-50%);
+  animation: none;
+}
+.cf-deck__back:hover { transform: translateX(-50%) translateY(-2px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cf-eyebrow,
+  .cf-btn,
+  .cf-orb,
+  .cf-card__rise { animation: none; }
+  .cf-deck { animation: none; opacity: 1; }
+  .cf-card__face,
+  .cf-btn,
+  .cf-deck__card,
+  .cf-deck__face { transition: none; }
+}
+
+/* ==========================================================================
+   Trainings — the bookshelf  (TrainingShelf.js)
+   ==========================================================================
+   Built to a reference image: one frame, two zones, a shelf between them. Above
+   the shelf the trainings stand as books, the selected one large and square on
+   with the rest ranged to its right. Below it, where the reference puts a row of
+   bestsellers, this puts the selected training's own information.
+
+   The books are placed by the component, one transform each, written every
+   frame — so nothing here transitions position. What is here is the shelf, the
+   covers, and the entrances.
+   ========================================================================== */
+.ts-root {
+  /* White and red, as asked. The red is Torii's own, measured off the polo
+     everybody in the team photographs is wearing; a book takes its own `--ts-tint`
+     where one is given and falls back to this. */
+  --ts-red: #D91823;
+  --ts-cream: #FBF4EC;
+  --ts-paper: #FFFFFF;
+  --ts-ink: #1A1614;
+  --ts-book-w: 300px;
+  --ts-book-h: 430px;
+  /* Where the shelf sits — a fixed distance from the TOP of the frame, never a
+     percentage of it.
+     A slide learns its real height one frame after it is drawn: the root starts
+     at the 860 fallback and becomes `--slide-h` the moment FitSlide decides to
+     fill, which on a 16:9 screen is 900. As a percentage that moved the shelf
+     25px down on that frame, taking every book on it — and the deck's own slide
+     entrance then carried the whole thing back up over the next 430ms, so the
+     shelf appeared to drop, stick, and slide into place. Measured on arrival at
+     the slide, and it is exactly what "it looks like a glitch" was.
+     Pinned to the top, the extra height falls into the zone below the shelf,
+     whose content is top-aligned — so nothing moves at all. 533 is 62% of the
+     860 canvas, which is where the reference puts it. Raised to 505 when the
+     four facts under the shelf were replaced by a name and a paragraph set
+     large enough to read from a room — that type needs the height, and the
+     books had 28px to spare. */
+  --ts-split: 505px;
+
+  position: relative;
+  display: block;
+  /* A definite height, not a minimum: `.canvas-block > *` sets `flex: 1`, whose
+     `flex-basis: 0%` beats `height` on the main axis. Same arrangement as
+     `.pw-root` and `.tt-root`. */
+  flex: 0 0 auto;
+  height: 860px;
+  max-height: 860px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--ts-paper);
+  color: var(--ts-ink);
+}
+
+/* ------------------------------------------------------------- the top zone */
+.ts-top {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: var(--ts-split);
+  overflow: hidden;
+  /* Fixed, so the books standing at its foot are fixed too. */
+  background:
+    radial-gradient(70% 90% at 82% 18%, rgba(217, 24, 35, 0.05), transparent 70%),
+    var(--ts-cream);
+}
+
+.ts-head {
+  position: absolute;
+  z-index: 3;
+  left: 58px;
+  top: 78px;
+  width: 300px;
+}
+.ts-eyebrow {
+  margin: 0 0 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(26, 22, 20, 0.55);
+  animation: ts-in 560ms cubic-bezier(0.22, 0.7, 0.28, 1) both;
+  animation-delay: var(--intro-hold, 0s);
+}
+/* The reference sets its headline in a serif, large and tight. */
+.ts-title {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 58px;
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  animation: ts-in 620ms cubic-bezier(0.22, 0.7, 0.28, 1) both;
+  animation-delay: calc(var(--intro-hold, 0s) + 70ms);
+}
+.ts-lead {
+  margin: 14px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(26, 22, 20, 0.6);
+  animation: ts-in 620ms cubic-bezier(0.22, 0.7, 0.28, 1) both;
+  animation-delay: calc(var(--intro-hold, 0s) + 130ms);
+}
+
+/* ---------------------------------------------------------------- the books */
+/* The row is anchored to the shelf line, so every book stands ON the plank
+   whatever size it is drawn at — `transform-origin` at the foot is what keeps
+   the scaled ones from floating. */
+.ts-stage {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  outline: none;
+}
+.ts-row {
+  position: absolute;
+  left: 406px;
+  bottom: 0;
+  width: 0;
+  height: 0;
+}
+
+.ts-book {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: var(--ts-book-w);
+  height: var(--ts-book-h);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transform-origin: 50% 100%;
+  /* Placed by the component every frame; only the fade is CSS's business. */
+  animation: ts-rise 780ms cubic-bezier(0.19, 0.84, 0.28, 1) both;
+  animation-delay: calc(var(--intro-hold, 0s) + 230ms + var(--ts-i, 0) * 70ms);
+}
+.ts-book.is-gone { opacity: 0; pointer-events: none; }
+@keyframes ts-rise {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* The book itself: a cover, a spine down its left edge and a block of pages
+   down its right. */
+.ts-book__body {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: 4px 10px 10px 4px;
+  box-shadow:
+    0 22px 34px rgba(26, 22, 20, 0.18),
+    0 2px 5px rgba(26, 22, 20, 0.12);
+  transition: box-shadow 300ms ease, transform 300ms cubic-bezier(0.22, 0.7, 0.28, 1);
+}
+.ts-book.is-front .ts-book__body {
+  box-shadow:
+    0 40px 60px rgba(26, 22, 20, 0.24),
+    0 4px 10px rgba(26, 22, 20, 0.14);
+}
+.ts-book:hover .ts-book__body { transform: translateY(-8px); }
+
+/* White into red, as asked: the cover is mostly paper and the colour gathers at
+   its foot and its outer corner, which is where a printed cover carries it. */
+.ts-book__cover {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 38px 34px 34px 40px;
+  border-radius: 4px 10px 10px 4px;
+  /* The red has to arrive early enough to be the other half of "white and
+     red". A first cut held it back to the last third and every cover came out
+     a pale pink card — on the books ranged behind the front one, which are
+     drawn smaller, it read as no colour at all. */
+  background:
+    linear-gradient(162deg,
+      #FFFFFF 0%,
+      #FFFFFF 16%,
+      color-mix(in srgb, var(--ts-tint, var(--ts-red)) 10%, #ffffff) 32%,
+      color-mix(in srgb, var(--ts-tint, var(--ts-red)) 42%, #ffffff) 56%,
+      color-mix(in srgb, var(--ts-tint, var(--ts-red)) 78%, #ffffff) 78%,
+      var(--ts-tint, var(--ts-red)) 100%);
+  overflow: hidden;
+}
+/* A single soft sheen across the board, so the cover reads as a printed surface
+   rather than as a swatch. */
+.ts-book__cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(112deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 34%);
+  pointer-events: none;
+}
+.ts-book__track {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ts-tint, var(--ts-red)) 78%, #1A1614);
+}
+.ts-book__name {
+  margin-top: 16px;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 27px;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  text-align: left;
+  color: var(--ts-ink);
+  text-wrap: balance;
+}
+.ts-book__rule {
+  margin-top: 16px;
+  width: 42px;
+  height: 2px;
+  background: color-mix(in srgb, var(--ts-tint, var(--ts-red)) 70%, transparent);
+}
+.ts-book__meta {
+  margin-top: auto;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  /* The foot of the cover is the strong end of the gradient, so this line is
+     white on red rather than ink on white like everything above it. */
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* The spine, and the block of pages on the fore-edge. */
+.ts-book__spine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 13px;
+  border-radius: 4px 0 0 4px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--ts-tint, var(--ts-red)) 70%, #2a0508) 0%,
+    rgba(26, 22, 20, 0.16) 58%,
+    rgba(26, 22, 20, 0) 100%);
+  z-index: 2;
+}
+.ts-book__pages {
+  position: absolute;
+  right: -7px;
+  top: 7px;
+  bottom: 7px;
+  width: 8px;
+  border-radius: 0 3px 3px 0;
+  background: repeating-linear-gradient(90deg,
+    #FFFFFF 0 1px, #E7E0D8 1px 2px);
+  box-shadow: inset -1px 0 2px rgba(26, 22, 20, 0.14);
+}
+/* What the book throws onto the plank it is standing on. */
+.ts-book__cast {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: -9px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(26, 22, 20, 0.34), transparent);
+  filter: blur(4px);
+}
+
+/* ---------------------------------------------------------------- the shelf */
+.ts-shelf {
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  right: 0;
+  top: var(--ts-split);
+  height: 0;
+  pointer-events: none;
+}
+/* The plank's top face, its front edge, and the shadow it throws down the wall
+   below — three strips rather than one border, because a shelf is a thing with
+   a thickness. */
+.ts-shelf__top {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -9px;
+  height: 9px;
+  /* The lit top face of the board, with the line where the books meet it. */
+  background: linear-gradient(180deg, #FFFDFB 0%, #F6EFE6 62%, #EADFD1 100%);
+  box-shadow: 0 -1px 0 rgba(26, 22, 20, 0.06) inset;
+}
+.ts-shelf__edge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 17px;
+  /* The front edge — the thickness of the board seen straight on, which is what
+     makes it a shelf rather than a rule across the page. */
+  background: linear-gradient(180deg, #E9DDCD 0%, #DBCCB8 55%, #CBB9A2 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.5) inset,
+    0 -1px 2px rgba(26, 22, 20, 0.12);
+}
+.ts-shelf__under {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 17px;
+  height: 64px;
+  background: linear-gradient(180deg, rgba(26, 22, 20, 0.22) 0%, rgba(26, 22, 20, 0.05) 46%, rgba(26, 22, 20, 0) 100%);
+}
+
+/* ---------------------------------------------------------- the information */
+.ts-under {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--ts-split);
+  bottom: 0;
+  display: flex;
+  align-items: stretch;
+  gap: 30px;
+  /* The bar floats over the slide and what is under it here is the training's
+     own tools — content covered up, not a photograph carrying its own scrim.
+     Taken on this element rather than on the root, because the root's children
+     are positioned and an absolutely positioned child resolves against the
+     padding box, which includes the padding. */
+  padding: 44px 58px calc(30px + var(--deck-bar-clear, 0px));
+  background: var(--ts-paper);
+}
+/* A hairline across the zone, then two columns under it: the programme's number
+   and name on the left, what it covers and its syllabus on the right. Side by
+   side because the zone under the shelf is wide and shallow — stacked, a
+   paragraph set large enough to read runs out of height before it runs out of
+   words. The rule is what makes it read as a considered band rather than as
+   text that fell to the bottom of the slide. */
+.ts-info {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.55fr);
+  align-items: start;
+  column-gap: 64px;
+  row-gap: 26px;
+}
+.ts-info > * {
+  animation: ts-info-in 520ms cubic-bezier(0.22, 0.7, 0.28, 1) both;
+}
+.ts-info > *:nth-child(2) { animation-delay: 70ms; }
+.ts-info > *:nth-child(3) { animation-delay: 130ms; }
+@keyframes ts-info-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+.ts-info__rule {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: rgba(26, 22, 20, 0.14);
+}
+
+/* The number in the programme's own red, then what kind of programme it is. */
+.ts-info__index {
+  margin: 0 0 14px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.ts-info__num {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  color: var(--ts-tint, var(--ts-red));
+  font-variant-numeric: tabular-nums;
+}
+.ts-info__kind {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(26, 22, 20, 0.45);
+}
+
+.ts-info__name {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 52px;
+  line-height: 1.03;
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+}
+.ts-info__blurb {
+  margin: 0;
+  /* Read from the back of a room, which the 13.5px this started at was not. */
+  font-size: 22px;
+  line-height: 1.55;
+  letter-spacing: -0.004em;
+  color: rgba(26, 22, 20, 0.78);
+}
+/* The syllabus, as one line. A bulleted list of seven subjects is a list to
+   scroll; the same seven separated by dots is a line to read. */
+.ts-info__subjects {
+  margin: 18px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 10px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.9;
+  color: rgba(26, 22, 20, 0.58);
+}
+.ts-info__dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--ts-tint, var(--ts-red));
+  opacity: 0.6;
+}
+
+/* ------------------------------------------------------------- the controls */
+.ts-nav {
+  position: absolute;
+  z-index: 5;
+  right: 40px;
+  top: 74px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 6px;
+  border-radius: 999px;
+  background: var(--ts-paper);
+  box-shadow: 0 2px 12px rgba(26, 22, 20, 0.1);
+  animation: ts-in 560ms cubic-bezier(0.22, 0.7, 0.28, 1) both;
+  animation-delay: calc(var(--intro-hold, 0s) + 250ms);
+}
+.ts-nav__btn {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ts-ink);
+  cursor: pointer;
+  transition: background 180ms ease;
+}
+.ts-nav__btn:hover { background: rgba(26, 22, 20, 0.07); }
+.ts-nav__btn .ic { width: 18px; height: 18px; }
+.ts-nav__count {
+  min-width: 52px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  color: rgba(26, 22, 20, 0.6);
+}
+
+@keyframes ts-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ts-eyebrow, .ts-title, .ts-lead, .ts-nav,
+  .ts-book, .ts-info > * { animation: none; }
+  .ts-book__body { transition: none; }
+}
+
+
+/* ==========================================================================
+   Project Week — the collage  (PhotoCollage.js)
+   ==========================================================================
+   Copy in the left third, a staggered collage of nine photographs to its right,
+   a short list set into a gap in the collage. Built to a reference image; the
+   reference is black and white, this keeps the photographs in colour and takes
+   its ink, its button and its accent from the organization's own palette.
+
+   Every card is placed by the component in canvas pixels. What is here is the
+   card itself, and its entrance — of which there are five, so the collage
+   assembles rather than fades in.
+   ========================================================================== */
+.pc-root {
+  --pc-ink: #111111;
+  --pc-paper: #FFFFFF;
+  /* Torii's own orange, measured off the mark on its brand film's closing card.
+     It is on the arrows and the eyebrow's mark, and nowhere else. */
+  --pc-accent: #F05D29;
+
+  position: relative;
+  /* A definite height, not a minimum: `.canvas-block > *` sets `flex: 1`, whose
+     `flex-basis: 0%` beats `height` on the main axis. Everything inside is
+     anchored to the TOP in canvas pixels, so when presenting hands the root
+     more height than the 860 canvas, the extra falls harmlessly below the
+     collage and nothing moves — the lesson the Trainings shelf taught. */
+  flex: 0 0 auto;
+  height: 860px;
+  max-height: 860px;
+  /* The root is the scroller: the first screen, then the wall of every further
+     photograph under it. Scrolled by hand off the wheel (see the component), so
+     no `scroll-behavior: smooth` here, ever; and no scrollbar drawn. */
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  border-radius: var(--radius-lg);
+  background: var(--pc-paper);
+  color: var(--pc-ink);
+}
+.pc-root::-webkit-scrollbar { width: 0; height: 0; }
+
+/* The first screen. It takes the root's full height — 860 on the canvas,
+   `--slide-h` in the room — so the wall begins exactly one screen down; and
+   because everything on it is anchored to the top in canvas pixels, the stage
+   growing by the difference a frame after arrival moves nothing on it. */
+.pc-stage {
+  position: relative;
+  height: 100%;
+  flex: 0 0 auto;
+}
+
+/* ----------------------------------------------------------------- the light */
+/* Soft blobs behind the collage, in the organization's own two measured
+   colours — the orange off its mark and the red off the polo in its team
+   photographs. Deliberately faint: the ground stops being a sheet of paper, and
+   that is all it does. Two things this pattern already taught, on NT Square's
+   fan: a radial is strongest at exactly one point, so that point has to sit
+   somewhere the eye can reach — hung off the frame's edges the cores land off
+   screen and the visible ground measures under a percent off white, which is
+   not worth having. And an animation replaces the WHOLE transform, so the drift
+   has to repeat the centring translate in both keyframes or every blob snaps
+   half its own width down and right the moment it takes hold. */
+.pc-glow {
+  --pc-glow: #F05D29;
+  --pc-glow-2: #D91823;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.pc-blob {
+  position: absolute;
+  border-radius: 50%;
+  /* `closest-side` puts the stop on the circle's own edge, so a blob fades out
+     exactly where it ends and there is no seam anywhere. */
+  background: radial-gradient(closest-side, var(--pc-tone) 0%, transparent 100%);
+  transform: translate(-50%, -50%);
+  /* `pc-blob-drift`, not `pc-drift` — that name was already a card entrance in
+     this same stylesheet, and `@keyframes` names are global. The card's won:
+     the blobs were being faded 0 to 1 across forty-four seconds and having
+     their centring transform replaced by `none`, so they sat half a width off
+     and all but invisible. Measured before the rename: opacity 0.013, 0.32 and
+     0.54 against the 0.07, 0.055 and 0.06 set here. */
+  animation: pc-blob-drift 44s ease-in-out infinite alternate both;
+}
+/* Placed where the ground is actually visible, which on this layout is the wide
+   band above the collage, the column beside the copy, and the foot of the left
+   side. A blob centred under the middle of the collage is a blob nobody sees:
+   the photographs cover it, and only one sample point in seven moved at all. */
+.pc-blob--a {
+  --pc-tone: var(--pc-glow);
+  width: 1180px;
+  height: 1180px;
+  left: 57%;
+  top: 20%;
+  opacity: 0.085;
+}
+/* The foot of the left side, under the copy and around the first card. */
+.pc-blob--b {
+  --pc-tone: var(--pc-glow-2);
+  width: 880px;
+  height: 880px;
+  left: 19%;
+  top: 80%;
+  /* Lower than the other two: red reads stronger than the orange at the same
+     alpha, and at 0.065 this one's core measured 14.8% below white against a
+     5.2% mean across the ground — the one place the wash stopped being a wash. */
+  opacity: 0.05;
+  animation-duration: 37s;
+  animation-delay: -11s;
+}
+/* The right edge, filling the gaps between the tall column and the frame. */
+.pc-blob--c {
+  --pc-tone: var(--pc-glow);
+  width: 900px;
+  height: 900px;
+  left: 90%;
+  top: 64%;
+  opacity: 0.07;
+  animation-duration: 51s;
+  animation-delay: -23s;
+}
+@keyframes pc-blob-drift {
+  from { transform: translate(-50%, -50%) translate3d(-16px, 10px, 0) scale(1); }
+  to { transform: translate(-50%, -50%) translate3d(16px, -12px, 0) scale(1.06); }
+}
+
+/* ------------------------------------------------------------------ the copy */
+.pc-copy {
+  position: absolute;
+  left: 60px;
+  top: 44px;
+  width: 470px;
+}
+.pc-eyebrow {
+  margin: 0 0 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  animation: pc-in 600ms cubic-bezier(0.22, 0.7, 0.28, 1) both;
+  animation-delay: var(--intro-hold, 0s);
+}
+/* The mark the reference sets before its wordmark: two dots, one filled. */
+.pc-eyebrow__mark {
+  position: relative;
+  width: 22px;
+  height: 10px;
+}
+.pc-eyebrow__mark::before,
+.pc-eyebrow__mark::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.pc-eyebrow__mark::before { left: 0; border: 2px solid var(--pc-ink); }
+.pc-eyebrow__mark::after { left: 12px; background: var(--pc-accent); }
+
+.pc-title {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 68px;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+}
+.pc-title__line { display: block; }
+
+.pc-lead {
+  margin: 28px 0 0;
+  max-width: 34ch;
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(17, 17, 17, 0.72);
+  animation: pc-in 700ms cubic-bezier(0.22, 0.7, 0.28, 1) both;
+  animation-delay: calc(var(--intro-hold, 0s) + 720ms);
+}
+
+/* The one pill, in ink, as the reference has it. */
+.pc-cta {
+  margin-top: 30px;
+  padding: 13px 24px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--pc-ink);
+  color: var(--pc-paper);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 220ms cubic-bezier(0.22, 0.7, 0.28, 1), background 220ms ease;
+  animation: pc-in 700ms cubic-bezier(0.22, 0.7, 0.28, 1) both;
+  animation-delay: calc(var(--intro-hold, 0s) + 900ms);
+}
+.pc-cta:hover { transform: translateY(-2px); background: #000; }
+
+/* ------------------------------------------------------------------ the list */
+.pc-points {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 14px;
+}
+.pc-points li {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  animation: pc-in 640ms cubic-bezier(0.22, 0.7, 0.28, 1) both;
+  animation-delay: calc(var(--intro-hold, 0s) + 1000ms + var(--pc-i, 0) * 110ms);
+}
+.pc-points__arrow {
+  color: var(--pc-accent);
+  font-size: 14px;
+  transform: translateY(1px);
+}
+
+/* --------------------------------------------------------------- the collage */
+.pc-card {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  /* Each slot names its own entrance, delay and duration; the component writes
+     the two numbers, the class picks the motion. `both` so a card is invisible
+     until its turn. */
+  animation-duration: var(--pc-dur, 1000ms);
+  animation-delay: calc(var(--intro-hold, 0s) + var(--pc-delay, 0ms));
+  animation-timing-function: cubic-bezier(0.16, 0.84, 0.3, 1);
+  animation-fill-mode: both;
+}
+.pc-card--rise   { animation-name: pc-rise; }
+.pc-card--drift  { animation-name: pc-drift; animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1); }
+.pc-card--slide  { animation-name: pc-slide; }
+.pc-card--unfold { animation-name: pc-unfold; }
+.pc-card--sink   { animation-name: pc-sink; }
+
+@keyframes pc-rise   { from { opacity: 0; transform: translateY(64px); }  to { opacity: 1; transform: none; } }
+@keyframes pc-drift  { from { opacity: 0; transform: translateY(96px) scale(1.05); } to { opacity: 1; transform: none; } }
+@keyframes pc-slide  { from { opacity: 0; transform: translateX(56px); }  to { opacity: 1; transform: none; } }
+@keyframes pc-unfold { from { opacity: 0; transform: scale(0.9); }        to { opacity: 1; transform: none; } }
+@keyframes pc-sink   { from { opacity: 0; transform: translateY(-44px); } to { opacity: 1; transform: none; } }
+
+/* The face carries the hover, so it never fights the entrance for the same
+   transform. */
+.pc-card__face {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #EEE;
+  box-shadow: 0 10px 28px rgba(17, 17, 17, 0.12);
+  transition: transform 320ms cubic-bezier(0.22, 0.7, 0.28, 1), box-shadow 320ms ease;
+}
+.pc-card:hover .pc-card__face,
+.pc-card:focus-visible .pc-card__face {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 24px 48px rgba(17, 17, 17, 0.2);
+}
+.pc-card:focus-visible { outline: none; }
+/* A card is a window on its photograph, and the photographs are not the shape
+   of the windows — five are 16:9 and four are 3:2, against cards from 0.74 to
+   2.0. So the face covers, looking where the publisher pointed it, and the
+   whole picture is one press away in the viewer. Same trade as NT Square's
+   fan, and made for the same reason. */
+.pc-card__face img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+
+@keyframes pc-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ------------------------------------------------------------------ the wall */
+/* Every further photograph, under the collage. Justified rows off the same
+   solver the placements wall uses, so nothing is cropped: each tile is its own
+   aspect ratio times the row's solved height. The bottom padding clears the
+   presenter bar, which otherwise sits on the last row. */
+.pc-more {
+  position: relative;
+  padding: 8px 60px calc(56px + var(--deck-bar-clear, 0px));
+}
+.pc-more__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26px 0 22px;
+  border-top: 1px solid rgba(17, 17, 17, 0.1);
+}
+.pc-more__label { margin: 0; animation: none; }
+.pc-more__count {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(17, 17, 17, 0.5);
+  font-variant-numeric: tabular-nums;
+}
+.pc-more__row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  justify-content: flex-start;
+}
+.pc-more__row:not(.is-full) { justify-content: center; }
+.pc-tile {
+  flex: 0 0 auto;
+  position: relative;
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #EEE;
+  box-shadow: 0 10px 28px rgba(17, 17, 17, 0.12);
+  cursor: zoom-in;
+  /* Off until it scrolls into view; a row arriving together staggers by its
+     place in the row. Its own class, not the card's: the card's animations are
+     an entrance for a slide, these are a reveal for a scroll. */
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 640ms cubic-bezier(0.22, 0.7, 0.28, 1) calc(var(--pc-n, 0) * 70ms),
+    transform 760ms cubic-bezier(0.16, 0.84, 0.3, 1) calc(var(--pc-n, 0) * 70ms),
+    box-shadow 320ms ease;
+}
+.pc-tile.is-seen { opacity: 1; transform: none; }
+.pc-tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 420ms cubic-bezier(0.22, 0.7, 0.28, 1);
+}
+.pc-tile.is-seen:hover { box-shadow: 0 24px 48px rgba(17, 17, 17, 0.2); }
+.pc-tile.is-seen:hover img { transform: scale(1.035); }
+.pc-tile:focus-visible { outline: 2px solid var(--pc-accent); outline-offset: 3px; }
+
+.pc-more__foot {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+/* The way back up: the same pill, in outline. */
+.pc-cta--ghost {
+  margin-top: 0;
+  background: transparent;
+  color: var(--pc-ink);
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.2);
+  animation: none;
+}
+.pc-cta--ghost:hover { background: var(--pc-ink); color: var(--pc-paper); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pc-eyebrow, .pc-lead, .pc-cta, .pc-points li, .pc-card, .pc-blob { animation: none; }
+  .pc-card__face, .pc-cta, .pc-tile, .pc-tile img { transition: none; }
+  .pc-tile { opacity: 1; transform: none; }
+}
+
+/* ==========================================================================
+   Trainings — the open page  (TrainingShelf.js, second state)
+   ==========================================================================
+   Press the front book and the shelf closes around it: the book grows and
+   travels to the left, and the right side carries everything about the
+   programme. The shelf underneath fades but never moves, so the book can find
+   its way back to exactly where it stood.
+   ========================================================================== */
+
+/* The way in, in the band under the shelf. */
+.ts-info__open {
+  margin-top: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px 11px 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ts-ink);
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 200ms cubic-bezier(0.22, 0.7, 0.28, 1), background 200ms ease;
+}
+.ts-info__open:hover { transform: translateY(-2px); background: #000; }
+.ts-info__open .ic { width: 15px; height: 15px; transition: transform 200ms cubic-bezier(0.22, 0.7, 0.28, 1); }
+.ts-info__open:hover .ic { transform: translateX(3px); }
+
+/* The shelf, the plank, the band and the pill fade when a programme is open —
+   fade, not display:none, because the book has to be able to measure its way
+   back onto the shelf when it closes. */
+.ts-top, .ts-shelf, .ts-under {
+  transition: opacity 340ms ease;
+}
+.ts-root.is-open .ts-top,
+.ts-root.is-open .ts-shelf,
+.ts-root.is-open .ts-under {
+  opacity: 0;
+  pointer-events: none;
+}
+.ts-root.is-closing .ts-top,
+.ts-root.is-closing .ts-shelf,
+.ts-root.is-closing .ts-under {
+  opacity: 1;
+  transition-delay: 220ms;
+}
+
+/* ------------------------------------------------------------- the page */
+.ts-detail {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  overflow: hidden;
+  background: var(--ts-paper);
+  outline: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 360ms ease, visibility 0s linear 360ms;
+}
+.ts-root.is-open .ts-detail {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 360ms ease;
+}
+.ts-root.is-closing .ts-detail {
+  opacity: 0;
+  transition: opacity 420ms ease 220ms;
+}
+/* It scrolls only when there is something below the fold. */
+.ts-detail.has-photos { overflow-y: auto; }
+.ts-detail::-webkit-scrollbar { width: 0; height: 0; }
+.ts-detail { scrollbar-width: none; }
+
+.ts-detail__bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 40px 0 22px;
+  pointer-events: none;
+}
+.ts-detail__bar > * { pointer-events: auto; }
+.ts-detail__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px 9px 10px;
+  border: 1px solid rgba(26, 22, 20, 0.14);
+  border-radius: 999px;
+  background: var(--ts-paper);
+  color: var(--ts-ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: transform 180ms ease;
+}
+.ts-detail__back:hover { transform: translateX(-2px); }
+.ts-detail__back .ic { width: 17px; height: 17px; }
+.ts-nav--detail { position: static; animation: none; }
+
+.ts-detail__grid {
+  display: grid;
+  grid-template-columns: 380px minmax(0, 1fr);
+  column-gap: 76px;
+  align-items: start;
+  padding: 26px 58px 0;
+  min-height: calc(860px - 70px);
+}
+
+/* The book, grown. Same parts as a book on the shelf, at 380 wide — and the
+   transform that carries it there is written by the component, once, and
+   released; this is the transition that carries it. */
+.ts-big {
+  position: relative;
+  width: 380px;
+  height: 545px;
+  margin-top: 30px;
+  transform-origin: 0 0;
+  transition: transform 720ms cubic-bezier(0.2, 0.75, 0.2, 1);
+  will-change: transform;
+}
+.ts-big .ts-book__body {
+  box-shadow:
+    0 48px 80px rgba(26, 22, 20, 0.24),
+    0 6px 14px rgba(26, 22, 20, 0.12);
+}
+.ts-big .ts-book__cover { padding: 48px 42px 44px 50px; }
+.ts-big .ts-book__track { font-size: 12px; }
+.ts-big .ts-book__name { margin-top: 20px; font-size: 38px; }
+.ts-big .ts-book__rule { margin-top: 22px; width: 54px; }
+.ts-big .ts-book__meta { font-size: 13px; }
+.ts-big .ts-book__spine { width: 16px; }
+.ts-big .ts-book__pages { right: -9px; width: 10px; }
+
+/* The information. Set large, because the slide is now about one thing. */
+.ts-detail__info {
+  padding-top: 26px;
+  padding-bottom: 40px;
+}
+.ts-detail__info > * {
+  animation: ts-info-in 560ms cubic-bezier(0.22, 0.7, 0.28, 1) both;
+}
+.ts-detail__info > *:nth-child(2) { animation-delay: 70ms; }
+.ts-detail__info > *:nth-child(3) { animation-delay: 140ms; }
+.ts-detail__info > *:nth-child(4) { animation-delay: 210ms; }
+.ts-detail__info > *:nth-child(5) { animation-delay: 280ms; }
+/* Turning to another programme while open replays the entrance. */
+.ts-detail.is-turning .ts-detail__info > * { animation-name: ts-info-in; }
+
+.ts-detail__index {
+  margin: 0 0 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.ts-detail__name {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 66px;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.ts-detail__blurb {
+  margin: 26px 0 0;
+  max-width: 44ch;
+  font-size: 22px;
+  line-height: 1.55;
+  color: rgba(26, 22, 20, 0.78);
+}
+
+.ts-detail__label {
+  margin: 0 0 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(26, 22, 20, 0.45);
+}
+.ts-detail__teach { margin-top: 40px; }
+/* The syllabus, highlighted: each subject on its own line with its number in
+   the programme's red, in two columns when there are more than four. */
+.ts-detail__subjects {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 10px 32px;
+}
+.ts-detail__subjects li {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(26, 22, 20, 0.1);
+}
+.ts-detail__n {
+  flex: 0 0 auto;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--ts-tint, var(--ts-red));
+  font-variant-numeric: tabular-nums;
+}
+.ts-detail__subject {
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.008em;
+}
+
+.ts-detail__more {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 26px 40px;
+}
+.ts-detail__text {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.55;
+  color: rgba(26, 22, 20, 0.74);
+}
+
+/* ------------------------------------------------------------ the photos */
+.ts-detail__photos {
+  padding: 24px 58px calc(48px + var(--deck-bar-clear, 0px));
+}
+.ts-detail__photos:empty { display: none; }
+.ts-detail__row {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 14px;
+  justify-content: flex-start;
+}
+.ts-detail__row:not(.is-full) { justify-content: center; }
+.ts-detail__photo {
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  background: #EFE9E1;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+.ts-detail__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ts-top, .ts-shelf, .ts-under, .ts-detail, .ts-big { transition: none; }
+  .ts-detail__info > * { animation: none; }
+}
+
+
+/* ==========================================================================
+   Project Street — the film, then the thread board  (ThreadBoard.js)
+   ==========================================================================
+   Built to a reference: a pale sheet of graph paper, white cards leaning a
+   few degrees each way, a dashed thread running pin to pin between them. The
+   reference reads down a page; this reads across a slide, the cards alternating
+   high and low with the thread weaving between the rows. Two screens stacked:
+   the film first, the board below it, moved by the component's own eased loop.
+   ========================================================================== */
+.tb-root {
+  --tb-paper: #F3F3F1;
+  --tb-grid: rgba(20, 20, 20, 0.055);
+  --tb-ink: #171717;
+  --tb-muted: rgba(23, 23, 23, 0.62);
+  --tb-thread: #2B2B2B;
+  --tb-card: #FFFFFF;
+  --tb-accent: #F05D29;
+
+  position: relative;
+  /* A definite height, not a minimum: `.canvas-block > *` sets `flex: 1`, whose
+     `flex-basis: 0%` beats `height` on the main axis. */
+  flex: 0 0 auto;
+  height: 860px;
+  max-height: 860px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: #0B0B0B;
+  color: var(--tb-ink);
+  outline: none;
+}
+.tb-pages {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+/* Each screen is the root's full height; the board sits exactly one screen
+   down. Percentages are safe here because every thing on either screen is
+   anchored to its own top in px — the root growing 860 -> 900 on arrival moves
+   the board, which is off screen, and nothing on the film. */
+.tb-film, .tb-board {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 100%;
+}
+.tb-film { top: 0; }
+.tb-board { top: 100%; }
+
+/* ------------------------------------------------------------------ the film */
+.tb-film { background: #0B0B0B; }
+.tb-film__media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.tb-film__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(0deg, rgba(6, 6, 8, 0.86) 0%, rgba(6, 6, 8, 0.5) 34%, rgba(6, 6, 8, 0.08) 62%, rgba(6, 6, 8, 0) 100%),
+    linear-gradient(90deg, rgba(6, 6, 8, 0.45) 0%, rgba(6, 6, 8, 0) 55%);
+}
+.tb-film__copy {
+  position: absolute;
+  left: 64px;
+  bottom: calc(64px + var(--deck-bar-clear, 0px));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  color: #fff;
+}
+.tb-film__title {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 110px;
+  line-height: 0.96;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+/* The outlined pill the reference sets above its headline. */
+.tb-pill {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  border: 1px solid rgba(23, 23, 23, 0.34);
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tb-ink);
+  background: transparent;
+}
+.tb-pill--light { color: #fff; border-color: rgba(255, 255, 255, 0.5); }
+
+.tb-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 18px 13px 22px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--tb-ink);
+  color: #fff;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 220ms cubic-bezier(0.22, 0.7, 0.28, 1), background 220ms ease, color 220ms ease;
+}
+.tb-cta:hover { transform: translateY(-2px); }
+.tb-cta--light { background: #fff; color: #111; }
+.tb-cta--light:hover { background: #fff; }
+.tb-chev { width: 16px; height: 16px; display: block; }
+.tb-cta .tb-chev { animation: tb-nudge 1.8s ease-in-out infinite; }
+@keyframes tb-nudge { 0%, 100% { translate: 0 0; } 50% { translate: 0 3px; } }
+
+/* ----------------------------------------------------------------- the board */
+.tb-board {
+  background-color: var(--tb-paper);
+  /* The graph paper: two hairline grids, one each way. */
+  background-image:
+    linear-gradient(var(--tb-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--tb-grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+  background-position: 0 0;
+}
+.tb-intro {
+  position: absolute;
+  left: 60px;
+  top: 92px;
+  width: 400px;
+  z-index: 2;
+}
+.tb-intro > * { opacity: 0; transform: translateY(14px); transition: opacity 600ms cubic-bezier(0.22, 0.7, 0.28, 1), transform 700ms cubic-bezier(0.22, 0.7, 0.28, 1); }
+.tb-intro.is-seen > * { opacity: 1; transform: none; }
+.tb-intro.is-seen > :nth-child(2) { transition-delay: 80ms; }
+.tb-intro.is-seen > :nth-child(3) { transition-delay: 520ms; }
+.tb-intro__title {
+  margin: 26px 0 0;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 54px;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--tb-ink);
+}
+.tb-intro__line { display: block; }
+.tb-intro__lead {
+  margin: 24px 0 0;
+  max-width: 34ch;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--tb-muted);
+}
+
+/* The band: everything right of the copy, clipped, with the paper fading the
+   cards out as they pass behind the copy rather than cutting them off. */
+.tb-band {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 500px;
+  right: 0;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 130px, #000 calc(100% - 24px), transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 130px, #000 calc(100% - 24px), transparent 100%);
+}
+.tb-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  will-change: transform;
+}
+.tb-thread {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+/* A segment of the thread. Dashed, so it cannot be "drawn" with a dash offset;
+   it is uncovered instead, left to right, by a clip that opens across it. The
+   reference box of a clip on an SVG element is the element's own bounding box,
+   which is exactly the segment. */
+.tb-seg {
+  fill: none;
+  stroke: var(--tb-thread);
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-dasharray: 7 7;
+  clip-path: inset(-6px 100% -6px -6px);
+  transition: clip-path 560ms cubic-bezier(0.4, 0, 0.3, 1);
+}
+.tb-seg.is-seen { clip-path: inset(-6px -6px -6px -6px); }
+
+/* A pin: a black head with a ring of paper around it, so it sits on the card
+   rather than in it. */
+.tb-pin {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  margin: -5.5px 0 0 -5.5px;
+  border-radius: 50%;
+  background: #141414;
+  box-shadow: 0 0 0 3px var(--tb-paper), 0 3px 6px rgba(0, 0, 0, 0.28);
+  z-index: 3;
+  transform: scale(0);
+  transition: transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.tb-pin.is-seen { transform: scale(1); }
+
+/* The card. Three layers, so nothing fights over a transform: the button
+   arrives, the paper leans and lifts on hover, the photograph zooms. */
+.tb-card {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(30px) scale(0.965);
+  transition: opacity 720ms cubic-bezier(0.22, 0.7, 0.28, 1), transform 820ms cubic-bezier(0.16, 0.84, 0.3, 1);
+  z-index: 2;
+}
+.tb-card.is-seen { opacity: 1; transform: none; }
+.tb-card:focus-visible { outline: none; }
+.tb-card__paper {
+  position: absolute;
+  inset: 0;
+  display: block;
+  padding: 0 14px 14px;
+  border-radius: 14px;
+  background: var(--tb-card);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 6px 14px rgba(0, 0, 0, 0.06),
+    0 24px 48px rgba(0, 0, 0, 0.13);
+  transform: rotate(var(--tb-tilt, 0deg));
+  transition: transform 360ms cubic-bezier(0.22, 0.7, 0.28, 1), box-shadow 360ms ease;
+  text-align: left;
+}
+.tb-card:hover .tb-card__paper,
+.tb-card:focus-visible .tb-card__paper {
+  transform: rotate(0deg) translateY(-8px) scale(1.015);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.06),
+    0 14px 28px rgba(0, 0, 0, 0.1),
+    0 40px 70px rgba(0, 0, 0, 0.18);
+}
+.tb-card__head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  height: 26px;
+  padding: 0 2px;
+}
+.tb-card__num {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: rgba(23, 23, 23, 0.55);
+  font-variant-numeric: tabular-nums;
+  line-height: 26px;
+}
+.tb-card__name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--tb-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tb-card__shot {
+  display: block;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #EAEAE6;
+}
+.tb-card__shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 520ms cubic-bezier(0.22, 0.7, 0.28, 1);
+}
+.tb-card:hover .tb-card__shot img { transform: scale(1.04); }
+.tb-card.is-broken { display: none; }
+
+/* The sign-off the thread ends on, in a hand. */
+.tb-note {
+  position: absolute;
+  z-index: 2;
+  opacity: 0;
+  transform: translateY(10px) rotate(-3deg);
+  transition: opacity 600ms ease, transform 700ms cubic-bezier(0.22, 0.7, 0.28, 1);
+}
+.tb-note.is-seen { opacity: 1; transform: rotate(-3deg); }
+.tb-note__text {
+  display: block;
+  font-family: 'Segoe Print', 'Bradley Hand', 'Comic Sans MS', cursive;
+  font-size: 24px;
+  line-height: 1.2;
+  color: var(--tb-ink);
+  white-space: nowrap;
+}
+.tb-note__under {
+  display: block;
+  width: 220px;
+  height: 14px;
+  margin-top: 2px;
+  overflow: visible;
+}
+.tb-note__under path { stroke: var(--tb-ink); stroke-width: 1.6; stroke-linecap: round; }
+
+/* One card either way. Inside the board so it turns with it. */
+.tb-nav {
+  position: absolute;
+  top: 28px;
+  right: 40px;
+  z-index: 4;
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 10px 24px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(6px);
+}
+.tb-nav__btn {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--tb-ink);
+  cursor: pointer;
+  transition: background 180ms ease;
+}
+.tb-nav__btn:hover { background: rgba(23, 23, 23, 0.08); }
+.tb-nav__btn .tb-chev { width: 18px; height: 18px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tb-seg, .tb-pin, .tb-card, .tb-card__paper, .tb-card__shot img, .tb-note, .tb-intro > *, .tb-cta { transition: none; }
+  .tb-cta .tb-chev { animation: none; }
 }

@@ -50,7 +50,7 @@ export function openLightbox(images, startIndex = 0) {
     ArrowRight: () => step(1),
     ArrowLeft: () => step(-1),
     Space: () => step(1),
-  });
+  }, { exclusive: true });
 
   function close() {
     disposeKeys();

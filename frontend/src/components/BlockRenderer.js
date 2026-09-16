@@ -8,6 +8,12 @@ import { HeroBox } from './HeroBox.js';
 import { LeaderHero } from './LeaderHero.js';
 import { MilestoneTimeline } from './MilestoneTimeline.js';
 import { LeadershipPanels } from './LeadershipPanels.js';
+import { CouncilGrid } from './CouncilGrid.js';
+import { Roster } from './Roster.js';
+import { Hub } from './Hub.js';
+import { StatWall } from './StatWall.js';
+import { BookShelf } from './BookShelf.js';
+import { PaperTabs } from './PaperTabs.js';
 import { LeadershipRoad } from './LeadershipRoad.js';
 import { GalleryWall } from './GalleryWall.js';
 import { CourseDeck } from './CourseDeck.js';
@@ -22,9 +28,18 @@ import { EventReel } from './EventReel.js';
 import { CertificationWall } from './CertificationWall.js';
 import { VideoResumes } from './VideoResumes.js';
 import { AiReadyEngineer } from './AiReadyEngineer.js';
+import { AllianceAccordion } from './AllianceAccordion.js';
+import { SkewCarousel } from './SkewCarousel.js';
+import { TiltedTiles } from './TiltedTiles.js';
+import { CardFan } from './CardFan.js';
+import { PhotoRing } from './PhotoRing.js';
+import { EventOrbit } from './EventOrbit.js';
+import { TrainingShelf } from './TrainingShelf.js';
+import { PhotoCollage } from './PhotoCollage.js';
 import { ButtonRow, IconBox, LogoBox } from './Elements.js';
 import { TextBox, ImageBox, ProfileBox } from './MediaBoxes.js';
 import { VideoBox } from './VideoBox.js';
+import { ThreadBoard } from './ThreadBoard.js';
 import {
   inReadingOrder,
   layoutOf,
@@ -111,6 +126,51 @@ export function renderBlock(block, options = {}) {
       /* The road, not the accordion. LeadershipPanels is still in the tree and still
          reads the same block, so switching this one line back restores the bars. */
       return LeadershipRoad(block, options);
+
+    case 'council-grid':
+      return CouncilGrid(block, options);
+
+    case 'roster':
+      return Roster(block, options);
+
+    case 'hub':
+      return Hub(block, options);
+
+    case 'stat-wall':
+      return StatWall(block, options);
+
+    case 'book-shelf':
+      return BookShelf(block, options);
+
+    case 'paper-tabs':
+      return PaperTabs(block, options);
+
+    case 'alliance-accordion':
+      return AllianceAccordion(block);
+
+    case 'skew-carousel':
+      return SkewCarousel(block);
+
+    case 'tilted-tiles':
+      return TiltedTiles(block, options);
+
+    case 'card-fan':
+      return CardFan(block);
+
+    case 'photo-ring':
+      return PhotoRing(block, options);
+
+    case 'event-orbit':
+      return EventOrbit(block, options);
+
+    case 'training-shelf':
+      return TrainingShelf(block);
+
+    case 'photo-collage':
+      return PhotoCollage(block);
+
+    case 'thread-board':
+      return ThreadBoard(block);
 
     case 'gallery-wall':
       return GalleryWall(block, options);

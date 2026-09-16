@@ -12,3 +12,7 @@ export function get(req, res, ctx) {
 export async function update(req, res, ctx) {
   sendJson(res, 200, { organization: await orgService.update(ctx.params.orgId, ctx.body || {}) });
 }
+
+export async function create(req, res, ctx) {
+  sendJson(res, 201, { organization: await orgService.create(ctx.body || {}) });
+}

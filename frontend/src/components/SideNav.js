@@ -33,18 +33,25 @@ import { SectionIconGlyph } from './IconChooser.js';
    Executive Summary, Organization Snapshot, History & Milestones, CEO Profile,
    Leadership Journey and Success Stories now each stand on their own.
 
-   A curated label wins over the stored title, so this list is the presenter-facing
-   naming. The icons are the same ones the sections themselves carry: fourteen
+   The stored title wins; a curated label is the fallback for a section that has
+   none. It used to be the other way round, and that made every deck share one set
+   of names — three organizations now hold the same section keys, and the moment
+   NGI asked for "Legacy & Milestones" while Torii kept "History & Milestones",
+   the name had to come from the section itself. The list still carries the icon
+   for each key and the story of subsections under a group whose pages have not
+   been built. The icons are the same ones the sections themselves carry: fourteen
    distinct glyphs, because a repeated glyph is a row the eye cannot tell from its
    neighbour in the collapsed rail, where the glyph is all there is. */
 const NAVIGATION_GROUPS = [
   ['company-profile', 'Executive Summary', 'team-cycle', []],
+  ['leadership-journey', 'Governance Council', 'climb-steps', []],
+  ['governing-body', 'Governing Body', 'team-cycle', []],
+  ['academic-council', 'Academic Council', 'rosette', []],
   ['organization-snapshot', 'Organization Snapshot', 'camera-photo', []],
   ['history-milestones', 'History & Milestones', 'roadmap', []],
   ['ceo-profile', 'CEO Profile', 'ceo-podium', []],
-  ['leadership-journey', 'Leadership Journey', 'climb-steps', []],
   ['success-stories', 'Success Stories', 'rosette', []],
-  ['programs', 'Programs', 'www-globe', []],
+  ['programs', 'Programmes', 'www-globe', []],
   ['team', 'Centers of Excellence', 'handshake-check', []],
   ['certifications', 'Certifications', 'seal-check', []],
   ['placements', 'Placements', 'job-pin', []],
@@ -170,9 +177,9 @@ const groupFor = (section) => {
 
 /**
  * The presenter-facing name and icon for a section, exactly as the side pane
- * shows it — so the deck's jump bar cannot drift from the navigation. A curated
- * group label wins; a real subsection page falls back to its own title, because
- * no curated row is keyed to it.
+ * shows it — so the deck's jump bar cannot drift from the navigation. The
+ * section's own title wins; the curated label is what a titleless section falls
+ * back to, and the curated icon is what a section with no `iconKey` gets.
  */
 /**
  * What sits under a section, for the deck bar's hover menu.
@@ -206,7 +213,7 @@ export function sectionMenu(section) {
 export function sectionLabel(section) {
   const [title, iconKey] = groupFor(section);
   return {
-    label: title || section?.title || 'Section',
+    label: section?.title || title || 'Section',
     icon: iconKey || section?.icon || iconForTitle(section?.title),
   };
 }
@@ -319,9 +326,40 @@ function navigationState(orgId, activeIndex) {
     navigationStateByOrg.set(orgId, {
       expanded: new Set(activeIndex >= 0 ? [activeIndex] : []),
       selectedChildren: new Map(),
+      // How far down the pane was scrolled, and the same for the collapsed
+      // rail. Kept per organization: each deck is a different length, and
+      // Torii's twenty-one rows have nothing to do with NGI's thirteen.
+      scroll: 0,
+      railScroll: 0,
     });
   }
   return navigationStateByOrg.get(orgId);
+}
+
+/**
+ * Keeps a scroller's position across the rerender that follows every click.
+ *
+ * The router rebuilds the pane on each navigation, so its scroller is a brand
+ * new element starting at the top. With a deck long enough to scroll, that put
+ * every row below the fold out of reach: clicking one sent the pane back to the
+ * top, and the next had to be hunted for again. The offset is parked beside the
+ * open-group state, which lives outside the DOM for exactly this reason.
+ *
+ * Restored with `scroll-behavior` forced off for the assignment. The pane is
+ * declared `smooth`, and a smooth restore animates up from the top on every
+ * click — the same glitch, half a second slower.
+ */
+function keepScroll(el, store, key) {
+  el.addEventListener('scroll', () => { store[key] = el.scrollTop; }, { passive: true });
+  const saved = store[key];
+  if (!saved) return el;
+  requestAnimationFrame(() => {
+    const previous = el.style.scrollBehavior;
+    el.style.scrollBehavior = 'auto';
+    el.scrollTop = saved;
+    el.style.scrollBehavior = previous;
+  });
+  return el;
 }
 
 /** A section's own mark wins over the curated one — admins can restyle any row. */
@@ -492,7 +530,7 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
     // rest of the group's story stays put until its pages are built too.
     const built = childSections(section.id);
     const children = title ? mergeChildren(curated, built) : built;
-    return groupNode(section, index, title || section.title, iconKey, children);
+    return groupNode(section, index, section.title || title, iconKey, children);
   });
 
   /* ----------------------------------------------------------- rail flyout
@@ -589,12 +627,12 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
     railTip.hidden = true;
   };
 
-  const railTree = h(
+  const railTree = keepScroll(h(
     'div',
     { class: 'snav-rail__list' },
     ...sections.map((section, index) => {
       const [title, iconKey, curated] = groupFor(section);
-      const label = title || section.title;
+      const label = section.title || title;
       // The rail flyout was reading the curated list raw, so it never offered a
       // page that had actually been built. Same merge as the pane — the two are
       // meant to agree.
@@ -615,14 +653,14 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
       );
       return button;
     }),
-  );
+  ), navState, 'railScroll');
 
   /* ----------------------------------------------------------- scroll body */
-  const guide = h(
+  const guide = keepScroll(h(
     'nav',
     { class: 'sidenav__scroll', 'aria-label': 'Organization guide' },
     h('div', { class: 'nav-tree' }, ...tree),
-  );
+  ), navState, 'scroll');
 
   /* -------------------------------------------------------------- shell */
   const collapse = h(
@@ -664,6 +702,30 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
     artworkGlyph(CHROME_ARTWORK.signout, { class: 'ic ic--sm' }),
   );
 
+  /* The organization switcher. Three decks share one pane, and this is how the
+     presenter moves between them: one tab per organization, the current one
+     filled in its own brand ink. It is a control and reads as one — unlike the
+     section rows, which are colour rather than fill on purpose — so a filled
+     active state is right here and would be wrong two inches below.
+
+     Collapsed, the tabs stack and show each organization's short name, because
+     the initial alone cannot tell NGI from NCET. */
+  const orgTabs = h(
+    'nav',
+    { class: 'sidenav__orgs', 'aria-label': 'Organizations' },
+    ...state.orgs.map((o) => h(
+      'button',
+      {
+        class: `sidenav__org${o.id === org.id ? ' is-active' : ''}`,
+        type: 'button',
+        title: o.name,
+        'aria-current': o.id === org.id ? 'page' : undefined,
+        onclick: () => { if (o.id !== org.id) navigate(`/o/${o.id}`); },
+      },
+      o.shortName || o.name,
+    )),
+  );
+
   const brandMark = org.mark?.url
     ? h('img', { class: 'sidenav__mark', src: org.mark.url, alt: `${org.name} mark` })
     : h('div', { class: 'sidenav__mark sidenav__mark--text' }, initials(org.name, 1));
@@ -681,6 +743,7 @@ export function SideNav(org, activeSectionId, { onLogout } = {}) {
       signOut,
       collapse,
     ),
+    orgTabs,
     guide,
     railTree,
     flyout,

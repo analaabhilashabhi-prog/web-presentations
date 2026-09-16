@@ -1,0 +1,1671 @@
+
+/* ==========================================================================
+   Book shelf — ThreeUI "BestsellersBookShowcase", ported verbatim
+   Source: https://threeui.com/landing-pages/bestsellers-book-showcase.html
+   SHA-256 7c1ed1ca4a4c58f1c33956c84edd8f7ba450ea0312df718701e634a207568138
+   (verified against the fetched bytes before any edit was made).
+
+   Three edits, and only three, were made to the authored sheet:
+
+   1. Every selector is namespaced -- classes gain a `bs-` prefix, keyframes
+      too, and every rule is scoped under `.bs-root`. The original owns the
+      document: it styles `:root`, `html`, `body` and a bare `*`. Dropped into
+      this app unscoped it would restyle the whole deck.
+   2. `vw`/`vh`/`svh` became `cqw`/`cqh`. The showcase no longer owns the
+      viewport -- it owns one full-bleed block inside a slide that FitSlide
+      lays out at a nominal 1600x900 and then transform-scales to the display.
+      Viewport units would be read against the real window and every authored
+      proportion would drift. Container units restore them exactly.
+   3. The three `[data-book]` position rules are keyed on slot number rather
+      than on the original book names. Same geometry, same values; it just no
+      longer says "codex" in a deck about a college.
+
+   Nothing else moved: the transforms, the easing curves, the durations, the
+   page fan, the parallax hooks and the falling blossoms are the authored ones.
+   ========================================================================== */
+
+/* The block has to actually own a box before `cqw`/`cqh` mean anything, and it
+   has to be the containment root rather than an ancestor, or the units resolve
+   against the wrong rectangle. */
+.slide--hero .canvas-block--book-shelf {
+  height: 100% !important;
+  min-height: var(--slide-h, 860px) !important;
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  grid-row: 1 / -1 !important;
+}
+
+/* The app puts `flex: 1` on every direct child of a canvas block, which carries
+   `flex-basis: 0%` with it. A size container whose basis is 0% reports a
+   queried height of 0 even while it lays out at the full 860 -- measured: the
+   probe read `100cqw` as 1600 and `100cqh` as 0 -- so every `cqh` in the
+   authored sheet collapsed and the shelf stacked at the top of the slide with
+   the books hanging off the bottom. The item needs a definite block size of
+   its own, which means taking it out of the flex sizing. */
+.slide--hero .canvas-block--book-shelf > .bs-shell {
+  flex: 0 0 auto !important;
+  height: var(--slide-h, 860px) !important;
+}
+
+.bs-shell {
+  container-type: size;
+  position: relative;
+  height: var(--slide-h, 860px);
+  max-height: var(--slide-h, 860px);
+  overflow: hidden;
+}
+
+.bs-root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+
+.bs-root{
+  --ink: #29251d;
+  --ink-deep: #1d1a15;
+  --ink-soft: #3a382b;
+  --pink: #c3a47b;
+  --pink-bright: #dbc39c;
+  --text: #eee2ca;
+  --muted: #c5b79e;
+  --periwinkle: #b7976c;
+  --sage: #89946f;
+  --clay: #a96346;
+  --moss: #5f684f;
+  --paper: #eadfc7;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua",
+    Baskerville, Georgia, serif;
+  --ease: cubic-bezier(.2, .78, .2, 1);
+  --mx: 0px;
+  --my: 0px;
+}
+
+.bs-root *{
+  box-sizing: border-box;
+}
+
+.bs-root, .bs-root{
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  background: var(--ink);
+}
+
+.bs-root{
+  min-height: 100cqh;
+  overflow: hidden;
+  color: var(--text);
+  font-family: var(--serif);
+  -webkit-font-smoothing: antialiased;
+  cursor: default;
+}
+
+.bs-root button, .bs-root a{
+  font: inherit;
+}
+
+.bs-root button{
+  color: inherit;
+}
+
+.bs-root .bs-stage{
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-height: 100cqh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 49% 84%, rgba(117, 102, 71, .2), transparent 34%),
+    radial-gradient(circle at 14% 4%, rgba(100, 112, 77, .12), transparent 28%),
+    linear-gradient(180deg, #343025 0%, var(--ink) 48%, #211e18 100%);
+}
+
+.bs-root .bs-stage::after{
+  content: "";
+  position: absolute;
+  z-index: 30;
+  inset: 0;
+  pointer-events: none;
+  opacity: .14;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+}
+
+.bs-root .bs-topbar{
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 26px 3.2cqw;
+  pointer-events: none;
+}
+
+.bs-root .bs-brand{
+  color: var(--pink);
+  font-size: clamp(23px, 2.1cqw, 30px);
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: -.035em;
+  line-height: 1;
+  text-decoration: none;
+  pointer-events: auto;
+}
+
+.bs-root .bs-nav-actions{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+.bs-root .bs-icon-button, .bs-root .bs-ticket-button, .bs-root .bs-close-button, .bs-root .bs-pill, .bs-root .bs-book-card{
+  border: 0;
+  outline: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bs-root .bs-icon-button, .bs-root .bs-ticket-button{
+  height: 50px;
+  border: 1px solid rgba(61, 49, 35, .18);
+  background: var(--paper);
+  color: #30291f;
+  box-shadow: 0 8px 26px rgba(28, 22, 14, .13);
+  transition: transform 240ms var(--ease), background-color 240ms ease;
+}
+
+.bs-root .bs-icon-button{
+  display: grid;
+  width: 50px;
+  place-items: center;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.bs-root .bs-menu-glyph{
+  position: relative;
+  width: 14px;
+  height: 10px;
+}
+
+.bs-root .bs-menu-glyph::before, .bs-root .bs-menu-glyph::after{
+  content: "";
+  position: absolute;
+  left: 1px;
+  width: 12px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 300ms var(--ease), top 300ms var(--ease);
+}
+
+.bs-root .bs-menu-glyph::before{
+  top: 2px;
+}
+
+.bs-root .bs-menu-glyph::after{
+  top: 7px;
+}
+
+.bs-root[data-menu="open"] .bs-menu-glyph::before{
+  top: 5px;
+  transform: rotate(45deg);
+}
+
+.bs-root[data-menu="open"] .bs-menu-glyph::after{
+  top: 5px;
+  transform: rotate(-45deg);
+}
+
+.bs-root .bs-ticket-button{
+  display: inline-grid;
+  min-width: 138px;
+  padding: 0 25px;
+  place-items: center;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.bs-root .bs-icon-button:hover, .bs-root .bs-ticket-button:hover{
+  transform: translateY(-3px);
+  background: #f7edd9;
+}
+
+.bs-root .bs-icon-button:focus-visible, .bs-root .bs-ticket-button:focus-visible, .bs-root .bs-close-button:focus-visible, .bs-root .bs-pill:focus-visible, .bs-root .bs-menu-link:focus-visible{
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
+
+.bs-root .bs-hero-word{
+  position: absolute;
+  z-index: 1;
+  top: 11.5cqh;
+  left: 50%;
+  margin: 0;
+  color: var(--pink);
+  font-size: clamp(184px, 22cqw, 325px);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -.085em;
+  line-height: .84;
+  white-space: nowrap;
+  transform: translate3d(calc(-50% + var(--mx) * -.12), calc(var(--my) * -.12), 0);
+  transition: opacity 700ms ease, filter 700ms ease, transform 900ms var(--ease);
+  user-select: none;
+}
+
+.bs-root .bs-gallery{
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  perspective: 1400px;
+  transform-style: flat;
+}
+
+.bs-root .bs-book-card{
+  --hover-y: 0px;
+  --local-x: 0px;
+  --local-y: 0px;
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+  aspect-ratio: .672 / 1;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  transform:
+    translate3d(
+      calc(-50% + var(--local-x)),
+      calc(var(--hover-y) + var(--local-y)),
+      0
+    )
+    rotate(var(--r))
+    rotateY(var(--yaw));
+  transform-style: preserve-3d;
+  transition:
+    left 1100ms var(--ease),
+    top 1100ms var(--ease),
+    width 1100ms var(--ease),
+    opacity 500ms ease,
+    filter 500ms ease,
+    transform 520ms var(--ease);
+  will-change: transform, left, top, width;
+}
+
+.bs-root .bs-book-card[data-book="1"]{
+  --x: 23.2%;
+  --y: 40.5%;
+  --w: min(30.5cqw, 435px);
+  --r: -8deg;
+  --yaw: -7deg;
+  z-index: 1;
+}
+
+.bs-root .bs-book-card[data-book="2"]{
+  --x: 50%;
+  --y: 32.2%;
+  --w: min(33cqw, 470px);
+  --r: .8deg;
+  --yaw: -3deg;
+  z-index: 3;
+}
+
+.bs-root .bs-book-card[data-book="3"]{
+  --x: 77%;
+  --y: 42%;
+  --w: min(30.5cqw, 435px);
+  --r: 8deg;
+  --yaw: 7deg;
+  z-index: 2;
+}
+
+.bs-root .bs-book-card:hover, .bs-root .bs-book-card[data-hovered="true"]{
+  --hover-y: -28px;
+  z-index: 8;
+}
+
+.bs-root .bs-book{
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 800ms var(--ease);
+}
+
+.bs-root .bs-book-card:hover .bs-book{
+  transform: scale(1.035) rotateX(-1.5deg);
+}
+
+.bs-root .bs-book-back, .bs-root .bs-page-block, .bs-root .bs-page-fan, .bs-root .bs-front-cover, .bs-root .bs-book-shadow{
+  position: absolute;
+  inset: 0;
+  border-radius: 3px 7px 7px 3px;
+}
+
+.bs-root .bs-book-shadow{
+  z-index: -2;
+  inset: 5% -4% -2% 4%;
+  border-radius: 12px;
+  background: rgba(24, 18, 10, .7);
+  filter: blur(22px);
+  opacity: .72;
+  transform: translate3d(18px, 28px, -60px);
+}
+
+.bs-root .bs-book-back{
+  z-index: 0;
+  background: var(--cover-color);
+  box-shadow: 0 18px 30px rgba(24, 18, 10, .4);
+  transform: translate3d(7px, 1px, -26px);
+}
+
+.bs-root .bs-page-block{
+  z-index: 1;
+  inset: 1.7% 1.4% 1.7% 3.8%;
+  overflow: visible;
+  border: 1px solid rgba(84, 68, 45, .25);
+  border-radius: 2px 5px 5px 2px;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(105, 86, 58, .14) 0,
+      rgba(105, 86, 58, .14) 1px,
+      transparent 1px,
+      transparent 2.8px
+    ),
+    linear-gradient(90deg, #cfc1a4 0%, #f2e8d2 14%, #e7dac0 87%, #cbb894 100%);
+  box-shadow: 7px 5px 16px rgba(31, 23, 13, .26);
+  transform: translate3d(7px, 1px, -12px);
+  transition: transform 1100ms var(--ease), inset 1100ms var(--ease);
+}
+
+.bs-root .bs-page-block::before{
+  content: "";
+  position: absolute;
+  top: -7px;
+  right: 1px;
+  left: 1px;
+  height: 8px;
+  border-radius: 2px 4px 0 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #d9cbae 0,
+      #d9cbae 2px,
+      #f2e7cf 2px,
+      #f2e7cf 5px
+    );
+  transform: skewX(-8deg);
+  transform-origin: bottom left;
+}
+
+.bs-root .bs-page-block::after{
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -7px;
+  width: 8px;
+  height: 100%;
+  border-radius: 0 4px 4px 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      #cbb995 0,
+      #cbb995 1px,
+      #eee3cd 1px,
+      #eee3cd 3px
+    );
+  box-shadow: 3px 2px 7px rgba(35, 26, 14, .18);
+  transform: skewY(-2deg);
+  transform-origin: left center;
+}
+
+.bs-root .bs-page-fan{
+  z-index: 2;
+  inset: 2.4% 2% 2.4% 4.3%;
+  pointer-events: none;
+  transform-style: preserve-3d;
+}
+
+.bs-root .bs-page-fan i{
+  position: absolute;
+  inset: 0;
+  display: block;
+  border: 1px solid rgba(102, 83, 55, .22);
+  border-radius: 2px 5px 5px 2px;
+  background:
+    linear-gradient(90deg, rgba(116, 91, 56, .22), transparent 9%),
+    repeating-linear-gradient(
+      0deg,
+      #f0e6d0 0,
+      #f0e6d0 2px,
+      #e6d8ba 2px,
+      #e6d8ba 3px
+    );
+  box-shadow: 3px 5px 10px rgba(37, 28, 16, .08);
+  opacity: 0;
+  transform: translate3d(0, 0, 0) rotateY(0);
+  transform-origin: 1.5% center;
+  transition: opacity 500ms ease, transform 1200ms var(--ease);
+}
+
+.bs-root .bs-front-cover{
+  z-index: 3;
+  overflow: hidden;
+  border: 1px solid rgba(238, 224, 194, .2);
+  background-color: var(--cover-color);
+  background-image: var(--cover);
+  background-position: center;
+  background-size: cover;
+  box-shadow:
+    0 25px 38px rgba(24, 18, 10, .4),
+    inset -12px 0 18px rgba(0, 0, 0, .16),
+    inset 4px 0 9px rgba(255, 255, 255, .12);
+  transform: translate3d(0, 0, 12px);
+  transform-origin: 1.5% center;
+  transform-style: preserve-3d;
+  transition: transform 1200ms var(--ease), box-shadow 600ms ease;
+}
+
+.bs-root .bs-front-cover::before{
+  content: "";
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 5.5%;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, .35),
+      rgba(255, 255, 255, .08) 35%,
+      rgba(0, 0, 0, .12) 75%,
+      transparent
+    );
+  mix-blend-mode: multiply;
+  opacity: .8;
+}
+
+.bs-root .bs-front-cover::after{
+  content: "";
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  border: 3px solid rgba(255, 255, 255, .04);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.bs-root .bs-cover-motion{
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 420ms ease;
+  pointer-events: none;
+}
+
+.bs-root .bs-cover-motion[data-ready="true"]{
+  opacity: 1;
+}
+
+.bs-root .bs-cover-copy{
+  position: absolute;
+  z-index: 2;
+  inset: 5.8% 7.5% 5.5%;
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto;
+  align-content: start;
+  color: var(--cover-ink);
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(241, 226, 196, .24);
+}
+
+.bs-root .bs-cover-kicker{
+  font-size: clamp(8px, .72cqw, 11px);
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.bs-root .bs-cover-title{
+  margin-top: 2.2%;
+  font-size: clamp(35px, 4.3cqw, 64px);
+  font-weight: 600;
+  letter-spacing: -.055em;
+  line-height: .9;
+}
+
+.bs-root .bs-cover-subtitle{
+  margin-top: 3%;
+  font-size: clamp(10px, 1.05cqw, 15px);
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: .035em;
+}
+
+.bs-root .bs-cover-footer{
+  align-self: end;
+  padding-top: 3%;
+  border-top: 1px solid currentColor;
+  font-size: clamp(7px, .62cqw, 9px);
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.bs-root .bs-book-card[data-book="1"] .bs-cover-copy{
+  --cover-ink: #31291e;
+}
+
+.bs-root .bs-book-card[data-book="2"] .bs-cover-copy{
+  --cover-ink: #4b281a;
+}
+
+.bs-root .bs-book-card[data-book="3"] .bs-cover-copy{
+  --cover-ink: #293024;
+}
+
+.bs-root .bs-open-badge{
+  position: absolute;
+  z-index: 6;
+  top: 47%;
+  left: 50%;
+  display: grid;
+  width: 94px;
+  height: 66px;
+  place-items: center;
+  color: #312a21;
+  background: #efe3ca;
+  clip-path: polygon(
+    3% 22%, 10% 8%, 25% 7%, 38% 1%, 51% 6%, 66% 2%,
+    77% 10%, 92% 11%, 96% 26%, 100% 39%, 95% 52%, 99% 67%,
+    88% 79%, 83% 93%, 68% 94%, 55% 100%, 42% 94%, 27% 98%,
+    17% 88%, 4% 84%, 5% 69%, 0 57%, 5% 43%, 1% 34%
+  );
+  font-size: 11px;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: .12em;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.76) rotate(-3deg);
+  transition: opacity 260ms ease, transform 420ms var(--ease), filter 260ms ease;
+  pointer-events: none;
+}
+
+.bs-root .bs-book-card:hover .bs-open-badge, .bs-root .bs-book-card[data-hovered="true"] .bs-open-badge, .bs-root .bs-book-card:focus-visible .bs-open-badge{
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) rotate(-3deg);
+}
+
+.bs-root .bs-book-card:focus-visible{
+  outline: 0;
+}
+
+.bs-root .bs-book-card:focus-visible .bs-open-badge{
+  filter:
+    drop-shadow(0 7px 12px rgba(29, 22, 14, .34))
+    drop-shadow(0 0 8px rgba(224, 190, 137, .28));
+}
+
+.bs-root .bs-detail-panel{
+  position: absolute;
+  z-index: 12;
+  top: 14.5%;
+  right: 4.5%;
+  width: min(47.5%, 650px);
+  opacity: 0;
+  transition: opacity 520ms ease 280ms;
+  pointer-events: none;
+}
+
+.bs-root .bs-detail-title{
+  margin: 0 0 24px;
+  color: var(--pink);
+  font-size: clamp(52px, 5.7cqw, 82px);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -.055em;
+  line-height: .96;
+}
+
+.bs-root .bs-detail-description{
+  max-width: 600px;
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(14px, 1.28cqw, 17px);
+  line-height: 1.64;
+}
+
+/* Reclaiming the dock's room.
+   The authored `100cqh - 450px` and the 76px fade both budgeted for what sat
+   under the sheet: the star rating, the year line, the rule and the rail of
+   pills. All of that is gone, and with the original figures the two longer
+   sheets still scrolled -- measured 161px of hidden rows on UG and 170px on
+   the research register -- while 176-220px of the panel's own space sat empty
+   beneath it. A presenter driving a projector cannot scroll a panel, so rows
+   below the fold are rows nobody sees. These two numbers hand that space back
+   and every sheet now ends inside the panel. */
+.bs-root .bs-detail-scroll{
+  max-height: clamp(320px, calc(100cqh - 300px), 620px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 22px 28px 0;
+  /* The fade now spans exactly the bottom padding, so when a sheet fits it
+     falls entirely on empty space and no row is dimmed; only a sheet that
+     genuinely runs long gets the authored soft edge. */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 calc(100% - 28px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 calc(100% - 28px),
+    transparent 100%
+  );
+  scrollbar-color: rgba(198, 139, 140, .76) rgba(73, 66, 49, .35);
+  scrollbar-width: thin;
+}
+
+.bs-root .bs-detail-scroll:focus-visible{
+  border-radius: 8px;
+  outline: 1px solid rgba(231, 184, 185, .7);
+  outline-offset: 8px;
+}
+
+.bs-root .bs-detail-scroll::-webkit-scrollbar{
+  width: 5px;
+}
+
+.bs-root .bs-detail-scroll::-webkit-scrollbar-track{
+  border-radius: 999px;
+  background: rgba(73, 66, 49, .35);
+}
+
+.bs-root .bs-detail-scroll::-webkit-scrollbar-thumb{
+  border-radius: 999px;
+  background: rgba(198, 139, 140, .76);
+}
+
+.bs-root .bs-doc-section{
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(220, 200, 164, .2);
+}
+
+.bs-root .bs-doc-label{
+  margin: 0 0 16px;
+  color: var(--pink);
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.bs-root .bs-doc-steps{
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: guide-step;
+}
+
+.bs-root .bs-doc-steps li{
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 12px;
+  counter-increment: guide-step;
+}
+
+.bs-root .bs-doc-steps li::before{
+  content: counter(guide-step, decimal-leading-zero);
+  padding-top: 2px;
+  color: rgba(231, 184, 185, .7);
+  font-size: 12px;
+  font-style: italic;
+  letter-spacing: .08em;
+}
+
+.bs-root .bs-doc-step-copy{
+  display: grid;
+  gap: 4px;
+}
+
+.bs-root .bs-doc-step-copy strong{
+  color: #e8dcc4;
+  font-size: 15px;
+  font-style: italic;
+  font-weight: 650;
+}
+
+.bs-root .bs-doc-step-copy span, .bs-root .bs-doc-review{
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.58;
+}
+
+.bs-root .bs-prompt-block{
+  padding: 17px 18px;
+  border: 1px solid rgba(220, 200, 164, .2);
+  border-radius: 12px;
+  background: rgba(52, 48, 37, .62);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .035);
+}
+
+.bs-root .bs-prompt-block code{
+  color: #e8dcc4;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.58;
+  white-space: pre-wrap;
+}
+
+.bs-root .bs-doc-review{
+  margin: 0;
+}
+
+.bs-root .bs-meta-row{
+  display: grid;
+  grid-template-columns: max-content 1px max-content 1fr;
+  align-items: center;
+  gap: clamp(16px, 2cqw, 27px);
+  margin-top: 22px;
+  color: var(--pink);
+}
+
+.bs-root .bs-stars{
+  display: flex;
+  gap: 8px;
+  font-size: 24px;
+  letter-spacing: .02em;
+  line-height: 1;
+}
+
+.bs-root .bs-stars .bs-dim{
+  color: #665f4d;
+}
+
+.bs-root .bs-meta-divider{
+  width: 1px;
+  height: 26px;
+  background: rgba(220, 200, 164, .28);
+}
+
+.bs-root .bs-review-source, .bs-root .bs-year{
+  color: #bcae92;
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 650;
+}
+
+.bs-root .bs-year{
+  justify-self: end;
+}
+
+.bs-root .bs-detail-rule{
+  height: 1px;
+  margin: 10px 0 22px;
+  border: 0;
+  background: rgba(220, 200, 164, .24);
+}
+
+.bs-root .bs-bottom-dock{
+  position: fixed;
+  z-index: 24;
+  right: 4.5%;
+  bottom: 28px;
+  width: min(47.5%, 650px);
+}
+
+.bs-root .bs-bottom-dock .bs-meta-row{
+  margin: 0 10px;
+}
+
+.bs-root .bs-bottom-dock .bs-detail-rule{
+  margin: 10px 8px 14px;
+}
+
+.bs-root .bs-action-rail{
+  --action-inset: 8px;
+  display: flex;
+  align-items: center;
+  gap: var(--action-inset);
+  width: 100%;
+  padding: var(--action-inset);
+  border: 1px solid rgba(238, 226, 202, .07);
+  border-radius: 32px;
+  background: rgba(64, 58, 43, .88);
+  box-shadow: 0 16px 32px rgba(26, 20, 12, .2);
+  backdrop-filter: blur(12px);
+}
+
+.bs-root .bs-pill{
+  display: inline-flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 58px;
+  padding: 0 18px;
+  border-radius: 24px;
+  background: var(--periwinkle);
+  color: #2e261d;
+  cursor: pointer;
+  font-size: 15px;
+  font-style: italic;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: transform 220ms var(--ease), filter 220ms ease, background 220ms ease;
+}
+
+.bs-root .bs-pill:hover{
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+}
+
+.bs-root .bs-pill.bs-language{
+  gap: 10px;
+  background: var(--paper);
+}
+
+.bs-root .bs-pill.bs-language svg{
+  width: 19px;
+  height: 19px;
+}
+
+.bs-root .bs-pill.bs-icon-only{
+  flex: 0 0 58px;
+  width: 58px;
+  min-width: 58px;
+  padding: 0;
+  background: #565d45;
+  color: #f1e6cf;
+}
+
+.bs-root .bs-pill.bs-icon-only svg{
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  transition: fill 220ms ease;
+}
+
+.bs-root .bs-pill.bs-icon-only[aria-pressed="true"] svg{
+  fill: var(--pink);
+  stroke: var(--pink);
+}
+
+.bs-root .bs-close-button{
+  position: absolute;
+  z-index: 52;
+  top: 30px;
+  left: 50%;
+  display: grid;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .26);
+  border-radius: 50%;
+  background: rgba(42, 37, 28, .28);
+  color: var(--paper);
+  cursor: pointer;
+  font-size: 27px;
+  font-weight: 200;
+  opacity: 0;
+  transform: translate3d(-50%, -18px, 0) rotate(-45deg);
+  transition: opacity 400ms ease, transform 620ms var(--ease), background 220ms ease;
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+}
+
+.bs-root .bs-close-button:hover{
+  background: rgba(255, 255, 255, .08);
+}
+
+.bs-root .bs-blossom-field{
+  position: absolute;
+  z-index: 9;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 700ms ease 250ms;
+  pointer-events: none;
+}
+
+.bs-root .bs-blossom{
+  --blossom-size: 26px;
+  position: absolute;
+  top: -12cqh;
+  left: var(--blossom-x);
+  width: var(--blossom-size);
+  height: var(--blossom-size);
+  opacity: .92;
+  transform-style: preserve-3d;
+  animation: bs-blossomFall var(--blossom-duration) linear var(--blossom-delay) infinite;
+}
+
+.bs-root .bs-blossom i{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 42%;
+  height: 60%;
+  border-radius: 72% 72% 58% 58%;
+  background:
+    radial-gradient(circle at 50% 82%, rgba(187, 103, 108, .9) 0 10%, transparent 11%),
+    linear-gradient(180deg, #f5d8d3 0%, #e6aaa9 74%, #c78184 100%);
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .42);
+  transform-origin: 50% 100%;
+}
+
+.bs-root .bs-blossom i:nth-child(1){
+  transform: translate(-50%, -100%) rotate(0deg);
+}
+
+.bs-root .bs-blossom i:nth-child(2){
+  transform: translate(-50%, -100%) rotate(72deg);
+}
+
+.bs-root .bs-blossom i:nth-child(3){
+  transform: translate(-50%, -100%) rotate(144deg);
+}
+
+.bs-root .bs-blossom i:nth-child(4){
+  transform: translate(-50%, -100%) rotate(216deg);
+}
+
+.bs-root .bs-blossom i:nth-child(5){
+  transform: translate(-50%, -100%) rotate(288deg);
+}
+
+.bs-root .bs-blossom::after{
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18%;
+  height: 18%;
+  border-radius: 50%;
+  background: #d9b46f;
+  box-shadow: 0 0 0 2px rgba(107, 70, 51, .18);
+  transform: translate(-50%, -50%);
+}
+
+@keyframes bs-blossomFall {
+  0% {
+    transform: translate3d(0, -10cqh, 0) rotateX(18deg) rotateZ(var(--blossom-r));
+  }
+  32% {
+    transform: translate3d(36px, 34cqh, 0) rotateX(154deg) rotateZ(calc(var(--blossom-r) + 126deg));
+  }
+  68% {
+    transform: translate3d(-30px, 78cqh, 0) rotateX(284deg) rotateZ(calc(var(--blossom-r) + 272deg));
+  }
+  100% {
+    transform: translate3d(20px, 122cqh, 0) rotateX(430deg) rotateZ(calc(var(--blossom-r) + 430deg));
+  }
+}
+
+.bs-root .bs-menu-layer{
+  position: fixed;
+  z-index: 40;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 47%, rgba(111, 91, 61, .22), transparent 42%),
+    rgba(30, 27, 21, .95);
+  opacity: 0;
+  transition: opacity 460ms ease;
+  pointer-events: none;
+  backdrop-filter: blur(18px);
+}
+
+.bs-root .bs-menu-list{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bs-root .bs-menu-link{
+  display: inline-block;
+  color: var(--pink);
+  font-size: clamp(56px, 7.5cqw, 108px);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -.055em;
+  line-height: 1.05;
+  text-decoration: none;
+  transform: translateY(24px);
+  transition: color 200ms ease, transform 500ms var(--ease);
+}
+
+.bs-root .bs-menu-link:hover{
+  color: #fff;
+}
+
+.bs-root[data-menu="open"] .bs-menu-layer{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.bs-root[data-menu="open"] .bs-menu-link{
+  transform: translateY(0);
+}
+
+.bs-root .bs-toast{
+  position: fixed;
+  z-index: 80;
+  bottom: 22px;
+  left: 50%;
+  max-width: calc(100cqw - 32px);
+  padding: 12px 18px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 999px;
+  background: rgba(36, 32, 25, .88);
+  color: var(--paper);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, .22);
+  font-size: 13px;
+  font-weight: 650;
+  opacity: 0;
+  transform: translate(-50%, 20px);
+  transition: opacity 250ms ease, transform 350ms var(--ease);
+  pointer-events: none;
+  backdrop-filter: blur(12px);
+}
+
+.bs-root .bs-toast[data-show="true"]{
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.bs-root[data-mode="detail"] .bs-hero-word{
+  opacity: 0;
+  filter: blur(16px);
+  transform: translate3d(-50%, -34px, 0) scale(.9);
+}
+
+.bs-root[data-mode="detail"] .bs-book-card:not(.bs-selected){
+  opacity: 0;
+  filter: blur(10px);
+  transform: translate3d(-50%, 60cqh, -200px) rotate(var(--r)) scale(.8);
+  pointer-events: none;
+}
+
+.bs-root[data-mode="detail"] .bs-book-card.bs-selected{
+  --hover-y: 0px;
+  --local-x: 0px;
+  --local-y: 0px;
+  --detail-yaw: -5deg;
+  --detail-pitch: 0deg;
+  left: 27%;
+  top: 50%;
+  width: min(30cqw, 415px);
+  z-index: 14;
+  cursor: default;
+  transform: translate3d(-50%, -50%, 0) rotate(-3deg);
+  pointer-events: none;
+}
+
+.bs-root[data-mode="detail"] .bs-book-card.bs-selected .bs-book{
+  transform: scale(1.02) rotateX(var(--detail-pitch)) rotateY(var(--detail-yaw));
+  transition-duration: 170ms;
+  transition-timing-function: cubic-bezier(.2, .78, .2, 1);
+}
+
+.bs-root[data-mode="detail"] .bs-book-card.bs-selected .bs-front-cover{
+  box-shadow:
+    25px 26px 44px rgba(29, 21, 11, .34),
+    inset -12px 0 18px rgba(0, 0, 0, .13),
+    inset 4px 0 9px rgba(255, 255, 255, .1);
+  transform: translate3d(0, 0, 18px) rotateY(-29deg);
+}
+
+.bs-root[data-mode="detail"] .bs-book-card.bs-selected .bs-page-block{
+  inset: 1.9% 1.5% 1.9% 4.4%;
+  transform: translate3d(6px, 1px, -11px);
+}
+
+.bs-root[data-mode="detail"] .bs-book-card.bs-selected .bs-page-fan i{
+  opacity: 1;
+}
+
+.bs-root[data-mode="detail"] .bs-book-card.bs-selected .bs-page-fan i:nth-child(1){
+  transform: translate3d(0, 0, 10px) rotateY(-4deg);
+}
+
+.bs-root[data-mode="detail"] .bs-book-card.bs-selected .bs-page-fan i:nth-child(2){
+  transform: translate3d(0, 0, 11px) rotateY(-8deg);
+}
+
+.bs-root[data-mode="detail"] .bs-book-card.bs-selected .bs-page-fan i:nth-child(3){
+  transform: translate3d(0, 0, 12px) rotateY(-12deg);
+}
+
+.bs-root[data-mode="detail"] .bs-book-card.bs-selected .bs-page-fan i:nth-child(4){
+  transform: translate3d(0, 0, 13px) rotateY(-16deg);
+}
+
+.bs-root[data-mode="detail"] .bs-book-card.bs-selected .bs-open-badge{
+  opacity: 0;
+}
+
+.bs-root[data-mode="detail"] .bs-detail-panel{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.bs-root[data-mode="gallery"] .bs-detail-panel{
+  transition-duration: 160ms;
+  transition-delay: 0ms;
+}
+
+.bs-root[data-mode="detail"] .bs-close-button{
+  opacity: 1;
+  transform: translate3d(-50%, 0, 0) rotate(0);
+  pointer-events: auto;
+}
+
+.bs-root[data-mode="detail"] .bs-blossom-field{
+  opacity: 1;
+}
+
+@container (max-width: 900px) {
+  .bs-root{
+    overflow: auto;
+  }
+
+  .bs-root .bs-stage{
+    min-height: 100cqh;
+    overflow: hidden;
+  }
+
+  .bs-root .bs-topbar{
+    padding: 20px;
+  }
+
+  .bs-root .bs-icon-button, .bs-root .bs-ticket-button{
+    height: 44px;
+  }
+
+  .bs-root .bs-icon-button{
+    width: 44px;
+  }
+
+  .bs-root .bs-ticket-button{
+    min-width: auto;
+    padding: 0 18px;
+  }
+
+  .bs-root .bs-hero-word{
+    top: 17cqh;
+    font-size: clamp(128px, 28cqw, 230px);
+  }
+
+  .bs-root .bs-book-card[data-book="1"]{
+    --x: 14%;
+    --y: 41%;
+    --w: min(49cqw, 360px);
+  }
+
+  .bs-root .bs-book-card[data-book="2"]{
+    --x: 50%;
+    --y: 35%;
+    --w: min(54cqw, 395px);
+  }
+
+  .bs-root .bs-book-card[data-book="3"]{
+    --x: 87%;
+    --y: 42%;
+    --w: min(49cqw, 360px);
+  }
+
+  .bs-root[data-mode="detail"] .bs-stage{
+    min-height: calc(100cqh + 760px);
+    overflow-y: auto;
+  }
+
+  .bs-root[data-mode="detail"] .bs-book-card.bs-selected{
+    left: 50%;
+    top: 50cqh;
+    width: min(58cqw, 340px);
+  }
+
+  .bs-root .bs-detail-panel{
+    top: calc(100cqh + 48px);
+    right: 7%;
+    left: 7%;
+    width: auto;
+    padding-bottom: 130px;
+  }
+
+  .bs-root .bs-detail-scroll{
+    max-height: min(500px, calc(100cqh - 310px));
+  }
+
+  .bs-root .bs-detail-title{
+    font-size: clamp(48px, 10cqw, 70px);
+  }
+
+  .bs-root .bs-bottom-dock{
+    right: 20px;
+    bottom: 20px;
+    left: 20px;
+    width: auto;
+  }
+
+  .bs-root .bs-action-rail{
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .bs-root .bs-action-rail::-webkit-scrollbar{
+    display: none;
+  }
+
+  .bs-root .bs-pill{
+    min-width: 132px;
+  }
+
+  .bs-root .bs-pill.bs-icon-only{
+    min-width: 58px;
+  }
+}
+
+@container (max-width: 560px) {
+  .bs-root .bs-brand{
+    font-size: 22px;
+  }
+
+  .bs-root .bs-ticket-button{
+    display: none;
+  }
+
+  .bs-root .bs-hero-word{
+    top: 22cqh;
+    font-size: 38cqw;
+  }
+
+  .bs-root .bs-book-card[data-book="1"]{
+    --x: 4%;
+    --y: 45%;
+    --w: 66cqw;
+  }
+
+  .bs-root .bs-book-card[data-book="2"]{
+    --x: 50%;
+    --y: 40%;
+    --w: 72cqw;
+  }
+
+  .bs-root .bs-book-card[data-book="3"]{
+    --x: 96%;
+    --y: 46%;
+    --w: 66cqw;
+  }
+
+  .bs-root[data-mode="detail"] .bs-stage{
+    min-height: calc(100cqh + 760px);
+  }
+
+  .bs-root[data-mode="detail"] .bs-book-card.bs-selected{
+    width: min(67cqw, 315px);
+  }
+
+  .bs-root .bs-detail-panel{
+    right: 20px;
+    left: 20px;
+  }
+
+  .bs-root .bs-detail-scroll{
+    padding-right: 14px;
+  }
+
+  .bs-root .bs-pill{
+    min-width: 0;
+    min-height: 54px;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+
+  .bs-root .bs-pill.bs-language svg{
+    display: none;
+  }
+
+  .bs-root .bs-pill.bs-icon-only{
+    flex-basis: 54px;
+    width: 54px;
+    min-width: 54px;
+  }
+
+  .bs-root .bs-meta-row{
+    grid-template-columns: max-content 1px 1fr;
+  }
+
+  .bs-root .bs-year{
+    display: none;
+  }
+
+  .bs-root .bs-close-button{
+    top: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bs-root .bs-cover-motion{
+    display: none !important;
+  }
+
+  .bs-root *, .bs-root *::before, .bs-root *::after{
+    scroll-behavior: auto !important;
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    transition-delay: 0ms !important;
+  }
+}
+  
+/* --------------------------------------------------------------------------
+   The sheet.
+
+   Everything ThreeUI put in the panel beside the book -- the description, the
+   "Getting started" steps, the prompt block, the review note, the star rating,
+   the year, and the whole action rail of pills -- is gone, as asked. What is
+   left is the book's title and the table off its own page, and nothing else.
+   The authored rules for those parts are still in the sheet above, unused, so
+   restoring any of them is a matter of rendering the node again.
+
+   Typed in the showcase's own voice rather than the deck's: the serif it
+   already loads, its pink for the headings, its muted tone for the body. A
+   table set in the deck's sans would read as a foreign object dropped into
+   the panel.
+   -------------------------------------------------------------------------- */
+.bs-root .bs-sheet {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+}
+
+.bs-root .bs-sheet th {
+  padding: 0 14px 11px 0;
+  border-bottom: 1px solid rgba(195, 164, 123, .34);
+  color: var(--pink);
+  font-size: clamp(10px, .92cqw, 12px);
+  font-weight: 600;
+  letter-spacing: .13em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.bs-root .bs-sheet td {
+  padding: 13px 14px 13px 0;
+  border-bottom: 1px solid rgba(195, 164, 123, .13);
+  color: var(--text);
+  font-size: clamp(13px, 1.2cqw, 16px);
+  line-height: 1.38;
+  vertical-align: baseline;
+}
+
+/* The first column is the thing being named; the rest are its figures. */
+.bs-root .bs-sheet td:first-child {
+  padding-right: 22px;
+  color: var(--text);
+}
+
+.bs-root .bs-sheet th:not(:first-child),
+.bs-root .bs-sheet td:not(:first-child) {
+  width: 1%;
+  padding-right: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* A total is the sheet's own summation, not another row of data. */
+.bs-root .bs-sheet tr[data-total="true"] td {
+  border-bottom: 0;
+  border-top: 1px solid rgba(195, 164, 123, .34);
+  padding-top: 15px;
+  color: var(--pink-bright);
+  font-size: clamp(14px, 1.32cqw, 18px);
+  font-style: italic;
+  font-weight: 600;
+}
+
+.bs-root .bs-sheet tr[data-total="true"] td:not(:first-child) {
+  color: var(--pink-bright);
+}
+
+/* Rows arrive after the panel has faded up, in reading order, on the
+   showcase's own easing curve.
+
+   `both`, not `backwards`. `backwards` only fills the delay; the moment the
+   animation ends the row falls back to the rule below it and every row in the
+   sheet turned invisible again — the panel showed its headings and its rules
+   over nine empty lines. The keyframes carry their own `from` so the fill has
+   something to hold at each end. */
+.bs-root .bs-sheet tbody tr {
+  opacity: 0;
+}
+
+.bs-root[data-mode="detail"] .bs-sheet tbody tr {
+  animation: bs-row-in 460ms var(--ease) both;
+  animation-delay: calc(460ms + var(--row, 0) * 52ms);
+}
+
+@keyframes bs-row-in {
+  from { opacity: 0; transform: translate3d(0, 9px, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+.bs-root .bs-sheet-note {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: clamp(11px, 1cqw, 13px);
+  font-style: italic;
+  line-height: 1.5;
+  opacity: .84;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bs-root .bs-sheet tbody tr,
+  .bs-root[data-mode="detail"] .bs-sheet tbody tr {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   Light ground — white behind the books, on the shelf and with one open.
+
+   A layer over the port rather than edits scattered through it, so the
+   authored sheet above stays exactly as fetched and this whole theme lifts
+   out in one block if it is ever unwanted.
+
+   The showcase was drawn for a dark field, and almost nothing in it survives
+   the ground being inverted: its body cream (#eee2ca) measures 1.2:1 on white
+   and its tan (#c3a47b) 2.1:1 -- both effectively invisible. So the palette is
+   rebuilt in the deck's own colours, which is what white was always going to
+   ask for: navy for reading, orange for the one thing that is primary, white
+   for everything else.
+
+   Measured against #FFFFFF:
+     navy   #0E2455  14.3:1   body, figures, totals
+     orange #D45F06   3.9:1   the title only -- 82px display text, where the
+                              threshold is 3:1; it would fail as body copy,
+                              which is why the column headings are navy and
+                              not a lighter orange.
+   ========================================================================== */
+.bs-root {
+  --ink: #FFFFFF;
+  --ink-deep: #FFFFFF;
+  --ink-soft: #F4F6FA;
+  --paper: #FFFFFF;
+  --text: #0E2455;
+  --muted: rgba(14, 36, 85, .62);
+  --pink: #D45F06;
+  --pink-bright: #F6872A;
+  --rule: rgba(14, 36, 85, .14);
+  --rule-strong: rgba(14, 36, 85, .28);
+  background: #FFFFFF;
+}
+
+/* Flat white. The authored ground was two radial washes over a vertical
+   gradient; the house rule here is no gradients, and on white they would only
+   read as dirt. */
+.bs-root .bs-stage {
+  background: #FFFFFF;
+}
+
+/* The film grain was there to keep a large dark field from banding. On white
+   it is just grey speckle across the slide. */
+.bs-root .bs-stage::after {
+  display: none;
+}
+
+/* ---------------------------------------------------------- the books
+   The books keep their own weight -- dark boards, cream paper, the artwork
+   covers -- but every shadow was mixed for a dark ground and reads as a
+   smudge on white. They become navy-tinted and lighter, so the books still
+   lift off the page without dirtying it. */
+.bs-root .bs-book-shadow {
+  background: rgba(14, 36, 85, .16);
+}
+
+.bs-root .bs-book-back {
+  box-shadow: 0 18px 30px rgba(14, 36, 85, .16);
+}
+
+.bs-root .bs-page-block {
+  box-shadow: 7px 5px 16px rgba(14, 36, 85, .12);
+}
+
+.bs-root .bs-page-fan i {
+  box-shadow: 3px 5px 10px rgba(14, 36, 85, .07);
+}
+
+.bs-root .bs-front-cover {
+  box-shadow:
+    18px 20px 34px rgba(14, 36, 85, .16),
+    inset -12px 0 18px rgba(0, 0, 0, .1),
+    inset 4px 0 9px rgba(255, 255, 255, .1);
+}
+
+.bs-root[data-mode="detail"] .bs-book-card.bs-selected .bs-front-cover {
+  box-shadow:
+    25px 26px 44px rgba(14, 36, 85, .2),
+    inset -12px 0 18px rgba(0, 0, 0, .1),
+    inset 4px 0 9px rgba(255, 255, 255, .1);
+}
+
+/* "Read" sat on the cover as a cream chip, which is invisible against the
+   cream covers once the field behind them is white too.
+
+   Navy on orange, not white on orange: white measured 2.49:1 against the
+   brand orange and this is a small uppercase chip, where the threshold is
+   4.5:1. Navy on the same orange measures 5.7:1 and keeps the brand colour. */
+.bs-root .bs-open-badge {
+  background: #F6872A;
+  color: #0E2455;
+}
+
+.bs-root .bs-book-card:focus-visible .bs-open-badge {
+  filter: drop-shadow(0 6px 12px rgba(212, 95, 6, .34));
+}
+
+/* ---------------------------------------------------------- the panel */
+.bs-root .bs-detail-title {
+  color: var(--pink);
+}
+
+/* White circle, navy mark. The authored button was a pale glyph on a dark
+   translucent disc -- white on white with the ground inverted. */
+.bs-root .bs-close-button {
+  border: 1px solid var(--rule-strong);
+  background: #FFFFFF;
+  color: #0E2455;
+  box-shadow: 0 6px 18px rgba(14, 36, 85, .12);
+}
+
+.bs-root .bs-close-button:hover {
+  background: #F4F6FA;
+}
+
+/* ---------------------------------------------------------- the sheet
+   Headings navy rather than orange: they set at ~11px, where orange's 3.9:1
+   is not readable. The accent stays on the title and the rule above the
+   total, which is where it earns its place. */
+.bs-root .bs-sheet th {
+  border-bottom: 1px solid var(--rule-strong);
+  color: rgba(14, 36, 85, .66);
+}
+
+.bs-root .bs-sheet td {
+  border-bottom: 1px solid var(--rule);
+  color: var(--text);
+}
+
+.bs-root .bs-sheet td:not(:first-child) {
+  color: var(--muted);
+}
+
+/* A total is the sheet's own summation. Navy and bold carries that better
+   than a second orange would, and the orange rule above it already marks the
+   break. */
+.bs-root .bs-sheet tr[data-total="true"] td,
+.bs-root .bs-sheet tr[data-total="true"] td:not(:first-child) {
+  border-top: 1px solid rgba(246, 135, 42, .55);
+  color: #0E2455;
+  font-weight: 700;
+}
+
+.bs-root .bs-detail-scroll {
+  scrollbar-color: rgba(246, 135, 42, .7) rgba(14, 36, 85, .1);
+}
+
+.bs-root .bs-detail-scroll::-webkit-scrollbar-track {
+  background: rgba(14, 36, 85, .1);
+}
+
+.bs-root .bs-detail-scroll::-webkit-scrollbar-thumb {
+  background: rgba(246, 135, 42, .7);
+}
+
+.bs-root .bs-sheet-note {
+  color: var(--muted);
+}

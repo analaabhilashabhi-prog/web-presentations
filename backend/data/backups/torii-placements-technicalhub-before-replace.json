@@ -1,0 +1,712 @@
+{
+  "id": "sec_8229e88e6fcc4654",
+  "orgId": "torii",
+  "parentId": null,
+  "key": "placements",
+  "title": "Placements",
+  "subtitle": "",
+  "intro": "",
+  "icon": "▲",
+  "iconKey": "job-pin",
+  "iconAssetId": null,
+  "order": 10,
+  "hidden": false,
+  "status": "published",
+  "blocks": [
+    {
+      "id": "blk_5c45c9a50c0a411c",
+      "type": "placement-wall",
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 15
+      },
+      "eyebrow": "Career Outcomes",
+      "title": "Placements",
+      "lead": "Campus drives, open drives, and the offices our students walked into — each record shown at its own proportions, company by company.",
+      "chapters": [
+        {
+          "key": "journeys",
+          "name": "Placement Journeys",
+          "blurb": "One student, one timeline, start to offer.",
+          "kind": "journey",
+          "icon": "route",
+          "groups": [
+            {
+              "name": "",
+              "images": [
+                {
+                  "src": "PJ1.jpg",
+                  "label": "",
+                  "w": 1280,
+                  "h": 2008
+                },
+                {
+                  "src": "PJ2.jpg",
+                  "label": "",
+                  "w": 1280,
+                  "h": 2008
+                },
+                {
+                  "src": "PJ3.jpg",
+                  "label": "",
+                  "w": 1280,
+                  "h": 2008
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key": "campus",
+          "name": "Campus Placements",
+          "blurb": "Selections announced from campus drives.",
+          "kind": "poster",
+          "icon": "building",
+          "groups": [
+            {
+              "name": "",
+              "images": [
+                {
+                  "src": "Open Drive\\Autodesk.jpg",
+                  "label": "Autodesk",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Campus Placements/Capgemini.jpg",
+                  "label": "Capgemini",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Open Drive\\Congolmerate.jpg",
+                  "label": "Conglomerate",
+                  "w": 2048,
+                  "h": 1152
+                },
+                {
+                  "src": "Campus Placements/Deloitte.jpg",
+                  "label": "Deloitte",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "Campus Placements/Deloitte1.jpg",
+                  "label": "Deloitte",
+                  "w": 800,
+                  "h": 450
+                },
+                {
+                  "src": "Campus Placements/DeltaX.jpg",
+                  "label": "DeltaX",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Campus Placements/genpact.jpg",
+                  "label": "Genpact",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "Campus Placements/hcltech.jpg",
+                  "label": "HCLTech",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Campus Placements/Hitachi.jpg",
+                  "label": "Hitachi",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "Campus Placements/hsbc.jpg",
+                  "label": "HSBC",
+                  "w": 1179,
+                  "h": 2048
+                },
+                {
+                  "src": "Campus Placements/hsbc1.jpg",
+                  "label": "HSBC",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Campus Placements/IBM.jpg",
+                  "label": "IBM",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "Campus Placements/Infosys-Servicenow.jpg",
+                  "label": "Infosys ServiceNow",
+                  "w": 800,
+                  "h": 806
+                },
+                {
+                  "src": "Campus Placements/Infosys.jpg",
+                  "label": "Infosys",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Open Drive\\Japan.jpg",
+                  "label": "Japan",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Campus Placements/jyesta.jpg",
+                  "label": "Jyesta",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Campus Placements/KT Semicon.jpg",
+                  "label": "KT Semicon",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Campus Placements/L and T.jpg",
+                  "label": "L and T",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "Open Drive\\LG.jpg",
+                  "label": "LG",
+                  "w": 2048,
+                  "h": 1152
+                },
+                {
+                  "src": "Open Drive\\maersk.jpg",
+                  "label": "Maersk",
+                  "w": 800,
+                  "h": 450
+                },
+                {
+                  "src": "Open Drive\\O9.jpg",
+                  "label": "O",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "Campus Placements/pelatro.jpg",
+                  "label": "Pelatro",
+                  "w": 800,
+                  "h": 800
+                },
+                {
+                  "src": "Campus Placements/Pennant.jpg",
+                  "label": "Pennant",
+                  "w": 2048,
+                  "h": 1152
+                },
+                {
+                  "src": "Campus Placements/peopletech.jpg",
+                  "label": "PeopleTech",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "Campus Placements/Qsales.jpg",
+                  "label": "Qsales",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "Campus Placements/Rossell Techsy.jpg",
+                  "label": "Rossell Techsy",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Campus Placements/sttelemedia global data center.jpg",
+                  "label": "Sttelemedia Global Data Center",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Campus Placements/TCS Digital.jpg",
+                  "label": "TCS Digital",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Campus Placements/TCS Ninja.jpg",
+                  "label": "TCS Ninja",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "Campus Placements/vedxience.jpg",
+                  "label": "Vedxience",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "Campus Placements/vedxience1.jpg",
+                  "label": "Vedxience",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "Campus Placements/Verizon.jpg",
+                  "label": "Verizon",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Campus Placements/Virtusa.jpg",
+                  "label": "Virtusa",
+                  "w": 2000,
+                  "h": 2000
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key": "open",
+          "name": "Open Drives",
+          "blurb": "Selections from open and off-campus drives.",
+          "kind": "poster",
+          "icon": "globe",
+          "groups": [
+            {
+              "name": "",
+              "images": [
+                {
+                  "src": "Open Drive/AirBus.jpg",
+                  "label": "Airbus",
+                  "w": 2048,
+                  "h": 1152
+                },
+                {
+                  "src": "Open Drive/Airbus1.jpg",
+                  "label": "Airbus",
+                  "w": 800,
+                  "h": 800
+                },
+                {
+                  "src": "Open Drive/Airbus2.jpg",
+                  "label": "Airbus",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Open Drive/Amazon.jpg",
+                  "label": "Amazon",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "Open Drive/Amazon1.jpg",
+                  "label": "Amazon",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Campus Placements\\ball.jpg",
+                  "label": "Ball",
+                  "w": 800,
+                  "h": 800
+                },
+                {
+                  "src": "Open Drive/cisco.jpg",
+                  "label": "Cisco",
+                  "w": 800,
+                  "h": 800
+                },
+                {
+                  "src": "Open Drive/Flipkart.jpg",
+                  "label": "Flipkart",
+                  "w": 2000,
+                  "h": 2000
+                },
+                {
+                  "src": "Open Drive/Flipkart1.jpg",
+                  "label": "Flipkart",
+                  "w": 800,
+                  "h": 800
+                },
+                {
+                  "src": "Campus Placements\\FreshBus.jpg",
+                  "label": "FreshBus",
+                  "w": 800,
+                  "h": 800
+                },
+                {
+                  "src": "Campus Placements\\ISRO Intern.jpg",
+                  "label": "ISRO Intern",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Open Drive/LLoyds.jpg",
+                  "label": "Lloyds",
+                  "w": 800,
+                  "h": 450
+                },
+                {
+                  "src": "Open Drive/Myntra.jpg",
+                  "label": "Myntra",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Campus Placements\\NorthernArc.jpg",
+                  "label": "Northern Arc",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Campus Placements\\Redhat.jpg",
+                  "label": "Red Hat",
+                  "w": 800,
+                  "h": 800
+                },
+                {
+                  "src": "Open Drive/Shinsei.jpg",
+                  "label": "Shinsei",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Open Drive/thoughtworks.jpg",
+                  "label": "Thoughtworks",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Open Drive/ubona.jpg",
+                  "label": "Ubona",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Campus Placements\\UIPath.jpg",
+                  "label": "UiPath",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Open Drive/VISA.jpg",
+                  "label": "VISA",
+                  "w": 800,
+                  "h": 800
+                },
+                {
+                  "src": "Open Drive/Walmart.jpg",
+                  "label": "Walmart",
+                  "w": 800,
+                  "h": 450
+                },
+                {
+                  "src": "Open Drive/walmart1.jpg",
+                  "label": "Walmart",
+                  "w": 800,
+                  "h": 800
+                },
+                {
+                  "src": "Open Drive/walmart2.jpg",
+                  "label": "Walmart",
+                  "w": 2048,
+                  "h": 1152
+                },
+                {
+                  "src": "Open Drive/walmart3.jpg",
+                  "label": "Walmart",
+                  "w": 800,
+                  "h": 800
+                },
+                {
+                  "src": "Open Drive/walmart4.jpg",
+                  "label": "Walmart",
+                  "w": 800,
+                  "h": 800
+                },
+                {
+                  "src": "Campus Placements\\Wissada.jpg",
+                  "label": "Wissada",
+                  "w": 1536,
+                  "h": 1536
+                },
+                {
+                  "src": "Campus Placements\\Wissda.jpg",
+                  "label": "Wissda",
+                  "w": 2000,
+                  "h": 2000
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key": "stories",
+          "name": "Inside the Companies",
+          "blurb": "Photographs sent back from the offices they joined.",
+          "kind": "photo",
+          "icon": "briefcase",
+          "groups": [
+            {
+              "name": "ServiceNow",
+              "images": [
+                {
+                  "src": "Placement Success Stories/servicenow/1.jpg",
+                  "label": "ServiceNow",
+                  "w": 2048,
+                  "h": 1536
+                },
+                {
+                  "src": "Placement Success Stories/servicenow/2.jpg",
+                  "label": "ServiceNow",
+                  "w": 1280,
+                  "h": 1975
+                },
+                {
+                  "src": "Placement Success Stories/servicenow/3.jpg",
+                  "label": "ServiceNow",
+                  "w": 1280,
+                  "h": 1635
+                },
+                {
+                  "src": "Placement Success Stories/servicenow/4.jpg",
+                  "label": "ServiceNow",
+                  "w": 899,
+                  "h": 1599
+                },
+                {
+                  "src": "Placement Success Stories/servicenow/5.jpg",
+                  "label": "ServiceNow",
+                  "w": 1600,
+                  "h": 1204
+                },
+                {
+                  "src": "Placement Success Stories/servicenow/6.jpg",
+                  "label": "ServiceNow",
+                  "w": 1600,
+                  "h": 1204
+                },
+                {
+                  "src": "Placement Success Stories/servicenow/7.jpg",
+                  "label": "ServiceNow",
+                  "w": 1600,
+                  "h": 1241
+                }
+              ]
+            },
+            {
+              "name": "Flipkart",
+              "images": [
+                {
+                  "src": "Placement Success Stories/Flipkart/1.jpg",
+                  "label": "Flipkart",
+                  "w": 1600,
+                  "h": 1200
+                },
+                {
+                  "src": "Placement Success Stories/Flipkart/2.jpg",
+                  "label": "Flipkart",
+                  "w": 1600,
+                  "h": 900
+                },
+                {
+                  "src": "Placement Success Stories/Flipkart/3.jpg",
+                  "label": "Flipkart",
+                  "w": 800,
+                  "h": 450
+                },
+                {
+                  "src": "Placement Success Stories/Flipkart/4.jpg",
+                  "label": "Flipkart",
+                  "w": 1280,
+                  "h": 1706
+                },
+                {
+                  "src": "Placement Success Stories/Flipkart/5.jpg",
+                  "label": "Flipkart",
+                  "w": 1280,
+                  "h": 960
+                },
+                {
+                  "src": "Placement Success Stories/Flipkart/6.jpg",
+                  "label": "Flipkart",
+                  "w": 1280,
+                  "h": 1047
+                }
+              ]
+            },
+            {
+              "name": "Wipro + ServiceNow",
+              "images": [
+                {
+                  "src": "Placement Success Stories/Wipro_servicenow/1.jpg",
+                  "label": "Wipro + ServiceNow",
+                  "w": 1080,
+                  "h": 1920
+                },
+                {
+                  "src": "Placement Success Stories/Wipro_servicenow/2.jpg",
+                  "label": "Wipro + ServiceNow",
+                  "w": 720,
+                  "h": 1280
+                },
+                {
+                  "src": "Placement Success Stories/Wipro_servicenow/3.jpg",
+                  "label": "Wipro + ServiceNow",
+                  "w": 1080,
+                  "h": 1920
+                },
+                {
+                  "src": "Placement Success Stories/Wipro_servicenow/4.jpg",
+                  "label": "Wipro + ServiceNow",
+                  "w": 1280,
+                  "h": 1706
+                },
+                {
+                  "src": "Placement Success Stories/Wipro_servicenow/5.jpg",
+                  "label": "Wipro + ServiceNow",
+                  "w": 1280,
+                  "h": 1706
+                },
+                {
+                  "src": "Placement Success Stories/Wipro_servicenow/6.jpg",
+                  "label": "Wipro + ServiceNow",
+                  "w": 1080,
+                  "h": 1920
+                }
+              ]
+            },
+            {
+              "name": "DrawInBox",
+              "images": [
+                {
+                  "src": "Placement Success Stories/drawinbox/1.jpg",
+                  "label": "DrawInBox",
+                  "w": 1200,
+                  "h": 1600
+                },
+                {
+                  "src": "Placement Success Stories/drawinbox/2.jpg",
+                  "label": "DrawInBox",
+                  "w": 1280,
+                  "h": 1706
+                },
+                {
+                  "src": "Placement Success Stories/drawinbox/3.jpg",
+                  "label": "DrawInBox",
+                  "w": 2048,
+                  "h": 1536
+                },
+                {
+                  "src": "Placement Success Stories/drawinbox/4.jpg",
+                  "label": "DrawInBox",
+                  "w": 1280,
+                  "h": 1706
+                }
+              ]
+            },
+            {
+              "name": "Google",
+              "images": [
+                {
+                  "src": "Placement Success Stories/Google/1.jpg",
+                  "label": "Google",
+                  "w": 2048,
+                  "h": 920
+                },
+                {
+                  "src": "Placement Success Stories/Google/2.jpg",
+                  "label": "Google",
+                  "w": 2048,
+                  "h": 1536
+                },
+                {
+                  "src": "Placement Success Stories/Google/3.jpg",
+                  "label": "Google",
+                  "w": 2048,
+                  "h": 1536
+                }
+              ]
+            },
+            {
+              "name": "Hitachi",
+              "images": [
+                {
+                  "src": "Placement Success Stories/Hitachi/1.jpg",
+                  "label": "Hitachi",
+                  "w": 2000,
+                  "h": 1500
+                },
+                {
+                  "src": "Placement Success Stories/Hitachi/2.jpg",
+                  "label": "Hitachi",
+                  "w": 960,
+                  "h": 1280
+                },
+                {
+                  "src": "Placement Success Stories/Hitachi/3.jpg",
+                  "label": "Hitachi",
+                  "w": 1280,
+                  "h": 1706
+                }
+              ]
+            },
+            {
+              "name": "GE",
+              "images": [
+                {
+                  "src": "Placement Success Stories/GE/1.jpg",
+                  "label": "GE",
+                  "w": 1280,
+                  "h": 679
+                },
+                {
+                  "src": "Placement Success Stories/GE/2.jpg",
+                  "label": "GE",
+                  "w": 773,
+                  "h": 1280
+                }
+              ]
+            },
+            {
+              "name": "Verixzo",
+              "images": [
+                {
+                  "src": "Placement Success Stories/Verixzo/1.jpg",
+                  "label": "Verixzo",
+                  "w": 1024,
+                  "h": 896
+                },
+                {
+                  "src": "Placement Success Stories/Verixzo/2.jpg",
+                  "label": "Verixzo",
+                  "w": 768,
+                  "h": 1024
+                }
+              ]
+            },
+            {
+              "name": "Pega",
+              "images": [
+                {
+                  "src": "Pega/1.jpg",
+                  "label": "Pega",
+                  "w": 2048,
+                  "h": 1152
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "createdAt": "2026-09-14T04:18:23.170Z",
+  "updatedAt": "2026-09-14T04:18:23.170Z"
+}

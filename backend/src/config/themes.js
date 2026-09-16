@@ -1,5 +1,5 @@
 /**
- * The only colours used anywhere in the product. Taken from the two logos.
+ * The only colours used anywhere in the product. Taken from the three logos.
  * Nothing outside these values may be introduced by seed data or the UI.
  */
 export const NEUTRALS = {
@@ -33,6 +33,24 @@ export const THEMES = {
     highlight: '#71BD1F',
     onBrand: '#FFFFFF',
     navBg: '#008638',
+    navText: '#FFFFFF',
+  },
+  /* Nagarjuna College of Engineering & Technology. No brand file has been
+     supplied, so these are measured off the college's own logo as it appears on
+     the Snowflake MOU card (tools in the session notes): the deep green of the
+     wordmark, the leaf green of the canopy, and the saffron stripe at the base.
+     Close kin to Technical Hub's green — the same group — and told apart by the
+     accent, saffron here against gold there. Replace with official values when
+     they arrive; the shape of the object is all the UI depends on. */
+  ncet: {
+    id: 'ncet',
+    label: 'Green + Saffron',
+    primary: '#047738',
+    secondary: '#9AB537',
+    accent: '#D6AB30',
+    highlight: '#9AB537',
+    onBrand: '#FFFFFF',
+    navBg: '#047738',
     navText: '#FFFFFF',
   },
 };

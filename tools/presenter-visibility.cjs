@@ -16,7 +16,7 @@
 const http = require('http');
 
 const HOST = { host: '127.0.0.1', port: Number(process.env.PORT) || 4173 };
-const ORGS = ['technical-hub', 'torii'];
+const ORGS = ['technical-hub', 'torii', 'ncet'];
 
 function request(method, path, body, cookie) {
   return new Promise((resolve, reject) => {

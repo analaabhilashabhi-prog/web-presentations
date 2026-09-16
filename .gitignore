@@ -67,3 +67,15 @@ backend/uploads/originals/
 
 # Sessions are runtime state and do not belong in the repo, but they live
 # inside db.json, so they are simply short-lived — a deploy signs people out.
+
+# ---- Over GitHub's 100MB per-file limit ----
+# Two brand films cannot go up as ordinary git objects. The first is the
+# Torii film that was replaced on 2026-09-15 and nothing references any more;
+# the second is NCET's Executive Summary film, which a fresh clone will lack
+# until it is uploaded again (or moved to Git LFS).
+backend/uploads/torii-brand-film-23d907a92fc2471b.mp4
+backend/uploads/ncet-brand-film-19042026-6fa9b9e67ed24b08.mp4
+
+# ---- Real deployment credentials ----
+# Holds the live admin and presenter passwords, not the documented demo ones.
+DEPLOYMENT.env.txt

@@ -1,0 +1,993 @@
+{
+  "id": "blk_949162bcb8084e75",
+  "type": "event-reel",
+  "layout": {
+    "x": 0,
+    "y": 0,
+    "w": 12,
+    "h": 15
+  },
+  "eyebrow": "Events",
+  "title": "Nine years, on film",
+  "lead": "Every film Technical Hub has published, in six chapters — the anniversary reels first, because they are the whole arc of the place.",
+  "base": "Events",
+  "chapters": [
+    {
+      "key": "journey",
+      "name": "The Journey",
+      "icon": "flag",
+      "blurb": "Nine years, told by the films made at the end of each of them.",
+      "sequential": true,
+      "groups": [
+        {
+          "title": "7th Annivesary",
+          "films": [
+            {
+              "youtube": "J1AaijZLehQ",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Technical Hub Journey 2022",
+          "films": [
+            {
+              "youtube": "Bi185TMReEs",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Technical Hub Journey 2023",
+          "films": [
+            {
+              "youtube": "AO-Unwthsss",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "8th Anniversary",
+          "films": [
+            {
+              "youtube": "J1K4Jv33vJc",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Technical Hub Journey 2024",
+          "films": [
+            {
+              "youtube": "ZLZ_caELALU",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Technical Hub Golden Day",
+          "films": [
+            {
+              "youtube": "npWZvkGebf8",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "9th Anniversary",
+          "films": [
+            {
+              "youtube": "2ad0TiZhc40",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        }
+      ]
+    },
+    {
+      "key": "events",
+      "name": "Events & Arenas",
+      "icon": "calendar",
+      "blurb": "Project Space, T-News, Gitex and the days the whole campus turned out.",
+      "sequential": false,
+      "groups": [
+        {
+          "title": "T-News",
+          "films": [
+            {
+              "youtube": "bpjK1xqHIPA",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "ZjjMzdmwUOc",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "WZte7YT7EEM",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "1xXF8LuP5cc",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "Hx68TKC8i2Y",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "ls18es54N2c",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "iGgzZrpvHao",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "5Km5q4p3cQU",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "ySlLdxk3zJE",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "RlMynAkkp6I",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Why Technical Hub",
+          "films": [
+            {
+              "youtube": "7ySirk9x-s4",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Project Space 2.0",
+          "films": [
+            {
+              "youtube": "dlMvtDr7gOs",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "iFEVFoBh558",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Project Space Intro",
+          "films": [
+            {
+              "youtube": "cKWygWPmHy4",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Project Space 3.0- Day 1 to Day 6",
+          "films": [
+            {
+              "youtube": "TslImL48kS4",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "fCINJUmmEZs",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "3j3E7xk9IjA",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "qexbja8x4oc",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "lfWMuyHAoTQ",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Poject Space 3.0 Tech Party",
+          "films": [
+            {
+              "youtube": "Xq-pMGG726k",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Project Space 4.0- Onboarding Day",
+          "films": [
+            {
+              "youtube": "L0-zSurRC68",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Project Space 4.0- Implementation Day",
+          "films": [
+            {
+              "youtube": "gQsY_y37ZQw",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Project Space 4.0- Deep Dive Day",
+          "films": [
+            {
+              "youtube": "k3AKCNni5Jc",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Project Space 4.0- Fun Network Day",
+          "films": [
+            {
+              "youtube": "B4lYDREHQaE",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Project Space 4.0- Expert Session Day",
+          "films": [
+            {
+              "youtube": "5lxbtE_SryQ",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Project Space 4.0- Highlights",
+          "films": [
+            {
+              "youtube": "Zknym0jiol4",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Project Space 7.0",
+          "films": [
+            {
+              "youtube": "2YpciZnl2h8",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Project Space 8.0",
+          "films": [
+            {
+              "youtube": "4eF2haYMoWM",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "PEGA Project Space",
+          "films": [
+            {
+              "youtube": "ljYucKe7ZEc",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Marker Square",
+          "films": [
+            {
+              "youtube": "WHSDYLToQZo",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Public AR Show",
+          "films": [
+            {
+              "youtube": "0lkBr-cKDR0",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "3000+ Internships",
+          "films": [
+            {
+              "youtube": "IW3DYR2Nr2o",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Programmers Day",
+          "films": [
+            {
+              "youtube": "bxiIsk4ltxM",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Gitex Global",
+          "films": [
+            {
+              "youtube": "0Y-gCZ3Cl3A",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "sTI1LfxKzsw",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "83PojqxKOww",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "P-F8i6LLSds",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Vandematram",
+          "films": [
+            {
+              "youtube": "eFgcXLijFeQ",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Technical Hub Certification",
+          "films": [
+            {
+              "youtube": "eUqOavJxRag",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Independence Day",
+          "films": [
+            {
+              "youtube": "1JriTokxtzs",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "4eF2haYMoWM",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "AWS Summit 2026",
+          "films": [],
+          "images": [
+            {
+              "src": "aws-summit-2026/01.jpg",
+              "label": "AWS Summit 2026",
+              "w": 1500,
+              "h": 1500
+            },
+            {
+              "src": "aws-summit-2026/02.jpg",
+              "label": "AWS Summit 2026",
+              "w": 1500,
+              "h": 1500
+            },
+            {
+              "src": "aws-summit-2026/03.jpg",
+              "label": "AWS Summit 2026",
+              "w": 1500,
+              "h": 1500
+            },
+            {
+              "src": "aws-summit-2026/04.jpg",
+              "label": "AWS Summit 2026",
+              "w": 1500,
+              "h": 1500
+            },
+            {
+              "src": "aws-summit-2026/05.jpg",
+              "label": "AWS Summit 2026",
+              "w": 1920,
+              "h": 1080
+            },
+            {
+              "src": "aws-summit-2026/06.jpg",
+              "label": "AWS Summit 2026",
+              "w": 1500,
+              "h": 1500
+            },
+            {
+              "src": "aws-summit-2026/07.jpg",
+              "label": "AWS Summit 2026",
+              "w": 1500,
+              "h": 1500
+            }
+          ]
+        },
+        {
+          "title": "ServiceNow AI Skills Summit",
+          "films": [],
+          "images": [
+            {
+              "src": "servicenow-ai-skills-summit/01.jpg",
+              "label": "ServiceNow AI Skills Summit",
+              "w": 852,
+              "h": 590
+            },
+            {
+              "src": "servicenow-ai-skills-summit/02.jpg",
+              "label": "ServiceNow AI Skills Summit",
+              "w": 808,
+              "h": 460
+            },
+            {
+              "src": "servicenow-ai-skills-summit/03.jpg",
+              "label": "ServiceNow AI Skills Summit",
+              "w": 848,
+              "h": 617
+            },
+            {
+              "src": "servicenow-ai-skills-summit/04.jpg",
+              "label": "ServiceNow AI Skills Summit",
+              "w": 654,
+              "h": 490
+            },
+            {
+              "src": "servicenow-ai-skills-summit/05.jpg",
+              "label": "ServiceNow AI Skills Summit",
+              "w": 1204,
+              "h": 1600
+            },
+            {
+              "src": "servicenow-ai-skills-summit/06.jpg",
+              "label": "ServiceNow AI Skills Summit",
+              "w": 1204,
+              "h": 1600
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "programs",
+      "name": "Programs",
+      "icon": "book",
+      "blurb": "Every programme that runs here, filmed as it ran.",
+      "sequential": false,
+      "groups": [
+        {
+          "title": "Drive Ready",
+          "films": [
+            {
+              "youtube": "bZus9z5qZ2A",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "J7rIcZ-YoRg",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Mind Camp",
+          "films": [
+            {
+              "youtube": "Kt4tJdl3Mus",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "L24A2CBjQ0o",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "T-Connect",
+          "films": [
+            {
+              "youtube": "vxoHN48gkg0",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "T-Connect 2.0",
+          "films": [
+            {
+              "youtube": "gyezuHlm1hE",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "T-Connect 4.0",
+          "films": [
+            {
+              "youtube": "JD8ZQSRi-qs",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "T-Connect 5.0",
+          "films": [
+            {
+              "youtube": "vpBMPKUCvuY",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "T-Connect Feedback",
+          "films": [
+            {
+              "youtube": "r8cDm5SlBnA",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "T6T_mrUG3IQ",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "Th1mrPgaLLw",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "T-Connect 6.0",
+          "films": [
+            {
+              "youtube": "WqkAu3j2slk",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "T-Connect 6.0 Thanking Techies",
+          "films": [
+            {
+              "youtube": "K-W004YHfYc",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "T-Connect 7.0",
+          "films": [
+            {
+              "youtube": "awFS-mJR9q0",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Owl Coder",
+          "films": [
+            {
+              "youtube": "kkBQQ9njcJA",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Life of an Owl Coder",
+          "films": [
+            {
+              "youtube": "sIA1L7rWtow",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Owl Coder 2.0",
+          "films": [
+            {
+              "youtube": "5xUzKes5Pcs",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Owl Coder Deliverables",
+          "films": [
+            {
+              "youtube": "t9aB4kHGk0w",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Owl Coder Placements",
+          "films": [
+            {
+              "youtube": "Q0O3zrzOoEc",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "30+ Certifications",
+          "films": [
+            {
+              "youtube": "bu94vHIGtpI",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Mock Interviews",
+          "films": [
+            {
+              "youtube": "9Nybgc9Ho6w",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "bSzgeOYDGJU",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "HOOT",
+          "films": [
+            {
+              "youtube": "T2bqDXAC49c",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "MPOD",
+          "films": [
+            {
+              "youtube": "lfQFKSmsC3w",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "GROW",
+          "films": [
+            {
+              "youtube": "Zknym0jiol4",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        }
+      ]
+    },
+    {
+      "key": "coe",
+      "name": "Centers of Excellence",
+      "icon": "beaker",
+      "blurb": "Inside the vendor academies — Red Hat, Pega and Mile2.",
+      "sequential": false,
+      "groups": [
+        {
+          "title": "RedHat Academy",
+          "films": [
+            {
+              "youtube": "QRYe7MaEqdU",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "PEGA",
+          "films": [
+            {
+              "youtube": "asLTQ9V4kOI",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "ygsE4YAC1yk",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "PEGA Project Space",
+          "films": [
+            {
+              "youtube": "ljYucKe7ZEc",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Mile 2",
+          "films": [
+            {
+              "youtube": "nL4bXn93yOM",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        }
+      ]
+    },
+    {
+      "key": "team",
+      "name": "The Team",
+      "icon": "users",
+      "blurb": "The people who run it, and the days they compete.",
+      "sequential": false,
+      "groups": [
+        {
+          "title": "Team",
+          "films": [
+            {
+              "youtube": "KlKlgpDknto",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "1bbN7ONKlpE",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "1859SiCSeTg",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "mH2LHdnL0W8",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Technical Hub Awards",
+          "films": [
+            {
+              "youtube": "6Zh9Exwrnzs",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Clash of Techies",
+          "films": [
+            {
+              "youtube": "2-PX7PPtsiU",
+              "src": "",
+              "label": ""
+            },
+            {
+              "youtube": "-5K5xzzK2kk",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        }
+      ]
+    },
+    {
+      "key": "ai",
+      "name": "Technical Hub AI",
+      "icon": "brain",
+      "blurb": "Robots, avatars and the assistants built in house.",
+      "sequential": false,
+      "groups": [
+        {
+          "title": "Technical Hub Robo Gen AI",
+          "films": [
+            {
+              "youtube": "GbI5nWeP2N0",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Technical Hub Maya",
+          "films": [
+            {
+              "youtube": "DyTC7LROZo8",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Technical Hub Zoro",
+          "films": [
+            {
+              "youtube": "mkTwsweWZ24",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Emo Pulse",
+          "films": [
+            {
+              "youtube": "WSNquCjFEqk",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Story Book",
+          "films": [
+            {
+              "youtube": "EvuY7qSz6kE",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        },
+        {
+          "title": "Maya AI",
+          "films": [
+            {
+              "youtube": "NblyE09mDio",
+              "src": "",
+              "label": ""
+            }
+          ],
+          "images": []
+        }
+      ]
+    }
+  ]
+}

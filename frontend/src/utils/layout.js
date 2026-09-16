@@ -42,6 +42,15 @@ export const DEFAULT_SIZE = {
   'course-deck': { w: 12, h: 15 },
   'drift-wall': { w: 12, h: 15 },
   'platforms': { w: 12, h: 15 },
+  'alliance-accordion': { w: 12, h: 15 },
+  'skew-carousel': { w: 12, h: 15 },
+  'tilted-tiles': { w: 12, h: 15 },
+  'card-fan': { w: 12, h: 15 },
+  'photo-ring': { w: 12, h: 15 },
+  'event-orbit': { w: 12, h: 15 },
+  'training-shelf': { w: 12, h: 15 },
+  'photo-collage': { w: 12, h: 15 },
+  'thread-board': { w: 12, h: 15 },
 };
 
 /** Layout boxes may nest, but not without end — the server enforces the same. */

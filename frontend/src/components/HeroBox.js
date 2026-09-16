@@ -27,12 +27,21 @@ export function HeroBox(block, { editing = false } = {}) {
     const usingLink = block.source === 'url';
     const fileUrl = usingLink ? (block.link?.kind === 'file' ? block.link.playbackUrl : null) : block.asset?.url;
     if (fileUrl) {
+      /* Where the film should open. A brand film that spends its first seconds
+         on a logo sting has nothing on screen for exactly the moment the slide
+         is doing its work, so the hero can be told to start past it. */
+      const start = Math.max(0, Number(block.start) || 0);
       const heroVideo = h('video', {
         class: 'hero__media',
-        src: fileUrl,
+        src: start ? `${fileUrl}#t=${start}` : fileUrl,
+        /* Unset falls through to the stylesheet's 1.325, which is there to hide
+           the baked-in bars of a letterboxed export. */
+        style: block.zoom ? { '--hero-zoom': String(block.zoom) } : null,
         autoplay: true,
         muted: true,
-        loop: true,
+        /* The loop attribute always returns to zero, which would play the sting
+           on every pass. With an offset the repeat is done by hand instead. */
+        loop: start ? null : true,
         playsinline: true,
         // Autoplay only sticks when the element is muted before it loads.
         oncanplay: (event) => {
@@ -40,6 +49,22 @@ export function HeroBox(block, { editing = false } = {}) {
           event.target.play?.().catch(() => {});
         },
       });
+      if (start) {
+        /* The media fragment above is what the browser opens on; this is the
+           belt to its braces, because a fragment is advisory and a cached or
+           already-decoded file can ignore it. Only ever pulled forward — a
+           presenter who has scrubbed past it is left alone. */
+        const seek = () => {
+          if (heroVideo.currentTime < start - 0.25 && heroVideo.duration > start) {
+            try { heroVideo.currentTime = start; } catch { /* not seekable yet */ }
+          }
+        };
+        heroVideo.addEventListener('loadedmetadata', seek, { once: true });
+        heroVideo.addEventListener('ended', () => {
+          try { heroVideo.currentTime = start; } catch { /* ignore */ }
+          heroVideo.play?.().catch(() => {});
+        });
+      }
       /* The film is a backdrop behind the headline, so its controls go in their
          own layer above it — the element itself sits under the copy and could
          never be hovered. */
@@ -91,6 +116,10 @@ export function HeroBox(block, { editing = false } = {}) {
         hasBackdrop ? 'hero--media' : 'hero--plain',
         editing ? 'hero--editing' : '',
       ].filter(Boolean).join(' '),
+      /* The accent the copy's `[gold:…]` spans take. Unset leaves the
+         stylesheet's own default, which the decks written before this one
+         depend on. */
+      style: block.accent ? { '--hero-accent': block.accent } : null,
     },
     ...background,
     hasBackdrop ? h('div', { class: 'hero__scrim', style: { opacity: String(overlay) } }) : null,
