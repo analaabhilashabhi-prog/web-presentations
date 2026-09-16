@@ -1,0 +1,17 @@
+{
+  "name": "webpresentation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Organization presentation portal — API and frontend served by one zero-dependency Node process.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node backend/src/server.js",
+    "dev": "node --watch backend/src/server.js",
+    "presenter": "node tools/presenter-visibility.cjs"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

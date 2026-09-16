@@ -1,0 +1,18 @@
+{
+  "name": "org-presentation-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API + static host for the Torii / Technical Hub presentation app. Zero runtime dependencies.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "reseed": "node src/scripts/reseed.js",
+    "blank": "node src/scripts/blank.js"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

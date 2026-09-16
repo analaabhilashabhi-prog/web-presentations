@@ -1,0 +1,4506 @@
+{
+  "meta": {
+    "version": 1,
+    "seededAt": "2026-07-30T05:29:38.142Z",
+    "blank": true
+  },
+  "users": [
+    {
+      "id": "usr_4d7c41e246a842a5",
+      "email": "admin@org.local",
+      "name": "Content Admin",
+      "role": "admin",
+      "passwordHash": "scrypt$db4661f9b01ba26312b00c7ddfb0dcda$6368a269a5dea47fb937a2b09783f99c29df2b4f9364e44f6c87cc5f0c9507b6b4ad889545a778c66938a3d81afd50aab536e0fec24342495b9b51f4fa96509c",
+      "createdAt": "2026-07-29T18:03:53.473Z"
+    },
+    {
+      "id": "usr_26e9b0c6f1cb4ed1",
+      "email": "presenter@org.local",
+      "name": "Presenter",
+      "role": "presenter",
+      "passwordHash": "scrypt$c403429eaeef2e34b45903a0272361bf$c862ed1c7e552d89426660c6cc8c59709198bb6f108b8c69a43fe7fb95850eb28484e011812daff992ec19b495b0afa777ca464674efb0487e8cbfeb1da247f8",
+      "createdAt": "2026-07-29T18:03:53.618Z"
+    }
+  ],
+  "sessions": [
+    {
+      "token": "cd5d9dc2cb1c48fcd9eb491d1408d1ae38a185fbcfbaf9bb82a84c47c2e74eed",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-05T05:12:19.480Z",
+      "expiresAt": "2026-08-05T17:12:19.480Z"
+    },
+    {
+      "token": "928765a100f896e0e0a66152dd713c45386f01ca5d3b79c32aa3920580ba018b",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-05T05:28:55.037Z",
+      "expiresAt": "2026-08-05T17:28:55.037Z"
+    },
+    {
+      "token": "bc478acc0b721867ad1cb8c01982b862f6b8d40f803e7c4aa252bec988a2f550",
+      "userId": "usr_26e9b0c6f1cb4ed1",
+      "createdAt": "2026-08-05T05:31:19.407Z",
+      "expiresAt": "2026-08-05T17:31:19.407Z"
+    },
+    {
+      "token": "20d9de7ce07abab3c0e297c3548c87999a3a5c74f1b1647cb2189cc457a5e6d1",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-05T05:55:36.392Z",
+      "expiresAt": "2026-08-05T17:55:36.392Z"
+    },
+    {
+      "token": "44515e12bbdd1d27093b51567f1037efa40a3738bb6695b31bc9209100114526",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-05T06:15:06.830Z",
+      "expiresAt": "2026-08-05T18:15:06.830Z"
+    },
+    {
+      "token": "39742100b399d65c12032dc084fcd50c9a51952aa3f338a04e20eb5a8e6e56c3",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-05T06:29:12.111Z",
+      "expiresAt": "2026-08-05T18:29:12.111Z"
+    },
+    {
+      "token": "883af20b32bfc7c460b9ed23c53501ca61c5062cb2a66e507a16b964b10aabdb",
+      "userId": "usr_4d7c41e246a842a5",
+      "createdAt": "2026-08-05T09:09:01.614Z",
+      "expiresAt": "2026-08-05T21:09:01.616Z"
+    }
+  ],
+  "organizations": [
+    {
+      "id": "torii",
+      "name": "Torii",
+      "shortName": "Torii",
+      "tagline": "STEP IN. STAND OUT.",
+      "logoAssetId": "ast_de8205d983b44fd5",
+      "founded": "2016",
+      "hq": "Coimbatore, Tamil Nadu",
+      "order": 0,
+      "createdAt": "2026-07-30T05:29:37.869Z",
+      "updatedAt": "2026-08-05T06:29:12.288Z",
+      "themeOverride": null,
+      "fontId": null,
+      "markAssetId": "ast_6071cbddcc7648ed"
+    },
+    {
+      "id": "technical-hub",
+      "name": "Technical Hub",
+      "shortName": "Tech Hub",
+      "tagline": "ENGINEERING DEPTH, INDUSTRY READY.",
+      "logoAssetId": "ast_b967ee5d8f324e04",
+      "founded": "2014",
+      "hq": "Hyderabad, Telangana",
+      "order": 1,
+      "createdAt": "2026-07-30T05:29:38.020Z",
+      "updatedAt": "2026-08-05T06:29:12.419Z",
+      "markAssetId": "ast_7fb50de468ee4814"
+    }
+  ],
+  "sections": [
+    {
+      "id": "sec_b78ac612e665485a",
+      "orgId": "torii",
+      "key": "profile",
+      "title": "Organization Overview",
+      "subtitle": "",
+      "icon": "*",
+      "order": 0,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_11fbf2a642ff4083",
+          "type": "hero",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 7,
+            "h": 11
+          },
+          "kicker": "IN ASSOCIATION WITH NAGARJUNA COLLEGE OF ENGINEERING & TECHNOLOGY",
+          "heading": "Career readiness, built into the campus",
+          "subheading": "Mentors, a Centre of Excellence and a super-app that carries a student from the first lesson to the first offer.",
+          "media": "image",
+          "source": "upload",
+          "assetId": "ast_fde44fab66b54d2d",
+          "videoUrl": "",
+          "alt": "",
+          "overlay": 55,
+          "align": "left",
+          "height": "md",
+          "buttons": []
+        },
+        {
+          "id": "blk_c8b781e1c4c34181",
+          "type": "text",
+          "layout": {
+            "x": 7,
+            "y": 0,
+            "w": 5,
+            "h": 3
+          },
+          "heading": "About Torii",
+          "level": 2,
+          "body": "Replace this with your own description — what the organization does, who it serves and what makes it different. The pictures and the numbers across the deck carry the proof.",
+          "items": [],
+          "align": "left"
+        },
+        {
+          "id": "blk_5ba3df07bb634e7f",
+          "type": "image",
+          "layout": {
+            "x": 7,
+            "y": 3,
+            "w": 5,
+            "h": 8
+          },
+          "assetId": "ast_7a79c8b247f84bd0",
+          "title": "Project Street",
+          "caption": "Where student projects go on show",
+          "alt": "Project Street",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_fcce9d76d43c48a5",
+          "type": "gallery",
+          "layout": {
+            "x": 0,
+            "y": 11,
+            "w": 12,
+            "h": 6
+          },
+          "caption": "Across the campus",
+          "fit": "contain",
+          "assetIds": [
+            "ast_84664e4f6fd34c58",
+            "ast_a351328ec4f247f2",
+            "ast_6523cd14c5f64c73",
+            "ast_ad5dc0b193c0484d",
+            "ast_8d4de8f3194c40e8"
+          ],
+          "titles": [
+            "Centre of Excellence",
+            "Skill Sprint lab",
+            "GitHub campus session",
+            "A Skill Sprint cohort",
+            "MongoDB session"
+          ]
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:37.875Z",
+      "updatedAt": "2026-08-05T05:31:07.565Z",
+      "iconKey": "",
+      "iconAssetId": null
+    },
+    {
+      "id": "sec_bb70b38f2c3b4698",
+      "orgId": "torii",
+      "key": "ceo-message",
+      "title": "CEO / Leadership Message",
+      "subtitle": "",
+      "icon": "❝",
+      "order": 1,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_898167252e9b4b66",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 7,
+            "h": 11
+          },
+          "assetId": "ast_7c82ee40a17c4c3a",
+          "title": "",
+          "caption": "I work to make a difference",
+          "alt": "I work to make a difference",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_2af041de1ee442b5",
+          "type": "text",
+          "layout": {
+            "x": 7,
+            "y": 0,
+            "w": 5,
+            "h": 3
+          },
+          "heading": "From the leadership",
+          "level": 2,
+          "body": "Replace this with the leadership message. Two short paragraphs is the right length for a room.",
+          "items": [],
+          "align": "left"
+        },
+        {
+          "id": "blk_2c0de44880e14349",
+          "type": "quote",
+          "layout": {
+            "x": 7,
+            "y": 3,
+            "w": 5,
+            "h": 5
+          },
+          "text": "I work to make a difference.",
+          "author": "",
+          "role": "",
+          "imageAssetId": null
+        },
+        {
+          "id": "blk_6b643e9653fa4af4",
+          "type": "gallery",
+          "layout": {
+            "x": 0,
+            "y": 11,
+            "w": 12,
+            "h": 6
+          },
+          "caption": "Leading from the front",
+          "fit": "contain",
+          "assetIds": [
+            "ast_1bec25f6a00a4846",
+            "ast_6272b37179e344ca",
+            "ast_2eb51129ede84ca3",
+            "ast_6e0b63dc4b804de2",
+            "ast_a4928d22f9b34b27"
+          ],
+          "titles": [
+            "With the O9 Solutions team",
+            "Inauguration",
+            "AWS Summit, Bengaluru",
+            "Students presenting",
+            "Lecture hall"
+          ]
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:37.882Z",
+      "updatedAt": "2026-07-31T06:10:59.110Z"
+    },
+    {
+      "id": "sec_dfad712330074df5",
+      "orgId": "torii",
+      "key": "vision-mission",
+      "title": "Vision, Mission & Values",
+      "subtitle": "",
+      "icon": "★",
+      "order": 2,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_047ed4b4472b41e5",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 4,
+            "h": 7
+          },
+          "assetId": "ast_898a088d7e4b4f99",
+          "title": "Clear vision. Plan. Execution.",
+          "caption": "",
+          "alt": "Clear vision. Plan. Execution.",
+          "fit": "contain",
+          "radius": "none"
+        },
+        {
+          "id": "blk_b4599eb90f5a467b",
+          "type": "image",
+          "layout": {
+            "x": 4,
+            "y": 0,
+            "w": 4,
+            "h": 7
+          },
+          "assetId": "ast_7a0ff53c24e045cb",
+          "title": "Transforming passion into profession",
+          "caption": "",
+          "alt": "Transforming passion into profession",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_c87683761e8d49c0",
+          "type": "image",
+          "layout": {
+            "x": 8,
+            "y": 0,
+            "w": 4,
+            "h": 7
+          },
+          "assetId": "ast_43c3394589eb45c9",
+          "title": "Torii delivers on values",
+          "caption": "",
+          "alt": "Torii delivers on values",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_a7fb92be85e842b8",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 7,
+            "w": 5,
+            "h": 8
+          },
+          "assetId": "ast_adaeff808aa84375",
+          "title": "Our workspace is inspiring",
+          "caption": "",
+          "alt": "Our workspace is inspiring",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_0e6093e716a3492a",
+          "type": "text",
+          "layout": {
+            "x": 5,
+            "y": 9,
+            "w": 7,
+            "h": 3
+          },
+          "heading": "Vision, mission and values",
+          "level": 2,
+          "body": "Replace this with the vision and mission statements in your own words. The three lines above are the ones Torii already puts on its posters.",
+          "items": [],
+          "align": "left"
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:37.891Z",
+      "updatedAt": "2026-08-04T08:03:45.741Z"
+    },
+    {
+      "id": "sec_a9115967d9e24791",
+      "orgId": "torii",
+      "key": "best-practices",
+      "title": "Best Practices",
+      "subtitle": "",
+      "icon": "✦",
+      "order": 3,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_715858c8639441a2",
+          "type": "text",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 7,
+            "h": 5
+          },
+          "heading": "How we work",
+          "level": 2,
+          "body": "",
+          "items": [
+            "Mentors who are accessible, not scheduled",
+            "Learning that ends in a recognised certification",
+            "Practice on the same tools industry uses",
+            "Every cohort measured on placement outcomes"
+          ],
+          "align": "left"
+        },
+        {
+          "id": "blk_65d7c0ba639a4fda",
+          "type": "image",
+          "layout": {
+            "x": 7,
+            "y": 0,
+            "w": 5,
+            "h": 8
+          },
+          "assetId": "ast_b8cfc5575b3542bd",
+          "title": "Easily accessible mentors",
+          "caption": "",
+          "alt": "Easily accessible mentors",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_d6fc044d672e410c",
+          "type": "gallery",
+          "layout": {
+            "x": 0,
+            "y": 8,
+            "w": 12,
+            "h": 6
+          },
+          "caption": "Mentoring and practice",
+          "fit": "contain",
+          "assetIds": [
+            "ast_c94498d2edf44a85",
+            "ast_bc7bbf51ab824a2f",
+            "ast_3212dde637b74bc9",
+            "ast_a4928d22f9b34b27",
+            "ast_120089a4ad744bb7"
+          ],
+          "titles": [
+            "One-to-one mentoring",
+            "Hands-on demo",
+            "Classroom session",
+            "Lecture hall",
+            "Lab practice"
+          ]
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:37.898Z",
+      "updatedAt": "2026-07-31T06:10:59.173Z"
+    },
+    {
+      "id": "sec_419a181042734ede",
+      "orgId": "torii",
+      "key": "programs",
+      "title": "Programs / Courses",
+      "subtitle": "",
+      "icon": "▤",
+      "order": 4,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_5d40b680b62f48d9",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 3,
+            "h": 9
+          },
+          "assetId": "ast_6252ab9a0eb147e2",
+          "title": "Skill Sprint",
+          "caption": "Programming · Problem solving",
+          "alt": "Skill Sprint",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_60070099272c441f",
+          "type": "image",
+          "layout": {
+            "x": 3,
+            "y": 0,
+            "w": 3,
+            "h": 9
+          },
+          "assetId": "ast_d836155a65164aae",
+          "title": "Ninja Pro",
+          "caption": "Ready to hire",
+          "alt": "Ninja Pro",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_85018bc5a0d043c2",
+          "type": "image",
+          "layout": {
+            "x": 6,
+            "y": 0,
+            "w": 3,
+            "h": 9
+          },
+          "assetId": "ast_85640b73a43a467a",
+          "title": "Ninja Plus",
+          "caption": "Deep dive into programming",
+          "alt": "Ninja Plus",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_712ba3b2f7ff4fd1",
+          "type": "image",
+          "layout": {
+            "x": 9,
+            "y": 0,
+            "w": 3,
+            "h": 5
+          },
+          "assetId": "ast_d64f83b113354338",
+          "title": "Placement training",
+          "caption": "Ready Engineer",
+          "alt": "Placement training",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_d01568a1e5c64b86",
+          "type": "gallery",
+          "layout": {
+            "x": 0,
+            "y": 9,
+            "w": 12,
+            "h": 6
+          },
+          "caption": "Programmes in progress",
+          "fit": "contain",
+          "assetIds": [
+            "ast_a351328ec4f247f2",
+            "ast_0035fd6c4328484a",
+            "ast_a396037cbe154746",
+            "ast_8d4de8f3194c40e8",
+            "ast_d9d516465e23445c"
+          ],
+          "titles": [
+            "Skill Sprint lab",
+            "AWS Skill Sprint",
+            "Sprint cohort",
+            "MongoDB session",
+            "Classroom"
+          ]
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:37.905Z",
+      "updatedAt": "2026-07-31T06:10:59.199Z"
+    },
+    {
+      "id": "sec_75dc099019094ab2",
+      "orgId": "torii",
+      "key": "team",
+      "title": "Team / Trainers",
+      "subtitle": "",
+      "icon": "⬢",
+      "order": 5,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_3c5a65e665df42bd",
+          "type": "text",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 3
+          },
+          "heading": "The team on campus",
+          "level": 2,
+          "body": "Trainers, mentors and the placement team who run Torii day to day.",
+          "items": [],
+          "align": "left"
+        },
+        {
+          "id": "blk_445a9bc8e6154c3e",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 3,
+            "w": 3,
+            "h": 9
+          },
+          "assetId": "ast_4aa7e3a484e345db",
+          "title": "The Torii team",
+          "caption": "",
+          "alt": "The Torii team",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_c9fec5dac4994734",
+          "type": "image",
+          "layout": {
+            "x": 3,
+            "y": 3,
+            "w": 3,
+            "h": 9
+          },
+          "assetId": "ast_a2f3a006de094e01",
+          "title": "Together",
+          "caption": "",
+          "alt": "Together",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_1f727e4ec70e45b3",
+          "type": "image",
+          "layout": {
+            "x": 6,
+            "y": 3,
+            "w": 3,
+            "h": 9
+          },
+          "assetId": "ast_78262782a3584cd8",
+          "title": "On campus",
+          "caption": "",
+          "alt": "On campus",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_8001f8dbbd9f4331",
+          "type": "image",
+          "layout": {
+            "x": 9,
+            "y": 3,
+            "w": 3,
+            "h": 9
+          },
+          "assetId": "ast_49f3e212a61f4bd7",
+          "title": "On campus",
+          "caption": "",
+          "alt": "On campus",
+          "fit": "contain",
+          "radius": "md"
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:37.913Z",
+      "updatedAt": "2026-07-31T06:10:59.226Z"
+    },
+    {
+      "id": "sec_f0ee6d93897f4d51",
+      "orgId": "torii",
+      "key": "initiatives",
+      "title": "Initiatives",
+      "subtitle": "",
+      "icon": "◈",
+      "order": 6,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_02edff7a68114579",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 6,
+            "h": 10
+          },
+          "assetId": "ast_5c70e93140bd403c",
+          "title": "Super-app · exclusive features",
+          "caption": "",
+          "alt": "Super-app · exclusive features",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_e4ad3ca2876d4d66",
+          "type": "image",
+          "layout": {
+            "x": 6,
+            "y": 0,
+            "w": 6,
+            "h": 10
+          },
+          "assetId": "ast_60a746095c0740d6",
+          "title": "",
+          "caption": "India’s first super-app for education, career and placements",
+          "alt": "India’s first super-app for education, career and placements",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_fcc47d198ce74e5d",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 10,
+            "w": 2,
+            "h": 6
+          },
+          "assetId": "ast_ac0b0ea235c0489b",
+          "title": "Cockatoo",
+          "caption": "",
+          "alt": "Cockatoo",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_ecbb4592c1674d93",
+          "type": "image",
+          "layout": {
+            "x": 2,
+            "y": 10,
+            "w": 2,
+            "h": 6
+          },
+          "assetId": "ast_a5651346b53241dc",
+          "title": "Crowlytics",
+          "caption": "",
+          "alt": "Crowlytics",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_8de2b17cb5264e7a",
+          "type": "image",
+          "layout": {
+            "x": 4,
+            "y": 10,
+            "w": 2,
+            "h": 6
+          },
+          "assetId": "ast_46432160da044a0d",
+          "title": "Myna",
+          "caption": "",
+          "alt": "Myna",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_a1aa68dd6bc640a1",
+          "type": "image",
+          "layout": {
+            "x": 6,
+            "y": 10,
+            "w": 2,
+            "h": 6
+          },
+          "assetId": "ast_7f4905f3ec05413b",
+          "title": "Owl Coder",
+          "caption": "",
+          "alt": "Owl Coder",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_79f46e09c20e4438",
+          "type": "text",
+          "layout": {
+            "x": 8,
+            "y": 10,
+            "w": 4,
+            "h": 3
+          },
+          "heading": "One app",
+          "level": 2,
+          "body": "Learning, practice, mentoring and placement — four products inside a single super-app.",
+          "items": [],
+          "align": "left"
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:37.924Z",
+      "updatedAt": "2026-07-31T06:10:59.260Z"
+    },
+    {
+      "id": "sec_a13f596f7c7b429b",
+      "orgId": "torii",
+      "key": "certifications",
+      "title": "Certifications",
+      "subtitle": "",
+      "icon": "✚",
+      "order": 7,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_2ac58648b9ff4b43",
+          "type": "kpi",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 4
+          },
+          "columns": "auto",
+          "variant": "card",
+          "items": [
+            {
+              "id": "kpi_d29b545d094443b4",
+              "icon": "🏅",
+              "value": 189,
+              "prefix": "",
+              "suffix": "",
+              "label": "Cisco certified in C programming",
+              "note": ""
+            },
+            {
+              "id": "kpi_1eddcd0516a44461",
+              "icon": "🛡️",
+              "value": 25,
+              "prefix": "",
+              "suffix": "",
+              "label": "Cisco certifications awarded",
+              "note": ""
+            },
+            {
+              "id": "kpi_03114c92337444e1",
+              "icon": "🎓",
+              "value": 47,
+              "prefix": "",
+              "suffix": "",
+              "label": "Certified in communication",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "id": "blk_7434b867097a42f0",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 4,
+            "w": 4,
+            "h": 7
+          },
+          "assetId": "ast_8aa1e7fd73da47f0",
+          "title": "189 Cisco certifications",
+          "caption": "C programming",
+          "alt": "189 Cisco certifications",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_c1e1e82a139d451f",
+          "type": "image",
+          "layout": {
+            "x": 4,
+            "y": 4,
+            "w": 4,
+            "h": 7
+          },
+          "assetId": "ast_b457946f17114e95",
+          "title": "25 Cisco certifications",
+          "caption": "",
+          "alt": "25 Cisco certifications",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_1cd6bc072b6a4c1a",
+          "type": "image",
+          "layout": {
+            "x": 8,
+            "y": 4,
+            "w": 4,
+            "h": 7
+          },
+          "assetId": "ast_d3b0290f30334a71",
+          "title": "47 successfully certified",
+          "caption": "Communication",
+          "alt": "47 successfully certified",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_2a103178a9ec45da",
+          "type": "gallery",
+          "layout": {
+            "x": 0,
+            "y": 11,
+            "w": 12,
+            "h": 6
+          },
+          "caption": "Where the certifications are earned",
+          "fit": "contain",
+          "assetIds": [
+            "ast_0035fd6c4328484a",
+            "ast_a396037cbe154746",
+            "ast_d9d516465e23445c",
+            "ast_b0226463735146fe",
+            "ast_bb1a3ff3dd894949"
+          ],
+          "titles": [
+            "AWS Skill Sprint",
+            "Sprint cohort",
+            "Classroom",
+            "Skill Edge · day one",
+            "Skill Edge"
+          ]
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:37.934Z",
+      "updatedAt": "2026-07-31T06:10:59.404Z"
+    },
+    {
+      "id": "sec_072c2bfa4c1f48de",
+      "orgId": "torii",
+      "key": "placements",
+      "title": "Placements",
+      "subtitle": "",
+      "icon": "▲",
+      "order": 8,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_840abc325806425c",
+          "type": "kpi",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 4
+          },
+          "columns": "auto",
+          "variant": "card",
+          "items": [
+            {
+              "id": "kpi_22206873a2d84715",
+              "icon": "🤝",
+              "value": 12,
+              "prefix": "",
+              "suffix": "",
+              "label": "Selections at Deloitte",
+              "note": ""
+            },
+            {
+              "id": "kpi_5eb6d55bdf684344",
+              "icon": "📈",
+              "value": 6,
+              "prefix": "",
+              "suffix": "",
+              "label": "Selections at Mphasis",
+              "note": ""
+            },
+            {
+              "id": "kpi_adcb0af3251a41e1",
+              "icon": "🏆",
+              "value": 9,
+              "prefix": "",
+              "suffix": " LPA+",
+              "label": "Highest package offered",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "id": "blk_f0e4257258b64db9",
+          "type": "gallery",
+          "layout": {
+            "x": 0,
+            "y": 4,
+            "w": 12,
+            "h": 11
+          },
+          "caption": "Offers and selections",
+          "fit": "contain",
+          "assetIds": [
+            "ast_8709758738204312",
+            "ast_742fd919c5c64d41",
+            "ast_199c8715fa3243e6",
+            "ast_f9a5c20d998d4cd1",
+            "ast_604c20c10f3741c1",
+            "ast_0716105c315c476d",
+            "ast_1b5672422c78441f",
+            "ast_e06f701d5f2245a9",
+            "ast_a20deb3f3c6d4c1e",
+            "ast_da4dae1327ae44f8"
+          ],
+          "titles": [
+            "Deloitte · 12 selections",
+            "LTIMindtree",
+            "Mphasis · 7.5 LPA",
+            "O9 Solutions · 9 LPA+",
+            "Cognizant · 5.4 LPA",
+            "Evertz · 5.5 LPA",
+            "Nokia",
+            "Sagility · 6 LPA",
+            "Deloitte",
+            "Deloitte"
+          ]
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:37.943Z",
+      "updatedAt": "2026-07-31T06:10:59.438Z"
+    },
+    {
+      "id": "sec_8f27148e717a4b60",
+      "orgId": "torii",
+      "key": "coe",
+      "title": "Centers of Excellence",
+      "subtitle": "",
+      "icon": "◉",
+      "order": 9,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_fe83ac3bee4f4ba1",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 3,
+            "h": 11
+          },
+          "assetId": "ast_914b9240542a4113",
+          "title": "Centre of Excellence",
+          "caption": "The partner stack",
+          "alt": "Centre of Excellence",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_de28bb9ccbce44ec",
+          "type": "text",
+          "layout": {
+            "x": 3,
+            "y": 0,
+            "w": 9,
+            "h": 2
+          },
+          "heading": "",
+          "level": 2,
+          "body": "An on-campus centre built around the tools industry actually uses. Replace this with your own description of the facility and the programmes that run inside it.",
+          "items": [],
+          "align": "left"
+        },
+        {
+          "id": "blk_c84138302ab1408f",
+          "type": "image",
+          "layout": {
+            "x": 3,
+            "y": 2,
+            "w": 3,
+            "h": 9
+          },
+          "assetId": "ast_9b19bc368f5a46a0",
+          "title": "AI Centre of Excellence",
+          "caption": "",
+          "alt": "AI Centre of Excellence",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_fd188f3787e54f64",
+          "type": "image",
+          "layout": {
+            "x": 6,
+            "y": 2,
+            "w": 3,
+            "h": 9
+          },
+          "assetId": "ast_84664e4f6fd34c58",
+          "title": "Inside the centre",
+          "caption": "",
+          "alt": "Inside the centre",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_a400b37c0fed49e1",
+          "type": "image",
+          "layout": {
+            "x": 9,
+            "y": 2,
+            "w": 3,
+            "h": 9
+          },
+          "assetId": "ast_b7af4475ee1541e3",
+          "title": "Ready Engineer",
+          "caption": "",
+          "alt": "Ready Engineer",
+          "fit": "contain",
+          "radius": "md"
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:37.950Z",
+      "updatedAt": "2026-07-31T06:10:59.462Z"
+    },
+    {
+      "id": "sec_4c1d39ecdb144c5b",
+      "orgId": "torii",
+      "key": "mous",
+      "title": "MOUs / Academic Partnerships",
+      "subtitle": "",
+      "icon": "⬟",
+      "order": 10,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_2bb097dffc44408c",
+          "type": "text",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 3
+          },
+          "heading": "Partnerships",
+          "level": 2,
+          "body": "Programmes run on campus with industry partners. Replace this line with your own summary of the agreements in place.",
+          "items": [],
+          "align": "left"
+        },
+        {
+          "id": "blk_a039eb182eb14e90",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 3,
+            "w": 3,
+            "h": 9
+          },
+          "assetId": "ast_d1d958595a894271",
+          "title": "GitHub Campus Program",
+          "caption": "Launch on campus",
+          "alt": "GitHub Campus Program",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_ddfda94ada8644c3",
+          "type": "image",
+          "layout": {
+            "x": 3,
+            "y": 3,
+            "w": 3,
+            "h": 9
+          },
+          "assetId": "ast_6523cd14c5f64c73",
+          "title": "Full hall",
+          "caption": "",
+          "alt": "Full hall",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_09c70b9d3e0f455b",
+          "type": "image",
+          "layout": {
+            "x": 6,
+            "y": 3,
+            "w": 3,
+            "h": 9
+          },
+          "assetId": "ast_a7884d89af56468a",
+          "title": "On stage",
+          "caption": "",
+          "alt": "On stage",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_7f3a6110c3524af3",
+          "type": "image",
+          "layout": {
+            "x": 9,
+            "y": 3,
+            "w": 3,
+            "h": 5
+          },
+          "assetId": "ast_21df4e15d9034c99",
+          "title": "The GitHub director",
+          "caption": "",
+          "alt": "The GitHub director",
+          "fit": "contain",
+          "radius": "md"
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:37.959Z",
+      "updatedAt": "2026-07-31T06:10:59.485Z"
+    },
+    {
+      "id": "sec_794903b3ae51443a",
+      "orgId": "torii",
+      "key": "moments",
+      "title": "Memorable Moments",
+      "subtitle": "",
+      "icon": "❖",
+      "order": 11,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_2a31a80e19794ed2",
+          "type": "gallery",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 15
+          },
+          "caption": "Events on campus",
+          "fit": "contain",
+          "assetIds": [
+            "ast_b0226463735146fe",
+            "ast_416f9a0dc8db4871",
+            "ast_bc7bbf51ab824a2f",
+            "ast_88fb992c189545a1",
+            "ast_bb1a3ff3dd894949",
+            "ast_7c62fd65b87c4a5a",
+            "ast_6523cd14c5f64c73",
+            "ast_ad5dc0b193c0484d",
+            "ast_4e0446bedba2471f",
+            "ast_96015deb04ca4799",
+            "ast_a4928d22f9b34b27",
+            "ast_3212dde637b74bc9",
+            "ast_a396037cbe154746",
+            "ast_6e0b63dc4b804de2",
+            "ast_2eb51129ede84ca3"
+          ],
+          "titles": [
+            "Skill Edge · day one",
+            "Demo day",
+            "Hands-on",
+            "Walkthrough",
+            "Skill Edge",
+            "Skill Edge",
+            "GitHub campus session",
+            "Skill Sprint cohort",
+            "On campus",
+            "On campus",
+            "Lecture hall",
+            "Classroom",
+            "Sprint cohort",
+            "Students presenting",
+            "AWS Summit, Bengaluru"
+          ]
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:37.966Z",
+      "updatedAt": "2026-07-31T06:10:59.509Z"
+    },
+    {
+      "id": "sec_17538179c6c345c1",
+      "orgId": "torii",
+      "key": "achievements",
+      "title": "Achievements & Awards",
+      "subtitle": "",
+      "icon": "✧",
+      "order": 12,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_cc263794666d409b",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 5,
+            "h": 8
+          },
+          "assetId": "ast_d3b0290f30334a71",
+          "title": "47 successfully certified",
+          "caption": "Communication · MBA cohort",
+          "alt": "47 successfully certified",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_08fa12531dc04322",
+          "type": "text",
+          "layout": {
+            "x": 5,
+            "y": 0,
+            "w": 7,
+            "h": 3
+          },
+          "heading": "Achievements",
+          "level": 2,
+          "body": "Certifications earned, competitions entered and recognitions won. Replace this with your own summary.",
+          "items": [],
+          "align": "left"
+        },
+        {
+          "id": "blk_b4fb08e386444e66",
+          "type": "gallery",
+          "layout": {
+            "x": 0,
+            "y": 8,
+            "w": 12,
+            "h": 6
+          },
+          "caption": "Recognition and results",
+          "fit": "contain",
+          "assetIds": [
+            "ast_2eb51129ede84ca3",
+            "ast_6e0b63dc4b804de2",
+            "ast_8aa1e7fd73da47f0",
+            "ast_b457946f17114e95",
+            "ast_ad5dc0b193c0484d"
+          ],
+          "titles": [
+            "AWS Summit, Bengaluru",
+            "Students presenting",
+            "189 Cisco certifications",
+            "25 Cisco certifications",
+            "Skill Sprint cohort"
+          ]
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:37.974Z",
+      "updatedAt": "2026-07-31T06:10:59.537Z"
+    },
+    {
+      "id": "sec_c125c0d640804a71",
+      "orgId": "torii",
+      "key": "media",
+      "title": "Media / Gallery",
+      "subtitle": "",
+      "icon": "▣",
+      "order": 13,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_c78a2fc03fe741c5",
+          "type": "gallery",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 15
+          },
+          "caption": "From the campus",
+          "fit": "contain",
+          "assetIds": [
+            "ast_fde44fab66b54d2d",
+            "ast_adaeff808aa84375",
+            "ast_7a79c8b247f84bd0",
+            "ast_84664e4f6fd34c58",
+            "ast_4aa7e3a484e345db",
+            "ast_6523cd14c5f64c73",
+            "ast_bb1a3ff3dd894949",
+            "ast_a351328ec4f247f2",
+            "ast_ad5dc0b193c0484d",
+            "ast_78262782a3584cd8",
+            "ast_8d4de8f3194c40e8",
+            "ast_a4928d22f9b34b27",
+            "ast_9b19bc368f5a46a0",
+            "ast_5c70e93140bd403c",
+            "ast_6272b37179e344ca"
+          ],
+          "titles": [
+            "Step in. Stand out.",
+            "Our workspace",
+            "Project Street",
+            "Centre of Excellence",
+            "The team",
+            "GitHub campus session",
+            "Skill Edge",
+            "Skill Sprint lab",
+            "Cohort",
+            "On campus",
+            "MongoDB session",
+            "Lecture hall",
+            "AI Centre of Excellence",
+            "Super-app features",
+            "Inauguration"
+          ]
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:37.980Z",
+      "updatedAt": "2026-07-31T06:10:59.564Z"
+    },
+    {
+      "id": "sec_bcfbe5322cab4966",
+      "orgId": "torii",
+      "key": "testimonials",
+      "title": "Testimonials",
+      "subtitle": "",
+      "icon": "❞",
+      "order": 14,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_eee5ffa56d194a4d",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 8,
+            "h": 13
+          },
+          "assetId": "ast_6e0b63dc4b804de2",
+          "title": "Students speaking",
+          "caption": "",
+          "alt": "Students speaking",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_6879c071c56d4ccb",
+          "type": "quote",
+          "layout": {
+            "x": 8,
+            "y": 0,
+            "w": 4,
+            "h": 6
+          },
+          "text": "Replace this with a line from a student, in their own words.",
+          "author": "Student name",
+          "role": "Programme, year",
+          "imageAssetId": null
+        },
+        {
+          "id": "blk_f71aa3627d9047e3",
+          "type": "quote",
+          "layout": {
+            "x": 8,
+            "y": 6,
+            "w": 4,
+            "h": 6
+          },
+          "text": "Replace this with a line from a recruiter or faculty member.",
+          "author": "Name",
+          "role": "Role, organization",
+          "imageAssetId": null
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:37.988Z",
+      "updatedAt": "2026-07-31T06:10:59.600Z"
+    },
+    {
+      "id": "sec_2d669a7d62bb4610",
+      "orgId": "torii",
+      "key": "contact",
+      "title": "Contact",
+      "subtitle": "",
+      "icon": "✉",
+      "order": 15,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_490068baeb77415b",
+          "type": "box",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 4,
+            "h": 6
+          },
+          "label": "Visit",
+          "background": "surface",
+          "padding": "md",
+          "gap": "md",
+          "border": true,
+          "radius": "md",
+          "children": [
+            {
+              "id": "blk_242410386d5e40b3",
+              "type": "icon",
+              "layout": {
+                "x": 0,
+                "y": 0,
+                "w": 12,
+                "h": 3
+              },
+              "glyph": "📍",
+              "label": "Visit",
+              "note": "",
+              "size": "md",
+              "shape": "circle",
+              "tone": "accent"
+            },
+            {
+              "id": "blk_0df4eb2a9cb6493b",
+              "type": "paragraph",
+              "layout": {
+                "x": 0,
+                "y": 3,
+                "w": 12,
+                "h": 2
+              },
+              "text": "Add the campus address here."
+            }
+          ]
+        },
+        {
+          "id": "blk_682dfe44537845a2",
+          "type": "box",
+          "layout": {
+            "x": 4,
+            "y": 0,
+            "w": 4,
+            "h": 6
+          },
+          "label": "Call",
+          "background": "surface",
+          "padding": "md",
+          "gap": "md",
+          "border": true,
+          "radius": "md",
+          "children": [
+            {
+              "id": "blk_dda39b784bf84f36",
+              "type": "icon",
+              "layout": {
+                "x": 0,
+                "y": 0,
+                "w": 12,
+                "h": 3
+              },
+              "glyph": "📞",
+              "label": "Call",
+              "note": "",
+              "size": "md",
+              "shape": "circle",
+              "tone": "accent"
+            },
+            {
+              "id": "blk_cc9fe85547e44ba1",
+              "type": "paragraph",
+              "layout": {
+                "x": 0,
+                "y": 3,
+                "w": 12,
+                "h": 2
+              },
+              "text": "Add the contact number here."
+            }
+          ]
+        },
+        {
+          "id": "blk_80e86e34b1b34545",
+          "type": "box",
+          "layout": {
+            "x": 8,
+            "y": 0,
+            "w": 4,
+            "h": 6
+          },
+          "label": "Email",
+          "background": "surface",
+          "padding": "md",
+          "gap": "md",
+          "border": true,
+          "radius": "md",
+          "children": [
+            {
+              "id": "blk_73e5037e7b3c40a7",
+              "type": "icon",
+              "layout": {
+                "x": 0,
+                "y": 0,
+                "w": 12,
+                "h": 3
+              },
+              "glyph": "✉️",
+              "label": "Email",
+              "note": "",
+              "size": "md",
+              "shape": "circle",
+              "tone": "accent"
+            },
+            {
+              "id": "blk_53e807b424d7444c",
+              "type": "paragraph",
+              "layout": {
+                "x": 0,
+                "y": 3,
+                "w": 12,
+                "h": 2
+              },
+              "text": "Add the contact email here."
+            }
+          ]
+        },
+        {
+          "id": "blk_eb29ba81abf14a88",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 6,
+            "w": 6,
+            "h": 10
+          },
+          "assetId": "ast_fde44fab66b54d2d",
+          "title": "",
+          "caption": "Step in. Stand out.",
+          "alt": "Step in. Stand out.",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_bf7e2e9e537f40ce",
+          "type": "image",
+          "layout": {
+            "x": 6,
+            "y": 6,
+            "w": 6,
+            "h": 10
+          },
+          "assetId": "ast_ad5dc0b193c0484d",
+          "title": "",
+          "caption": "The Skill Sprint cohort",
+          "alt": "The Skill Sprint cohort",
+          "fit": "contain",
+          "radius": "md"
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:37.998Z",
+      "updatedAt": "2026-07-31T06:10:59.658Z"
+    },
+    {
+      "id": "sec_8c7248a61dc04df1",
+      "orgId": "technical-hub",
+      "key": "ceo-message",
+      "title": "CEO / Leadership Message",
+      "subtitle": "",
+      "icon": "❝",
+      "order": 1,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_684def4babb54e91",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 7,
+            "h": 11
+          },
+          "assetId": "ast_88855fcd2f294755",
+          "title": "",
+          "caption": "Addressing a cohort",
+          "alt": "Addressing a cohort",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_2b17e2f1098e4ce3",
+          "type": "text",
+          "layout": {
+            "x": 7,
+            "y": 0,
+            "w": 5,
+            "h": 3
+          },
+          "heading": "From the leadership",
+          "level": 2,
+          "body": "Replace this with the leadership message. Two short paragraphs is the right length for a room.",
+          "items": [],
+          "align": "left"
+        },
+        {
+          "id": "blk_79a007ea87314c5e",
+          "type": "image",
+          "layout": {
+            "x": 7,
+            "y": 3,
+            "w": 5,
+            "h": 8
+          },
+          "assetId": "ast_cef31e6192e24244",
+          "title": "Session in progress",
+          "caption": "",
+          "alt": "Session in progress",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_9f489f8ef38044a5",
+          "type": "gallery",
+          "layout": {
+            "x": 0,
+            "y": 11,
+            "w": 12,
+            "h": 6
+          },
+          "caption": "Across the campus",
+          "fit": "contain",
+          "assetIds": [
+            "ast_c6213dd678cd4027",
+            "ast_29c8294ae5ac4453",
+            "ast_2f3cbf4bd0774cef",
+            "ast_0370ddb32aa74e46",
+            "ast_e271b1a8882943ad"
+          ],
+          "titles": [
+            "Cohort",
+            "Hall session",
+            "The lab",
+            "Full hall",
+            "Outdoor review"
+          ]
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:38.036Z",
+      "updatedAt": "2026-07-31T06:10:59.732Z"
+    },
+    {
+      "id": "sec_32c5f24b6811464b",
+      "orgId": "technical-hub",
+      "key": "vision-mission",
+      "title": "Vision, Mission & Values",
+      "subtitle": "",
+      "icon": "★",
+      "order": 2,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_a04693826f224ed8",
+          "type": "box",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 4,
+            "h": 6
+          },
+          "label": "Identify",
+          "background": "surface",
+          "padding": "md",
+          "gap": "md",
+          "border": true,
+          "radius": "md",
+          "children": [
+            {
+              "id": "blk_c05aba3d4c3b40bf",
+              "type": "icon",
+              "layout": {
+                "x": 0,
+                "y": 0,
+                "w": 12,
+                "h": 3
+              },
+              "glyph": "🔍",
+              "label": "Identify",
+              "note": "",
+              "size": "md",
+              "shape": "circle",
+              "tone": "accent"
+            },
+            {
+              "id": "blk_c0ff3e02704c4324",
+              "type": "paragraph",
+              "layout": {
+                "x": 0,
+                "y": 3,
+                "w": 12,
+                "h": 2
+              },
+              "text": "Find the real problem before writing a line of code."
+            }
+          ]
+        },
+        {
+          "id": "blk_320349ae1dad4228",
+          "type": "box",
+          "layout": {
+            "x": 4,
+            "y": 0,
+            "w": 4,
+            "h": 6
+          },
+          "label": "Solve",
+          "background": "surface",
+          "padding": "md",
+          "gap": "md",
+          "border": true,
+          "radius": "md",
+          "children": [
+            {
+              "id": "blk_486e76fdd43d446a",
+              "type": "icon",
+              "layout": {
+                "x": 0,
+                "y": 0,
+                "w": 12,
+                "h": 3
+              },
+              "glyph": "🧩",
+              "label": "Solve",
+              "note": "",
+              "size": "md",
+              "shape": "circle",
+              "tone": "accent"
+            },
+            {
+              "id": "blk_63ff552d45c24324",
+              "type": "paragraph",
+              "layout": {
+                "x": 0,
+                "y": 3,
+                "w": 12,
+                "h": 2
+              },
+              "text": "Build it with the tools industry actually uses."
+            }
+          ]
+        },
+        {
+          "id": "blk_9374c7ff99c647f1",
+          "type": "box",
+          "layout": {
+            "x": 8,
+            "y": 0,
+            "w": 4,
+            "h": 6
+          },
+          "label": "Deploy",
+          "background": "surface",
+          "padding": "md",
+          "gap": "md",
+          "border": true,
+          "radius": "md",
+          "children": [
+            {
+              "id": "blk_b7664e6e587d441a",
+              "type": "icon",
+              "layout": {
+                "x": 0,
+                "y": 0,
+                "w": 12,
+                "h": 3
+              },
+              "glyph": "🚀",
+              "label": "Deploy",
+              "note": "",
+              "size": "md",
+              "shape": "circle",
+              "tone": "accent"
+            },
+            {
+              "id": "blk_ba29482ab8224b7e",
+              "type": "paragraph",
+              "layout": {
+                "x": 0,
+                "y": 3,
+                "w": 12,
+                "h": 2
+              },
+              "text": "Ship it, and learn from what happens next."
+            }
+          ]
+        },
+        {
+          "id": "blk_5292fc45435e4182",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 6,
+            "w": 3,
+            "h": 9
+          },
+          "assetId": "ast_bcfa283b6b2d4b92",
+          "title": "Project Space",
+          "caption": "",
+          "alt": "Project Space",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_f65f1eeedeee4a01",
+          "type": "image",
+          "layout": {
+            "x": 3,
+            "y": 6,
+            "w": 5,
+            "h": 8
+          },
+          "assetId": "ast_4e1773d82d7643fd",
+          "title": "Project Space on campus",
+          "caption": "",
+          "alt": "Project Space on campus",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_55961fc05b184aaf",
+          "type": "image",
+          "layout": {
+            "x": 8,
+            "y": 6,
+            "w": 4,
+            "h": 7
+          },
+          "assetId": "ast_8c147f26a448435e",
+          "title": "A working session",
+          "caption": "",
+          "alt": "A working session",
+          "fit": "contain",
+          "radius": "md"
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:38.044Z",
+      "updatedAt": "2026-07-31T06:10:59.772Z"
+    },
+    {
+      "id": "sec_99c30560f78a44f2",
+      "orgId": "technical-hub",
+      "key": "best-practices",
+      "title": "Best Practices",
+      "subtitle": "",
+      "icon": "✦",
+      "order": 3,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_968e071b00a14343",
+          "type": "text",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 7,
+            "h": 5
+          },
+          "heading": "How we work",
+          "level": 2,
+          "body": "",
+          "items": [
+            "Train on the tools industry uses, not on slideware",
+            "Every centre of excellence is a working lab",
+            "Practice at scale — full cohorts, full labs",
+            "Measured on certifications earned and offers made"
+          ],
+          "align": "left"
+        },
+        {
+          "id": "blk_33539697050a44ea",
+          "type": "image",
+          "layout": {
+            "x": 7,
+            "y": 0,
+            "w": 5,
+            "h": 8
+          },
+          "assetId": "ast_8c49c164b6a74df4",
+          "title": "30+ technologies",
+          "caption": "",
+          "alt": "30+ technologies",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_af68e1365c4b4b09",
+          "type": "gallery",
+          "layout": {
+            "x": 0,
+            "y": 8,
+            "w": 12,
+            "h": 6
+          },
+          "caption": "Training at scale",
+          "fit": "contain",
+          "assetIds": [
+            "ast_2f3cbf4bd0774cef",
+            "ast_cd562d741b214351",
+            "ast_29c8294ae5ac4453",
+            "ast_b4351c2bf18a410e",
+            "ast_c6213dd678cd4027"
+          ],
+          "titles": [
+            "The lab",
+            "Full lab",
+            "Hall session",
+            "Between sessions",
+            "Cohort"
+          ]
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:38.051Z",
+      "updatedAt": "2026-07-31T06:10:59.798Z"
+    },
+    {
+      "id": "sec_2ce27ff81ff0481d",
+      "orgId": "technical-hub",
+      "key": "programs",
+      "title": "Programs / Courses",
+      "subtitle": "",
+      "icon": "▤",
+      "order": 4,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_3008a3006dd34ad9",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 6,
+            "h": 10
+          },
+          "assetId": "ast_8c49c164b6a74df4",
+          "title": "30+ technologies",
+          "caption": "The full stack Technical Hub trains on",
+          "alt": "30+ technologies",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_947bff75a9c647e1",
+          "type": "logo",
+          "layout": {
+            "x": 6,
+            "y": 0,
+            "w": 3,
+            "h": 5
+          },
+          "assetId": "ast_a6e8ba32d9db475f",
+          "title": "DriveReady",
+          "alt": "DriveReady",
+          "href": "",
+          "background": "surface",
+          "pad": "md"
+        },
+        {
+          "id": "blk_c1646c94bc064e3f",
+          "type": "logo",
+          "layout": {
+            "x": 9,
+            "y": 0,
+            "w": 3,
+            "h": 5
+          },
+          "assetId": "ast_8ba08be254cc4cc2",
+          "title": "OwlCoder",
+          "alt": "OwlCoder",
+          "href": "",
+          "background": "surface",
+          "pad": "md"
+        },
+        {
+          "id": "blk_346aed66d8124f38",
+          "type": "logo",
+          "layout": {
+            "x": 6,
+            "y": 5,
+            "w": 3,
+            "h": 5
+          },
+          "assetId": "ast_7bacacd26cd04588",
+          "title": "Maya AI",
+          "alt": "Maya AI",
+          "href": "",
+          "background": "surface",
+          "pad": "md"
+        },
+        {
+          "id": "blk_38344fe0bf52480f",
+          "type": "logo",
+          "layout": {
+            "x": 9,
+            "y": 5,
+            "w": 3,
+            "h": 5
+          },
+          "assetId": "ast_e5230483600f4412",
+          "title": "Ignite Coder",
+          "alt": "Ignite Coder",
+          "href": "",
+          "background": "surface",
+          "pad": "md"
+        },
+        {
+          "id": "blk_f738c9c3602e4fd6",
+          "type": "gallery",
+          "layout": {
+            "x": 0,
+            "y": 10,
+            "w": 12,
+            "h": 6
+          },
+          "caption": "A programme per stack",
+          "fit": "contain",
+          "assetIds": [
+            "ast_43ce52771c924ff4",
+            "ast_dd630766da7f4295",
+            "ast_186b49a2a46c42ec",
+            "ast_52bad222aab54ac1",
+            "ast_aa31799ff62e47c1"
+          ],
+          "titles": [
+            "DevOps",
+            "Cyber Security",
+            "UI / UX",
+            "Full Stack Data Specialist",
+            "React Native"
+          ]
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:38.059Z",
+      "updatedAt": "2026-07-31T06:10:59.825Z"
+    },
+    {
+      "id": "sec_bddf4b1b0ee64631",
+      "orgId": "technical-hub",
+      "key": "team",
+      "title": "Team / Trainers",
+      "subtitle": "",
+      "icon": "⬢",
+      "order": 5,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_b389287c6a4140c4",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 8,
+            "h": 13
+          },
+          "assetId": "ast_ae50adb9175647b8",
+          "title": "Team Technical Hub",
+          "caption": "",
+          "alt": "Team Technical Hub",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_a7a1ee8d89a04ac5",
+          "type": "image",
+          "layout": {
+            "x": 8,
+            "y": 0,
+            "w": 4,
+            "h": 7
+          },
+          "assetId": "ast_61f368d2d6ff4834",
+          "title": "The team on campus",
+          "caption": "",
+          "alt": "The team on campus",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_1e5ac0046b7d478f",
+          "type": "image",
+          "layout": {
+            "x": 8,
+            "y": 7,
+            "w": 4,
+            "h": 7
+          },
+          "assetId": "ast_4e1773d82d7643fd",
+          "title": "Project Space team",
+          "caption": "",
+          "alt": "Project Space team",
+          "fit": "contain",
+          "radius": "md"
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:38.066Z",
+      "updatedAt": "2026-07-31T06:10:59.846Z"
+    },
+    {
+      "id": "sec_e43351a97e7643f0",
+      "orgId": "technical-hub",
+      "key": "initiatives",
+      "title": "Initiatives",
+      "subtitle": "",
+      "icon": "◈",
+      "order": 6,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_d7041449dc424060",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 2,
+            "h": 12
+          },
+          "assetId": "ast_0e48175a778c4999",
+          "title": "App home",
+          "caption": "",
+          "alt": "App home",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_53b9799c8c82478a",
+          "type": "image",
+          "layout": {
+            "x": 2,
+            "y": 0,
+            "w": 2,
+            "h": 12
+          },
+          "assetId": "ast_c0329509769b4374",
+          "title": "Progress",
+          "caption": "",
+          "alt": "Progress",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_d0d2ab96d7034127",
+          "type": "image",
+          "layout": {
+            "x": 4,
+            "y": 0,
+            "w": 2,
+            "h": 12
+          },
+          "assetId": "ast_515a8c06a7a44ad1",
+          "title": "Aptitude",
+          "caption": "",
+          "alt": "Aptitude",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_2dea7c4818664208",
+          "type": "image",
+          "layout": {
+            "x": 6,
+            "y": 0,
+            "w": 6,
+            "h": 10
+          },
+          "assetId": "ast_744cbf4c52474d65",
+          "title": "",
+          "caption": "4 sections · 21 interactive modules",
+          "alt": "4 sections · 21 interactive modules",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_853035209fc04768",
+          "type": "text",
+          "layout": {
+            "x": 6,
+            "y": 10,
+            "w": 6,
+            "h": 3
+          },
+          "heading": "The learning app",
+          "level": 2,
+          "body": "Maya AI and the Technical Hub app put practice, assessment and progress tracking in the trainee’s hand.",
+          "items": [],
+          "align": "left"
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:38.073Z",
+      "updatedAt": "2026-07-31T06:10:59.869Z"
+    },
+    {
+      "id": "sec_69c6554f56bd453e",
+      "orgId": "technical-hub",
+      "key": "certifications",
+      "title": "Certifications",
+      "subtitle": "",
+      "icon": "✚",
+      "order": 7,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_507157765d2e409f",
+          "type": "kpi",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 4
+          },
+          "columns": "2",
+          "variant": "card",
+          "items": [
+            {
+              "id": "kpi_886a371dd5d94ea0",
+              "icon": "🎓",
+              "value": 15000,
+              "prefix": "",
+              "suffix": "+",
+              "label": "Certified trainees",
+              "note": ""
+            },
+            {
+              "id": "kpi_5aa7f5fdf1784205",
+              "icon": "🛡️",
+              "value": 30,
+              "prefix": "",
+              "suffix": "+",
+              "label": "Technologies covered",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "id": "blk_0ea1b550013b46bb",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 4,
+            "w": 7,
+            "h": 11
+          },
+          "assetId": "ast_715e165c05b643f5",
+          "title": "15,000+ certified trainees",
+          "caption": "",
+          "alt": "15,000+ certified trainees",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_37f97d01982c4f3d",
+          "type": "image",
+          "layout": {
+            "x": 7,
+            "y": 4,
+            "w": 5,
+            "h": 7
+          },
+          "assetId": "ast_bdb8d6344a4b48e3",
+          "title": "Trained by us, recognized by the world",
+          "caption": "",
+          "alt": "Trained by us, recognized by the world",
+          "fit": "contain",
+          "radius": "md"
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:38.082Z",
+      "updatedAt": "2026-07-31T06:10:59.891Z"
+    },
+    {
+      "id": "sec_23024decb4804a5e",
+      "orgId": "technical-hub",
+      "key": "placements",
+      "title": "Placements",
+      "subtitle": "",
+      "icon": "▲",
+      "order": 8,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_b1f9a6fdf9ca4dcf",
+          "type": "kpi",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 4
+          },
+          "columns": "auto",
+          "variant": "card",
+          "items": [
+            {
+              "id": "kpi_9948a26e48d649c2",
+              "icon": "🏆",
+              "value": 22.6,
+              "prefix": "",
+              "suffix": " LPA",
+              "label": "Highest package",
+              "note": ""
+            },
+            {
+              "id": "kpi_586d1191204c4baa",
+              "icon": "🤝",
+              "value": 29,
+              "prefix": "",
+              "suffix": "",
+              "label": "ServiceNow selections",
+              "note": ""
+            },
+            {
+              "id": "kpi_559b66176606404f",
+              "icon": "📈",
+              "value": 24,
+              "prefix": "",
+              "suffix": "",
+              "label": "Areteans apprenticeships",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "id": "blk_d864d6caabfe4584",
+          "type": "gallery",
+          "layout": {
+            "x": 0,
+            "y": 4,
+            "w": 12,
+            "h": 11
+          },
+          "caption": "Offers and selections",
+          "fit": "contain",
+          "assetIds": [
+            "ast_6259852b616e4c36",
+            "ast_83b147705d59439a",
+            "ast_03c43970b5644682",
+            "ast_b18cf3a5c02f44ca",
+            "ast_ce3adaf8414d4ff0",
+            "ast_6105c01ca61e4049",
+            "ast_ea429ed617334076",
+            "ast_f8b50d7bd1e246ac",
+            "ast_0b5be8c99cfb4d7c",
+            "ast_2bf534a68845466e"
+          ],
+          "titles": [
+            "Walmart · 22.6 LPA",
+            "ServiceNow · 17.6 LPA",
+            "Pennant · 17 LPA",
+            "Darwinbox · 16.3 LPA",
+            "Cisco · 16 LPA",
+            "Maersk · 10.83 LPA",
+            "Lloyds · 10.71 LPA",
+            "ZopSmart · 10 LPA",
+            "HSBC · 9 LPA",
+            "HP · 8 LPA"
+          ]
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:38.088Z",
+      "updatedAt": "2026-07-31T06:10:59.916Z"
+    },
+    {
+      "id": "sec_7be501c45f464566",
+      "orgId": "technical-hub",
+      "key": "coe",
+      "title": "Centers of Excellence",
+      "subtitle": "",
+      "icon": "◉",
+      "order": 9,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_bee53753e6b94126",
+          "type": "text",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 2
+          },
+          "heading": "",
+          "level": 2,
+          "body": "A working lab for each technology stack, built with the vendor whose tools it teaches.",
+          "items": [],
+          "align": "left"
+        },
+        {
+          "id": "blk_8b6bf48deab647a1",
+          "type": "gallery",
+          "layout": {
+            "x": 0,
+            "y": 2,
+            "w": 12,
+            "h": 11
+          },
+          "caption": "One centre per stack",
+          "fit": "contain",
+          "assetIds": [
+            "ast_43ce52771c924ff4",
+            "ast_dd630766da7f4295",
+            "ast_186b49a2a46c42ec",
+            "ast_fbde20a758c84200",
+            "ast_31349a9663864a68",
+            "ast_4fbbf5ae405140ed",
+            "ast_3b29b189a7124da1",
+            "ast_2cb21cc8bdc84bf3",
+            "ast_25ef99645f3246b2",
+            "ast_c035b1e5806a4eb7"
+          ],
+          "titles": [
+            "DevOps",
+            "Cyber Security",
+            "UI / UX",
+            "Project Space",
+            "Oracle Academy",
+            "Java",
+            "Operating Systems",
+            "Internet of Things",
+            "Competitive coding",
+            "The centre"
+          ]
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:38.094Z",
+      "updatedAt": "2026-07-31T06:10:59.949Z"
+    },
+    {
+      "id": "sec_1454bbb9b45d44ae",
+      "orgId": "technical-hub",
+      "key": "mous",
+      "title": "MOUs / Academic Partnerships",
+      "subtitle": "",
+      "icon": "⬟",
+      "order": 10,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_98e15c4853154f0e",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 6,
+            "h": 10
+          },
+          "assetId": "ast_31349a9663864a68",
+          "title": "Oracle Academy",
+          "caption": "On-campus academy",
+          "alt": "Oracle Academy",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_7301c33adf9e4ad9",
+          "type": "image",
+          "layout": {
+            "x": 6,
+            "y": 0,
+            "w": 6,
+            "h": 10
+          },
+          "assetId": "ast_0427e04fa16b41f1",
+          "title": "PEGA University Program",
+          "caption": "Implementation partner",
+          "alt": "PEGA University Program",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_94709cd335014e66",
+          "type": "gallery",
+          "layout": {
+            "x": 0,
+            "y": 10,
+            "w": 12,
+            "h": 6
+          },
+          "caption": "Vendor programmes on campus",
+          "fit": "contain",
+          "assetIds": [
+            "ast_9a0b1dafbc7d4e37",
+            "ast_593c387b245447f1",
+            "ast_15dd268c540949f5",
+            "ast_52bad222aab54ac1",
+            "ast_b7ccf62085074b1e"
+          ],
+          "titles": [
+            "ServiceNow",
+            "AWS",
+            "Cadence",
+            "Microsoft · Full Stack Data Specialist",
+            "Mobile development"
+          ]
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:38.102Z",
+      "updatedAt": "2026-07-31T06:10:59.973Z"
+    },
+    {
+      "id": "sec_f22c6da161594637",
+      "orgId": "technical-hub",
+      "key": "moments",
+      "title": "Memorable Moments",
+      "subtitle": "",
+      "icon": "❖",
+      "order": 11,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_bb382e31a7174b2d",
+          "type": "gallery",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 15
+          },
+          "caption": "On campus",
+          "fit": "contain",
+          "assetIds": [
+            "ast_eb2709559b6042e8",
+            "ast_e48a14d32a144683",
+            "ast_943d5101407d4b3a",
+            "ast_c6213dd678cd4027",
+            "ast_29c8294ae5ac4453",
+            "ast_cef31e6192e24244",
+            "ast_e271b1a8882943ad",
+            "ast_b4351c2bf18a410e",
+            "ast_4e1773d82d7643fd",
+            "ast_84db7853001b4ee7",
+            "ast_2f3cbf4bd0774cef",
+            "ast_0370ddb32aa74e46",
+            "ast_61f368d2d6ff4834",
+            "ast_c035b1e5806a4eb7",
+            "ast_8c147f26a448435e"
+          ],
+          "titles": [
+            "The full cohort",
+            "On the ground",
+            "Campus assembly",
+            "Cohort",
+            "Hall session",
+            "Session in progress",
+            "Outdoor review",
+            "Between sessions",
+            "Project Space",
+            "The campus at night",
+            "The lab",
+            "Full hall",
+            "The team",
+            "Centre corridor",
+            "Working session"
+          ]
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:38.107Z",
+      "updatedAt": "2026-07-31T06:10:59.998Z"
+    },
+    {
+      "id": "sec_86f7d33fd59c4bda",
+      "orgId": "technical-hub",
+      "key": "achievements",
+      "title": "Achievements & Awards",
+      "subtitle": "",
+      "icon": "✧",
+      "order": 12,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_367ac586bef34e74",
+          "type": "gallery",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 11
+          },
+          "caption": "Selections, apprenticeships and internships",
+          "fit": "contain",
+          "assetIds": [
+            "ast_3468c763760e470e",
+            "ast_d4f32bb3dc004756",
+            "ast_9a32ebabe8ce45b9",
+            "ast_7b86313905e54ce8",
+            "ast_320afdc900ea4b0f",
+            "ast_19937ec628464fae",
+            "ast_16843e59c3b9434f",
+            "ast_bcc127c14ce34c71",
+            "ast_53c54270d6ba4f86",
+            "ast_58f7888ed8954ff4"
+          ],
+          "titles": [
+            "ServiceNow · 29 selections",
+            "Areteans · 24 apprenticeships",
+            "PEGA · 7 selections",
+            "Walmart · 13 selections",
+            "International placements",
+            "International placements",
+            "Google internship",
+            "Flipkart internship",
+            "Airbus internship",
+            "Thoughtworks · 11.10 LPA"
+          ]
+        },
+        {
+          "id": "blk_74d31f4fece04d00",
+          "type": "text",
+          "layout": {
+            "x": 0,
+            "y": 11,
+            "w": 12,
+            "h": 3
+          },
+          "heading": "Achievements",
+          "level": 2,
+          "body": "Selection counts, apprenticeships and international placements. Replace this with your own summary.",
+          "items": [],
+          "align": "left"
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:38.117Z",
+      "updatedAt": "2026-07-31T06:11:00.027Z"
+    },
+    {
+      "id": "sec_e05d8c6687f44bf9",
+      "orgId": "technical-hub",
+      "key": "media",
+      "title": "Media / Gallery",
+      "subtitle": "",
+      "icon": "▣",
+      "order": 13,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_16a083f1209346b5",
+          "type": "gallery",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 12,
+            "h": 15
+          },
+          "caption": "From the campus",
+          "fit": "contain",
+          "assetIds": [
+            "ast_715e165c05b643f5",
+            "ast_84db7853001b4ee7",
+            "ast_cb5e64ce369c434d",
+            "ast_c035b1e5806a4eb7",
+            "ast_ae50adb9175647b8",
+            "ast_eb2709559b6042e8",
+            "ast_cd562d741b214351",
+            "ast_186b49a2a46c42ec",
+            "ast_e48a14d32a144683",
+            "ast_b4351c2bf18a410e",
+            "ast_4e1773d82d7643fd",
+            "ast_29c8294ae5ac4453",
+            "ast_1f68e53ac4104681",
+            "ast_1699a25dcb1c42aa",
+            "ast_c799f2af3e104175"
+          ],
+          "titles": [
+            "15,000+ certified trainees",
+            "The campus at night",
+            "Since 2016",
+            "Centre corridor",
+            "Team Technical Hub",
+            "The full cohort",
+            "Full lab",
+            "UI / UX centre",
+            "On the ground",
+            "Between sessions",
+            "Project Space",
+            "Hall session",
+            "Maya AI",
+            "The learner portal",
+            "Self-service kiosk"
+          ]
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:38.123Z",
+      "updatedAt": "2026-07-31T06:11:00.061Z"
+    },
+    {
+      "id": "sec_36db91d0532440aa",
+      "orgId": "technical-hub",
+      "key": "testimonials",
+      "title": "Testimonials",
+      "subtitle": "",
+      "icon": "❞",
+      "order": 14,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_1694e5b6ef2a4959",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 8,
+            "h": 13
+          },
+          "assetId": "ast_b4351c2bf18a410e",
+          "title": "Between sessions",
+          "caption": "",
+          "alt": "Between sessions",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_4591a74206994c0b",
+          "type": "quote",
+          "layout": {
+            "x": 8,
+            "y": 0,
+            "w": 4,
+            "h": 6
+          },
+          "text": "Replace this with a line from a trainee, in their own words.",
+          "author": "Trainee name",
+          "role": "Programme, year",
+          "imageAssetId": null
+        },
+        {
+          "id": "blk_fca244f62587489d",
+          "type": "quote",
+          "layout": {
+            "x": 8,
+            "y": 6,
+            "w": 4,
+            "h": 6
+          },
+          "text": "Replace this with a line from a recruiter or partner.",
+          "author": "Name",
+          "role": "Role, organization",
+          "imageAssetId": null
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:38.129Z",
+      "updatedAt": "2026-07-31T06:11:00.088Z"
+    },
+    {
+      "id": "sec_a2aace4eba274c90",
+      "orgId": "technical-hub",
+      "key": "contact",
+      "title": "Contact",
+      "subtitle": "",
+      "icon": "✉",
+      "order": 15,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_fa625649d628474e",
+          "type": "box",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 4,
+            "h": 6
+          },
+          "label": "Visit",
+          "background": "surface",
+          "padding": "md",
+          "gap": "md",
+          "border": true,
+          "radius": "md",
+          "children": [
+            {
+              "id": "blk_90c3908b829e4322",
+              "type": "icon",
+              "layout": {
+                "x": 0,
+                "y": 0,
+                "w": 12,
+                "h": 3
+              },
+              "glyph": "📍",
+              "label": "Visit",
+              "note": "",
+              "size": "md",
+              "shape": "circle",
+              "tone": "accent"
+            },
+            {
+              "id": "blk_cf7c0fe5f6fb4028",
+              "type": "paragraph",
+              "layout": {
+                "x": 0,
+                "y": 3,
+                "w": 12,
+                "h": 2
+              },
+              "text": "Add the campus address here."
+            }
+          ]
+        },
+        {
+          "id": "blk_a6b1b4a335284654",
+          "type": "box",
+          "layout": {
+            "x": 4,
+            "y": 0,
+            "w": 4,
+            "h": 6
+          },
+          "label": "Call",
+          "background": "surface",
+          "padding": "md",
+          "gap": "md",
+          "border": true,
+          "radius": "md",
+          "children": [
+            {
+              "id": "blk_550c21e543384808",
+              "type": "icon",
+              "layout": {
+                "x": 0,
+                "y": 0,
+                "w": 12,
+                "h": 3
+              },
+              "glyph": "📞",
+              "label": "Call",
+              "note": "",
+              "size": "md",
+              "shape": "circle",
+              "tone": "accent"
+            },
+            {
+              "id": "blk_b937a70150d14a95",
+              "type": "paragraph",
+              "layout": {
+                "x": 0,
+                "y": 3,
+                "w": 12,
+                "h": 2
+              },
+              "text": "Add the contact number here."
+            }
+          ]
+        },
+        {
+          "id": "blk_b90218244c9347bd",
+          "type": "box",
+          "layout": {
+            "x": 8,
+            "y": 0,
+            "w": 4,
+            "h": 6
+          },
+          "label": "Email",
+          "background": "surface",
+          "padding": "md",
+          "gap": "md",
+          "border": true,
+          "radius": "md",
+          "children": [
+            {
+              "id": "blk_4b526e7af50f42b7",
+              "type": "icon",
+              "layout": {
+                "x": 0,
+                "y": 0,
+                "w": 12,
+                "h": 3
+              },
+              "glyph": "✉️",
+              "label": "Email",
+              "note": "",
+              "size": "md",
+              "shape": "circle",
+              "tone": "accent"
+            },
+            {
+              "id": "blk_3d2cd2eb25434276",
+              "type": "paragraph",
+              "layout": {
+                "x": 0,
+                "y": 3,
+                "w": 12,
+                "h": 2
+              },
+              "text": "Add the contact email here."
+            }
+          ]
+        },
+        {
+          "id": "blk_77dd57dc01ca4453",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 6,
+            "w": 6,
+            "h": 10
+          },
+          "assetId": "ast_cb5e64ce369c434d",
+          "title": "",
+          "caption": "Technical Hub · since 2016",
+          "alt": "Technical Hub · since 2016",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_99d953144af249ab",
+          "type": "image",
+          "layout": {
+            "x": 6,
+            "y": 6,
+            "w": 6,
+            "h": 10
+          },
+          "assetId": "ast_84db7853001b4ee7",
+          "title": "",
+          "caption": "The campus",
+          "alt": "The campus",
+          "fit": "contain",
+          "radius": "md"
+        }
+      ],
+      "createdAt": "2026-07-30T05:29:38.135Z",
+      "updatedAt": "2026-07-31T06:11:00.119Z"
+    },
+    {
+      "id": "sec_7ebb72b895e94ec8",
+      "orgId": "technical-hub",
+      "key": "company-profile",
+      "title": "Company Profile",
+      "subtitle": "",
+      "icon": "â—†",
+      "order": 0,
+      "hidden": false,
+      "status": "published",
+      "blocks": [
+        {
+          "id": "blk_086e177eab2c4b04",
+          "type": "hero",
+          "layout": {
+            "x": 0,
+            "y": 0,
+            "w": 7,
+            "h": 11
+          },
+          "kicker": "TECHNICAL HUB · SINCE 2016",
+          "heading": "Industry certification, at scale",
+          "subheading": "Centres of excellence across more than thirty technologies — and a placement record to match.",
+          "media": "image",
+          "source": "upload",
+          "assetId": "ast_13b5680a75bd4a21",
+          "videoUrl": "",
+          "alt": "",
+          "overlay": 55,
+          "align": "left",
+          "height": "md",
+          "buttons": []
+        },
+        {
+          "id": "blk_f471aecec87c4d44",
+          "type": "text",
+          "layout": {
+            "x": 7,
+            "y": 2,
+            "w": 5,
+            "h": 6
+          },
+          "heading": "About Technical Hub",
+          "level": 2,
+          "body": "Replace this with your own description — what the organization does, who it serves and what makes it different. The pictures and the numbers across the deck carry the proof.",
+          "items": [],
+          "align": "left"
+        },
+        {
+          "id": "blk_0fff40ca22d843be",
+          "type": "image",
+          "layout": {
+            "x": 0,
+            "y": 11,
+            "w": 12,
+            "h": 8
+          },
+          "assetId": "ast_cb5e64ce369c434d",
+          "title": "Since 2016",
+          "caption": "The campus",
+          "alt": "Since 2016",
+          "fit": "contain",
+          "radius": "md"
+        },
+        {
+          "id": "blk_8c201dec5f6c456a",
+          "type": "kpi",
+          "layout": {
+            "x": 0,
+            "y": 19,
+            "w": 12,
+            "h": 4
+          },
+          "columns": "2",
+          "variant": "card",
+          "items": [
+            {
+              "id": "kpi_f2acd9df8426481a",
+              "icon": "🎓",
+              "value": 15000,
+              "prefix": "",
+              "suffix": "+",
+              "label": "Certified trainees",
+              "note": ""
+            },
+            {
+              "id": "kpi_9e05a353cd2f4c96",
+              "icon": "⚙️",
+              "value": 30,
+              "prefix": "",
+              "suffix": "+",
+              "label": "Technologies covered",
+              "note": ""
+            }
+          ]
+        }
+      ],
+      "createdAt": "2026-07-31T06:22:26.936Z",
+      "updatedAt": "2026-08-05T07:43:03.754Z",
+      "iconKey": "",
+      "iconAssetId": null
+    }
+  ],
+  "assets": [
+    {
+      "id": "ast_323fa075fda74f8e",
+      "name": "tori-logo",
+      "kind": "image",
+      "mime": "image/svg+xml",
+      "size": 469,
+      "width": 720,
+      "height": 200,
+      "seeded": true,
+      "url": "/uploads/seed/tori-logo-323fa075fda74f8e.svg",
+      "createdAt": "2026-07-30T05:29:37.855Z"
+    },
+    {
+      "id": "ast_23aad367322c426b",
+      "name": "tech-logo",
+      "kind": "image",
+      "mime": "image/svg+xml",
+      "size": 485,
+      "width": 720,
+      "height": 200,
+      "seeded": true,
+      "url": "/uploads/seed/tech-logo-23aad367322c426b.svg",
+      "createdAt": "2026-07-30T05:29:38.012Z"
+    },
+    {
+      "id": "ast_959aa9303ece41e1",
+      "name": "torii star.png",
+      "kind": "image",
+      "mime": "image/png",
+      "size": 1756,
+      "createdAt": "2026-07-30T15:07:10.712Z",
+      "url": "/uploads/torii-star-959aa9303ece41e1.png",
+      "width": 225,
+      "height": 225
+    },
+    {
+      "id": "ast_515a8c06a7a44ad1",
+      "name": "th_app_apt.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 12920,
+      "createdAt": "2026-07-30T16:54:04.959Z",
+      "url": "/uploads/th-app-apt-515a8c06a7a44ad1.jpg"
+    },
+    {
+      "id": "ast_c0329509769b4374",
+      "name": "th_app_dashboard.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 30867,
+      "createdAt": "2026-07-30T16:54:04.973Z",
+      "url": "/uploads/th-app-dashboard-c0329509769b4374.jpg"
+    },
+    {
+      "id": "ast_0e48175a778c4999",
+      "name": "th_app_home.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 45653,
+      "createdAt": "2026-07-30T16:54:04.988Z",
+      "url": "/uploads/th-app-home-0e48175a778c4999.jpg"
+    },
+    {
+      "id": "ast_1f68e53ac4104681",
+      "name": "th_app_maya.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 15914,
+      "createdAt": "2026-07-30T16:54:05.001Z",
+      "url": "/uploads/th-app-maya-1f68e53ac4104681.jpg"
+    },
+    {
+      "id": "ast_744cbf4c52474d65",
+      "name": "th_app_modules.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 123726,
+      "createdAt": "2026-07-30T16:54:05.014Z",
+      "url": "/uploads/th-app-modules-744cbf4c52474d65.jpg"
+    },
+    {
+      "id": "ast_b4351c2bf18a410e",
+      "name": "th_beanbags.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 88600,
+      "createdAt": "2026-07-30T16:54:05.027Z",
+      "url": "/uploads/th-beanbags-b4351c2bf18a410e.jpg"
+    },
+    {
+      "id": "ast_84db7853001b4ee7",
+      "name": "th_campus_night.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 178423,
+      "createdAt": "2026-07-30T16:54:05.039Z",
+      "url": "/uploads/th-campus-night-84db7853001b4ee7.jpg"
+    },
+    {
+      "id": "ast_593c387b245447f1",
+      "name": "th_coe_aws.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 92580,
+      "createdAt": "2026-07-30T16:54:05.051Z",
+      "url": "/uploads/th-coe-aws-593c387b245447f1.jpg"
+    },
+    {
+      "id": "ast_15dd268c540949f5",
+      "name": "th_coe_cadence.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 75123,
+      "createdAt": "2026-07-30T16:54:05.065Z",
+      "url": "/uploads/th-coe-cadence-15dd268c540949f5.jpg"
+    },
+    {
+      "id": "ast_25ef99645f3246b2",
+      "name": "th_coe_coding.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 127241,
+      "createdAt": "2026-07-30T16:54:05.078Z",
+      "url": "/uploads/th-coe-coding-25ef99645f3246b2.jpg"
+    },
+    {
+      "id": "ast_c035b1e5806a4eb7",
+      "name": "th_coe_corridor.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 73994,
+      "createdAt": "2026-07-30T16:54:05.091Z",
+      "url": "/uploads/th-coe-corridor-c035b1e5806a4eb7.jpg"
+    },
+    {
+      "id": "ast_dd630766da7f4295",
+      "name": "th_coe_cyber.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 148862,
+      "createdAt": "2026-07-30T16:54:05.104Z",
+      "url": "/uploads/th-coe-cyber-dd630766da7f4295.jpg"
+    },
+    {
+      "id": "ast_43ce52771c924ff4",
+      "name": "th_coe_devops.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 116872,
+      "createdAt": "2026-07-30T16:54:05.117Z",
+      "url": "/uploads/th-coe-devops-43ce52771c924ff4.jpg"
+    },
+    {
+      "id": "ast_b7e399bfc8464e00",
+      "name": "th_coe_embedded.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 89172,
+      "createdAt": "2026-07-30T16:54:05.129Z",
+      "url": "/uploads/th-coe-embedded-b7e399bfc8464e00.jpg"
+    },
+    {
+      "id": "ast_52bad222aab54ac1",
+      "name": "th_coe_fullstack.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 93929,
+      "createdAt": "2026-07-30T16:54:05.141Z",
+      "url": "/uploads/th-coe-fullstack-52bad222aab54ac1.jpg"
+    },
+    {
+      "id": "ast_2cb21cc8bdc84bf3",
+      "name": "th_coe_iot.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 169403,
+      "createdAt": "2026-07-30T16:54:05.154Z",
+      "url": "/uploads/th-coe-iot-2cb21cc8bdc84bf3.jpg"
+    },
+    {
+      "id": "ast_4fbbf5ae405140ed",
+      "name": "th_coe_java.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 183376,
+      "createdAt": "2026-07-30T16:54:05.166Z",
+      "url": "/uploads/th-coe-java-4fbbf5ae405140ed.jpg"
+    },
+    {
+      "id": "ast_c799f2af3e104175",
+      "name": "th_coe_kiosk.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 58330,
+      "createdAt": "2026-07-30T16:54:05.177Z",
+      "url": "/uploads/th-coe-kiosk-c799f2af3e104175.jpg"
+    },
+    {
+      "id": "ast_b7ccf62085074b1e",
+      "name": "th_coe_mobile.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 92841,
+      "createdAt": "2026-07-30T16:54:05.188Z",
+      "url": "/uploads/th-coe-mobile-b7ccf62085074b1e.jpg"
+    },
+    {
+      "id": "ast_31349a9663864a68",
+      "name": "th_coe_oracle.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 104321,
+      "createdAt": "2026-07-30T16:54:05.203Z",
+      "url": "/uploads/th-coe-oracle-31349a9663864a68.jpg"
+    },
+    {
+      "id": "ast_3b29b189a7124da1",
+      "name": "th_coe_os.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 180218,
+      "createdAt": "2026-07-30T16:54:05.215Z",
+      "url": "/uploads/th-coe-os-3b29b189a7124da1.jpg"
+    },
+    {
+      "id": "ast_0427e04fa16b41f1",
+      "name": "th_coe_pega.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 77685,
+      "createdAt": "2026-07-30T16:54:05.230Z",
+      "url": "/uploads/th-coe-pega-0427e04fa16b41f1.jpg"
+    },
+    {
+      "id": "ast_fbde20a758c84200",
+      "name": "th_coe_projectspace.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 142645,
+      "createdAt": "2026-07-30T16:54:05.244Z",
+      "url": "/uploads/th-coe-projectspace-fbde20a758c84200.jpg"
+    },
+    {
+      "id": "ast_aa31799ff62e47c1",
+      "name": "th_coe_react.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 85893,
+      "createdAt": "2026-07-30T16:54:05.258Z",
+      "url": "/uploads/th-coe-react-aa31799ff62e47c1.jpg"
+    },
+    {
+      "id": "ast_9a0b1dafbc7d4e37",
+      "name": "th_coe_servicenow.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 82002,
+      "createdAt": "2026-07-30T16:54:05.273Z",
+      "url": "/uploads/th-coe-servicenow-9a0b1dafbc7d4e37.jpg"
+    },
+    {
+      "id": "ast_186b49a2a46c42ec",
+      "name": "th_coe_uiux.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 133998,
+      "createdAt": "2026-07-30T16:54:05.287Z",
+      "url": "/uploads/th-coe-uiux-186b49a2a46c42ec.jpg"
+    },
+    {
+      "id": "ast_c6213dd678cd4027",
+      "name": "th_group_dark.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 106712,
+      "createdAt": "2026-07-30T16:54:05.300Z",
+      "url": "/uploads/th-group-dark-c6213dd678cd4027.jpg"
+    },
+    {
+      "id": "ast_e48a14d32a144683",
+      "name": "th_group_green.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 601095,
+      "createdAt": "2026-07-30T16:54:05.316Z",
+      "url": "/uploads/th-group-green-e48a14d32a144683.jpg"
+    },
+    {
+      "id": "ast_eb2709559b6042e8",
+      "name": "th_group_huge.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 682184,
+      "createdAt": "2026-07-30T16:54:05.332Z",
+      "url": "/uploads/th-group-huge-eb2709559b6042e8.jpg"
+    },
+    {
+      "id": "ast_943d5101407d4b3a",
+      "name": "th_group_students.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 479828,
+      "createdAt": "2026-07-30T16:54:05.343Z",
+      "url": "/uploads/th-group-students-943d5101407d4b3a.jpg"
+    },
+    {
+      "id": "ast_29c8294ae5ac4453",
+      "name": "th_hall_training.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 76207,
+      "createdAt": "2026-07-30T16:54:05.357Z",
+      "url": "/uploads/th-hall-training-29c8294ae5ac4453.jpg"
+    },
+    {
+      "id": "ast_715e165c05b643f5",
+      "name": "th_hero_certified.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 598887,
+      "createdAt": "2026-07-30T16:54:05.371Z",
+      "url": "/uploads/th-hero-certified-715e165c05b643f5.jpg"
+    },
+    {
+      "id": "ast_2f3cbf4bd0774cef",
+      "name": "th_lab_wide.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 109345,
+      "createdAt": "2026-07-30T16:54:05.382Z",
+      "url": "/uploads/th-lab-wide-2f3cbf4bd0774cef.jpg"
+    },
+    {
+      "id": "ast_cd562d741b214351",
+      "name": "th_lab_wide2.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 197687,
+      "createdAt": "2026-07-30T16:54:05.395Z",
+      "url": "/uploads/th-lab-wide2-cd562d741b214351.jpg"
+    },
+    {
+      "id": "ast_9ee9f41f81434bed",
+      "name": "th_logo_becomecoder.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 13701,
+      "createdAt": "2026-07-30T16:54:05.407Z",
+      "url": "/uploads/th-logo-becomecoder-9ee9f41f81434bed.jpg"
+    },
+    {
+      "id": "ast_a6e8ba32d9db475f",
+      "name": "th_logo_driveready.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 13024,
+      "createdAt": "2026-07-30T16:54:05.418Z",
+      "url": "/uploads/th-logo-driveready-a6e8ba32d9db475f.jpg"
+    },
+    {
+      "id": "ast_e5230483600f4412",
+      "name": "th_logo_ignite.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 27806,
+      "createdAt": "2026-07-30T16:54:05.429Z",
+      "url": "/uploads/th-logo-ignite-e5230483600f4412.jpg"
+    },
+    {
+      "id": "ast_7bacacd26cd04588",
+      "name": "th_logo_mayaai.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 15580,
+      "createdAt": "2026-07-30T16:54:05.442Z",
+      "url": "/uploads/th-logo-mayaai-7bacacd26cd04588.jpg"
+    },
+    {
+      "id": "ast_8ba08be254cc4cc2",
+      "name": "th_logo_owlcoder.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 12570,
+      "createdAt": "2026-07-30T16:54:05.458Z",
+      "url": "/uploads/th-logo-owlcoder-8ba08be254cc4cc2.jpg"
+    },
+    {
+      "id": "ast_e271b1a8882943ad",
+      "name": "th_outdoor_review.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 133422,
+      "createdAt": "2026-07-30T16:54:05.476Z",
+      "url": "/uploads/th-outdoor-review-e271b1a8882943ad.jpg"
+    },
+    {
+      "id": "ast_53c54270d6ba4f86",
+      "name": "th_pl_airbus.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 358076,
+      "createdAt": "2026-07-30T16:54:05.494Z",
+      "url": "/uploads/th-pl-airbus-53c54270d6ba4f86.jpg"
+    },
+    {
+      "id": "ast_d4f32bb3dc004756",
+      "name": "th_pl_areteans24.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 360478,
+      "createdAt": "2026-07-30T16:54:05.509Z",
+      "url": "/uploads/th-pl-areteans24-d4f32bb3dc004756.jpg"
+    },
+    {
+      "id": "ast_ce3adaf8414d4ff0",
+      "name": "th_pl_cisco.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 313872,
+      "createdAt": "2026-07-30T16:54:05.524Z",
+      "url": "/uploads/th-pl-cisco-ce3adaf8414d4ff0.jpg"
+    },
+    {
+      "id": "ast_b18cf3a5c02f44ca",
+      "name": "th_pl_darwinbox.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 342222,
+      "createdAt": "2026-07-30T16:54:05.539Z",
+      "url": "/uploads/th-pl-darwinbox-b18cf3a5c02f44ca.jpg"
+    },
+    {
+      "id": "ast_bcc127c14ce34c71",
+      "name": "th_pl_flipkart.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 345753,
+      "createdAt": "2026-07-30T16:54:05.555Z",
+      "url": "/uploads/th-pl-flipkart-bcc127c14ce34c71.jpg"
+    },
+    {
+      "id": "ast_16843e59c3b9434f",
+      "name": "th_pl_google.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 325420,
+      "createdAt": "2026-07-30T16:54:05.570Z",
+      "url": "/uploads/th-pl-google-16843e59c3b9434f.jpg"
+    },
+    {
+      "id": "ast_2bf534a68845466e",
+      "name": "th_pl_hp.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 347508,
+      "createdAt": "2026-07-30T16:54:05.585Z",
+      "url": "/uploads/th-pl-hp-2bf534a68845466e.jpg"
+    },
+    {
+      "id": "ast_0b5be8c99cfb4d7c",
+      "name": "th_pl_hsbc.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 351813,
+      "createdAt": "2026-07-30T16:54:05.601Z",
+      "url": "/uploads/th-pl-hsbc-0b5be8c99cfb4d7c.jpg"
+    },
+    {
+      "id": "ast_320afdc900ea4b0f",
+      "name": "th_pl_intl1.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 283124,
+      "createdAt": "2026-07-30T16:54:05.617Z",
+      "url": "/uploads/th-pl-intl1-320afdc900ea4b0f.jpg"
+    },
+    {
+      "id": "ast_19937ec628464fae",
+      "name": "th_pl_intl2.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 240017,
+      "createdAt": "2026-07-30T16:54:05.632Z",
+      "url": "/uploads/th-pl-intl2-19937ec628464fae.jpg"
+    },
+    {
+      "id": "ast_092efc51dc304ffd",
+      "name": "th_pl_lg.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 383010,
+      "createdAt": "2026-07-30T16:54:05.646Z",
+      "url": "/uploads/th-pl-lg-092efc51dc304ffd.jpg"
+    },
+    {
+      "id": "ast_ea429ed617334076",
+      "name": "th_pl_lloyds.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 350556,
+      "createdAt": "2026-07-30T16:54:05.659Z",
+      "url": "/uploads/th-pl-lloyds-ea429ed617334076.jpg"
+    },
+    {
+      "id": "ast_6105c01ca61e4049",
+      "name": "th_pl_maersk.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 381841,
+      "createdAt": "2026-07-30T16:54:05.674Z",
+      "url": "/uploads/th-pl-maersk-6105c01ca61e4049.jpg"
+    },
+    {
+      "id": "ast_9a32ebabe8ce45b9",
+      "name": "th_pl_pega7.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 343519,
+      "createdAt": "2026-07-30T16:54:05.691Z",
+      "url": "/uploads/th-pl-pega7-9a32ebabe8ce45b9.jpg"
+    },
+    {
+      "id": "ast_03c43970b5644682",
+      "name": "th_pl_pennant.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 371280,
+      "createdAt": "2026-07-30T16:54:05.702Z",
+      "url": "/uploads/th-pl-pennant-03c43970b5644682.jpg"
+    },
+    {
+      "id": "ast_83b147705d59439a",
+      "name": "th_pl_servicenow176.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 351365,
+      "createdAt": "2026-07-30T16:54:05.719Z",
+      "url": "/uploads/th-pl-servicenow176-83b147705d59439a.jpg"
+    },
+    {
+      "id": "ast_3468c763760e470e",
+      "name": "th_pl_servicenow29.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 354927,
+      "createdAt": "2026-07-30T16:54:05.736Z",
+      "url": "/uploads/th-pl-servicenow29-3468c763760e470e.jpg"
+    },
+    {
+      "id": "ast_f914a56b4cee4c21",
+      "name": "th_pl_tcs.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 379475,
+      "createdAt": "2026-07-30T16:54:05.749Z",
+      "url": "/uploads/th-pl-tcs-f914a56b4cee4c21.jpg"
+    },
+    {
+      "id": "ast_58f7888ed8954ff4",
+      "name": "th_pl_thoughtworks.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 364483,
+      "createdAt": "2026-07-30T16:54:05.763Z",
+      "url": "/uploads/th-pl-thoughtworks-58f7888ed8954ff4.jpg"
+    },
+    {
+      "id": "ast_f657962c764c44b9",
+      "name": "th_pl_uipath.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 357251,
+      "createdAt": "2026-07-30T16:54:05.777Z",
+      "url": "/uploads/th-pl-uipath-f657962c764c44b9.jpg"
+    },
+    {
+      "id": "ast_7b86313905e54ce8",
+      "name": "th_pl_walmart13.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 270581,
+      "createdAt": "2026-07-30T16:54:05.789Z",
+      "url": "/uploads/th-pl-walmart13-7b86313905e54ce8.jpg"
+    },
+    {
+      "id": "ast_6259852b616e4c36",
+      "name": "th_pl_walmart226.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 333309,
+      "createdAt": "2026-07-30T16:54:05.801Z",
+      "url": "/uploads/th-pl-walmart226-6259852b616e4c36.jpg"
+    },
+    {
+      "id": "ast_f8b50d7bd1e246ac",
+      "name": "th_pl_zopsmart.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 346705,
+      "createdAt": "2026-07-30T16:54:05.814Z",
+      "url": "/uploads/th-pl-zopsmart-f8b50d7bd1e246ac.jpg"
+    },
+    {
+      "id": "ast_bcfa283b6b2d4b92",
+      "name": "th_projectspace_logo.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 20568,
+      "createdAt": "2026-07-30T16:54:05.827Z",
+      "url": "/uploads/th-projectspace-logo-bcfa283b6b2d4b92.jpg"
+    },
+    {
+      "id": "ast_4e1773d82d7643fd",
+      "name": "th_projectspace_team.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 63710,
+      "createdAt": "2026-07-30T16:54:05.841Z",
+      "url": "/uploads/th-projectspace-team-4e1773d82d7643fd.jpg"
+    },
+    {
+      "id": "ast_cef31e6192e24244",
+      "name": "th_session_green.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 63915,
+      "createdAt": "2026-07-30T16:54:05.855Z",
+      "url": "/uploads/th-session-green-cef31e6192e24244.jpg"
+    },
+    {
+      "id": "ast_8c147f26a448435e",
+      "name": "th_session_pipeline.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 59708,
+      "createdAt": "2026-07-30T16:54:05.868Z",
+      "url": "/uploads/th-session-pipeline-8c147f26a448435e.jpg"
+    },
+    {
+      "id": "ast_cb5e64ce369c434d",
+      "name": "th_since2016.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 130113,
+      "createdAt": "2026-07-30T16:54:05.879Z",
+      "url": "/uploads/th-since2016-cb5e64ce369c434d.jpg"
+    },
+    {
+      "id": "ast_0370ddb32aa74e46",
+      "name": "th_speaker_hall.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 47806,
+      "createdAt": "2026-07-30T16:54:05.891Z",
+      "url": "/uploads/th-speaker-hall-0370ddb32aa74e46.jpg"
+    },
+    {
+      "id": "ast_88855fcd2f294755",
+      "name": "th_speaker_mic.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 51327,
+      "createdAt": "2026-07-30T16:54:05.904Z",
+      "url": "/uploads/th-speaker-mic-88855fcd2f294755.jpg"
+    },
+    {
+      "id": "ast_61f368d2d6ff4834",
+      "name": "th_team_green.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 108677,
+      "createdAt": "2026-07-30T16:54:05.917Z",
+      "url": "/uploads/th-team-green-61f368d2d6ff4834.jpg"
+    },
+    {
+      "id": "ast_ae50adb9175647b8",
+      "name": "th_team_grey.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 398696,
+      "createdAt": "2026-07-30T16:54:05.931Z",
+      "url": "/uploads/th-team-grey-ae50adb9175647b8.jpg"
+    },
+    {
+      "id": "ast_8c49c164b6a74df4",
+      "name": "th_tech30.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 189320,
+      "createdAt": "2026-07-30T16:54:05.945Z",
+      "url": "/uploads/th-tech30-8c49c164b6a74df4.jpg"
+    },
+    {
+      "id": "ast_5bf40ccf5cfa4b40",
+      "name": "th_web_courses.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 56729,
+      "createdAt": "2026-07-30T16:54:05.958Z",
+      "url": "/uploads/th-web-courses-5bf40ccf5cfa4b40.jpg"
+    },
+    {
+      "id": "ast_1699a25dcb1c42aa",
+      "name": "th_web_portal.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 32975,
+      "createdAt": "2026-07-30T16:54:05.975Z",
+      "url": "/uploads/th-web-portal-1699a25dcb1c42aa.jpg"
+    },
+    {
+      "id": "ast_bdb8d6344a4b48e3",
+      "name": "th_web_trained.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 42593,
+      "createdAt": "2026-07-30T16:54:05.992Z",
+      "url": "/uploads/th-web-trained-bdb8d6344a4b48e3.jpg"
+    },
+    {
+      "id": "ast_ac0b0ea235c0489b",
+      "name": "torii_app_cockatoo.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 76809,
+      "createdAt": "2026-07-30T16:54:06.007Z",
+      "url": "/uploads/torii-app-cockatoo-ac0b0ea235c0489b.jpg"
+    },
+    {
+      "id": "ast_a5651346b53241dc",
+      "name": "torii_app_crowlytics.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 79008,
+      "createdAt": "2026-07-30T16:54:06.021Z",
+      "url": "/uploads/torii-app-crowlytics-a5651346b53241dc.jpg"
+    },
+    {
+      "id": "ast_46432160da044a0d",
+      "name": "torii_app_myna.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 75612,
+      "createdAt": "2026-07-30T16:54:06.035Z",
+      "url": "/uploads/torii-app-myna-46432160da044a0d.jpg"
+    },
+    {
+      "id": "ast_7f4905f3ec05413b",
+      "name": "torii_app_owlcoder.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 64795,
+      "createdAt": "2026-07-30T16:54:06.047Z",
+      "url": "/uploads/torii-app-owlcoder-7f4905f3ec05413b.jpg"
+    },
+    {
+      "id": "ast_2eb51129ede84ca3",
+      "name": "torii_aws_summit.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 319973,
+      "createdAt": "2026-07-30T16:54:06.060Z",
+      "url": "/uploads/torii-aws-summit-2eb51129ede84ca3.jpg"
+    },
+    {
+      "id": "ast_7c82ee40a17c4c3a",
+      "name": "torii_ceo_difference.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 167305,
+      "createdAt": "2026-07-30T16:54:06.073Z",
+      "url": "/uploads/torii-ceo-difference-7c82ee40a17c4c3a.jpg"
+    },
+    {
+      "id": "ast_1bec25f6a00a4846",
+      "name": "torii_ceo_o9.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 249269,
+      "createdAt": "2026-07-30T16:54:06.089Z",
+      "url": "/uploads/torii-ceo-o9-1bec25f6a00a4846.jpg"
+    },
+    {
+      "id": "ast_d3b0290f30334a71",
+      "name": "torii_cert_47.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 332605,
+      "createdAt": "2026-07-30T16:54:06.105Z",
+      "url": "/uploads/torii-cert-47-d3b0290f30334a71.jpg"
+    },
+    {
+      "id": "ast_8aa1e7fd73da47f0",
+      "name": "torii_cert_cisco189.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 250475,
+      "createdAt": "2026-07-30T16:54:06.120Z",
+      "url": "/uploads/torii-cert-cisco189-8aa1e7fd73da47f0.jpg"
+    },
+    {
+      "id": "ast_b457946f17114e95",
+      "name": "torii_cert_cisco25.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 261609,
+      "createdAt": "2026-07-30T16:54:06.135Z",
+      "url": "/uploads/torii-cert-cisco25-b457946f17114e95.jpg"
+    },
+    {
+      "id": "ast_3212dde637b74bc9",
+      "name": "torii_class_mongodb.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 257946,
+      "createdAt": "2026-07-30T16:54:06.151Z",
+      "url": "/uploads/torii-class-mongodb-3212dde637b74bc9.jpg"
+    },
+    {
+      "id": "ast_d9d516465e23445c",
+      "name": "torii_class_mongodb2.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 269336,
+      "createdAt": "2026-07-30T16:54:06.168Z",
+      "url": "/uploads/torii-class-mongodb2-d9d516465e23445c.jpg"
+    },
+    {
+      "id": "ast_416f9a0dc8db4871",
+      "name": "torii_claude_demo1.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 116248,
+      "createdAt": "2026-07-30T16:54:06.182Z",
+      "url": "/uploads/torii-claude-demo1-416f9a0dc8db4871.jpg"
+    },
+    {
+      "id": "ast_bc7bbf51ab824a2f",
+      "name": "torii_claude_demo2.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 129416,
+      "createdAt": "2026-07-30T16:54:06.197Z",
+      "url": "/uploads/torii-claude-demo2-bc7bbf51ab824a2f.jpg"
+    },
+    {
+      "id": "ast_88fb992c189545a1",
+      "name": "torii_claude_demo3.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 139476,
+      "createdAt": "2026-07-30T16:54:06.211Z",
+      "url": "/uploads/torii-claude-demo3-88fb992c189545a1.jpg"
+    },
+    {
+      "id": "ast_bb1a3ff3dd894949",
+      "name": "torii_claude_hr.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 184850,
+      "createdAt": "2026-07-30T16:54:06.225Z",
+      "url": "/uploads/torii-claude-hr-bb1a3ff3dd894949.jpg"
+    },
+    {
+      "id": "ast_7c62fd65b87c4a5a",
+      "name": "torii_claude_hr2.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 296911,
+      "createdAt": "2026-07-30T16:54:06.241Z",
+      "url": "/uploads/torii-claude-hr2-7c62fd65b87c4a5a.jpg"
+    },
+    {
+      "id": "ast_9b19bc368f5a46a0",
+      "name": "torii_coe_ai_poster.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 91891,
+      "createdAt": "2026-07-30T16:54:06.258Z",
+      "url": "/uploads/torii-coe-ai-poster-9b19bc368f5a46a0.jpg"
+    },
+    {
+      "id": "ast_6ba93addc4b84f29",
+      "name": "torii_coe_claude_wall.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 137066,
+      "createdAt": "2026-07-30T16:54:06.272Z",
+      "url": "/uploads/torii-coe-claude-wall-6ba93addc4b84f29.jpg"
+    },
+    {
+      "id": "ast_914b9240542a4113",
+      "name": "torii_coe_partners.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 307121,
+      "createdAt": "2026-07-30T16:54:06.290Z",
+      "url": "/uploads/torii-coe-partners-914b9240542a4113.jpg"
+    },
+    {
+      "id": "ast_b7af4475ee1541e3",
+      "name": "torii_coe_ready_engineer.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 114822,
+      "createdAt": "2026-07-30T16:54:06.306Z",
+      "url": "/uploads/torii-coe-ready-engineer-b7af4475ee1541e3.jpg"
+    },
+    {
+      "id": "ast_84664e4f6fd34c58",
+      "name": "torii_coe_room.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 126605,
+      "createdAt": "2026-07-30T16:54:06.321Z",
+      "url": "/uploads/torii-coe-room-84664e4f6fd34c58.jpg"
+    },
+    {
+      "id": "ast_ae814ebefe7c4a7c",
+      "name": "torii_github_audience.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 166543,
+      "createdAt": "2026-07-30T16:54:06.337Z",
+      "url": "/uploads/torii-github-audience-ae814ebefe7c4a7c.jpg"
+    },
+    {
+      "id": "ast_6523cd14c5f64c73",
+      "name": "torii_github_hall.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 226506,
+      "createdAt": "2026-07-30T16:54:06.356Z",
+      "url": "/uploads/torii-github-hall-6523cd14c5f64c73.jpg"
+    },
+    {
+      "id": "ast_21df4e15d9034c99",
+      "name": "torii_github_karthik.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 179909,
+      "createdAt": "2026-07-30T16:54:06.372Z",
+      "url": "/uploads/torii-github-karthik-21df4e15d9034c99.jpg"
+    },
+    {
+      "id": "ast_d1d958595a894271",
+      "name": "torii_github_ribbon.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 150890,
+      "createdAt": "2026-07-30T16:54:06.398Z",
+      "url": "/uploads/torii-github-ribbon-d1d958595a894271.jpg"
+    },
+    {
+      "id": "ast_a7884d89af56468a",
+      "name": "torii_github_stage.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 128160,
+      "createdAt": "2026-07-30T16:54:06.412Z",
+      "url": "/uploads/torii-github-stage-a7884d89af56468a.jpg"
+    },
+    {
+      "id": "ast_cdd042f212274f72",
+      "name": "torii_github_team.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 153439,
+      "createdAt": "2026-07-30T16:54:06.426Z",
+      "url": "/uploads/torii-github-team-cdd042f212274f72.jpg"
+    },
+    {
+      "id": "ast_a396037cbe154746",
+      "name": "torii_group_sprint.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 327918,
+      "createdAt": "2026-07-30T16:54:06.443Z",
+      "url": "/uploads/torii-group-sprint-a396037cbe154746.jpg"
+    },
+    {
+      "id": "ast_ad5dc0b193c0484d",
+      "name": "torii_group_ss.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 327918,
+      "createdAt": "2026-07-30T16:54:06.457Z",
+      "url": "/uploads/torii-group-ss-ad5dc0b193c0484d.jpg"
+    },
+    {
+      "id": "ast_a4928d22f9b34b27",
+      "name": "torii_hall_lecture.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 307867,
+      "createdAt": "2026-07-30T16:54:06.472Z",
+      "url": "/uploads/torii-hall-lecture-a4928d22f9b34b27.jpg"
+    },
+    {
+      "id": "ast_fde44fab66b54d2d",
+      "name": "torii_hero_stepin.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 247238,
+      "createdAt": "2026-07-30T16:54:06.487Z",
+      "url": "/uploads/torii-hero-stepin-fde44fab66b54d2d.jpg"
+    },
+    {
+      "id": "ast_6272b37179e344ca",
+      "name": "torii_inauguration.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 279195,
+      "createdAt": "2026-07-30T16:54:06.503Z",
+      "url": "/uploads/torii-inauguration-6272b37179e344ca.jpg"
+    },
+    {
+      "id": "ast_b8cfc5575b3542bd",
+      "name": "torii_mentors.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 167433,
+      "createdAt": "2026-07-30T16:54:06.518Z",
+      "url": "/uploads/torii-mentors-b8cfc5575b3542bd.jpg"
+    },
+    {
+      "id": "ast_8d4de8f3194c40e8",
+      "name": "torii_mongodb.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 314869,
+      "createdAt": "2026-07-30T16:54:06.536Z",
+      "url": "/uploads/torii-mongodb-8d4de8f3194c40e8.jpg"
+    },
+    {
+      "id": "ast_85640b73a43a467a",
+      "name": "torii_ninja_plus.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 66828,
+      "createdAt": "2026-07-30T16:54:06.550Z",
+      "url": "/uploads/torii-ninja-plus-85640b73a43a467a.jpg"
+    },
+    {
+      "id": "ast_d836155a65164aae",
+      "name": "torii_ninja_pro.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 64443,
+      "createdAt": "2026-07-30T16:54:06.564Z",
+      "url": "/uploads/torii-ninja-pro-d836155a65164aae.jpg"
+    },
+    {
+      "id": "ast_4e0446bedba2471f",
+      "name": "torii_outdoor_poster.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 257364,
+      "createdAt": "2026-07-30T16:54:06.579Z",
+      "url": "/uploads/torii-outdoor-poster-4e0446bedba2471f.jpg"
+    },
+    {
+      "id": "ast_96015deb04ca4799",
+      "name": "torii_outdoor_poster2.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 229990,
+      "createdAt": "2026-07-30T16:54:06.605Z",
+      "url": "/uploads/torii-outdoor-poster2-96015deb04ca4799.jpg"
+    },
+    {
+      "id": "ast_78262782a3584cd8",
+      "name": "torii_outdoor_team.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 280661,
+      "createdAt": "2026-07-30T16:54:06.622Z",
+      "url": "/uploads/torii-outdoor-team-78262782a3584cd8.jpg"
+    },
+    {
+      "id": "ast_49f3e212a61f4bd7",
+      "name": "torii_outdoor_team2.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 267441,
+      "createdAt": "2026-07-30T16:54:06.637Z",
+      "url": "/uploads/torii-outdoor-team2-49f3e212a61f4bd7.jpg"
+    },
+    {
+      "id": "ast_778543498f294292",
+      "name": "torii_outdoor_team3.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 261403,
+      "createdAt": "2026-07-30T16:54:06.650Z",
+      "url": "/uploads/torii-outdoor-team3-778543498f294292.jpg"
+    },
+    {
+      "id": "ast_7a0ff53c24e045cb",
+      "name": "torii_passion.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 125451,
+      "createdAt": "2026-07-30T16:54:06.664Z",
+      "url": "/uploads/torii-passion-7a0ff53c24e045cb.jpg"
+    },
+    {
+      "id": "ast_d64f83b113354338",
+      "name": "torii_placement_training.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 258616,
+      "createdAt": "2026-07-30T16:54:06.677Z",
+      "url": "/uploads/torii-placement-training-d64f83b113354338.jpg"
+    },
+    {
+      "id": "ast_604c20c10f3741c1",
+      "name": "torii_pl_cognizant.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 240032,
+      "createdAt": "2026-07-30T16:54:06.693Z",
+      "url": "/uploads/torii-pl-cognizant-604c20c10f3741c1.jpg"
+    },
+    {
+      "id": "ast_8709758738204312",
+      "name": "torii_pl_deloitte.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 232650,
+      "createdAt": "2026-07-30T16:54:06.709Z",
+      "url": "/uploads/torii-pl-deloitte-8709758738204312.jpg"
+    },
+    {
+      "id": "ast_a20deb3f3c6d4c1e",
+      "name": "torii_pl_deloitte2.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 146568,
+      "createdAt": "2026-07-30T16:54:06.724Z",
+      "url": "/uploads/torii-pl-deloitte2-a20deb3f3c6d4c1e.jpg"
+    },
+    {
+      "id": "ast_da4dae1327ae44f8",
+      "name": "torii_pl_deloitte3.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 140573,
+      "createdAt": "2026-07-30T16:54:06.738Z",
+      "url": "/uploads/torii-pl-deloitte3-da4dae1327ae44f8.jpg"
+    },
+    {
+      "id": "ast_0716105c315c476d",
+      "name": "torii_pl_evertz.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 234009,
+      "createdAt": "2026-07-30T16:54:06.752Z",
+      "url": "/uploads/torii-pl-evertz-0716105c315c476d.jpg"
+    },
+    {
+      "id": "ast_742fd919c5c64d41",
+      "name": "torii_pl_lti.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 241736,
+      "createdAt": "2026-07-30T16:54:06.768Z",
+      "url": "/uploads/torii-pl-lti-742fd919c5c64d41.jpg"
+    },
+    {
+      "id": "ast_199c8715fa3243e6",
+      "name": "torii_pl_mphasis.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 84946,
+      "createdAt": "2026-07-30T16:54:06.782Z",
+      "url": "/uploads/torii-pl-mphasis-199c8715fa3243e6.jpg"
+    },
+    {
+      "id": "ast_1b5672422c78441f",
+      "name": "torii_pl_nokia.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 223905,
+      "createdAt": "2026-07-30T16:54:06.797Z",
+      "url": "/uploads/torii-pl-nokia-1b5672422c78441f.jpg"
+    },
+    {
+      "id": "ast_f9a5c20d998d4cd1",
+      "name": "torii_pl_o9.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 141217,
+      "createdAt": "2026-07-30T16:54:06.814Z",
+      "url": "/uploads/torii-pl-o9-f9a5c20d998d4cd1.jpg"
+    },
+    {
+      "id": "ast_e06f701d5f2245a9",
+      "name": "torii_pl_sagility.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 118728,
+      "createdAt": "2026-07-30T16:54:06.827Z",
+      "url": "/uploads/torii-pl-sagility-e06f701d5f2245a9.jpg"
+    },
+    {
+      "id": "ast_7a79c8b247f84bd0",
+      "name": "torii_project_street.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 479572,
+      "createdAt": "2026-07-30T16:54:06.841Z",
+      "url": "/uploads/torii-project-street-7a79c8b247f84bd0.jpg"
+    },
+    {
+      "id": "ast_b0226463735146fe",
+      "name": "torii_skilledge_queue.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 339295,
+      "createdAt": "2026-07-30T16:54:06.854Z",
+      "url": "/uploads/torii-skilledge-queue-b0226463735146fe.jpg"
+    },
+    {
+      "id": "ast_0035fd6c4328484a",
+      "name": "torii_sprint_aws.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 321577,
+      "createdAt": "2026-07-30T16:54:06.865Z",
+      "url": "/uploads/torii-sprint-aws-0035fd6c4328484a.jpg"
+    },
+    {
+      "id": "ast_120089a4ad744bb7",
+      "name": "torii_sprint_class.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 213410,
+      "createdAt": "2026-07-30T16:54:06.879Z",
+      "url": "/uploads/torii-sprint-class-120089a4ad744bb7.jpg"
+    },
+    {
+      "id": "ast_a351328ec4f247f2",
+      "name": "torii_sprint_lab.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 163590,
+      "createdAt": "2026-07-30T16:54:06.893Z",
+      "url": "/uploads/torii-sprint-lab-a351328ec4f247f2.jpg"
+    },
+    {
+      "id": "ast_c94498d2edf44a85",
+      "name": "torii_sprint_mca.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 180612,
+      "createdAt": "2026-07-30T16:54:06.908Z",
+      "url": "/uploads/torii-sprint-mca-c94498d2edf44a85.jpg"
+    },
+    {
+      "id": "ast_6252ab9a0eb147e2",
+      "name": "torii_sprint_poster.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 326360,
+      "createdAt": "2026-07-30T16:54:06.923Z",
+      "url": "/uploads/torii-sprint-poster-6252ab9a0eb147e2.jpg"
+    },
+    {
+      "id": "ast_6e0b63dc4b804de2",
+      "name": "torii_students_mic.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 238309,
+      "createdAt": "2026-07-30T16:54:06.935Z",
+      "url": "/uploads/torii-students-mic-6e0b63dc4b804de2.jpg"
+    },
+    {
+      "id": "ast_5c70e93140bd403c",
+      "name": "torii_superapp_features.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 121522,
+      "createdAt": "2026-07-30T16:54:06.951Z",
+      "url": "/uploads/torii-superapp-features-5c70e93140bd403c.jpg"
+    },
+    {
+      "id": "ast_60a746095c0740d6",
+      "name": "torii_superapp_india1st.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 110334,
+      "createdAt": "2026-07-30T16:54:06.967Z",
+      "url": "/uploads/torii-superapp-india1st-60a746095c0740d6.jpg"
+    },
+    {
+      "id": "ast_a2f3a006de094e01",
+      "name": "torii_team_group1.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 184529,
+      "createdAt": "2026-07-30T16:54:06.993Z",
+      "url": "/uploads/torii-team-group1-a2f3a006de094e01.jpg"
+    },
+    {
+      "id": "ast_4aa7e3a484e345db",
+      "name": "torii_team_red.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 263282,
+      "createdAt": "2026-07-30T16:54:07.005Z",
+      "url": "/uploads/torii-team-red-4aa7e3a484e345db.jpg"
+    },
+    {
+      "id": "ast_43c3394589eb45c9",
+      "name": "torii_values.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 92491,
+      "createdAt": "2026-07-30T16:54:07.023Z",
+      "url": "/uploads/torii-values-43c3394589eb45c9.jpg"
+    },
+    {
+      "id": "ast_898a088d7e4b4f99",
+      "name": "torii_vision_plan.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 294287,
+      "createdAt": "2026-07-30T16:54:07.037Z",
+      "url": "/uploads/torii-vision-plan-898a088d7e4b4f99.jpg"
+    },
+    {
+      "id": "ast_adaeff808aa84375",
+      "name": "torii_workspace.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 150040,
+      "createdAt": "2026-07-30T16:54:07.053Z",
+      "url": "/uploads/torii-workspace-adaeff808aa84375.jpg"
+    },
+    {
+      "id": "ast_f3972c9689c94199",
+      "name": "Recording 2026-03-17 121150.mp4",
+      "kind": "video",
+      "mime": "video/mp4",
+      "size": 665325,
+      "createdAt": "2026-08-01T15:38:28.165Z",
+      "url": "/uploads/recording-2026-03-17-121150-f3972c9689c94199.mp4",
+      "posterUrl": "/uploads/recording-2026-03-17-121150-f3972c9689c94199-poster.jpg"
+    },
+    {
+      "id": "ast_de8205d983b44fd5",
+      "name": "torii-wordmark.svg",
+      "kind": "image",
+      "mime": "image/svg+xml",
+      "size": 1024,
+      "createdAt": "2026-08-05T06:27:53.343Z",
+      "url": "/uploads/torii-wordmark-de8205d983b44fd5.svg"
+    },
+    {
+      "id": "ast_6071cbddcc7648ed",
+      "name": "torii-mark.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 3554,
+      "createdAt": "2026-08-05T06:27:53.351Z",
+      "url": "/uploads/torii-mark-6071cbddcc7648ed.jpg"
+    },
+    {
+      "id": "ast_b967ee5d8f324e04",
+      "name": "technical-hub-wordmark.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 11953,
+      "createdAt": "2026-08-05T06:27:53.359Z",
+      "url": "/uploads/technical-hub-wordmark-b967ee5d8f324e04.jpg"
+    },
+    {
+      "id": "ast_7fb50de468ee4814",
+      "name": "technical-hub-mark.png",
+      "kind": "image",
+      "mime": "image/png",
+      "size": 2839,
+      "createdAt": "2026-08-05T06:27:53.371Z",
+      "url": "/uploads/technical-hub-mark-7fb50de468ee4814.png",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ast_13b5680a75bd4a21",
+      "name": "16k Certification Post.jpg",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "size": 108098,
+      "createdAt": "2026-08-05T07:41:24.388Z",
+      "url": "/uploads/16k-certification-post-13b5680a75bd4a21.jpg"
+    }
+  ],
+  "templates": []
+}

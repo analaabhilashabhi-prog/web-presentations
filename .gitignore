@@ -1,0 +1,81 @@
+# Single ignore file covering both frontend/ and backend/
+
+# ---- Dependencies ----
+node_modules/
+.pnp/
+.pnp.js
+
+# ---- Build output ----
+dist/
+build/
+out/
+.next/
+
+# ---- Environment files ----
+.env
+.env.*
+# keep the documented templates tracked
+!.env.example
+!.env.*.example
+
+# ---- Logs ----
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---- Test coverage ----
+coverage/
+.nyc_output/
+*.lcov
+
+# ---- Temp dirs ----
+# `uploads/` used to be here too. Unanchored, it matched backend/uploads/ at
+# any depth and silently kept every photograph out of the repo — the deck's
+# media is content, not scratch. See the App content section below.
+tmp/
+temp/
+*.tmp
+
+# ---- Tool caches ----
+.cache/
+.vite/
+.eslintcache
+.parcel-cache/
+*.tsbuildinfo
+
+# ---- Editor & OS files ----
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- App content ----
+# The store and the media ARE the deck. They were ignored as "runtime state",
+# which is true only while the app is a local tool: the moment it is deployed,
+# a checkout without them is a portal with no sections and no pictures. They
+# are committed, and publishing a change means committing db.json again.
+#
+# Genuinely derived files stay out: `originals/` holds the pre-transcode video
+# and other source material the app never serves.
+backend/uploads/originals/
+
+# Sessions are runtime state and do not belong in the repo, but they live
+# inside db.json, so they are simply short-lived — a deploy signs people out.
+
+# ---- Over GitHub's 100MB per-file limit ----
+# Two brand films cannot go up as ordinary git objects. The first is the
+# Torii film that was replaced on 2026-09-15 and nothing references any more;
+# the second is NCET's Executive Summary film, which a fresh clone will lack
+# until it is uploaded again (or moved to Git LFS).
+backend/uploads/torii-brand-film-23d907a92fc2471b.mp4
+backend/uploads/ncet-brand-film-19042026-6fa9b9e67ed24b08.mp4
+
+# ---- Real deployment credentials ----
+# Holds the live admin and presenter passwords, not the documented demo ones.
+DEPLOYMENT.env.txt

@@ -1,0 +1,590 @@
+[
+ {
+  "name": "Adobe Certified Professional Using Adobe Photoshop",
+  "vendor": "Adobe",
+  "domain": "Digital imaging",
+  "held": 66,
+  "sourceImg": "https://myjobcertified.com/cdn/shop/files/Untitleddesign_22.png?v=1751519599",
+  "badge": "certifications/badges/adobe-certified-professional-using-adobe-photoshop.webp",
+  "skills": [
+   "Non-destructive layers and masking",
+   "Selections, compositing and retouching",
+   "Colour correction with adjustment layers",
+   "Export for print, web and mobile"
+  ]
+ },
+ {
+  "name": "Arduino Fundamentals",
+  "vendor": "Arduino",
+  "domain": "Embedded electronics",
+  "held": 210,
+  "sourceImg": "https://framerusercontent.com/images/EivduzxEJb5pc3rwF7bHufZUeE.webp",
+  "badge": "certifications/badges/arduino-fundamentals.webp",
+  "skills": [
+   "Reading schematics and breadboard wiring",
+   "Sketch structure and control flow in C++",
+   "Analog and digital sensor input",
+   "PWM, motor and actuator control"
+  ]
+ },
+ {
+  "name": "AutoCAD Certified User",
+  "vendor": "Autodesk",
+  "domain": "Technical drafting",
+  "held": 42,
+  "sourceImg": "https://images.credly.com/images/87e311ec-4438-4701-b4ba-40867159c1e9/image.png",
+  "badge": "certifications/badges/autocad-certified-user.png",
+  "skills": [
+   "Precision 2D drawing and coordinate entry",
+   "Layers, linetypes and object properties",
+   "Dimensioning and annotation standards",
+   "Blocks, layouts and plotting"
+  ]
+ },
+ {
+  "name": "Automation Anywhere Certified Advanced RPA Professional",
+  "vendor": "Automation Anywhere",
+  "domain": "Robotic process automation",
+  "held": 210,
+  "sourceImg": "https://i.ibb.co/VpCsB9Pn/Automation-Any.png",
+  "badge": "certifications/badges/automation-anywhere-certified-advanced-rpa-professional.png",
+  "skills": [
+   "Bot architecture and reusable components",
+   "Exception handling and error recovery",
+   "Document extraction with IQ Bot",
+   "Credential Vault and bot deployment"
+  ]
+ },
+ {
+  "name": "Automation Anywhere University Certified Essentials RPA Professional",
+  "vendor": "Automation Anywhere",
+  "domain": "RPA essentials",
+  "held": 1152,
+  "sourceImg": "https://pathfinder.automationanywhere.com/images/image-aiae-badge.svg",
+  "badge": "certifications/badges/automation-anywhere-university-certified-essentials-rpa-professional.svg",
+  "skills": [
+   "Recorder-based task automation",
+   "Variables, loops and conditional logic",
+   "Excel and file system actions",
+   "Scheduling and running bots in Control Room"
+  ]
+ },
+ {
+  "name": "AWS Certified Developer Associate",
+  "vendor": "Amazon Web Services",
+  "domain": "Cloud development",
+  "held": 124,
+  "sourceImg": "https://images.credly.com/images/b9feab85-1a43-4f6c-99a5-631b88d5461b/image.png",
+  "badge": "certifications/badges/aws-certified-developer-associate.png",
+  "skills": [
+   "Application development with SDK and CLI",
+   "Lambda, API Gateway and DynamoDB",
+   "IAM roles, KMS and secrets handling",
+   "CI/CD with CodePipeline and CloudFormation"
+  ]
+ },
+ {
+  "name": "AWS Certified Cloud Practitioner",
+  "vendor": "Amazon Web Services",
+  "domain": "Cloud foundations",
+  "held": 4914,
+  "sourceImg": "https://images.credly.com/images/00634f82-b07f-4bbd-a6bb-53de397fc3a6/image.png",
+  "badge": "certifications/badges/aws-certified-cloud-practitioner.png",
+  "skills": [
+   "Core services and global infrastructure",
+   "The shared responsibility security model",
+   "Pricing, billing and cost management",
+   "Well-Architected design principles"
+  ]
+ },
+ {
+  "name": "AWS Certified Solutions Architect - Associate",
+  "vendor": "Amazon Web Services",
+  "domain": "Cloud architecture",
+  "held": 204,
+  "sourceImg": "https://images.credly.com/images/0e284c3f-5164-4b21-8660-0d84737941bc/image.png",
+  "badge": "certifications/badges/aws-certified-solutions-architect-associate.png",
+  "skills": [
+   "Highly available multi-tier architectures",
+   "VPC design, subnets and routing",
+   "Choosing between S3, EBS and EFS",
+   "Cost and performance optimisation"
+  ]
+ },
+ {
+  "name": "Azure Administrator Associate",
+  "vendor": "Microsoft Azure",
+  "domain": "Cloud administration",
+  "held": 660,
+  "sourceImg": "https://images.credly.com/images/336eebfc-0ac3-4553-9a67-b402f491f185/twitter_thumb_201604_azure-administrator-associate-600x600.png",
+  "badge": "certifications/badges/azure-administrator-associate.png",
+  "skills": [
+   "Identity governance with Microsoft Entra ID",
+   "Virtual networks, NSGs and peering",
+   "VM, storage and backup administration",
+   "Monitoring with Azure Monitor and Log Analytics"
+  ]
+ },
+ {
+  "name": "Cisco Certified CCNA",
+  "vendor": "Cisco",
+  "domain": "Enterprise networking",
+  "held": 522,
+  "sourceImg": "https://images.credly.com/images/683783d8-eaac-4c37-a14d-11bd8a36321d/ccna_600.png",
+  "badge": "certifications/badges/cisco-certified-ccna.png",
+  "skills": [
+   "IPv4 and IPv6 addressing and subnetting",
+   "Switching, VLANs and spanning tree",
+   "OSPF and static routing",
+   "Access control lists and network security"
+  ]
+ },
+ {
+  "name": "CISCO CyberOps Associate",
+  "vendor": "Cisco",
+  "domain": "Security operations",
+  "held": 18,
+  "sourceImg": "https://www.afralti.org/wp-content/uploads/2019/10/ccna-cyber-ops-300x194.png",
+  "badge": "certifications/badges/cisco-cyberops-associate.png",
+  "skills": [
+   "SOC monitoring and alert triage",
+   "Network intrusion analysis",
+   "Host-based forensics fundamentals",
+   "Incident response and the kill chain"
+  ]
+ },
+ {
+  "name": "Google Cloud Certified Associate Cloud Engineer",
+  "vendor": "Google Cloud",
+  "domain": "Cloud engineering",
+  "held": 420,
+  "sourceImg": "https://miro.medium.com/1*T59fnCvp71WqNeuytWGorA.png",
+  "badge": "certifications/badges/google-cloud-certified-associate-cloud-engineer.png",
+  "skills": [
+   "Project, IAM and billing configuration",
+   "Compute Engine and GKE deployment",
+   "Cloud Storage and managed databases",
+   "Monitoring and logging with Operations Suite"
+  ]
+ },
+ {
+  "name": "GitHub Foundations Certification",
+  "vendor": "GitHub",
+  "domain": "Version control",
+  "held": 276,
+  "sourceImg": "https://images.credly.com/images/34880f37-8ec8-4542-a78a-73ba6647208e/image.png",
+  "badge": "certifications/badges/github-foundations-certification.png",
+  "skills": [
+   "Repositories, branches and commit history",
+   "Pull requests and code review flow",
+   "Issues, Projects and team collaboration",
+   "GitHub Actions and Codespaces basics"
+  ]
+ },
+ {
+  "name": "IT Specialist JavaScript",
+  "vendor": "Certiport",
+  "domain": "JavaScript",
+  "held": 780,
+  "sourceImg": "https://images.credly.com/size/680x680/images/ef99b79e-fd54-4eb5-b2a4-bf17e92a4837/ITS-Badges_JavaScript_1200px.png",
+  "badge": "certifications/badges/it-specialist-javascript.png",
+  "skills": [
+   "Variables, data types and operators",
+   "Functions, scope and closures",
+   "DOM manipulation and event handling",
+   "Debugging and error handling"
+  ]
+ },
+ {
+  "name": "IT Specialist Python",
+  "vendor": "Certiport",
+  "domain": "Python",
+  "held": 1530,
+  "sourceImg": "https://images.credly.com/images/3c4602d8-832e-4a24-b42d-00359ce746f7/ITS-Badges_Python_1200px.png",
+  "badge": "certifications/badges/it-specialist-python.png",
+  "skills": [
+   "Data types, operators and control flow",
+   "Functions, modules and file input/output",
+   "Lists, dictionaries and comprehensions",
+   "Exception handling and troubleshooting"
+  ]
+ },
+ {
+  "name": "IT Specialist HTML and CSS",
+  "vendor": "Certiport",
+  "domain": "HTML and CSS",
+  "held": 672,
+  "sourceImg": "https://images.credly.com/images/e2dc688d-de61-44a5-81af-ee96f117a211/ITS-Badges_HTML-and-CSS_1200px.png",
+  "badge": "certifications/badges/it-specialist-html-and-css.png",
+  "skills": [
+   "Semantic document structure",
+   "Selectors, the box model and layout",
+   "Responsive design with media queries",
+   "Forms, tables and accessibility basics"
+  ]
+ },
+ {
+  "name": "Juniper Networks JNCIA-Junos (JN0-103) - Certified Associate",
+  "vendor": "Juniper Networks",
+  "domain": "Routing and switching",
+  "held": 432,
+  "sourceImg": "https://images.credly.com/images/115e08d1-6b0c-40b2-aa15-5906022f4db0/twitter_thumb_201604_L_01_asso_JNCIA-Junos.png",
+  "badge": "certifications/badges/juniper-networks-jncia-junos-jn0-103-certified-associate.png",
+  "skills": [
+   "Junos OS architecture and the CLI",
+   "Configuration hierarchy and commit model",
+   "Routing policy and firewall filters",
+   "Static and OSPF routing fundamentals"
+  ]
+ },
+ {
+  "name": "Microsoft Office Specialist Excel Associate",
+  "vendor": "Microsoft",
+  "domain": "Spreadsheet analysis",
+  "held": 456,
+  "sourceImg": "https://images.credly.com/images/af151b3d-9453-48a8-8d22-5b9fc54d2b43/image.png",
+  "badge": "certifications/badges/microsoft-office-specialist-excel-associate.png",
+  "skills": [
+   "Workbook and worksheet management",
+   "Formulas, functions and cell references",
+   "Tables, sorting and filtering",
+   "Charts and conditional formatting"
+  ]
+ },
+ {
+  "name": "Microsoft Azure AI Fundamentals",
+  "vendor": "Microsoft Azure",
+  "domain": "Applied AI",
+  "held": 618,
+  "sourceImg": "https://images.credly.com/images/4136ced8-75d5-4afb-8677-40b6236e2672/azure-ai-fundamentals-600x600.png",
+  "badge": "certifications/badges/microsoft-azure-ai-fundamentals.png",
+  "skills": [
+   "Responsible AI principles and practice",
+   "Computer vision and OCR services",
+   "Natural language and speech services",
+   "Generative AI with Azure OpenAI"
+  ]
+ },
+ {
+  "name": "Microsoft Azure Fundamentals",
+  "vendor": "Microsoft Azure",
+  "domain": "Cloud foundations",
+  "held": 1728,
+  "sourceImg": "https://miro.medium.com/1*KjpRHQuaF0X0Kcb5lpWY_A.png",
+  "badge": "certifications/badges/microsoft-azure-fundamentals.png",
+  "skills": [
+   "Cloud concepts and service models",
+   "Core Azure compute and storage services",
+   "Identity, governance and compliance",
+   "Cost management and service agreements"
+  ]
+ },
+ {
+  "name": "MongoDB Certified Associate Developer",
+  "vendor": "MongoDB",
+  "domain": "Document databases",
+  "held": 217,
+  "sourceImg": "https://images.credly.com/images/6e32758f-6beb-44e5-ae9e-3ac8046f6290/image.png",
+  "badge": "certifications/badges/mongodb-certified-associate-developer.png",
+  "skills": [
+   "Document modelling and schema design",
+   "CRUD operations and query operators",
+   "Aggregation pipeline stages",
+   "Indexing and driver integration"
+  ]
+ },
+ {
+  "name": "Microsoft Technology Associate Database Fundamentals",
+  "vendor": "Microsoft",
+  "domain": "Database fundamentals",
+  "held": 76,
+  "sourceImg": "https://images.credly.com/images/b01120f3-1b27-405d-b64d-da1a2a7eca33/twitter_thumb_201604_Microsoft Technology Associate-Database-Fundamentals-2018.png",
+  "badge": "",
+  "skills": [
+   "Relational concepts and normalisation",
+   "Table design, keys and constraints",
+   "SELECT, JOIN and data manipulation",
+   "Backup, security and administration basics"
+  ]
+ },
+ {
+  "name": "Microsoft Technology Associate HTML",
+  "vendor": "Microsoft",
+  "domain": "HTML and CSS",
+  "held": 1404,
+  "sourceImg": "https://gttc.id/storage/22/MTA-Introduction_to_Programming_Using_HTML_and_CSS-600x600.png",
+  "badge": "certifications/badges/microsoft-technology-associate-html.png",
+  "skills": [
+   "Page structure with semantic tags",
+   "Styling with selectors and inheritance",
+   "The box model and positioning",
+   "Forms, media and responsive basics"
+  ]
+ },
+ {
+  "name": "Microsoft Technology Associate Java",
+  "vendor": "Microsoft",
+  "domain": "Java",
+  "held": 852,
+  "sourceImg": "https://i0.wp.com/robotechlabs.com/wp-content/uploads/2020/05/MTA-Introduction-to-Programming-using-Java-2018.png?fit=352%2C352",
+  "badge": "certifications/badges/microsoft-technology-associate-java.webp",
+  "skills": [
+   "Java syntax, data types and operators",
+   "Control flow, loops and arrays",
+   "Classes, objects and inheritance",
+   "Exception handling and file input/output"
+  ]
+ },
+ {
+  "name": "Microsoft Technology Associate Javascript",
+  "vendor": "Microsoft",
+  "domain": "JavaScript",
+  "held": 1050,
+  "sourceImg": "https://gttc.id/storage/20/MTA-Introduction_to_Programming_Using_JavaScript-600x600.png",
+  "badge": "certifications/badges/microsoft-technology-associate-javascript.png",
+  "skills": [
+   "Syntax, variables and operators",
+   "Decisions, loops and functions",
+   "DOM interaction and event handling",
+   "Form validation and error handling"
+  ]
+ },
+ {
+  "name": "Microsoft Technology Associate Python",
+  "vendor": "Microsoft",
+  "domain": "Python",
+  "held": 7689,
+  "sourceImg": "https://gttc.id/storage/18/MTA-Introduction_to_Programming_Using_Python-600x600.png",
+  "badge": "certifications/badges/microsoft-technology-associate-python.png",
+  "skills": [
+   "Data types, operators and expressions",
+   "Flow control with conditionals and loops",
+   "Functions and module reuse",
+   "File input/output and error handling"
+  ]
+ },
+ {
+  "name": "Microsoft Technology Associate Security Fundamentals",
+  "vendor": "Microsoft",
+  "domain": "Security fundamentals",
+  "held": 1116,
+  "sourceImg": "https://www.prepaway.biz/design/img/cert/microsoft-mta-security-fundamentals.png",
+  "badge": "certifications/badges/microsoft-technology-associate-security-fundamentals.png",
+  "skills": [
+   "Security layers and defence in depth",
+   "Authentication, authorisation and accounting",
+   "Network and host security controls",
+   "Malware types and protection software"
+  ]
+ },
+ {
+  "name": "Microsoft Certified Power BI Data Analyst",
+  "vendor": "Microsoft",
+  "domain": "Data analytics",
+  "held": 64,
+  "sourceImg": "https://images.credly.com/images/619f60f8-4f63-4772-910e-dc31c6f2f7e8/twitter_thumb_201604_image.png",
+  "badge": "certifications/badges/microsoft-certified-power-bi-data-analyst.png",
+  "skills": [
+   "Preparing and shaping data in Power Query",
+   "Data modelling and relationships",
+   "DAX measures and calculated columns",
+   "Report design and workspace deployment"
+  ]
+ },
+ {
+  "name": "Microsoft Certified Fabric Analytics Engineer Associate",
+  "vendor": "Microsoft Fabric",
+  "domain": "Analytics engineering",
+  "held": 25,
+  "sourceImg": "https://vel.co.jp/wp-content/uploads/2025/02/Fabric-Analytics-Engineer-Associate-Badge.png",
+  "badge": "certifications/badges/microsoft-certified-fabric-analytics-engineer-associate.png",
+  "skills": [
+   "Lakehouse and warehouse design",
+   "Ingestion with pipelines and dataflows",
+   "Transformation with Spark and T-SQL",
+   "Semantic models and workspace security"
+  ]
+ },
+ {
+  "name": "Microsoft Certified Power Platform Fundamentals",
+  "vendor": "Power Platform",
+  "domain": "Low-code applications",
+  "held": 417,
+  "sourceImg": "https://images.credly.com/images/2a6251f2-737b-4bf6-9190-d77570cc76fc/twitter_thumb_201604_CERT-Fundamentals-Power-Platform.png",
+  "badge": "certifications/badges/microsoft-certified-power-platform-fundamentals.png",
+  "skills": [
+   "Canvas and model-driven app basics",
+   "Dataverse tables and relationships",
+   "Cloud flows with Power Automate",
+   "Power BI and Copilot Studio overview"
+  ]
+ },
+ {
+  "name": "Microsoft Certified Power Platform Solution Architect",
+  "vendor": "Power Platform",
+  "domain": "Solution architecture",
+  "held": 132,
+  "sourceImg": "https://images.credly.com/images/72eb3ccc-c40c-4e41-84b1-689e58af16f9/twitter_thumb_201604_power-platform-solutions-architect-expert-600x600.png",
+  "badge": "certifications/badges/microsoft-certified-power-platform-solution-architect.png",
+  "skills": [
+   "Requirements gathering and solution design",
+   "Data model and integration architecture",
+   "Security, ALM and environment strategy",
+   "Performance, testing and go-live governance"
+  ]
+ },
+ {
+  "name": "Oracle Cloud Infrastructure Foundations Associate",
+  "vendor": "Oracle",
+  "domain": "Cloud infrastructure",
+  "held": 2490,
+  "sourceImg": "https://images.credly.com/images/27db49f3-8bae-4314-8a84-884935b569db/50_Oracle_Cloud_Infrastructure.png",
+  "badge": "certifications/badges/oracle-cloud-infrastructure-foundations-associate.png",
+  "skills": [
+   "Regions, compartments and IAM policy",
+   "Compute, storage and networking basics",
+   "Database and platform service catalogue",
+   "Pricing, support and governance"
+  ]
+ },
+ {
+  "name": "Oracle Foundation Associate Java",
+  "vendor": "Oracle",
+  "domain": "Java foundations",
+  "held": 321,
+  "sourceImg": "https://images.credly.com/images/aeada4ab-bd8f-4c3c-bf4a-a9f2f4e04dd2/02a_Java_Foundations_Associate.png",
+  "badge": "certifications/badges/oracle-foundation-associate-java.png",
+  "skills": [
+   "Java platform and program structure",
+   "Variables, operators and control flow",
+   "Classes, methods and object basics",
+   "Arrays, strings and exception handling"
+  ]
+ },
+ {
+  "name": "Oracle APEX Cloud Developer",
+  "vendor": "Oracle APEX",
+  "domain": "Low-code development",
+  "held": 7,
+  "sourceImg": "https://images.credly.com/images/6a32ce7e-4c21-4290-bb37-3da589c24cbf/60_-Oracle_APEX_Cloud_Dev_Specialist__1_.png",
+  "badge": "certifications/badges/oracle-apex-cloud-developer.png",
+  "skills": [
+   "Declarative application and page creation",
+   "SQL, PL/SQL and REST data sources",
+   "Interactive reports and faceted search",
+   "Authentication, authorisation and deployment"
+  ]
+ },
+ {
+  "name": "Pega Certified System Architect",
+  "vendor": "Pega",
+  "domain": "Business automation",
+  "held": 106,
+  "sourceImg": "https://academyartifacts.s3.amazonaws.com/Images/Prod/PEGAPCSA84V1_Current.png",
+  "badge": "certifications/badges/pega-certified-system-architect.png",
+  "skills": [
+   "Case design and life-cycle modelling",
+   "Data models and user interface config",
+   "Process flows and decision rules",
+   "Application debugging and testing"
+  ]
+ },
+ {
+  "name": "Pega Certified Senior System Architect",
+  "vendor": "Pega",
+  "domain": "Enterprise architecture",
+  "held": 103,
+  "sourceImg": "https://academyartifacts.s3.amazonaws.com/Images/Prod/PEGAPCSSA86V1_Current.png",
+  "badge": "certifications/badges/pega-certified-senior-system-architect.png",
+  "skills": [
+   "Enterprise class structure design",
+   "Reusable rules and application layering",
+   "Integration with external systems",
+   "Performance tuning and security models"
+  ]
+ },
+ {
+  "name": "RedHat Certified System Administrator",
+  "vendor": "Red Hat",
+  "domain": "Linux administration",
+  "held": 306,
+  "sourceImg": "https://images.credly.com/images/572de0ba-2c59-4816-a59d-b0e1687e45ee/image.png",
+  "badge": "certifications/badges/redhat-certified-system-administrator.png",
+  "skills": [
+   "Shell essentials and file management",
+   "Users, groups and permissions",
+   "Storage, LVM and file systems",
+   "systemd services, networking and SELinux"
+  ]
+ },
+ {
+  "name": "Salesforce Certified Administrator",
+  "vendor": "Salesforce",
+  "domain": "CRM administration",
+  "held": 82,
+  "sourceImg": "https://drm.my.salesforce.com/servlet/servlet.ImageServer?id=015Rf00000MAGlB&oid=00DF0000000gZsu&lastMod=17467806380000",
+  "badge": "certifications/badges/salesforce-certified-administrator.png",
+  "skills": [
+   "Org setup, users and the security model",
+   "Objects, fields and record types",
+   "Automation with Flow and validation rules",
+   "Reports, dashboards and data management"
+  ]
+ },
+ {
+  "name": "Salesforce Certified Platform Developer I",
+  "vendor": "Salesforce",
+  "domain": "Platform development",
+  "held": 79,
+  "sourceImg": "https://www.salesforceben.com/wp-content/uploads/2021/08/SF-Certified_Platform-Developer-I-1024x1024.png",
+  "badge": "certifications/badges/salesforce-certified-platform-developer-i.png",
+  "skills": [
+   "Apex classes, triggers and unit testing",
+   "SOQL, SOSL and DML operations",
+   "Lightning Web Components",
+   "Declarative versus programmatic design"
+  ]
+ },
+ {
+  "name": "Servicenow Certified System Administrator",
+  "vendor": "ServiceNow",
+  "domain": "IT service management",
+  "held": 125,
+  "sourceImg": "https://images.credly.com/images/cf2fd311-58c5-404e-b2aa-234b2ef7f994/Credential_Badge_-_Certified_System_Administrator.png",
+  "badge": "certifications/badges/servicenow-certified-system-administrator.png",
+  "skills": [
+   "User administration and access control",
+   "Tables, forms and UI configuration",
+   "Flow Designer and business rules",
+   "Reporting, imports and instance upgrades"
+  ]
+ },
+ {
+  "name": "Servicenow Certified Application Developer",
+  "vendor": "ServiceNow",
+  "domain": "Application development",
+  "held": 117,
+  "sourceImg": "https://img-c.udemycdn.com/open-badges/v2/badge-class/1339064239/19c8d6a9-3f76-42cd-a626-329a6376202116550298972043645923.png",
+  "badge": "certifications/badges/servicenow-certified-application-developer.webp",
+  "skills": [
+   "Scoped application design",
+   "Data models and table relationships",
+   "Client and server-side scripting",
+   "Application security and deployment"
+  ]
+ },
+ {
+  "name": "Unity Certified User: Programmer",
+  "vendor": "Unity",
+  "domain": "Real-time 3D",
+  "held": 108,
+  "sourceImg": "https://images.credly.com/images/51da8803-3699-4392-8ef5-3291e6bc084d/image.png",
+  "badge": "certifications/badges/unity-certified-user-programmer.png",
+  "skills": [
+   "C# scripting and the MonoBehaviour lifecycle",
+   "GameObjects, components and prefabs",
+   "Physics, collisions and input handling",
+   "UI, debugging and build deployment"
+  ]
+ }
+]

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 232" width="520" height="232" role="img" aria-label="Torii">
+  <title>Torii</title>
+  <!-- TORI: geometric letterforms drawn as strokes so the mark needs no font -->
+  <g fill="none" stroke="#111111" stroke-width="9" stroke-linecap="butt">
+    <path d="M56 70.5H122" />
+    <path d="M89 66V166" />
+    <circle cx="172" cy="116" r="50" />
+    <path d="M258 66V166" />
+    <path d="M258 70.5h34a22 22 0 0 1 0 44h-34" />
+    <path d="M276 114l30 52" />
+    <path d="M336 66V166" />
+  </g>
+  <!-- The final "i" stands inside a torii gate -->
+  <g fill="#E95A22">
+    <rect x="364" y="60" width="132" height="15" />
+    <rect x="364" y="60" width="15" height="116" />
+    <rect x="481" y="60" width="15" height="116" />
+  </g>
+  <rect x="423" y="106" width="14" height="60" fill="#111111" />
+  <g stroke="#E95A22" stroke-width="4.5" stroke-linecap="round">
+    <path d="M421 92h18" />
+    <path d="M425.5 84.2l9 15.6" />
+    <path d="M434.5 84.2l-9 15.6" />
+  </g>
+</svg>
