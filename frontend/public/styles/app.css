@@ -14197,13 +14197,13 @@ body.is-presenting .vc {
 
 .pr-ring {
   position: relative;
-  width: 890px; height: 560px;
+  width: 1010px; height: 650px;
   transform-style: preserve-3d;
 }
 
 .pr-slot {
   position: absolute; top: 0; left: 50%;
-  width: 890px; margin-left: -445px;
+  width: 1010px; margin-left: -505px;
   display: block; padding: 0; border: 0; background: none;
   transform-style: preserve-3d;
   cursor: pointer;
@@ -14257,8 +14257,8 @@ body.is-presenting .vc {
   /* Bigger, because the fan now walks itself and the photographs are the
      whole of the slide (2026-09-18, on request). 300 -> 430 tall, and the cap
      follows so a 16:9 picture is not clipped back to the old width. */
-  height: 500px; width: auto; aspect-ratio: var(--ar, 16 / 9);
-  max-width: 890px;
+  height: 600px; width: auto; aspect-ratio: var(--ar, 16 / 9);
+  max-width: 1010px;
   margin: 0 auto;
   border-radius: 16px; overflow: hidden;
   background: #0D1117;

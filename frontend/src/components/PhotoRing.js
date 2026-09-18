@@ -56,7 +56,7 @@ const SET_MS = 3400;
    (2026-09-18): at the old 268 a 760px card stood almost entirely over its
    neighbour, and the fan read as one picture with edges behind it rather than
    as a group standing around the front one. */
-const STEP_X = 404;   // across, per step out from the front
+const STEP_X = 452;   // across, per step out from the front
 const STEP_Z = 240;   // back, per step out
 const TILT = 34;      // degrees, leaning in toward the centre
 /* How many are drawn either side. Past the third the cards are behind each other
@@ -70,9 +70,6 @@ const WINGS = 3;
  * no groups. It still has to render, so that case becomes a single unnamed set
  * and the filter bar stays off — one filter is not a choice.
  */
-/** Whether a tab is the combined "everything" one rather than a chapter. */
-const isAll = (t) => t && t.key === 'all';
-
 function setsOf(block) {
   const groups = (Array.isArray(block.groups) ? block.groups : [])
     .map((g) => ({
@@ -115,10 +112,12 @@ export function PhotoRing(block, { editing = false } = {}) {
     ? [{ key: 'all', name: block.allLabel || 'All', shots: sets.flatMap((s) => s.shots) }, ...named]
     : named;
 
-  /* Opens on the first CHAPTER, not on "All": the walk starts with a title
-     highlighted and that title's photographs, which is what the section is.
-     "All" is still on the bar and a presenter may press it. */
-  let active = tabs.find((t) => !isAll(t)) || tabs[0] || sets[0];
+  /* OPENS ON EVERYTHING (2026-09-18, on request: "by default all photos should
+     flow"). It opened on the first chapter until then, which meant the slide
+     arrived showing three of its ten photographs and walked the rest a chapter
+     at a time. "All" is the whole section in one set, so the walk is simply
+     every photograph in turn. */
+  let active = tabs[0] || sets[0];
   let shots = active.shots;
   let slots = [];
   let index = 0;
@@ -244,17 +243,6 @@ export function PhotoRing(block, { editing = false } = {}) {
      and it is reset wherever a set begins, which is `buildCards`. */
   let shown = 1;
 
-  /* The named sets only. "All" stays on the bar for a presenter to press — and
-     the walk carries on from it when they do — but it is not a chapter, and
-     stepping into it on every lap would show every photograph twice. */
-  const chapters = tabs.filter((t) => !isAll(t));
-
-  function nextChapter() {
-    const here = chapters.indexOf(active);
-    /* From "All", or from anywhere unexpected, begin the run again. */
-    return chapters[here < 0 ? 0 : (here + 1) % chapters.length] || active;
-  }
-
   function goTo(t) {
     if (!t || t === active) { shown = 1; index = 0; paint(); return; }
     active = t;
@@ -263,16 +251,24 @@ export function PhotoRing(block, { editing = false } = {}) {
     buildCards();
   }
 
+  /* THE WALK STAYS IN THE OPEN SET AND COMES ROUND (2026-09-18, on request:
+     "if the user clicks on any particular one it should go to that and then do
+     the animation in the loop"). It used to hand on to the next chapter once a
+     set was spent, which was right while the slide opened on a chapter; opening
+     on "All" that would have taken it straight back out of the set the
+     presenter is looking at. So a set loops, and the only thing that changes
+     which set is open is somebody pressing a title.
+
+     `advance` wraps `index` on its own, so the wrap needs no case of its own —
+     only `shown`, the count of what has been seen, is put back. */
   function tick() {
     if (held) return;
-    if (shown < slots.length) {
-      shown += 1;
-      advance();
-      /* Landing on the last card: hold it for the chapter beat, not a card's. */
-      reschedule(shown >= slots.length ? SET_MS : HOLD_MS + TURN_MS);
-      return;
-    }
-    goTo(nextChapter());
+    const lap = shown >= slots.length;
+    shown = lap ? 1 : shown + 1;
+    advance();
+    /* A beat at the wrap, so coming back round reads as coming back round
+       rather than as one more step. */
+    reschedule(lap ? SET_MS : HOLD_MS + TURN_MS);
   }
 
   function reschedule(ms) {
