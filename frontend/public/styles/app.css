@@ -20598,3 +20598,293 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
 .ps-root .head .close:hover,.ps-root .head .nextp:hover{background:#12100F;border-color:#12100F;color:#fff;}
 .ps-root .head .site{color:#fff;border-color:var(--orange);}
 .ps-root.on-site .head .site{color:#12100F;border-color:#12100F;}
+
+/* ==========================================================================
+   Curriculum deck — Torii's Trainings (2026-09-18)
+
+   Eight programmes on a dark sheet; press one and it opens onto its numbered
+   topics. Nothing here sets a description, because there are none.
+
+   The type does not shrink to fit. The ask was that everything be readable
+   from the room, so a programme with fifteen topics takes more columns rather
+   than smaller words — `columnsFor` in the component picks 1, 2 or 3 off the
+   count, and this sheet sets them all at one size.
+   ========================================================================== */
+.cu-root {
+  position: relative;
+  /* A definite height, not a minimum: `.canvas-block > *` sets `flex: 1`,
+     whose `flex-basis: 0%` beats `height` on the main axis. And never a bare
+     860 — a slide presenting is the screen's shape, not 16:9. */
+  flex: 0 0 auto;
+  height: var(--slide-h, 860px);
+  max-height: var(--slide-h, 860px);
+  display: flex;
+  flex-direction: column;
+  padding: 48px 64px 0;
+  overflow: hidden;
+  color: #F6F4F2;
+  background:
+    radial-gradient(120% 80% at 12% 0%, rgb(255 90 31 / 0.14) 0%, transparent 58%),
+    #100E0D;
+  --cu-accent: #FF5A1F;
+  --cu-line: rgb(255 255 255 / 0.10);
+  --cu-card: rgb(255 255 255 / 0.035);
+}
+
+.cu-head { flex: 0 0 auto; margin-bottom: 34px; }
+
+.cu-eyebrow {
+  margin: 0 0 10px;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 13px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--cu-accent);
+}
+
+.cu-title {
+  margin: 0;
+  font-family: var(--display, inherit);
+  font-size: 62px;
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: #FFF;
+}
+
+/* --------------------------------------------------------------- the grid */
+.cu-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  /* The rows share whatever height is left rather than standing at their
+     minimum with the sheet empty below them. `minmax` keeps the minimum as a
+     floor, so a deck with more programmes than fit still gets readable cards
+     instead of squeezed ones. */
+  grid-auto-rows: minmax(188px, 1fr);
+  gap: 20px;
+  align-content: stretch;
+  padding-bottom: var(--deck-bar-clear, 32px);
+}
+
+.cu-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  min-height: 188px;
+  padding: 26px 24px;
+  text-align: left;
+  border: 1px solid var(--cu-line);
+  border-radius: 18px;
+  background: var(--cu-card);
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  /* Minimal, and once. This is the one slide in the deck that is read rather
+     than watched, so nothing here loops or drifts. */
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.cu-root.is-ready .cu-card {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.46s cubic-bezier(0.22, 0.68, 0, 1) calc(var(--cu-i, 0) * 40ms),
+    transform 0.46s cubic-bezier(0.22, 0.68, 0, 1) calc(var(--cu-i, 0) * 40ms),
+    border-color 0.24s ease,
+    background 0.24s ease;
+}
+
+.cu-card:hover,
+.cu-card:focus-visible {
+  border-color: var(--cu-accent);
+  background: rgb(255 255 255 / 0.06);
+  outline: none;
+}
+
+/* The number is a filled orange box — this sheet's one filled element, and what
+   makes a card read as a step in a course rather than a tile. */
+.cu-card__n {
+  display: grid;
+  place-items: center;
+  min-width: 46px;
+  height: 46px;
+  padding: 0 10px;
+  border-radius: 12px;
+  background: var(--cu-accent);
+  color: #12100F;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.cu-card__name {
+  font-family: var(--display, inherit);
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: -0.01em;
+  color: #FFF;
+}
+
+.cu-card__meta {
+  margin-top: auto;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 12.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(246 244 242 / 0.5);
+}
+
+/* ------------------------------------------------------------- the detail */
+/* Over the grid, not in place of a card: fifteen topics cannot fit a tile on an
+   eight-up grid at a size anyone can read, and a grid that reflows around one
+   open card moves every other card while somebody is reading it. */
+.cu-panel {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  padding: 48px 64px var(--deck-bar-clear, 40px);
+  background:
+    radial-gradient(120% 80% at 12% 0%, rgb(255 90 31 / 0.16) 0%, transparent 58%),
+    #100E0D;
+  overflow: hidden;
+}
+
+.cu-panel[hidden] { display: none; }
+
+.cu-panel__head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.cu-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 22px;
+  border: 1px solid var(--cu-line);
+  border-radius: 999px;
+  background: none;
+  color: #F6F4F2;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.24s ease, background 0.24s ease;
+}
+
+.cu-back::before { content: '\2190'; font-size: 17px; line-height: 1; }
+.cu-back:hover { border-color: var(--cu-accent); background: rgb(255 255 255 / 0.05); }
+
+.cu-panel__n {
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 15px;
+  letter-spacing: 0.22em;
+  color: rgb(246 244 242 / 0.45);
+}
+
+.cu-panel__name {
+  flex: 0 0 auto;
+  margin: 0 0 6px;
+  font-family: var(--display, inherit);
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: #FFF;
+}
+
+.cu-teach {
+  flex: 0 0 auto;
+  margin: 0 0 26px;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--cu-accent);
+}
+
+/* Column-major, so a numbered list reads down each column and then across —
+   01 to 05 on the left and 06 to 10 beside it, rather than 1, 2, 3 across the
+   top. `grid-template-rows` is written by the component, because only it knows
+   how many rows each column should hold. */
+.cu-topics {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(var(--cu-cols, 1), minmax(0, 1fr));
+  /* The rows share the height, for the reason the grid's do: a five-topic
+     programme should not leave two-thirds of the sheet empty under it. */
+  grid-template-rows: repeat(var(--cu-rows, 1), minmax(58px, 1fr));
+  grid-auto-flow: column;
+  gap: 14px 40px;
+  align-content: stretch;
+  padding-bottom: 8px;
+}
+
+.cu-topic {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--cu-line);
+  border-radius: 12px;
+  background: var(--cu-card);
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.cu-panel.is-in .cu-topic {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.4s cubic-bezier(0.22, 0.68, 0, 1) calc(var(--cu-i, 0) * 34ms),
+    transform 0.4s cubic-bezier(0.22, 0.68, 0, 1) calc(var(--cu-i, 0) * 34ms);
+}
+
+.cu-topic__n {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--cu-accent);
+  color: #12100F;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.cu-topic__name {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #F6F4F2;
+}
+
+/* Three columns means narrower cells, so the type steps down once — and once
+   only, to 17px, which is still well above this deck's body size. */
+.cu-topics.is-wide .cu-topic__name { font-size: 17px; }
+.cu-topics.is-wide .cu-topic { padding: 10px 14px; gap: 13px; }
+.cu-topics.is-wide .cu-topic__n { width: 34px; height: 34px; font-size: 14px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cu-card,
+  .cu-topic { opacity: 1; transform: none; transition: none; }
+}

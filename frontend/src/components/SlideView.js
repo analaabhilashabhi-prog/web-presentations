@@ -21,7 +21,7 @@ export function SlideView(section, org, { showStatus = false } = {}) {
   // section head above it would title the page twice.
   const hasHero = section.blocks?.length > 0
     && ['hero', 'leader-hero', 'milestone-timeline', 'leadership-panels', 'gallery-wall',
-      'ai-ready-engineer', 'course-deck', 'drift-wall', 'platforms', 'coe-wall', 'story-wall', 'program-deck', 'testimonial-wall', 'placement-wall', 'event-reel', 'video-resume', 'certification-wall', 'council-grid', 'roster', 'hub', 'stat-wall', 'book-shelf', 'paper-tabs', 'alliance-accordion', 'skew-carousel', 'tilted-tiles', 'card-fan', 'training-shelf', 'photo-collage', 'event-wheel', 'photo-folder', 'project-showcase', 'thread-board', 'event-orbit', 'photo-ring'].includes(section.blocks[0].type);
+      'ai-ready-engineer', 'course-deck', 'drift-wall', 'platforms', 'coe-wall', 'story-wall', 'program-deck', 'testimonial-wall', 'placement-wall', 'event-reel', 'video-resume', 'certification-wall', 'council-grid', 'roster', 'hub', 'stat-wall', 'book-shelf', 'paper-tabs', 'alliance-accordion', 'skew-carousel', 'tilted-tiles', 'card-fan', 'training-shelf', 'photo-collage', 'event-wheel', 'photo-folder', 'project-showcase', 'thread-board', 'event-orbit', 'photo-ring', 'curriculum-deck'].includes(section.blocks[0].type);
   /* A thunk: with a title card the blocks are built later, and a block that
      registers a stepper or starts a loop as it is constructed has to do so when
      it is actually going on the page. Called once either way. */

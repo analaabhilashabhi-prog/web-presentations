@@ -49,6 +49,7 @@ export const DEFAULT_SIZE = {
   'photo-ring': { w: 12, h: 15 },
   'event-orbit': { w: 12, h: 15 },
   'training-shelf': { w: 12, h: 15 },
+  'curriculum-deck': { w: 12, h: 15 },
   'photo-collage': { w: 12, h: 15 },
   'event-wheel': { w: 12, h: 15 },
   'photo-folder': { w: 12, h: 15 },

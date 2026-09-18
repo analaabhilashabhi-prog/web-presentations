@@ -56,6 +56,7 @@ export const BLOCK_TYPES = [
   'photo-ring',
   'event-orbit',
   'training-shelf',
+  'curriculum-deck',
   'photo-collage',
   'event-wheel',
   'photo-folder',
@@ -112,6 +113,7 @@ const DEFAULT_SIZE = {
   'photo-ring': { w: 12, h: 15 },
   'event-orbit': { w: 12, h: 15 },
   'training-shelf': { w: 12, h: 15 },
+  'curriculum-deck': { w: 12, h: 15 },
   'photo-collage': { w: 12, h: 15 },
   'event-wheel': { w: 12, h: 15 },
   'photo-folder': { w: 12, h: 15 },
@@ -1351,6 +1353,28 @@ function normalizeBlock(raw, index = 0, depth = 0) {
        where the reference puts a row of bestsellers — the selected training's
        own information. One list, therefore, not two: a training is both the
        book and what is written about it. */
+    /* The curriculum as cards: a programme's name on the face, and its numbered
+       topics behind it. Deliberately the whole of the schema — there is no
+       description field on a programme or on a topic, because the brief this
+       was built to says there are none, and a field nobody fills is a field
+       somebody fills later by accident. */
+    case 'curriculum-deck':
+      block.eyebrow = text(raw.eyebrow, 80);
+      block.title = text(raw.title, 80);
+      block.teachLabel = text(raw.teachLabel, 40);
+      block.backLabel = text(raw.backLabel, 40);
+      block.programs = (Array.isArray(raw.programs) ? raw.programs : [])
+        .map((p) => ({
+          name: text(p?.name, 80),
+          topics: (Array.isArray(p?.topics) ? p.topics : [])
+            .map((t) => text(t, 90))
+            .filter(Boolean)
+            .slice(0, 24),
+        }))
+        .filter((p) => p.name)
+        .slice(0, 12);
+      break;
+
     case 'training-shelf':
       block.eyebrow = text(raw.eyebrow, 80);
       block.title = text(raw.title, 80);
