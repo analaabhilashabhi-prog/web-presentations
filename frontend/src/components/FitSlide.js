@@ -24,8 +24,17 @@ export const NOMINAL_HEIGHT = 900;
  * entering presentation mode resizes the frame, which refits, and that must work
  * even where the fullscreen request is refused and no re-render follows.
  */
+/* `presenting` means two states now (2026-09-18, on request): the deck actually
+   presenting, and the editing view with the navigation collapsed to its rail.
+   Collapsing it is what a presenter does to get the deck out of the way, and
+   leaving bars down both sides of the slide at that point was the one thing
+   that still said "this is an editor". The pane open is the working view and
+   keeps the fitted slide, which is the shape the deck is designed to. */
+const railed = () => document.documentElement.dataset.navRail === '1';
 const wantsFill = (fill) =>
-  fill === true || (fill === 'presenting' && document.body.classList.contains('is-presenting'));
+  fill === true
+  || (fill === 'presenting'
+      && (document.body.classList.contains('is-presenting') || railed()));
 
 export function FitSlide(content, { nominalWidth = NOMINAL_WIDTH, fill = false } = {}) {
   const inner = h('div', { class: 'fit-slide__inner', style: { width: `${nominalWidth}px` } }, content);
@@ -162,10 +171,15 @@ export function FitSlide(content, { nominalWidth = NOMINAL_WIDTH, fill = false }
   // display, and it is a class on <body> rather than a resize of this frame — so
   // without watching for it the first fit's answer would be the final one.
   if (fill === 'presenting' && window.MutationObserver) {
-    new MutationObserver(() => {
-      schedule();
-      settle();
-    }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    const watch = () => { schedule(); settle(); };
+    new MutationObserver(watch)
+      .observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    /* And the rail, for the same reason: collapsing the pane changes both the
+       width of this frame and whether the slide fills it. The resize observer
+       catches the first on its own, but the fill decision is an attribute on
+       <html> and would otherwise be read once and never again. */
+    new MutationObserver(watch)
+      .observe(document.documentElement, { attributes: true, attributeFilter: ['data-nav-rail'] });
   }
 
   // An image that has not decoded yet has no height, so refit as they arrive —

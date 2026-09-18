@@ -1891,6 +1891,57 @@ AI Ready Engineer takes 6, NGI's Executive Summary 3 for its paper tabs, NGI's
 own AI Ready Engineer 6). The dock's Next tab pressed from sub-tab 3 of 6 goes
 straight to Centers of Excellence, and Previous tab from there comes back.
 
+## Collapsed, the editing view is the presenting view
+
+**The pane on its rail means full screen** (2026-09-18, on request: "when I
+collapse I have some space on the left and right side, I don't want it like
+that... and above we have so much space"). Collapsing the pane is what a
+presenter does to get the deck out of the way, and a slide still sitting in a
+window with bars down both sides was the one thing that still said *editor*.
+
+**Smaller type was not the fix; the top bar taking a row was.** The arithmetic,
+measured at 1920x1000: the stage is 1842 wide once the rail has its 78, and
+FitSlide fills only when a section's 860 nominal rows fit
+`1600 x height / width`. With the bar in the flow the stage is 960 tall, which
+allows 834 rows — twenty-six short, so it declined to fill and left 61px down
+each side rather than lose the bottom of the slide. That is the documented rule
+working correctly: **never clip content to fill.** Floating the bar gives the
+stage the whole 1000, which allows 869, and every slide fills with nothing
+cropped. Shrinking the bar from 64px to 39 was worth 24 rows and would never
+have been enough on its own.
+
+Three parts, all scoped to `:root[data-nav-rail='1']` so the working view and
+presenting itself cannot be changed by accident:
+
+  - **`wantsFill` counts the rail as presenting.** `fill: 'presenting'` now
+    means the deck presenting *or* the pane collapsed. The MutationObserver
+    watches `data-nav-rail` on `<html>` as well as the body's class, because the
+    fill decision is an attribute and would otherwise be read once at mount and
+    never again — the resize observer sees the frame change width but not why.
+  - **The bar floats and carries no ground at rest.** The scrim is this deck's
+    near-white, which is invisible over a white slide and a grey band across a
+    black one — and the first slide of the deck is a black film. The controls
+    carry their own backgrounds and stay readable either way; the scrim and full
+    opacity come up on hover, when the breadcrumb is being read.
+  - **The slide's own padding becomes the presenting 44/48/52**, not the
+    editor's 48/52/56. Not cosmetic: every block's row count is measured at one
+    exact canvas width, so a gutter 4px wider rewraps a line onto a row that
+    does not exist. Matching it is also the point — collapsed, what is on screen
+    is what the room will see, to the pixel.
+
+Measured across all fifteen Torii tabs at 1920x1000:
+
+| state | stage | slide | side bars | fills |
+| --- | --- | --- | --- | --- |
+| collapsed | 1842x1000 | 1842x1000 | **0 / 0** | yes, all 15 |
+| pane open | 1620x939 | 1580x849 | 20 / 20 | no — unchanged |
+| presenting | 1920x1000 | 1860x1000 | 30 / 30 | unchanged |
+
+Presenting letterboxes on a 1920x**1000** window for the same arithmetic — 833
+rows against 860 — and fills on a real 16:9 display, where it is 900. The
+collapsed view fills on that window precisely because the rail makes the stage
+narrower, which is the one case where losing 78px of width buys something.
+
 ## Four keys run the whole deck
 
 **Left and right explore a tab; up and down change tab** (2026-09-18, on

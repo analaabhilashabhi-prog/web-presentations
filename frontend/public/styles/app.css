@@ -1591,6 +1591,86 @@ a {
   flex-wrap: wrap;
 }
 
+/* Collapsed, every row this bar takes comes off the slide. The pane is put on
+   its rail to get out of the way, so the bar gets out of the way with it:
+   shallower, smaller type, smaller controls — and `nowrap`, because the whole
+   point is a bar that cannot grow a second line. Measured, it goes from 64px
+   to 40px, and those 24 rows go to the picture. The pane open is the working
+   view and the bar keeps its full size there. */
+:root[data-nav-rail='1'] .topbar {
+  gap: 10px;
+  padding: 6px 16px;
+  flex-wrap: nowrap;
+}
+
+/* Collapsed, the bar FLOATS over the slide instead of taking a row of its own,
+   and that is what actually removes the bars down the sides — not the smaller
+   type, which only helps a little.
+
+   The arithmetic, measured at 1920x1000: the stage is 1842 wide, and a slide
+   fills only when its 860 nominal rows fit `1600 x height / width`. With a
+   40px bar in the flow the stage is 960 tall, which allows 834 rows — 26 short,
+   so FitSlide declined to fill and left 61px down each side rather than lose
+   the bottom of the slide. Floating the bar gives the stage the whole 1000,
+   which allows 869, and the slide fills edge to edge with nothing cropped.
+
+   It is over the picture, so it carries its own scrim and lifts on hover, the
+   way the film players in this deck do. The pane open is the working view and
+   the bar stays in the flow there, where those rows cost nothing. */
+:root[data-nav-rail='1'] .shell--fit .main {
+  position: relative;
+}
+
+:root[data-nav-rail='1'] .shell--fit .topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  border-bottom: 0;
+  /* NO ground at rest. The scrim is the deck's own near-white, which is
+     invisible over a white slide and a grey band across a black one — and the
+     first slide of this deck is a black film. The controls carry their own
+     backgrounds, so they stay readable on either; only the breadcrumb fades
+     into a dark slide, and it is the one thing here nobody needs to read. */
+  background: transparent;
+  backdrop-filter: none;
+  opacity: 0.5;
+  transition: opacity 0.22s ease, background 0.22s ease;
+}
+
+/* Reached for: the ground comes up with it, so the crumbs can be read. */
+:root[data-nav-rail='1'] .shell--fit .topbar:hover,
+:root[data-nav-rail='1'] .shell--fit .topbar:focus-within {
+  opacity: 1;
+  background: linear-gradient(
+    to bottom,
+    rgba(248, 250, 252, 0.94),
+    rgba(248, 250, 252, 0.6) 64%,
+    rgba(248, 250, 252, 0)
+  );
+  backdrop-filter: blur(6px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-nav-rail='1'] .shell--fit .topbar { transition: none; }
+}
+
+:root[data-nav-rail='1'] .topbar__crumbs {
+  font-size: 12px;
+}
+
+:root[data-nav-rail='1'] .topbar .btn {
+  padding: 5px 11px;
+  font-size: 12.5px;
+}
+
+:root[data-nav-rail='1'] .topbar .badge,
+:root[data-nav-rail='1'] .topbar .tag {
+  font-size: 10.5px;
+  padding: 2px 7px;
+}
+
 .topbar__crumbs {
   font-size: 13.5px;
   color: var(--muted);
@@ -5275,6 +5355,40 @@ body.is-presenting .fit-slide__inner .slide {
 
 body.is-presenting .stage--fit {
   padding: 0;
+}
+
+/*
+ * Collapsed, the editing view IS the presenting view (2026-09-18, on request:
+ * "even though if I collapse the tabs it should look like full screen"). These
+ * repeat the four rules above for the rail rather than widening their
+ * selectors, so that presenting itself cannot be changed by accident here.
+ *
+ * The slide's own padding has to be the presenting 44/48/52 and not the
+ * editor's 48/52/56. It is not a cosmetic difference: every block's row count
+ * is measured at one exact canvas width, so a gutter 4px wider rewraps a line
+ * of text onto a row that does not exist. Matching it is also the point — what
+ * the pane collapsed shows is then what the room will see, to the pixel.
+ */
+:root[data-nav-rail='1'] .shell--fit .fit-slide {
+  padding: 0;
+}
+
+:root[data-nav-rail='1'] .shell--fit .stage--fit {
+  padding: 0;
+}
+
+:root[data-nav-rail='1'] .shell--fit .fit-slide__inner .slide {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 44px 48px 52px;
+}
+
+:root[data-nav-rail='1'] .shell--fit .fit-slide__inner .slide--hero {
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  height: 100% !important;
 }
 
 /* A projector is 16:9; leave room for the deck controls at the bottom. */
