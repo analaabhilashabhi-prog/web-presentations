@@ -2,6 +2,7 @@ import { h } from '../utils/dom.js';
 import { upload } from '../utils/media.js';
 import { openLightbox } from './Lightbox.js';
 import { letterRevealPreset } from '../utils/letterReveal.js';
+import { pointerHold } from '../utils/pointerHold.js';
 
 /**
  * A headline over a fan of cards rising out of the bottom edge.
@@ -256,7 +257,6 @@ export function CardFan(block = {}) {
   let offset = 0;
   let last = 0;
   let raf = 0;
-  let held = false;
 
   function frame(now) {
     raf = 0;
@@ -266,7 +266,7 @@ export function CardFan(block = {}) {
     const gap = last ? now - last : 0;
     const dt = gap > 0 && gap < 200 ? Math.min(0.05, gap / 1000) : 0.016;
     last = now;
-    if (!held) {
+    if (!grip.held) {
       offset = (offset + dt / TURN_S) % n;
       place(offset);
     }
@@ -276,8 +276,7 @@ export function CardFan(block = {}) {
 
   /* The pointer anywhere over the hand holds it: a presenter pointing at a
      photograph should not have it walk out from under them. */
-  fan.addEventListener('pointerenter', () => { held = true; });
-  fan.addEventListener('pointerleave', () => { held = false; last = 0; });
+  const grip = pointerHold(fan, { onRelease: () => { last = 0; } });
 
   /* The shared viewer — the one the galleries already use, with its own arrows
      and its own way out. */
@@ -324,7 +323,6 @@ export function CardFan(block = {}) {
        back at the other end rather than unwinding all the way round. */
     let dOff = 0;
     let dLast = 0;
-    let dHeld = false;
     let dRaf = 0;
     const dWrap = (x) => ((x + n / 2) % n + n) % n - n / 2;
     const turnDeck = (now) => {
@@ -333,7 +331,7 @@ export function CardFan(block = {}) {
       const gap = dLast ? now - dLast : 0;
       const dt = gap > 0 && gap < 200 ? Math.min(0.05, gap / 1000) : 0.016;
       dLast = now;
-      if (!dHeld) {
+      if (!dGrip.held) {
         dOff = (dOff + dt / TURN_S) % n;
         dealt.forEach((el, i) => {
           const dd = dWrap(i - dOff - mid);
@@ -344,8 +342,7 @@ export function CardFan(block = {}) {
       }
       dRaf = requestAnimationFrame(turnDeck);
     };
-    hand.addEventListener('pointerenter', () => { dHeld = true; });
-    hand.addEventListener('pointerleave', () => { dHeld = false; dLast = 0; });
+    const dGrip = pointerHold(hand, { onRelease: () => { dLast = 0; } });
     if (!REDUCED?.matches && n > 1) {
       /* After the deal, or the turn would fight the cards on their way out of
          the pile — the deal's own stagger is up to 70ms a card. */

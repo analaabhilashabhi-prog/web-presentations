@@ -2,6 +2,7 @@ import { h } from '../utils/dom.js';
 import { media } from '../utils/media.js';
 import { openLightbox } from './Lightbox.js';
 import { letterRevealPreset } from '../utils/letterReveal.js';
+import { pointerHold } from '../utils/pointerHold.js';
 
 /**
  * A carousel of cards standing in a fan, turning one card at a time, over a row
@@ -121,7 +122,6 @@ export function PhotoRing(block, { editing = false } = {}) {
   let shots = active.shots;
   let slots = [];
   let index = 0;
-  let held = false;
   let timer = null;
 
   const ring = h('div', { class: 'pr-ring' });
@@ -136,11 +136,10 @@ export function PhotoRing(block, { editing = false } = {}) {
     index = 0;
     shown = 1;
     /* The card the pointer was on is about to be destroyed, so its `pointerleave`
-       will never arrive. Left set, `held` blocks `start()` for good and the fan
-       never turns again after a filter is pressed with the pointer on a card —
-       which is the ordinary way to press one. Releasing it here is the only
-       place that knows the old cards are going. */
-    held = false;
+       will never arrive — which used to leave `held` set for good and stop the
+       fan turning after a filter was pressed with the pointer on a card, the
+       ordinary way to press one. The hold is released by stillness now, so it
+       cannot be stranded and there is nothing to reset here. */
     ring.textContent = '';
 
     slots = shots.map((shot, i) => {
@@ -178,14 +177,14 @@ export function PhotoRing(block, { editing = false } = {}) {
           shots.map((s) => ({ url: srcFor(s), name: s.label || block.title || '' })),
           i,
         ),
-        onpointerenter: () => { held = true; stop(); face(i); },
-        onpointerleave: () => { held = false; start(); },
+        onpointerenter: () => { face(i); },
+        
         /* Keyboard reaches the same two states as the pointer, so tabbing
            through the fan brings each card forward instead of leaving the
            focused one somewhere round the back where its outline cannot be
            seen. */
-        onfocus: () => { held = true; stop(); face(i); },
-        onblur: () => { held = false; start(); },
+        onfocus: () => { stop(); face(i); },
+        onblur: () => { start(); },
       }, card);
 
       ring.appendChild(slot);
@@ -262,7 +261,14 @@ export function PhotoRing(block, { editing = false } = {}) {
      `advance` wraps `index` on its own, so the wrap needs no case of its own —
      only `shown`, the count of what has been seen, is put back. */
   function tick() {
-    if (held) return;
+    /* The timeout that called this has fired, so the handle is spent. Clearing
+       it here matters more than it looks: `start` refuses to run while `timer`
+       is set, so a tick that returned early — which is exactly what a hold does
+       — used to leave a stale handle behind and the walk could never be started
+       again. That is what kept this slide frozen under a resting pointer after
+       every other one had been fixed. */
+    timer = 0;
+    if (grip.held) return;
     const lap = shown >= slots.length;
     shown = lap ? 1 : shown + 1;
     advance();
@@ -273,12 +279,12 @@ export function PhotoRing(block, { editing = false } = {}) {
 
   function reschedule(ms) {
     stop();
-    if (held || REDUCED?.matches) return;
+    if (grip.held || REDUCED?.matches) return;
     timer = setTimeout(tick, ms);
   }
 
   function start() {
-    if (timer || held || REDUCED?.matches) return;
+    if (timer || grip.held || REDUCED?.matches) return;
     /* A set of one still has to hand on, so the guard is no longer
        `slots.length < 2` — that stranded the walk on any single-photograph
        chapter for good. */
@@ -347,8 +353,7 @@ export function PhotoRing(block, { editing = false } = {}) {
      still this slide, and a presenter who has moved off a photograph to point at
      a title has not stopped looking at it. Each card keeps its own handlers as
      well, because those also bring that card to the front. */
-  root.addEventListener('pointerenter', () => { held = true; stop(); });
-  root.addEventListener('pointerleave', () => { held = false; start(); });
+  const grip = pointerHold(root, { onRelease: start });
 
   buildCards();
 

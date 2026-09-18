@@ -2,6 +2,7 @@ import { h } from '../utils/dom.js';
 import { upload } from '../utils/media.js';
 import { openLightbox } from './Lightbox.js';
 import { registerStepper } from '../utils/slideSteps.js';
+import { pointerHold } from '../utils/pointerHold.js';
 
 /**
  * Events as a wheel of albums beside the open album.
@@ -399,15 +400,14 @@ export function EventWheel(block = {}) {
      later, without a list to keep in step. `driving` is how the autoplay's own
      moves are told from a hand's: it would otherwise push its own schedule back
      on every tick and never advance. */
-  let hovered = false;
   let timer = 0;
   let driving = false;
 
-  const canAuto = () => root.isConnected && !hovered && !REDUCED?.matches;
+  const canAuto = () => root.isConnected && !grip.held && !REDUCED?.matches;
   const stop = () => { if (timer) { clearTimeout(timer); timer = 0; } };
   const after = (ms) => {
     stop();
-    if (hovered || REDUCED?.matches) return;
+    if (grip.held || REDUCED?.matches) return;
     timer = setTimeout(tick, ms);
   };
   /* `isConnected` is checked when the timer FIRES, never when it is set. The
@@ -451,8 +451,7 @@ export function EventWheel(block = {}) {
      left the slide entirely — the autoplay would stop for good on the first
      press. The keyboard is covered by `userMoved` instead, since the deck's
      arrow keys reach this slide through `step`. */
-  root.addEventListener('pointerenter', () => { hovered = true; stop(); });
-  root.addEventListener('pointerleave', () => { hovered = false; after(AUTO_RESUME); });
+  const grip = pointerHold(root, { onRelease: () => after(AUTO_RESUME) });
 
   open(0);
   placeTiles();

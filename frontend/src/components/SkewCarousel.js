@@ -4,6 +4,7 @@ import { upload } from '../utils/media.js';
 import { deepen, rgba } from '../utils/theme.js';
 import { letterRevealPreset, fitToWidth } from '../utils/letterReveal.js';
 import { registerStepper } from '../utils/slideSteps.js';
+import { pointerHold } from '../utils/pointerHold.js';
 
 /**
  * The team, as a skewed ribbon of cards.
@@ -254,7 +255,7 @@ export function SkewCarousel(block = {}) {
      pointer being anywhere over the row sets, and `autoAfter` is the stillness
      owed after a gesture. */
   let autoV = 0;
-  let hovered = false;
+  let focused = false;
   let autoAfter = 0;
 
   const wrap = (d) => ((d + lap / 2) % lap + lap) % lap - lap / 2;
@@ -317,7 +318,7 @@ export function SkewCarousel(block = {}) {
        instead of needing its own. Held at nothing while a pointer is over the
        row, while one is down on it, while a gesture is still settling, and for
        a moment afterwards. */
-    const wantAuto = !REDUCED?.matches && !hovered && !drag && !freeUntil
+    const wantAuto = !REDUCED?.matches && !grip.held && !focused && !drag && !freeUntil
       && !warm && now >= autoAfter;
     const aim = wantAuto ? step / AUTO_PERIOD : 0;
     autoV += (aim - autoV) * (1 - Math.exp(-dt / (wantAuto ? AUTO_RISE : AUTO_FALL)));
@@ -463,11 +464,10 @@ export function SkewCarousel(block = {}) {
 
      `focusin`/`focusout` do the same for a presenter on the keyboard, who has
      no pointer to park over the row. */
-  const hold = (on) => () => { hovered = on; kick(); };
-  stage.addEventListener('pointerenter', hold(true));
-  stage.addEventListener('pointerleave', hold(false));
-  stage.addEventListener('focusin', hold(true));
-  stage.addEventListener('focusout', hold(false));
+  const grip = pointerHold(stage, { onRelease: kick });
+  /* The keyboard has no pointer to rest, so focus holds outright. */
+  stage.addEventListener('focusin', () => { focused = true; });
+  stage.addEventListener('focusout', () => { focused = false; kick(); });
 
   /* Dragging. The ribbon follows the hand exactly — no easing while a pointer is
      down, or the cards lag behind the finger holding them — and the release

@@ -2,6 +2,7 @@ import { h } from '../utils/dom.js';
 import { upload } from '../utils/media.js';
 import { openLightbox } from './Lightbox.js';
 import { letterRevealPreset } from '../utils/letterReveal.js';
+import { pointerHold } from '../utils/pointerHold.js';
 
 /**
  * A headline beside a collage of photographs — and, below the fold, the rest.
@@ -241,14 +242,13 @@ export function PhotoCollage(block = {}) {
   };
 
   let timer = 0;
-  let held = false;
 
   function flip() {
     timer = 0;
     /* The deck rebuilds its DOM on every navigation; a chain left running would
        go on turning cards nobody can see. */
     if (!root.isConnected) return;
-    if (held) { timer = setTimeout(flip, FLIP_MS); return; }
+    if (grip.held) { timer = setTimeout(flip, FLIP_MS); return; }
 
     const slot = nextCard();
     const pick = nextPhoto();
@@ -275,8 +275,7 @@ export function PhotoCollage(block = {}) {
 
   /* The pointer over a card holds the wall: a presenter pointing at a
      photograph should not have it turn over under them. */
-  stage.addEventListener('pointerenter', () => { held = true; });
-  stage.addEventListener('pointerleave', () => { held = false; });
+  const grip = pointerHold(stage);
 
   if (!REDUCED?.matches) timer = setTimeout(flip, FLIP_MS);
 

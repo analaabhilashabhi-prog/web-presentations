@@ -2435,7 +2435,15 @@ body.is-presenting .stage {
   padding: 0;
 }
 
-body.is-presenting .shell {
+/* `:root` on the front is not decoration: it takes this to (0,3,1), which beats
+   the (0,3,0) of `:root[data-nav-rail='1'] .shell` further up. Without it that
+   rule won while the pane was collapsed, so the grid went on reserving the
+   rail's 78px column with the pane itself `display: none` — `.main` fell into
+   that column and the whole slide was drawn 78px wide for the length of the
+   switch into presenting. That was the flicker: it only ever happened when
+   presenting was entered FROM the collapsed pane, which is exactly how a
+   presenter does it. */
+:root body.is-presenting .shell {
   grid-template-columns: minmax(0, 1fr);
 }
 
