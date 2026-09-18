@@ -376,6 +376,7 @@ still publishable only by hand.
 | `publish-section-intros.cjs` | the title card on every row of both decks - the row's own title; `--clear` takes them off |
 | `apply-review-2026-09-17b.cjs` | the review's second pass — the showcase cut to five products plus three named ones, the photographic badges off the register, the CEO's two figures |
 | `apply-review-2026-09-17.cjs` | Torii's content changes from the 2026-09-17 review — the Claude card, the CEO lines, About, the team and CoE orders, the film start, the Beyond and Certifications photograph |
+| `fix-uploads-path-case.cjs` | corrects the case of every stored `/uploads` path — run it before deploying, because Windows hides a wrong case and Linux does not |
 | `crop-image.cjs` | crops a photograph through headless Chrome's canvas — there is no image library and there is not going to be |
 | `drop-ncet.cjs` | removes the NCET organization and its sections, and renames NGI's tab — stop the server first; always backs up `db.json` |
 | `mirror-deck.cjs` | copies one organization's whole deck into another — `--replace` clears the target first; always backs up `db.json` to `backend/data/backups/` |
@@ -1552,7 +1553,7 @@ page drew the gate with CSS borders — `.ps-root .brand i`, a 22px box with a 3
 orange border and a dark bar — which is a fair likeness and is not the mark: the
 real one carries an orange starburst above the bar. `project-showcase` takes a
 `logo` path under `/uploads`, unset falling back to the drawn gate, and Torii's
-block points at `Snapshot/torii-logo.png`, the same 420px alpha crop the drift
+block points at `snapshot/torii-logo.png`, the same 420px alpha crop the drift
 wall and the Centres of Excellence hub already use. It is drawn in a **28px**
 box, not 22: the file's ink runs 54–366 across and 45–374 down of its 420px
 square, so it is 78.6% of the height, and at 22px the gate would have stood
@@ -1879,6 +1880,26 @@ ratio drift, leaving 384x272, and a check that counts red pixels on every edge
 now returns zero. The framed originals are kept beside them as `NN-framed.png`,
 the way the Snowflake card's was.
 
+**Windows resolves a filename whatever its case; Linux does not.** Three slides
+lost the Torii mark the moment the deck was deployed (2026-09-18) and every
+local check had passed: the blocks pointed at `Snapshot/torii-logo.png` and the
+folder is `snapshot/`. An `<img>` or a CSS mask whose file 404s draws nothing at
+all rather than complaining, so the only symptom is a missing mark, and only on
+the deployed copy. The three were the Centres of Excellence hub, the drift
+wall's middle and the IT Development brand mark; 77 other references into that
+same folder had the real lowercase name, so the folder was right and the
+references were wrong.
+
+`tools/fix-uploads-path-case.cjs` audits every stored `/uploads` path against
+the case on disk and corrects only the case. Run it before a deploy. Two things
+it has to know to be believed: a path is resolved either from the uploads root
+or from the block's own `base`, and `placement-wall` falls back to `Placements`
+in the component when no base is stored — judged against the root alone it
+reports 345 files as missing that are on disk one directory down, which is the
+same false positive a media check here produced once before. With both, it
+reports 3 case mismatches and 3 genuinely absent files, all three of them
+NGI Platforms references that were already broken.
+
 **A replaced file keeps serving its old bytes for an hour.** `/uploads` goes out
 as `public, max-age=3600` with no ETag and no Last-Modified, so overwriting
 `01.png` in place changes nothing in any browser that has already seen it —
@@ -1971,7 +1992,7 @@ now a variable with that as its default. Torii's is
 `Downloads/TORI LOGO.png` is 1024px with the mark in its middle 482x504 on
 transparency (93% of it clear — the grey a viewer shows behind it is the
 viewer's); it is cropped to the mark plus its glow and written at 420px with
-alpha kept, into `uploads/Snapshot/`. On the slide it is 210px, about what the
+alpha kept, into `uploads/snapshot/`. On the slide it is 210px, about what the
 64px title stood — six rows of tiles — and no more.
 
 **383 originals are 99MB; the wall carries 17.** A tile is 230x150, so each is
@@ -1986,7 +2007,7 @@ draws each tile three times for its loop, so a count of `img` elements on the
 slide is 1,149 for 383 tiles — measured all loaded, none broken.
 
 Torii's Centers of Excellence carries the Torii mark at its hub (2026-09-16),
-not Technical Hub's: `coe-wall.hubLogo` → `/uploads/Snapshot/torii-logo.png`
+not Technical Hub's: `coe-wall.hubLogo` → `/uploads/snapshot/torii-logo.png`
 (the same 420px alpha crop the snapshot wall uses) and `hubName` → "Torii
 Minds", changed on Torii's block only by a one-off PATCH (backup
 `db-before-coe-logo-torii-*`). NCET's hub still shows Technical Hub's mark and

@@ -32,7 +32,12 @@
  * `Downloads/TORI LOGO.png` is a 1024px square with the mark in its middle 482x504
  * — orange frame, dark bar, a baked-in glow — on transparency (93% of it is
  * clear). It is cropped to the mark plus its glow and written at 420px, alpha
- * intact, to `uploads/Snapshot/torii-logo.png`; the block points at that path.
+ * intact, to `uploads/snapshot/torii-logo.png`; the block points at that path.
+ *
+ * That folder is lowercase and the path written here must match it EXACTLY.
+ * It read `Snapshot/` until 2026-09-18, which resolves on Windows and 404s on
+ * Linux — the mark was missing from three deployed slides while every local
+ * check passed. `tools/fix-uploads-path-case.cjs` audits all of them.
  * The plate it sits on is Torii's ink rather than NGI's green.
  *
  * THE NAMES
@@ -51,7 +56,7 @@ const ROOT = path.resolve(__dirname, '..');
 const SRC = 'C:/Users/HP/Downloads/TORII/Torii/Torii';
 const LOGO_SRC = 'C:/Users/HP/Downloads/TORI LOGO.png';
 const LOGO_DEST_DIR = path.join(ROOT, 'backend/uploads/Snapshot');
-const LOGO_REL = 'Snapshot/torii-logo.png';
+const LOGO_REL = 'snapshot/torii-logo.png';
 const DB = path.join(ROOT, 'backend/data/db.json');
 const BACKUPS = path.join(ROOT, 'backend/data/backups');
 const HOST = { host: '127.0.0.1', port: Number(process.env.PORT) || 4173 };
