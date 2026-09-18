@@ -46,7 +46,7 @@ const DRY = process.argv.includes('--dry');
 const ORG = 'torii';
 
 /* Put a path under /uploads here when the Sarvam mark arrives. */
-const SARVAM = '';
+const SARVAM = 'Claude/sarvam-ai.jpeg';
 
 const PARTNERS = [
   { name: 'Claude Partner Network', note: 'Member', logo: 'Claude/claude-partner-network.jpeg' },
@@ -54,8 +54,11 @@ const PARTNERS = [
   { name: 'Sarvam AI', note: 'Partnership', logo: SARVAM },
 ];
 
-/* The frames to keep, by the title each carries. Anything else is dropped. */
-const KEEP_FRAMES = ['16 Modules. End to End.', 'Claude Certified Architect — 10 Team Members'];
+/* The frames to keep, by KIND rather than by title, and in this order. Titles
+   were the first cut and did not survive contact with this tool's own work: it
+   renames the team frame, so a second run could no longer find the frame it had
+   renamed. A kind is unique here and nothing this file does changes one. */
+const KEEP_KINDS = ['modules', 'people'];
 
 function request(method, p, body, cookie) {
   return new Promise((resolve, reject) => {
@@ -95,20 +98,36 @@ function request(method, p, body, cookie) {
     { value: '300+', label: 'Hours of Training' },
   ];
 
-  const seal = deck.credential;
-  const kept = KEEP_FRAMES.map((t) => {
-    const f = deck.frames.find((x) => x.title === t);
-    if (!f) throw new Error(`no frame titled "${t}" — have: ${deck.frames.map((x) => x.title).join(' | ')}`);
-    return f;
+  /* The credential seal is off the cover and the two badges below are named
+     outright rather than read from it — which is what lets this run twice: on a
+     second run `deck.credential` is already null, and reading `seal.ring` off
+     it would throw. */
+  const kept = KEEP_KINDS.map((kind) => {
+    const hits = deck.frames.filter((x) => x.kind === kind);
+    if (hits.length !== 1) {
+      throw new Error(`expected one "${kind}" frame, found ${hits.length} — have: ${deck.frames.map((x) => `${x.kind}:${x.title}`).join(' | ')}`);
+    }
+    return hits[0];
   });
   const dropped = deck.frames.filter((f) => !kept.includes(f));
 
   const frames = kept.map((f) => {
     if (f.kind === 'modules') {
       /* The seal leaves the cover and lands on the slide it is about. */
-      return { ...f, badge: 'Claude/claude-certified-architect.png', badgeAlt: `${seal.ring} — ${seal.name}` };
+      /* The ASSOCIATE badge, not the Architect: this frame is the students'
+         curriculum and the Associate is what a student earns. The Architect
+         moved to the team frame below, which is who holds it. */
+      return { ...f, badge: 'Claude/claude-certified-associate.png', badgeAlt: 'Foundations — Claude Certified Associate' };
     }
-    if (f.kind === 'people') return { ...f, title: 'Claude Certified Architect Team' };
+    if (f.kind === 'people') {
+      /* The Architect badge belongs here — these ten are the ones who hold it. */
+      return {
+        ...f,
+        title: 'Claude Certified Architect Team',
+        badge: 'Claude/claude-certified-architect.png',
+        badgeAlt: 'Foundations — Claude Certified Architect',
+      };
+    }
     return f;
   });
 

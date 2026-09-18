@@ -11590,7 +11590,7 @@
             {
               "name": "Sarvam AI",
               "note": "Partnership",
-              "logo": ""
+              "logo": "Claude/sarvam-ai.jpeg"
             }
           ],
           "frames": [
@@ -11602,8 +11602,8 @@
               "columns": 2,
               "figure": "",
               "figureAlt": "",
-              "badge": "Claude/claude-certified-architect.png",
-              "badgeAlt": "Foundations — Claude Certified Architect",
+              "badge": "Claude/claude-certified-associate.png",
+              "badgeAlt": "Foundations — Claude Certified Associate",
               "items": [
                 {
                   "title": "LLM Foundation",
@@ -11731,8 +11731,8 @@
               "columns": 5,
               "figure": "",
               "figureAlt": "",
-              "badge": "",
-              "badgeAlt": "",
+              "badge": "Claude/claude-certified-architect.png",
+              "badgeAlt": "Foundations — Claude Certified Architect",
               "items": [
                 {
                   "title": "Sudhir",
@@ -11814,7 +11814,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:18:23.183Z",
-      "updatedAt": "2026-09-18T13:50:32.225Z"
+      "updatedAt": "2026-09-18T16:04:41.419Z"
     },
     {
       "id": "sec_70ab49dedfb7479c",
