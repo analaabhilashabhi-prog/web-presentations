@@ -33,6 +33,16 @@ export function CourseDeck(block, { editing = false } = {}) {
   if (hasHero) {
     const heroFrame = h('section', { class: 'cd-frame cd-frame--hero' },
       h('div', { class: 'cd-inner' },
+        /* The programme's own mark, above the line that names the two houses
+           running it. Nothing below moves: it is added to the top of the frame,
+           not in place of anything. */
+        block.logo
+          ? h('img', {
+              class: 'cd-mark',
+              src: media(`/uploads/${encodeURI(block.logo)}`),
+              alt: '', loading: 'eager', decoding: 'async',
+            })
+          : null,
         block.eyebrow ? h('p', { class: 'cd-eyebrow' }, block.eyebrow) : null,
         h('h1', { class: 'cd-title' },
           ...(block.titleLines || []).map((line) => h('span', { class: 'cd-title__line' }, line)),
@@ -101,6 +111,51 @@ export function CourseDeck(block, { editing = false } = {}) {
           h('span', { class: 'cd-module__title' }, item.title),
         )),
       );
+    } else if (frame.kind === 'split') {
+      /* Half the slide is the certification itself and half is what it is worth.
+         The seal is the thing a college asks about, and at the size a card gave
+         it nobody past the third row could read what it said; given half the
+         frame it is legible from the back of a hall, and the points sit beside
+         it rather than under it so the slide stays one screen deep. */
+      body = h('div', { class: 'cd-split' },
+        h('figure', { class: 'cd-split__art' },
+          h('img', {
+            src: media(`/uploads/${encodeURI(frame.figure)}`),
+            alt: frame.figureAlt || '', loading: 'eager', decoding: 'async',
+          }),
+        ),
+        h('ul', { class: 'cd-split__list' },
+          ...frame.items.map((item) => h('li', { class: 'cd-point' },
+            h('h3', { class: 'cd-point__title' }, item.title),
+            item.body ? h('p', { class: 'cd-point__body' }, item.body) : null,
+          )),
+        ),
+      );
+    } else if (frame.kind === 'people') {
+      /* One slide, every face on it. The certified trainers are already in the
+         Team section as portraits; this frame points at the same files rather
+         than a second copy of them, so a portrait that is replaced there is
+         replaced here too. A member with no portrait on file keeps their place
+         in the grid behind their initial — a hole in a roster of ten reads as
+         a missing person. */
+      body = h('ul', {
+        class: 'cd-people',
+        style: { '--cd-cols': String(frame.columns || 5) },
+      },
+        ...frame.items.map((person) => h('li', { class: 'cd-person' },
+          h('span', { class: 'cd-person__shot' },
+            person.photo
+              ? h('img', {
+                  src: media(`/uploads/${encodeURI(person.photo)}`),
+                  alt: person.title, loading: 'eager', decoding: 'async',
+                })
+              : h('span', { class: 'cd-person__mono' },
+                  String(person.title || '?').trim().charAt(0).toUpperCase()),
+          ),
+          h('span', { class: 'cd-person__name' }, person.title),
+          person.body ? h('span', { class: 'cd-person__role' }, person.body) : null,
+        )),
+      );
     } else if (frame.kind === 'close') {
       body = h('div', { class: 'cd-close' },
         frame.chips?.length
@@ -129,16 +184,22 @@ export function CourseDeck(block, { editing = false } = {}) {
       );
     } else {
       body = h('div', { class: 'cd-cards', style: { '--cd-cols': String(frame.columns || 2) } },
-        ...frame.items.map((item) => h('div', { class: 'cd-card' },
+        ...frame.items.map((item) => h('div', { class: `cd-card${item.wide ? ' cd-card--wide' : ''}` },
           /* A card with its own artwork — a credential badge — shows that in the
-             mark's disc instead of the line icon. */
+             mark's disc instead of the line icon. `wide` gives the card the full
+             row and the badge a disc a room can actually read, which is what a
+             certification card is for: the seal is the point, not a 46px dot. */
           item.logo
             ? h('span', { class: 'cd-card__mark has-art' },
                 h('img', { src: media(`/uploads/${encodeURI(item.logo)}`), alt: '', loading: 'eager', decoding: 'async' }))
             : h('span', { class: 'cd-card__mark' }, icon(item.icon || 'sparkles', { class: 'ic' })),
-          h('div', {},
+          h('div', { class: 'cd-card__text' },
             h('h3', { class: 'cd-card__title' }, item.title),
             item.body ? h('p', { class: 'cd-card__body' }, item.body) : null,
+            (item.bullets || []).length
+              ? h('ul', { class: 'cd-card__list' },
+                  ...item.bullets.map((line) => h('li', {}, line)))
+              : null,
           ),
         )),
       );

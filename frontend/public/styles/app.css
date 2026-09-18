@@ -8487,6 +8487,36 @@ body.is-presenting .milestones__inner {
   text-transform: uppercase;
 }
 
+/* The programme mark at the head of the opening frame. Sized by height so a
+   wordmark of any proportion sits on the same baseline as the eyebrow under it,
+   and capped in width so a wide one cannot push past the measure.
+
+   On a plate, because the artwork is drawn for paper: its "READY ENGINEER" is
+   near-black and this frame is near-black too, so on the ground alone half the
+   logo disappears. The same answer the card marks already use for supplied
+   artwork — `.cd-card__mark.has-art` is a white disc for exactly this reason. */
+.cd-mark {
+  box-sizing: border-box;
+  /* Out of the column and into the empty half on the right, where it sits clear
+     of the title and the standfirst instead of pushing them down. Anchored to
+     the frame's own padding, so it lines up with the gutter the rest of the
+     page is set to. */
+  position: absolute;
+  top: 56px;
+  right: 88px;
+  z-index: 2;
+  height: 104px;
+  width: auto;
+  max-width: 520px;
+  padding: 14px 22px;
+  border-radius: 16px;
+  /* Translucent, not solid: the frame's green reads through the plate while the
+     logo's near-black wordmark still has something light to sit on. */
+  background: rgba(255, 255, 255, 0.9);
+  object-fit: contain;
+  object-position: center;
+}
+
 .cd-title {
   margin: 0;
   display: grid;
@@ -8625,6 +8655,81 @@ body.is-presenting .milestones__inner {
 
 .cd-card__body { margin: 0; color: var(--cd-body); font-size: 15.5px; line-height: 1.5; }
 
+/* The certification card: the whole row, the seal at a size the back of the
+   room can read, and the points set beside it in two columns so the card is as
+   wide as it is and not as tall. `contain`, not `cover` — the badge is a disc
+   on a transparent square and cover would shave its rim. */
+.cd-card--wide { grid-column: 1 / -1; align-items: center; gap: 30px; padding: 24px 30px; }
+.cd-card--wide .cd-card__mark { width: 124px; height: 124px; border-width: 0; }
+.cd-card--wide .cd-card__mark.has-art { background: none; }
+.cd-card--wide .cd-card__mark.has-art img { object-fit: contain; border-radius: 0; }
+.cd-card__text { min-width: 0; }
+.cd-card__list {
+  margin: 10px 0 0;
+  padding: 0 0 0 20px;
+  display: grid;
+  gap: 7px;
+  color: var(--cd-body);
+  font-size: 15.5px;
+  line-height: 1.45;
+}
+.cd-card__list li::marker { color: var(--cd-lime); }
+.cd-card--wide .cd-card__list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 34px; }
+
+/* ------------------------------------------------- certification and points */
+/* Two halves of one frame: the seal on the left, what it is worth on the right.
+   `1fr 1fr` is the 50/50 the slide is meant to read as, and the picture is
+   contained rather than cropped — a certification mark with its rim shaved is a
+   mark nobody recognises. */
+.cd-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 56px;
+}
+.cd-split__art { margin: 0; display: grid; place-items: center; }
+.cd-split__art img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  max-height: 540px;
+  height: auto;
+  object-fit: contain;
+}
+.cd-split__list { margin: 0; padding: 0 0 0 26px; list-style: disc; display: grid; gap: 22px; }
+.cd-split__list li::marker { color: var(--cd-lime); }
+.cd-point__title { margin: 0 0 6px; font-size: 21px; font-weight: 800; line-height: 1.2; }
+.cd-point__body { margin: 0; color: var(--cd-body); font-size: 16px; line-height: 1.5; }
+
+/* ------------------------------------------------------------------ people */
+/* Ten portraits, one slide. A fixed square shot per person so a row of faces
+   lines up whatever shape the original photograph was, and the name under it
+   rather than over it — a caption across a face is unreadable on a projector. */
+.cd-people {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(var(--cd-cols, 5), minmax(0, 1fr));
+  gap: 22px 18px;
+}
+.cd-person { display: grid; justify-items: center; gap: 10px; text-align: center; }
+.cd-person__shot {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 148px;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: 1.5px solid rgba(126, 217, 87, 0.45);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+.cd-person__shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cd-person__mono { color: var(--cd-lime); font-size: 38px; font-weight: 800; }
+.cd-person__name { font-size: 17px; font-weight: 800; line-height: 1.15; }
+.cd-person__role { color: var(--cd-body); font-size: 13px; line-height: 1.3; }
+
 /* ----------------------------------------------------------------- modules */
 /* Fills down the first column and then across, not row by row. The flyer runs
    01–08 down the left and 09–16 down the right; row-major grid order gave
@@ -8757,6 +8862,11 @@ body.is-presenting .milestones__inner {
   .cd-root:not(.fit-slide__inner .cd-root) .cd-heading { font-size: 30px; }
   .cd-root:not(.fit-slide__inner .cd-root) .cd-cards,
   .cd-root:not(.fit-slide__inner .cd-root) .cd-modules { grid-template-columns: minmax(0, 1fr); }
+  .cd-root:not(.fit-slide__inner .cd-root) .cd-people { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cd-root:not(.fit-slide__inner .cd-root) .cd-split { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .cd-root:not(.fit-slide__inner .cd-root) .cd-mark { position: static; height: 64px; padding: 8px 14px; margin: 0 0 20px; }
+  .cd-root:not(.fit-slide__inner .cd-root) .cd-card--wide { align-items: flex-start; }
+  .cd-root:not(.fit-slide__inner .cd-root) .cd-card--wide .cd-card__list { grid-template-columns: minmax(0, 1fr); }
   .cd-root:not(.fit-slide__inner .cd-root) .cd-stats { flex-wrap: wrap; }
   .cd-root:not(.fit-slide__inner .cd-root) .cd-progress { left: 24px; bottom: 24px; }
 }
@@ -19245,11 +19355,33 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
 .ps-root .plate{position:absolute;left:287px;top:636px;width:176px;height:10px;border-radius:3px 4px 3px 3px;
   background:linear-gradient(180deg,#5c5c5c 0,#565656 3px,#3a3a3a 4px,var(--plate) 60%,var(--plate-dark) 100%);
   box-shadow:0 1px 1px rgba(0,0,0,.45),inset 1px 0 0 rgba(255,255,255,.08);}
-.ps-root .monitor{position:absolute;left:0;top:0;width:516px;height:350px;transform-origin:0 0;
-  transform:matrix3d(0.96430412,-0.06434557,0,-0.00005601, 0,0.96,0,0, 0,0,1,0, 104.5,208,0,1);
-  background:var(--bezel);border-radius:5px 6px 6px 5px;padding:4px 9px 8px 4px;
-  box-shadow:inset 1px 1px 0 rgba(255,255,255,.06),inset -1px 0 0 var(--bezel-lit),inset 0 -1px 0 #2c2c2c,0 40px 80px -30px rgba(0,0,0,.35);}
-.ps-root .screen{position:relative;width:100%;height:100%;background:var(--screen);border-radius:2px;overflow:hidden;box-shadow:0 0 0 1px var(--bezel-edge);}
+/* The monitor is laid out at twice its size and scaled back by half.
+   ------------------------------------------------------------------
+   The rig above it is scaled 2.1x, and the `matrix3d` here — the perspective
+   that turns the monitor — makes this element its own 3D render surface.
+   Chromium rasterises such a surface at the element's own size and the ancestor
+   scale then stretches the result, so on a 1920 display a 1920x1080 screen
+   recording was being drawn into a 503px box and blown up to 868px: every word
+   in the film, and every word of a site opened in it, arrived as a smear.
+
+   Doubling the box and pre-multiplying the transform by `scale(.5)` puts the
+   same pixels in exactly the same place — `M · S` maps a point of the doubled
+   box to `M` applied to the point it had before — while the surface, and the
+   film or site drawn into it, is rasterised at twice the resolution. Every
+   length below is doubled with it, so the bezel keeps its thickness.
+
+   Measured before and after on a 1920x1080 screen: the film's box is 868x608
+   at x 1001, y 198 either way, and the type in it goes from unreadable to
+   legible. Nothing is scaled down and no quality is thrown away — this is the
+   step that stops quality being thrown away.
+
+   `.state`, the only other thing in the screen, counter-scales by a half so the
+   two cards it draws keep the size they had; see below. */
+.ps-root .monitor{position:absolute;left:0;top:0;width:1032px;height:700px;transform-origin:0 0;
+  transform:matrix3d(0.96430412,-0.06434557,0,-0.00005601, 0,0.96,0,0, 0,0,1,0, 104.5,208,0,1) scale(.5);
+  background:var(--bezel);border-radius:10px 12px 12px 10px;padding:8px 18px 16px 8px;
+  box-shadow:inset 2px 2px 0 rgba(255,255,255,.06),inset -2px 0 0 var(--bezel-lit),inset 0 -2px 0 #2c2c2c,0 80px 160px -60px rgba(0,0,0,.35);}
+.ps-root .screen{position:relative;width:100%;height:100%;background:var(--screen);border-radius:4px;overflow:hidden;box-shadow:0 0 0 2px var(--bezel-edge);}
 .ps-root .screen .media{position:absolute;inset:0;opacity:0;transition:opacity .6s var(--ease);}
 .ps-root .screen .media.show{opacity:1;}
 .ps-root .screen .media > img,.ps-root .screen .media > video{display:block;width:100%;height:100%;object-fit:cover;border:0;}
@@ -19263,14 +19395,22 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
    breakpoint blown up 1.4x. The component writes the size and the scale from
    the screen it is given; pointer events map through the transform. */
 .ps-root .screen .media > iframe{display:block;border:0;background:#fff;transform-origin:0 0;}
+/* Doubled, because the monitor around it is now scaled by a half: every length
+   written below is in the doubled box's pixels, and two of those are one of the
+   old ones, so the card would come out half the size it was. Scaled about its
+   own centre, where its content already sits, it lands exactly where it did —
+   measured, the heading is 296x52 either way. The 8px the card rises through is
+   16 here for the same reason, and is written before the scale so it is read in
+   the box's own pixels rather than the scaled ones. */
 .ps-root .state{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:#2A2723;
-  opacity:0;transform:translateY(8px);transition:opacity .5s var(--ease),transform .5s var(--ease);
+  transform-origin:50% 50%;
+  opacity:0;transform:translateY(16px) scale(2);transition:opacity .5s var(--ease),transform .5s var(--ease);
   /* The two state cards sit over the screen whether or not they are shown, and
      `opacity:0` is still hit-testable — with a live site in the screen they ate
      every click. They carry nothing interactive, so they never take the
      pointer. The original page had nothing clickable in there to notice. */
   pointer-events:none;}
-.ps-root .state.show{opacity:1;transform:none;}
+.ps-root .state.show{opacity:1;transform:scale(2);}
 .ps-root .state .orb{position:absolute;left:50%;top:50%;width:260px;height:260px;border-radius:50%;transform:translate(-50%,-50%);
   background:radial-gradient(circle,rgba(255,111,50,.20),rgba(255,111,50,0) 70%);animation:ps-breathe 4.5s ease-in-out infinite;}
 @keyframes ps-breathe{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.8;}50%{transform:translate(-50%,-50%) scale(1.22);opacity:1;}}

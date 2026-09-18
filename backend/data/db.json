@@ -337,26 +337,142 @@
           "hubName": "Nagarjuna Group of Institutions",
           "centers": [
             {
-              "key": "claude",
-              "name": "Claude",
-              "mono": "C",
-              "tagline": "Applied AI, agents & assistants",
-              "color": "#D97757",
-              "ink": "#FFFFFF",
-              "logo": "claude.webp",
-              "logoFull": "claude full.png",
-              "media": []
+              "key": "snowflake",
+              "name": "Snowflake",
+              "mono": "SF",
+              "tagline": "Data cloud & analytics",
+              "color": "#29B5E8",
+              "ink": "#06222E",
+              "logo": "snowflake.png",
+              "logoFull": "snowflake full.webp",
+              "media": [
+                {
+                  "src": "coepics/snowflake/01.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/02.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/03.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/04.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/05.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/06.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/07.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/08.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/09.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
             },
             {
-              "key": "gcp",
-              "name": "Google Cloud",
-              "mono": "GC",
-              "tagline": "Cloud infrastructure & data platforms",
-              "color": "#4285F4",
+              "key": "github",
+              "name": "GitHub",
+              "mono": "GH",
+              "tagline": "DevOps, source & collaboration",
+              "color": "#8B7ED8",
               "ink": "#FFFFFF",
-              "logo": "google.webp",
-              "logoFull": "google full.png",
-              "media": []
+              "logo": "github.png",
+              "logoFull": "github full.png",
+              "media": [
+                {
+                  "src": "coepics/github/01.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/github/02.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/github/03.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/github/04.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/github/05.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/github/06.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/github/07.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/github/08.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/github/09.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/github/10.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
             },
             {
               "key": "aws",
@@ -369,37 +485,43 @@
               "logoFull": "aws full.png",
               "media": [
                 {
-                  "src": "coepics/aws/1.jpg",
+                  "src": "coepics/aws/01.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/aws/2.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                }
-              ]
-            },
-            {
-              "key": "oracle",
-              "name": "Oracle Academy",
-              "mono": "O",
-              "tagline": "Database & enterprise applications",
-              "color": "#C74634",
-              "ink": "#FFFFFF",
-              "logo": "oracle.png",
-              "logoFull": "oracle full.webp",
-              "media": [
-                {
-                  "src": "coepics/oracle/1.jpg",
+                  "src": "coepics/aws/02.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/oracle/2.jpg",
+                  "src": "coepics/aws/03.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aws/04.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aws/05.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aws/06.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aws/07.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
@@ -417,91 +539,43 @@
               "logoFull": "redhat full.png",
               "media": [
                 {
-                  "src": "",
-                  "youtube": "QRYe7MaEqdU",
-                  "kind": "video",
-                  "label": "RedHat Academy"
-                },
-                {
-                  "src": "coepics/redhat/1.jpg",
+                  "src": "coepics/redhat/01.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/2.jpg",
+                  "src": "coepics/redhat/02.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/3.jpg",
+                  "src": "coepics/redhat/03.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/4.jpg",
+                  "src": "coepics/redhat/04.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/5.jpg",
+                  "src": "coepics/redhat/05.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/6.jpg",
+                  "src": "coepics/redhat/06.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/7.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/redhat/8.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/redhat/9.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/redhat/10.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/redhat/11.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/redhat/13.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/redhat/Redhat Academey Challenge.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/redhat/Redhat Challenge 1.jpg",
+                  "src": "coepics/redhat/07.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
@@ -509,46 +583,212 @@
               ]
             },
             {
-              "key": "snowflake",
-              "name": "Snowflake",
-              "mono": "SF",
-              "tagline": "Data cloud & analytics",
-              "color": "#29B5E8",
-              "ink": "#06222E",
-              "logo": "snowflake.png",
-              "logoFull": "snowflake full.webp",
+              "key": "claude",
+              "name": "Claude",
+              "mono": "C",
+              "tagline": "Applied AI, agents & assistants",
+              "color": "#D97757",
+              "ink": "#FFFFFF",
+              "logo": "claude.webp",
+              "logoFull": "claude full.png",
               "media": [
                 {
-                  "src": "coepics/snowflake/1.jpg",
+                  "src": "coepics/claude/01.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/snowflake/2.jpg",
+                  "src": "coepics/claude/02.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/snowflake/3.jpg",
+                  "src": "coepics/claude/03.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/snowflake/4.jpg",
+                  "src": "coepics/claude/04.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/snowflake/5.jpg",
+                  "src": "coepics/claude/05.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/06.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/07.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/08.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/09.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/10.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/11.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/12.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/13.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/14.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/15.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/16.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 }
               ]
+            },
+            {
+              "key": "o9",
+              "name": "o9",
+              "mono": "o9",
+              "tagline": "",
+              "color": "#161821",
+              "ink": "#FFFFFF",
+              "logo": "09.png",
+              "logoFull": "o9 full.png",
+              "media": [
+                {
+                  "src": "coepics/o9/01.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/o9/02.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/o9/03.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/o9/04.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/o9/05.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
+            },
+            {
+              "key": "mile2",
+              "name": "Mile2",
+              "mono": "M2",
+              "tagline": "Cybersecurity certifications",
+              "color": "#C8102E",
+              "ink": "#FFFFFF",
+              "logo": "mile2 full.webp",
+              "logoFull": "mile2 full.webp",
+              "media": [
+                {
+                  "src": "coepics/mile2/01.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/mile2/02.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/mile2/03.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/mile2/04.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
+            },
+            {
+              "key": "gcp",
+              "name": "Google Cloud",
+              "mono": "GC",
+              "tagline": "Cloud infrastructure & data platforms",
+              "color": "#4285F4",
+              "ink": "#FFFFFF",
+              "logo": "google.webp",
+              "logoFull": "google full.png",
+              "media": []
+            },
+            {
+              "key": "oracle",
+              "name": "Oracle Academy",
+              "mono": "O",
+              "tagline": "Database & enterprise applications",
+              "color": "#C74634",
+              "ink": "#FFFFFF",
+              "logo": "oracle.png",
+              "logoFull": "oracle full.webp",
+              "media": []
             },
             {
               "key": "pega",
@@ -577,48 +817,6 @@
                   "youtube": "ljYucKe7ZEc",
                   "kind": "video",
                   "label": "PEGA Project Space"
-                },
-                {
-                  "src": "coepics/pega/1.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/pega/2.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/pega/3.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/pega/4.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/pega/5.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/pega/6.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/pega/8.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
                 }
               ]
             },
@@ -642,17 +840,6 @@
               "ink": "#052915",
               "logo": "mongo.webp",
               "logoFull": "mongo full.webp",
-              "media": []
-            },
-            {
-              "key": "github",
-              "name": "GitHub",
-              "mono": "GH",
-              "tagline": "DevOps, source & collaboration",
-              "color": "#8B7ED8",
-              "ink": "#FFFFFF",
-              "logo": "github.png",
-              "logoFull": "github full.png",
               "media": []
             },
             {
@@ -697,38 +884,7 @@
               "ink": "#FFFFFF",
               "logo": "automation anywhere.png",
               "logoFull": "automation anywhere full.webp",
-              "media": [
-                {
-                  "src": "coepics/aa/1.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/aa/2.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/aa/3.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/aa/4.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/aa/5.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                }
-              ]
+              "media": []
             },
             {
               "key": "splunk",
@@ -764,24 +920,6 @@
               "media": []
             },
             {
-              "key": "mile2",
-              "name": "Mile2",
-              "mono": "M2",
-              "tagline": "Cybersecurity certifications",
-              "color": "#C8102E",
-              "ink": "#FFFFFF",
-              "logo": "mile2 full.webp",
-              "logoFull": "mile2 full.webp",
-              "media": [
-                {
-                  "src": "",
-                  "youtube": "nL4bXn93yOM",
-                  "kind": "video",
-                  "label": "Mile 2"
-                }
-              ]
-            },
-            {
               "key": "microsoft",
               "name": "Microsoft",
               "mono": "MS",
@@ -790,17 +928,6 @@
               "ink": "#061E2B",
               "logo": "microsoft.webp",
               "logoFull": "microsoft full.webp",
-              "media": []
-            },
-            {
-              "key": "o9",
-              "name": "o9",
-              "mono": "o9",
-              "tagline": "",
-              "color": "#161821",
-              "ink": "#FFFFFF",
-              "logo": "09.png",
-              "logoFull": "o9 full.png",
               "media": []
             }
           ]
@@ -2904,7 +3031,7 @@
             "w": 12,
             "h": 15
           },
-          "eyebrow": "Technical Hub · in association with Torii",
+          "eyebrow": "In association with Torii",
           "titleLines": [
             "AI Ready",
             "Engineer"
@@ -2922,7 +3049,7 @@
           ],
           "credential": {
             "ring": "Foundations",
-            "name": "Claude Certified Associate",
+            "name": "Claude Certified Architect",
             "note": ""
           },
           "partners": [
@@ -3073,7 +3200,7 @@
               "contact": []
             },
             {
-              "kind": "cards",
+              "kind": "split",
               "eyebrow": "Student benefits",
               "title": "What a student walks away with",
               "subtitle": "",
@@ -3098,6 +3225,91 @@
                   "title": "Internship Completion Letter",
                   "body": "A completion letter issued and signed off by our AI partners.",
                   "icon": "document"
+                }
+              ],
+              "chips": [],
+              "stats": [],
+              "lines": [],
+              "contact": [],
+              "figure": "Claude/claude-certified-architect-certificate.png",
+              "figureAlt": "Claude Certified Architect"
+            },
+            {
+              "kind": "people",
+              "eyebrow": "Who teaches it",
+              "title": "Claude Certified Architect — 10 Team Members",
+              "subtitle": "",
+              "columns": 5,
+              "items": [
+                {
+                  "title": "Sudhir",
+                  "body": "",
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/sudhir.webp"
+                },
+                {
+                  "title": "Bhargava",
+                  "body": "",
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/bhargava.webp"
+                },
+                {
+                  "title": "Harshavardhini",
+                  "body": "",
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/harshavardhini.webp"
+                },
+                {
+                  "title": "Naveen",
+                  "body": "",
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/naveen.webp"
+                },
+                {
+                  "title": "Akhilesh",
+                  "body": "",
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/akhilesh.webp"
+                },
+                {
+                  "title": "Azarunnisa",
+                  "body": "",
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/azarunnisa.webp"
+                },
+                {
+                  "title": "Bobby",
+                  "body": "",
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/bobby.webp"
+                },
+                {
+                  "title": "Manikanta",
+                  "body": "",
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/manikanta.webp"
+                },
+                {
+                  "title": "Peter",
+                  "body": "",
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/peter.webp"
+                },
+                {
+                  "title": "Prasanth",
+                  "body": "",
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/prasanth-sir.webp"
                 }
               ],
               "chips": [],
@@ -3183,7 +3395,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "logo": "are/ai-ready-engineer-logo.png"
         }
       ],
       "createdAt": "2026-08-07T14:45:25.144Z",
@@ -3760,7 +3973,7 @@
               "vendor": "Microsoft",
               "domain": "Database fundamentals",
               "held": 76,
-              "badge": "",
+              "badge": "certifications/logos/mta-database-fundamentals.png",
               "skills": [
                 "Relational concepts and normalisation",
                 "Table design, keys and constraints",
@@ -5654,31 +5867,55 @@
               "logoFull": "snowflake full.webp",
               "media": [
                 {
-                  "src": "coepics/snowflake/1.jpg",
+                  "src": "coepics/snowflake/01.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/snowflake/2.jpg",
+                  "src": "coepics/snowflake/02.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/snowflake/3.jpg",
+                  "src": "coepics/snowflake/03.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/snowflake/4.jpg",
+                  "src": "coepics/snowflake/04.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/snowflake/5.jpg",
+                  "src": "coepics/snowflake/05.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/06.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/07.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/08.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/snowflake/09.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
@@ -5686,15 +5923,76 @@
               ]
             },
             {
-              "key": "claude",
-              "name": "Claude",
-              "mono": "C",
-              "tagline": "Applied AI, agents & assistants",
-              "color": "#D97757",
+              "key": "github",
+              "name": "GitHub",
+              "mono": "GH",
+              "tagline": "DevOps, source & collaboration",
+              "color": "#8B7ED8",
               "ink": "#FFFFFF",
-              "logo": "claude.webp",
-              "logoFull": "claude full.png",
-              "media": []
+              "logo": "github.png",
+              "logoFull": "github full.png",
+              "media": [
+                {
+                  "src": "coepics/github/01.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/github/02.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/github/03.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/github/04.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/github/05.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/github/06.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/github/07.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/github/08.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/github/09.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/github/10.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
             },
             {
               "key": "aws",
@@ -5707,37 +6005,43 @@
               "logoFull": "aws full.png",
               "media": [
                 {
-                  "src": "coepics/aws/1.jpg",
+                  "src": "coepics/aws/01.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/aws/2.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                }
-              ]
-            },
-            {
-              "key": "oracle",
-              "name": "Oracle Academy",
-              "mono": "O",
-              "tagline": "Database & enterprise applications",
-              "color": "#C74634",
-              "ink": "#FFFFFF",
-              "logo": "oracle.png",
-              "logoFull": "oracle full.webp",
-              "media": [
-                {
-                  "src": "coepics/oracle/1.jpg",
+                  "src": "coepics/aws/02.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/oracle/2.jpg",
+                  "src": "coepics/aws/03.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aws/04.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aws/05.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aws/06.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aws/07.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
@@ -5755,91 +6059,43 @@
               "logoFull": "redhat full.png",
               "media": [
                 {
-                  "src": "",
-                  "youtube": "QRYe7MaEqdU",
-                  "kind": "video",
-                  "label": "RedHat Academy"
-                },
-                {
-                  "src": "coepics/redhat/1.jpg",
+                  "src": "coepics/redhat/01.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/2.jpg",
+                  "src": "coepics/redhat/02.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/3.jpg",
+                  "src": "coepics/redhat/03.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/4.jpg",
+                  "src": "coepics/redhat/04.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/5.jpg",
+                  "src": "coepics/redhat/05.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/6.jpg",
+                  "src": "coepics/redhat/06.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/7.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/redhat/8.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/redhat/9.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/redhat/10.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/redhat/11.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/redhat/13.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/redhat/Redhat Academey Challenge.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/redhat/Redhat Challenge 1.jpg",
+                  "src": "coepics/redhat/07.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
@@ -5847,14 +6103,200 @@
               ]
             },
             {
-              "key": "github",
-              "name": "GitHub",
-              "mono": "GH",
-              "tagline": "DevOps, source & collaboration",
-              "color": "#8B7ED8",
+              "key": "claude",
+              "name": "Claude",
+              "mono": "C",
+              "tagline": "Applied AI, agents & assistants",
+              "color": "#D97757",
               "ink": "#FFFFFF",
-              "logo": "github.png",
-              "logoFull": "github full.png",
+              "logo": "claude.webp",
+              "logoFull": "claude full.png",
+              "media": [
+                {
+                  "src": "coepics/claude/01.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/02.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/03.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/04.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/05.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/06.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/07.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/08.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/09.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/10.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/11.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/12.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/13.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/14.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/15.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/claude/16.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
+            },
+            {
+              "key": "o9",
+              "name": "o9",
+              "mono": "o9",
+              "tagline": "",
+              "color": "#161821",
+              "ink": "#FFFFFF",
+              "logo": "09.png",
+              "logoFull": "o9 full.png",
+              "media": [
+                {
+                  "src": "coepics/o9/01.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/o9/02.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/o9/03.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/o9/04.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/o9/05.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
+            },
+            {
+              "key": "mile2",
+              "name": "Mile2",
+              "mono": "M2",
+              "tagline": "Cybersecurity certifications",
+              "color": "#C8102E",
+              "ink": "#FFFFFF",
+              "logo": "mile2 full.webp",
+              "logoFull": "mile2 full.webp",
+              "media": [
+                {
+                  "src": "coepics/mile2/01.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/mile2/02.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/mile2/03.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/mile2/04.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
+            },
+            {
+              "key": "oracle",
+              "name": "Oracle Academy",
+              "mono": "O",
+              "tagline": "Database & enterprise applications",
+              "color": "#C74634",
+              "ink": "#FFFFFF",
+              "logo": "oracle.png",
+              "logoFull": "oracle full.webp",
               "media": []
             },
             {
@@ -5866,17 +6308,6 @@
               "ink": "#FFFFFF",
               "logo": "cisco.webp",
               "logoFull": "cisco full.png",
-              "media": []
-            },
-            {
-              "key": "o9",
-              "name": "o9",
-              "mono": "o9",
-              "tagline": "",
-              "color": "#161821",
-              "ink": "#FFFFFF",
-              "logo": "09.png",
-              "logoFull": "o9 full.png",
               "media": []
             },
             {
@@ -5917,48 +6348,6 @@
                   "youtube": "ljYucKe7ZEc",
                   "kind": "video",
                   "label": "PEGA Project Space"
-                },
-                {
-                  "src": "coepics/pega/1.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/pega/2.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/pega/3.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/pega/4.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/pega/5.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/pega/6.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/pega/8.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
                 }
               ]
             },
@@ -6026,38 +6415,7 @@
               "ink": "#FFFFFF",
               "logo": "automation anywhere.png",
               "logoFull": "automation anywhere full.webp",
-              "media": [
-                {
-                  "src": "coepics/aa/1.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/aa/2.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/aa/3.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/aa/4.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/aa/5.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                }
-              ]
+              "media": []
             },
             {
               "key": "splunk",
@@ -6082,24 +6440,6 @@
               "media": []
             },
             {
-              "key": "mile2",
-              "name": "Mile2",
-              "mono": "M2",
-              "tagline": "Cybersecurity certifications",
-              "color": "#C8102E",
-              "ink": "#FFFFFF",
-              "logo": "mile2 full.webp",
-              "logoFull": "mile2 full.webp",
-              "media": [
-                {
-                  "src": "",
-                  "youtube": "nL4bXn93yOM",
-                  "kind": "video",
-                  "label": "Mile 2"
-                }
-              ]
-            },
-            {
               "key": "microsoft",
               "name": "Microsoft",
               "mono": "MS",
@@ -6114,7 +6454,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:18:23.142Z",
-      "updatedAt": "2026-09-18T05:38:12.473Z"
+      "updatedAt": "2026-09-17T13:06:02.837Z"
     },
     {
       "id": "sec_ad6634fc196d4832",
@@ -6293,7 +6633,7 @@
               "vendor": "Cisco",
               "domain": "1st year",
               "held": 312,
-              "badge": "certifications/badges/cisco-certified-ccna.png",
+              "badge": "coe/cisco.webp",
               "onRegister": true,
               "skills": [
                 "Python syntax, data types and operators",
@@ -6335,8 +6675,8 @@
               "vendor": "Red Hat",
               "domain": "354 (1st year) + 200 (2nd year)",
               "held": 554,
-              "badge": "certifications/torii/redhat-python-programming-course-attendance.png",
-              "onRegister": false,
+              "badge": "coe/redhat.png",
+              "onRegister": true,
               "skills": [
                 "Python on Red Hat Enterprise Linux",
                 "Data structures and modules",
@@ -6349,7 +6689,7 @@
               "vendor": "Red Hat",
               "domain": "2nd year",
               "held": 190,
-              "badge": "certifications/badges/redhat-certified-system-administrator.png",
+              "badge": "coe/redhat.png",
               "onRegister": true,
               "skills": [
                 "Enterprise Java on JBoss EAP",
@@ -6364,7 +6704,7 @@
               "domain": "361 (1st year) + 180 (2nd year)",
               "held": 541,
               "badge": "certifications/torii/codechef.png",
-              "onRegister": false,
+              "onRegister": true,
               "skills": [
                 "Problem solving under time limits",
                 "Algorithms and data structures",
@@ -6377,7 +6717,7 @@
               "vendor": "Oracle",
               "domain": "2nd year",
               "held": 183,
-              "badge": "certifications/badges/oracle-foundation-associate-java.png",
+              "badge": "coe/oracle.png",
               "onRegister": true,
               "skills": [
                 "Java basics, types and operators",
@@ -6391,8 +6731,8 @@
               "vendor": "Oracle",
               "domain": "2nd year",
               "held": 125,
-              "badge": "certifications/torii/oracle-certified-foundations-associate-database.png",
-              "onRegister": false,
+              "badge": "coe/oracle.png",
+              "onRegister": true,
               "skills": [
                 "PL/SQL blocks, variables and control",
                 "Cursors and exception handling",
@@ -6447,7 +6787,7 @@
               "vendor": "Infosys",
               "domain": "3rd year",
               "held": 116,
-              "badge": "",
+              "badge": "certifications/logos/infosys.svg",
               "onRegister": true,
               "skills": [
                 "Self-paced courses across technology and business",
@@ -6461,7 +6801,7 @@
               "vendor": "IBM",
               "domain": "3rd year",
               "held": 82,
-              "badge": "",
+              "badge": "certifications/logos/ibm.svg",
               "onRegister": true,
               "skills": [
                 "Cloud, data and AI fundamentals",
@@ -6489,8 +6829,8 @@
               "vendor": "Postman",
               "domain": "3rd year",
               "held": 25,
-              "badge": "certifications/torii/postman-api-fundamentals-student-expert.png",
-              "onRegister": false,
+              "badge": "certifications/logos/postman-mark.png",
+              "onRegister": true,
               "skills": [
                 "What an API is and how HTTP requests work",
                 "Sending requests and reading responses",
@@ -8851,7 +9191,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:18:23.154Z",
-      "updatedAt": "2026-09-18T05:38:12.491Z"
+      "updatedAt": "2026-09-17T13:06:02.816Z"
     },
     {
       "id": "sec_ee3ad17975b6452f",
@@ -11235,7 +11575,7 @@
             "w": 12,
             "h": 15
           },
-          "eyebrow": "Technical Hub · in association with Torii",
+          "eyebrow": "In association with Torii",
           "titleLines": [
             "AI Ready",
             "Engineer"
@@ -11253,7 +11593,7 @@
           ],
           "credential": {
             "ring": "Foundations",
-            "name": "Claude Certified Associate",
+            "name": "Claude Certified Architect",
             "note": ""
           },
           "partners": [
@@ -11426,7 +11766,7 @@
               "contact": []
             },
             {
-              "kind": "cards",
+              "kind": "split",
               "eyebrow": "Student benefits",
               "title": "What a student walks away with",
               "subtitle": "",
@@ -11455,12 +11795,91 @@
                   "body": "A completion letter issued and signed off by our AI partners.",
                   "icon": "document",
                   "logo": ""
+                }
+              ],
+              "chips": [],
+              "stats": [],
+              "lines": [],
+              "contact": [],
+              "figure": "Claude/claude-certified-architect-certificate.png",
+              "figureAlt": "Claude Certified Architect"
+            },
+            {
+              "kind": "people",
+              "eyebrow": "Who teaches it",
+              "title": "Claude Certified Architect — 10 Team Members",
+              "subtitle": "",
+              "columns": 5,
+              "items": [
+                {
+                  "title": "Sudhir",
+                  "body": "",
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/sudhir.webp"
                 },
                 {
-                  "title": "Claude Certification",
+                  "title": "Bhargava",
                   "body": "",
-                  "icon": "certificate",
-                  "logo": "Claude/claude-certified-architect.png"
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/bhargava.webp"
+                },
+                {
+                  "title": "Harshavardhini",
+                  "body": "",
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/harshavardhini.webp"
+                },
+                {
+                  "title": "Naveen",
+                  "body": "",
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/naveen.webp"
+                },
+                {
+                  "title": "Akhilesh",
+                  "body": "",
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/akhilesh.webp"
+                },
+                {
+                  "title": "Azarunnisa",
+                  "body": "",
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/azarunnisa.webp"
+                },
+                {
+                  "title": "Bobby",
+                  "body": "",
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/bobby.webp"
+                },
+                {
+                  "title": "Manikanta",
+                  "body": "",
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/manikanta.webp"
+                },
+                {
+                  "title": "Peter",
+                  "body": "",
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/peter.webp"
+                },
+                {
+                  "title": "Prasanth",
+                  "body": "",
+                  "icon": "",
+                  "logo": "",
+                  "photo": "Team/prasanth-sir.webp"
                 }
               ],
               "chips": [],
@@ -11468,7 +11887,8 @@
               "lines": [],
               "contact": []
             }
-          ]
+          ],
+          "logo": "are/ai-ready-engineer-logo.png"
         }
       ],
       "createdAt": "2026-09-14T04:18:23.183Z",
@@ -12441,17 +12861,20 @@
             },
             {
               "name": "Loop",
-              "tag": "",
-              "logo": "",
+              "tag": "Loop Recording.",
+              "logo": "Showcase/logos/loop.png",
               "description": "",
               "features": [],
               "stack": [],
               "links": {
-                "live": "",
+                "live": "https://loop.toriiminds.com/login",
                 "code": ""
               },
-              "media": null,
-              "site": "",
+              "media": {
+                "type": "video",
+                "src": "platforms/loop.mp4"
+              },
+              "site": "https://loop.toriiminds.com/login",
               "logins": []
             },
             {
@@ -12472,23 +12895,23 @@
             {
               "name": "Hibi",
               "tag": "",
-              "logo": "",
+              "logo": "Showcase/logos/hibi.jpg",
               "description": "",
               "features": [],
               "stack": [],
               "links": {
-                "live": "",
+                "live": "https://hibiplatform.com/",
                 "code": ""
               },
               "media": null,
-              "site": "",
+              "site": "https://hibiplatform.com/",
               "logins": []
             }
           ]
         }
       ],
       "createdAt": "2026-09-14T04:50:52.424Z",
-      "updatedAt": "2026-09-18T05:38:12.539Z"
+      "updatedAt": "2026-09-17T15:34:57.393Z"
     },
     {
       "id": "sec_b545ee30b43143ba",

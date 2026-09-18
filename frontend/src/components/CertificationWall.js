@@ -45,6 +45,64 @@ const GLYPH = {
   adobe: 'image', comptia: 'shield', mile2: 'target', others: 'medal',
 };
 
+/**
+ * The catalogue is filed by awarding body — five Microsoft rows together, three
+ * ServiceNow, three Cisco — and the arc fills its slots straight through it, so
+ * those rows ride the band shoulder to shoulder and a stretch of it reads as one
+ * vendor's band rather than a register of many.
+ *
+ * This deals the same credentials out again, largest group first and never the
+ * body that went immediately before, so no two neighbours share one. Nothing is
+ * added, dropped or duplicated: it is the same list in a different order, which
+ * is all the arc needs — the slots wrap with `% length`, so the order is a ring
+ * and the seam where the tail meets the head is checked too.
+ *
+ * A body that outnumbers all the others put together cannot be fully separated;
+ * the greedy pass places what it can and the remainder falls at the end, which
+ * is the best any ordering can do.
+ */
+function spreadByVendor(list) {
+  const groups = new Map();
+  for (const item of list) {
+    const key = String(item.vendor || '');
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(item);
+  }
+
+  const out = [];
+  let prev = null;
+  while (out.length < list.length) {
+    let pick = null;
+    for (const [vendor, items] of groups) {
+      if (!items.length) continue;
+      /* Skip the body that just went — unless it is all that is left, in which
+         case placing it is still better than stopping short of the catalogue. */
+      if (vendor === prev
+        && [...groups].some(([other, rest]) => other !== vendor && rest.length)) continue;
+      if (pick === null || items.length > groups.get(pick).length) pick = vendor;
+    }
+    if (pick === null) break;
+    out.push(groups.get(pick).shift());
+    prev = pick;
+  }
+
+  /* The seam. The band comes round, so the last badge sits beside the first; a
+     swap with any interior slot that takes it without making a new pair costs
+     nothing and closes the ring. */
+  const same = (a, b) => a && b && String(a.vendor || '') === String(b.vendor || '');
+  if (out.length > 2 && same(out[out.length - 1], out[0])) {
+    for (let i = 1; i < out.length - 1; i += 1) {
+      if (!same(out[i], out[0]) && !same(out[i], out[out.length - 2])
+        && !same(out[out.length - 1], out[i - 1]) && !same(out[out.length - 1], out[i + 1])) {
+        [out[i], out[out.length - 1]] = [out[out.length - 1], out[i]];
+        break;
+      }
+    }
+  }
+
+  return out;
+}
+
 const nf = (n) => Number(n || 0).toLocaleString('en-US');
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
@@ -175,6 +233,11 @@ export function CertificationWall(block, { editing = false } = {}) {
     return root;
   }
 
+  /* What the travelling band is filled from: the same credentials, ordered so
+     that two of one awarding body are never neighbours. The register's counts,
+     the grid and the detail view all still read `credentials` itself. */
+  const arcOrder = spreadByVendor(credentials);
+
   const cards = vendors.reduce((n, v) => n + v.certs.length, 0);
   const earned = credentials.reduce((n, c) => n + (c.held || 0), 0);
   const bodies = new Set(credentials.map((c) => c.vendor)).size;
@@ -301,7 +364,7 @@ export function CertificationWall(block, { editing = false } = {}) {
     const holders = [];
     plan.rings.forEach((g) => {
       for (let j = 0; j < g.count; j += 1) {
-        const cred = credentials[(g.from + j) % credentials.length];
+        const cred = arcOrder[(g.from + j) % arcOrder.length];
         const el = h('button', {
           class: 'cs-pin', type: 'button',
           style: { width: `${plan.size}px`, '--cs-pin-size': `${plan.size}px`, '--i': String(g.from + j) },

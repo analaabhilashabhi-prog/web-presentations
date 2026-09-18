@@ -259,11 +259,20 @@ export function CentersOfExcellence(block, { editing = false } = {}) {
     requestAnimationFrame(settleCards);
   };
 
-  /* The detail is the centre's mark, name and line. It used to carry a media
-     gallery beneath — photographs and films per centre — and that was removed
-     from this section on request (2026-09-17); `mediaTile` and the player
-     parameters above are kept for the day it is wanted back. */
+  /* The detail is the centre's mark, name and line, and under the rule the
+     centre's own photographs and films. The gallery was taken off this section
+     on 2026-09-17 and asked for again: a card that opens on a wordmark and
+     nothing else is a page that says nothing the wall had not already said.
+     Only the pictures filed against that centre are shown — never another
+     centre's — and a centre with none says so rather than drawing an empty
+     masonry. */
   const paintDetail = (center) => {
+    const shots = (center.media || []).filter((m) => m && (m.src || m.youtube));
+    /* The masonry is a column layout, so the number of columns is the one thing
+       it needs told. Two pictures in three columns leaves a hole; the count is
+       capped at three and never exceeds what there is to put in it. */
+    const cols = Math.max(1, Math.min(3, shots.length));
+
     detail.replaceChildren(
       h('button', { class: 'coe-back', type: 'button', onclick: close },
         icon('chevron-left', { class: 'ic ic--xs' }), h('span', {}, 'All centers')),
@@ -275,6 +284,15 @@ export function CentersOfExcellence(block, { editing = false } = {}) {
         ),
       ),
       h('div', { class: 'coe-rule', style: { background: center.color } }),
+      shots.length
+        ? h('div', { class: 'coe-gal__head' },
+            h('h4', {}, 'Photos & films'),
+            h('span', {}, `${shots.length} item${shots.length === 1 ? '' : 's'}`))
+        : null,
+      shots.length
+        ? h('div', { class: 'coe-gal', style: { 'column-count': String(cols) } },
+            ...shots.map((item) => mediaTile(item, center)))
+        : h('p', { class: 'coe-gal__none' }, 'No photographs filed for this center yet.'),
     );
     root.classList.add('is-open');
     detail.scrollTop = 0;

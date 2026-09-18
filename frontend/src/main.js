@@ -16,6 +16,7 @@ import { LoginPage } from './pages/LoginPage.js';
 import { OrgSelectPage } from './pages/OrgSelectPage.js';
 import { PresentPage } from './pages/PresentPage.js';
 import { toastError } from './components/Toast.js';
+import { confirmModal } from './components/Modal.js';
 import { startBuildWatch, flushPendingReload } from './utils/buildWatch.js';
 import { installTooltips } from './utils/tooltip.js';
 
@@ -58,7 +59,7 @@ function showMessage(text, actionLabel, onAction) {
   );
 }
 
-async function onLogout() {
+async function signOut() {
   try {
     await authService.logout();
   } catch {
@@ -68,6 +69,18 @@ async function onLogout() {
   document.body.classList.remove('is-presenting');
   applyTheme(null);
   navigate('/login');
+}
+
+/* Asked first, because sign out is one click away from every screen and a
+   mis-click mid-presentation drops the room back to the login page. */
+function onLogout() {
+  confirmModal({
+    title: 'Sign out?',
+    text: 'You will be returned to the login screen and will need to sign in again.',
+    confirmLabel: 'Sign out',
+    danger: true,
+    onConfirm: signOut,
+  });
 }
 
 async function route() {
