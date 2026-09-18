@@ -14,6 +14,17 @@ export function findById(id) {
   return data().users.find((user) => user.id === id) || null;
 }
 
+/** Rotates a password in place. The account keeps its id, so live sessions and
+    anything referencing the user survive the change. */
+export async function setPassword(id, passwordHash) {
+  const user = findById(id);
+  if (!user) return null;
+  user.passwordHash = passwordHash;
+  user.updatedAt = new Date().toISOString();
+  await persist();
+  return user;
+}
+
 export async function insert({ email, name, role, passwordHash }) {
   const user = {
     id: newId('usr'),

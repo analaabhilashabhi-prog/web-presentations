@@ -57,7 +57,24 @@ export async function ensureSeedUsers() {
     { ...env.seedUsers.presenter, role: 'presenter' },
   ];
   for (const candidate of wanted) {
-    if (userModel.findByEmail(candidate.email)) continue;
+    const existing = userModel.findByEmail(candidate.email);
+    if (existing) {
+      /* The account is already in the committed store, carrying the hash it was
+         created with on somebody's laptop — so setting ADMIN_PASSWORD on a
+         deployment used to do NOTHING, and the live deck went on accepting the
+         defaults that are printed in CLAUDE.md, README and DEPLOY.md. On a
+         public repository that is the whole of the door.
+
+         Rotate when the environment names a password and the stored hash is
+         not already that password. The verify is what keeps this quiet: every
+         boot would otherwise rewrite the store and log a rotation that had not
+         happened. */
+      if (candidate.passwordFromEnv && !verifyPassword(candidate.password, existing.passwordHash)) {
+        await userModel.setPassword(existing.id, hashPassword(candidate.password));
+        logger.info(`rotated the ${candidate.role} password from the environment`);
+      }
+      continue;
+    }
     await userModel.insert({
       email: candidate.email,
       name: candidate.name,

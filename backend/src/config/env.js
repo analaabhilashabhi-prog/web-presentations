@@ -74,11 +74,19 @@ export const env = {
     admin: {
       email: read('ADMIN_EMAIL', 'admin@org.local'),
       password: read('ADMIN_PASSWORD', 'Admin@123'),
+      /* Whether that password was named by the environment or is the fallback
+         above. `ensureSeedUsers` rotates an EXISTING account only when this is
+         true, so local work keeps whatever hash db.json carries and a
+         deployment that sets the variable actually takes effect. Without this
+         distinction the two cases are indistinguishable, and the fallback
+         would overwrite a password somebody had deliberately changed. */
+      passwordFromEnv: read('ADMIN_PASSWORD', null) !== null,
       name: 'Content Admin',
     },
     presenter: {
       email: read('PRESENTER_EMAIL', 'presenter@org.local'),
       password: read('PRESENTER_PASSWORD', 'Present@123'),
+      passwordFromEnv: read('PRESENTER_PASSWORD', null) !== null,
       name: 'Presenter',
     },
   },
