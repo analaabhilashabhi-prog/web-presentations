@@ -689,19 +689,49 @@ function normalizeBlock(raw, index = 0, depth = 0) {
             note: text(raw.credential.note, 40),
           }
         : null;
-      // Partner marks are typographic, never drawn: there are no official
-      // vendor logo files in the library and hand-tracing one is worse than
-      // setting the name.
+      /* A partner is set in type unless a real file is supplied. The rule has
+         not changed — a hand-traced vendor mark is still worse than a name in
+         type — but the official Claude Partner Network and OpenAI Select
+         Partner lockups arrived from the user (2026-09-18), so `logo` carries
+         them and a partner without one still stands in type beside them. */
       block.partners = (Array.isArray(raw.partners) ? raw.partners : [])
-        .map((p) => ({ name: text(p?.name, 60), note: text(p?.note, 40) }))
+        .map((p) => ({
+          name: text(p?.name, 60),
+          note: text(p?.note, 40),
+          logo: (() => {
+            const t = text(p?.logo, 240).replace(/^\/+/, '');
+            return /^[A-Za-z0-9][A-Za-z0-9 _.-]*(\/[A-Za-z0-9][A-Za-z0-9 _.-]*)*$/.test(t) ? t : '';
+          })(),
+        }))
         .filter((p) => p.name).slice(0, 6);
       block.frames = (Array.isArray(raw.frames) ? raw.frames : [])
         .map((f) => ({
-          kind: oneOf(f?.kind, ['cards', 'modules', 'close'], 'cards'),
+          /* 'split' and 'people' were rendered by the component long before
+             they were allowed here, because those frames were written straight
+             into the store. Anything PATCHed through this route was therefore
+             coerced to 'cards' — which turned the ten-portrait team frame into
+             a list of names and dropped its photographs, silently, on a write
+             that was about something else entirely. */
+          kind: oneOf(f?.kind, ['cards', 'modules', 'split', 'people', 'close'], 'cards'),
           eyebrow: text(f?.eyebrow, 80),
           title: text(f?.title, 120),
           subtitle: text(f?.subtitle, 240),
-          columns: clampInt(f?.columns, 1, 3, 2),
+          /* 'people' lays out five across; the cards and modules frames are
+             one to three, which is why this used to be capped at 3. */
+          columns: clampInt(f?.columns, 1, 6, 2),
+          /* The half-frame artwork a 'split' shows. */
+          figure: (() => {
+            const t = text(f?.figure, 240).replace(/^\/+/, '');
+            return /^[A-Za-z0-9][A-Za-z0-9 _.-]*(\/[A-Za-z0-9][A-Za-z0-9 _.-]*)*$/.test(t) ? t : '';
+          })(),
+          figureAlt: text(f?.figureAlt, 160),
+          /* A mark set into the frame's own corner — the certification the
+             frame is about, where the frame is not about a picture. */
+          badge: (() => {
+            const t = text(f?.badge, 240).replace(/^\/+/, '');
+            return /^[A-Za-z0-9][A-Za-z0-9 _.-]*(\/[A-Za-z0-9][A-Za-z0-9 _.-]*)*$/.test(t) ? t : '';
+          })(),
+          badgeAlt: text(f?.badgeAlt, 160),
           items: (Array.isArray(f?.items) ? f.items : [])
             .map((i) => ({
               title: text(i?.title, 120),
@@ -712,6 +742,12 @@ function normalizeBlock(raw, index = 0, depth = 0) {
                  other block's media field. */
               logo: (() => {
                 const t = text(i?.logo, 240).replace(/^\/+/, '');
+                return /^[A-Za-z0-9][A-Za-z0-9 _.-]*(\/[A-Za-z0-9][A-Za-z0-9 _.-]*)*$/.test(t) ? t : '';
+              })(),
+              /* A face, on a 'people' frame. Same path rule; dropped here is a
+                 roster of initials where ten portraits were meant to be. */
+              photo: (() => {
+                const t = text(i?.photo, 240).replace(/^\/+/, '');
                 return /^[A-Za-z0-9][A-Za-z0-9 _.-]*(\/[A-Za-z0-9][A-Za-z0-9 _.-]*)*$/.test(t) ? t : '';
               })(),
             }))

@@ -74,9 +74,23 @@ export function CourseDeck(block, { editing = false } = {}) {
           ? h('div', { class: 'cd-partners' },
               h('span', { class: 'cd-partners__label' }, 'Our AI Partners'),
               h('div', { class: 'cd-partners__row' },
-                ...block.partners.map((p) => h('span', { class: 'cd-partner' },
-                  h('span', { class: 'cd-partner__name' }, p.name),
-                  p.note ? h('span', { class: 'cd-partner__note' }, p.note) : null,
+                ...block.partners.map((p) => h('span', {
+                  class: `cd-partner${p.logo ? ' has-art' : ''}`,
+                },
+                  /* The official lockups already carry the partner's own name
+                     and their status word inside the artwork, so drawing the
+                     name beside them would say everything twice. A partner with
+                     no file keeps the typographic treatment and stands level
+                     with them. */
+                  p.logo
+                    ? h('img', {
+                        class: 'cd-partner__art',
+                        src: media(`/uploads/${encodeURI(p.logo)}`),
+                        alt: p.note ? `${p.name} — ${p.note}` : p.name,
+                        loading: 'eager', decoding: 'async',
+                      })
+                    : h('span', { class: 'cd-partner__name' }, p.name),
+                  !p.logo && p.note ? h('span', { class: 'cd-partner__note' }, p.note) : null,
                 )),
               ),
             )
@@ -88,10 +102,26 @@ export function CourseDeck(block, { editing = false } = {}) {
 
   /* ---------------------------------------------------------------- frames */
   for (const frame of frames) {
-    const head = h('div', { class: 'cd-head' },
-      frame.eyebrow ? h('p', { class: 'cd-eyebrow' }, frame.eyebrow) : null,
-      frame.title ? h('h2', { class: 'cd-heading' }, frame.title) : null,
-      frame.subtitle ? h('p', { class: 'cd-sub' }, frame.subtitle) : null,
+    /* The certification this frame is about, set in the head's own right-hand
+       end rather than over the body: the modules list is sixteen rows in two
+       columns and there is no corner of it a mark could sit in without landing
+       on a line of it. Beside the title it is level with the thing it belongs
+       to and the list below is untouched. */
+    const badge = frame.badge
+      ? h('img', {
+          class: 'cd-head__badge',
+          src: media(`/uploads/${encodeURI(frame.badge)}`),
+          alt: frame.badgeAlt || '', loading: 'eager', decoding: 'async',
+        })
+      : null;
+
+    const head = h('div', { class: `cd-head${badge ? ' has-badge' : ''}` },
+      h('div', { class: 'cd-head__text' },
+        frame.eyebrow ? h('p', { class: 'cd-eyebrow' }, frame.eyebrow) : null,
+        frame.title ? h('h2', { class: 'cd-heading' }, frame.title) : null,
+        frame.subtitle ? h('p', { class: 'cd-sub' }, frame.subtitle) : null,
+      ),
+      badge,
     );
 
     let body = null;
