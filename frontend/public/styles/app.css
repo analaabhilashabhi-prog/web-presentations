@@ -17595,7 +17595,10 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   /* The head takes the top of the frame down to where the hand begins. The
      reference sets its eyebrow at an eighth of the way down and closes its
      buttons just before the cards; this lands in the same place. */
-  top: 13%;
+  /* 13% while the head carried an eyebrow and a two-line headline. With a
+     wordmark in their place it starts higher, so the mark can be large and the
+     buttons still clear the top of the hand. */
+  top: 5%;
   left: 0;
   right: 0;
   display: flex;
@@ -17605,6 +17608,23 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   padding: 0 64px;
   text-align: center;
   pointer-events: none;
+}
+
+/* The section's wordmark. Sized by height, so a mark of any ratio keeps its own
+   width and the head's stack stays predictable; capped in width too, because a
+   very wide lockup would otherwise reach the frame's edges.
+
+   No `invert` — three colours on a pale ground. See the note in CardFan.js. */
+.cf-mark {
+  display: block;
+  height: 168px;
+  width: auto;
+  max-width: min(600px, 100%);
+  object-fit: contain;
+}
+
+@media (max-width: 900px) {
+  .cf-mark { height: 108px; }
 }
 .cf-head .cf-cta { pointer-events: auto; }
 
@@ -17755,9 +17775,9 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   left: 50%;
   /* Lifted (2026-09-18, on request: "move the photos slightly upward so that
      every photo is clearly visible"). The hand still stands out of the floor —
-     that is the layout it was built to — but 210px less of it is below the
+     that is the layout it was built to — but 120px less of it is below the
      frame, which is what the end cards were losing. */
-  bottom: calc(var(--cf-sink) * -1 + 210px);
+  bottom: calc(var(--cf-sink) * -1 + 120px);
   width: 0;
   height: 0;
 }

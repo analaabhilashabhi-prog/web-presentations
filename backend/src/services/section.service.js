@@ -1282,6 +1282,13 @@ function normalizeBlock(raw, index = 0, depth = 0) {
        them one after the other, so where it breaks is a content decision. */
     case 'card-fan':
       block.eyebrow = text(raw.eyebrow, 80);
+      /* The section's own wordmark, above the buttons. A file under /uploads,
+         the same path rule as every other block's media field. */
+      block.logo = (() => {
+        const t = text(raw.logo, 240).replace(/^\/+/, '');
+        return /^[A-Za-z0-9][A-Za-z0-9 _.-]*(\/[A-Za-z0-9][A-Za-z0-9 _.-]*)*$/.test(t) ? t : '';
+      })();
+      block.logoAlt = text(raw.logoAlt, 160);
       block.title = text(raw.title, 200);
       /* The colour of the orbs behind the cards. A hex value tints them, the
          string 'none' turns them off, and unset leaves the stylesheet's own —

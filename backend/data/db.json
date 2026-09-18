@@ -12323,6 +12323,8 @@
             "h": 15
           },
           "eyebrow": "",
+          "logo": "NTSquare/nt-square-wordmark.png",
+          "logoAlt": "NT Square",
           "title": "",
           "glow": "#F05D29",
           "base": "NTSquare",
@@ -12483,7 +12485,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:50:52.401Z",
-      "updatedAt": "2026-09-18T13:57:24.855Z"
+      "updatedAt": "2026-09-18T15:33:03.015Z"
     },
     {
       "id": "sec_e7b1eee845884989",

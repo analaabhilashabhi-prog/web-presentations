@@ -112,6 +112,23 @@ export function CardFan(block = {}) {
 
   // ------------------------------------------------------------------ the head
   const head = h('header', { class: 'cf-head' });
+  /* The section's own wordmark, above the buttons (2026-09-18, on request).
+     It is the first thing on the slide and the only thing on it that is not a
+     photograph or a control, which is why it can be as large as it is.
+
+     NOT inverted: this mark is three colours — a green N, an orange T and
+     SQUARE in black — on this slide's pale ground. Project Street's is turned
+     white because it is black on a dark film; the treatment follows the ground
+     each mark stands on, not a house rule. */
+  if (block.logo) {
+    head.append(h('img', {
+      class: 'cf-mark',
+      src: upload(block.logo),
+      alt: block.logoAlt || 'NT Square',
+      loading: 'eager',
+      decoding: 'async',
+    }));
+  }
   if (block.eyebrow) {
     head.append(h(
       'p',
