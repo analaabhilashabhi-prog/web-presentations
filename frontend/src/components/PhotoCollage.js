@@ -1,7 +1,6 @@
 import { h } from '../utils/dom.js';
 import { upload } from '../utils/media.js';
 import { openLightbox } from './Lightbox.js';
-import { justifyRows } from './PlacementWall.js';
 import { letterRevealPreset } from '../utils/letterReveal.js';
 
 /**
@@ -53,12 +52,9 @@ const LIST = { x: 950, y: 335, w: 265 };
 
 /* The wall under the collage: the canvas width less the copy's 60px margin
    each side, rows aimed at 300px, the gap the collage's own cards keep. */
-const WALL_WIDTH = 1600 - 2 * 60;
-const WALL_ROW = 300;
-const WALL_GAP = 16;
-/* How much of the way to the target each frame closes. Same figure as the
-   Trainings page, which is the same gesture. */
-const SCROLL_EASE = 0.22;
+/* The rotation's own reduced-motion switch: with it on the collage is the nine
+   it was composed with and nothing turns. */
+const REDUCED = window.matchMedia?.('(prefers-reduced-motion: reduce)');
 
 export function PhotoCollage(block = {}) {
   const photos = (block.photos || []).filter((p) => p && p.src).slice(0, SLOTS.length);
@@ -122,9 +118,11 @@ export function PhotoCollage(block = {}) {
   const cta = h('button', {
     class: 'pc-cta',
     type: 'button',
-    /* With a wall below, the pill takes the presenter down to it; without one
+    /* There is no wall below any more — the extra photographs come round on
+       the cards themselves — so the pill opens the viewer, which is the one
+       thing on this slide that shows a picture whole.
        there is nowhere to go, and it opens the viewer on the first card. */
-    onclick: () => (more.length ? scrollTo(wall.offsetTop) : open(0)),
+    onclick: () => open(0),
   }, block.ctaLabel || 'See every photograph');
   copy.append(cta);
   stage.append(copy);
@@ -141,8 +139,27 @@ export function PhotoCollage(block = {}) {
   }
 
   // --------------------------------------------------------------- the collage
+  /* Which photograph each card is showing, as an index into `pool` below. The
+     cards start on the nine the collage was composed with, in the order the
+     publisher put them in, so the slide's first impression is unchanged. */
+  const shown = photos.map((_, i) => i);
+  const faces = [];
+
   photos.forEach((photo, i) => {
     const s = SLOTS[i];
+    const img = h('img', {
+      src: urlOf(photo),
+      alt: photo.name || '',
+      draggable: 'false',
+      loading: 'eager',
+      decoding: 'async',
+      /* Where the card looks within its photograph — set per picture by the
+         publisher, because a tall card on a wide group shot has to be told
+         where the people are. */
+      style: photo.focus ? { objectPosition: photo.focus } : null,
+      onerror: (event) => event.currentTarget.closest('.pc-card')?.remove(),
+    });
+    faces.push(img);
     stage.append(h('button', {
       class: `pc-card pc-card--${s.enter}`,
       type: 'button',
@@ -152,113 +169,99 @@ export function PhotoCollage(block = {}) {
         '--pc-delay': `${s.delay}ms`,
         '--pc-dur': `${s.dur}ms`,
       },
-      onclick: () => open(i),
-    }, h('span', { class: 'pc-card__face' },
-      h('img', {
-        src: urlOf(photo),
-        alt: photo.name || '',
-        draggable: 'false',
-        loading: 'eager',
-        decoding: 'async',
-        /* Where the card looks within its photograph — set per picture by the
-           publisher, because a tall card on a wide group shot has to be told
-           where the people are. */
-        style: photo.focus ? { objectPosition: photo.focus } : null,
-        onerror: (event) => event.currentTarget.closest('.pc-card')?.remove(),
-      }))));
+      onclick: () => open(shown[i]),
+    }, h('span', { class: 'pc-card__face' }, img)));
   });
 
-  if (!more.length) return root;
 
-  // ------------------------------------------------------------------ the wall
-  const wall = h('div', { class: 'pc-more' });
-  wall.append(h('div', { class: 'pc-more__head' },
-    h('p', { class: 'pc-eyebrow pc-more__label' },
-      h('span', { class: 'pc-eyebrow__mark', 'aria-hidden': 'true' }),
-      h('span', { text: block.moreLabel || 'Every photograph' })),
-    h('span', { class: 'pc-more__count', text: `${all.length} photographs` })));
+  /* ------------------------------------------------------- the rotating wall */
+  /* THE EXTRA PHOTOGRAPHS COME TO THE CARDS (2026-09-18, on request: "remove
+     the need for scrolling… an automatic photo replacement/flip system"). The
+     slide used to be one screen of collage with a justified wall of sixteen
+     more under it, reached by scrolling. The collage is the whole slide now and
+     every photograph takes a turn on it.
 
-  const rows = justifyRows(more.map((p, i) => ({ ...p, i })), WALL_WIDTH, WALL_ROW, WALL_GAP);
-  let n = 0;
-  rows.forEach((row) => {
-    wall.append(h('div', { class: `pc-more__row${row.full ? ' is-full' : ''}` },
-      ...row.items.map((it) => {
-        const tile = h('button', {
-          class: 'pc-tile',
-          type: 'button',
-          'aria-label': it.name || `Photograph ${photos.length + it.i + 1}`,
-          style: {
-            width: `${it.dw.toFixed(2)}px`,
-            height: `${it.dh.toFixed(2)}px`,
-            /* Its place in the wall, for the stagger of a row that arrives
-               together. */
-            '--pc-n': String(n++ % 6),
-          },
-          onclick: () => open(photos.length + it.i),
-        }, h('img', {
-          src: urlOf(it),
-          alt: it.name || '',
-          draggable: 'false',
-          loading: 'lazy',
-          decoding: 'async',
-          onerror: (event) => event.currentTarget.closest('.pc-tile')?.remove(),
-        }));
-        return tile;
-      })));
-  });
+     WHAT MAKES IT A ROTATION RATHER THAN A SHUFFLE. A queue holds every
+     photograph in the pool in a shuffled order; each flip takes the next one
+     off it, and the queue is only refilled once it is empty. That is what
+     guarantees the thing that was actually asked for — every photograph is
+     eventually displayed — where picking at random each time would leave some
+     pictures unseen for a very long time and show others twice in a row.
 
-  wall.append(h('div', { class: 'pc-more__foot' },
-    h('button', {
-      class: 'pc-cta pc-cta--ghost',
-      type: 'button',
-      onclick: () => scrollTo(0),
-    }, block.topLabel || 'Back to the top')));
-  root.append(wall);
+     A photograph already on screen is skipped rather than drawn twice, and the
+     card to flip is taken from its own shuffled rotation, so the same card
+     never goes twice while another has not gone at all. */
+  const pool = [...photos, ...more];
+  if (pool.length <= photos.length) return root;
 
-  /* Tiles fade up as they scroll into view — and stay, so scrolling back up
-     does not replay the wall. The observer's root is the scroller, not the
-     viewport: inside FitSlide the viewport is the wrong frame. */
-  if ('IntersectionObserver' in window) {
-    const seen = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) { e.target.classList.add('is-seen'); seen.unobserve(e.target); }
-      });
-    }, { root, rootMargin: '0px 0px 60px 0px', threshold: 0.12 });
-    wall.querySelectorAll('.pc-tile').forEach((t) => seen.observe(t));
-  } else {
-    wall.querySelectorAll('.pc-tile').forEach((t) => t.classList.add('is-seen'));
+  const FLIP_MS = 1700;   // between flips — "approximately 1-2 seconds"
+  const HALF_MS = 360;    // the turn, half of which happens before the swap
+
+  const shuffle = (a) => {
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  };
+
+  let queue = [];
+  const nextPhoto = () => {
+    /* Refilled only when empty: one pass of the queue is one showing of every
+       photograph in the pool. */
+    if (!queue.length) queue = shuffle(pool.map((_, i) => i));
+    while (queue.length) {
+      const next = queue.shift();
+      if (!shown.includes(next)) return next;
+    }
+    return -1;
+  };
+
+  let order = [];
+  const nextCard = () => {
+    if (!order.length) order = shuffle(faces.map((_, i) => i));
+    return order.shift();
+  };
+
+  let timer = 0;
+  let held = false;
+
+  function flip() {
+    timer = 0;
+    /* The deck rebuilds its DOM on every navigation; a chain left running would
+       go on turning cards nobody can see. */
+    if (!root.isConnected) return;
+    if (held) { timer = setTimeout(flip, FLIP_MS); return; }
+
+    const slot = nextCard();
+    const pick = nextPhoto();
+    const img = faces[slot];
+    if (pick < 0 || !img || !img.isConnected) { timer = setTimeout(flip, FLIP_MS); return; }
+
+    const card = img.closest('.pc-card');
+    const photo = pool[pick];
+    /* Decoded before the turn starts, so the card never shows a gap at the
+       half-way point where the new picture is put in. */
+    const warm = new Image();
+    warm.src = urlOf(photo);
+    const swap = () => {
+      shown[slot] = pick;
+      img.src = urlOf(photo);
+      img.alt = photo.name || '';
+      img.style.objectPosition = photo.focus || '';
+      card.classList.remove('is-flip');
+    };
+    card.classList.add('is-flip');
+    setTimeout(swap, HALF_MS);
+    timer = setTimeout(flip, FLIP_MS);
   }
 
-  // --------------------------------------------------------------- the scroll
-  /* Scrolled by hand and eased, never with `scroll-behavior: smooth` — reading
-     `scrollTop` back mid-animation is how a wall stops scrolling. */
-  let target = 0;
-  let raf = 0;
-  const maxScroll = () => Math.max(0, root.scrollHeight - root.clientHeight);
-  /* The browser keeps scrollTop in whole pixels, so an ease that asks for less
-     than a pixel of movement gets none and never arrives — it sat 2px short of
-     the wall and 2px short of the top, spinning a frame loop forever. Inside a
-     pixel of the target it lands; a step under a pixel is made a pixel. */
-  function frame() {
-    raf = 0;
-    const cur = root.scrollTop;
-    const left = target - cur;
-    if (Math.abs(left) < 1) { root.scrollTop = target; return; }
-    const step = left * SCROLL_EASE;
-    root.scrollTop = cur + (Math.abs(step) < 1 ? Math.sign(step) : step);
-    raf = requestAnimationFrame(frame);
-  }
-  function scrollTo(y) {
-    target = Math.max(0, Math.min(y, maxScroll()));
-    if (!raf) raf = requestAnimationFrame(frame);
-  }
-  root.addEventListener('wheel', (event) => {
-    event.preventDefault();
-    /* A drag on the scrollbar-less scroller or a touch flick moves it natively;
-       pick the target up from wherever that left it. */
-    if (!raf) target = root.scrollTop;
-    scrollTo(target + event.deltaY);
-  }, { passive: false });
+  /* The pointer over a card holds the wall: a presenter pointing at a
+     photograph should not have it turn over under them. */
+  stage.addEventListener('pointerenter', () => { held = true; });
+  stage.addEventListener('pointerleave', () => { held = false; });
+
+  if (!REDUCED?.matches) timer = setTimeout(flip, FLIP_MS);
 
   return root;
 }

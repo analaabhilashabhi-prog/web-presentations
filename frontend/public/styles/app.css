@@ -18683,6 +18683,8 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   border: 0;
   background: none;
   cursor: pointer;
+  /* The turn is a real turn, so the card needs depth of its own. */
+  perspective: 1000px;
   /* Each slot names its own entrance, delay and duration; the component writes
      the two numbers, the class picks the motion. `both` so a card is invisible
      until its turn. */
@@ -18691,6 +18693,30 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   animation-timing-function: cubic-bezier(0.16, 0.84, 0.3, 1);
   animation-fill-mode: both;
 }
+/* The half-turn that swaps a photograph (2026-09-18). The rotation is on the
+   IMAGE, never on `.pc-card__face`: the face already carries the hover, and two
+   rules fighting over one transform is the trap this component's own note
+   warns about — it is why the entrance, the hover and the layout are three
+   layers here in the first place.
+
+   Half the turn runs, the component puts the new picture in at the 90° point
+   where nothing of the old one is facing the room, and the second half brings
+   it back. So one flip is one transition played out and back, and there is no
+   moment where the card is empty. */
+.pc-card__face img {
+  transition: transform 0.36s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.36s ease;
+  backface-visibility: hidden;
+}
+
+.pc-card.is-flip .pc-card__face img {
+  transform: rotateY(90deg);
+  opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pc-card__face img { transition: none; }
+}
+
 .pc-card--rise   { animation-name: pc-rise; }
 .pc-card--drift  { animation-name: pc-drift; animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1); }
 .pc-card--slide  { animation-name: pc-slide; }
@@ -19659,7 +19685,7 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   filter:drop-shadow(-2px 3px 3px rgba(27,27,27,.10));}
 /* thin orange rule near the top */
 .ps-root .file-inner::after{content:"";position:absolute;left:22px;right:70px;top:74px;height:2px;border-radius:2px;background:var(--orange);opacity:.85;}
-.ps-root .file .logo{position:absolute;left:22px;top:22px;width:40px;height:40px;border-radius:50%;background:var(--orange);display:grid;place-items:center;overflow:hidden;
+.ps-root .file .logo{position:absolute;left:22px;top:20px;width:54px;height:54px;border-radius:50%;background:var(--orange);display:grid;place-items:center;overflow:hidden;
   color:#fff;font-weight:600;font-size:16px;box-shadow:0 6px 14px -6px rgba(255,111,50,.7);}
 .ps-root .file .logo img{width:100%;height:100%;object-fit:cover;display:block;max-width:none;}
 /* A product's own logo (2026-09-17, on request). The design's badge is a 40px
@@ -19672,7 +19698,7 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
    118 is the room the card has: it is 200 wide, the plate starts at 22, and the
    dog-ear fold takes the last 46 — 22 + 118 leaves 14 before the fold. Height
    stays 40 so the orange rule at 74 and the index at 94 keep their places. */
-.ps-root .file .logo.has-art{width:auto;max-width:118px;min-width:40px;padding:5px 8px;border-radius:10px;
+.ps-root .file .logo.has-art{width:auto;max-width:150px;min-width:54px;padding:6px 10px;border-radius:11px;
   background:#fff;border:1px solid rgba(27,27,27,.10);box-shadow:0 6px 14px -8px rgba(27,27,27,.25);}
 /* Sized by HEIGHT, and nothing else. `width:auto; height:100%; max-width:100%`
    measured 100x53 on a 1.89:1 mark inside a 30px-tall content box — the
@@ -19682,7 +19708,12 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
    1.85:1 mark 55px and a 3.41:1 mark 102px, both inside the 102px the plate's
    padding leaves; the plate, being shrink-to-fit, then wraps each mark rather
    than standing at its maximum for all seven. */
-.ps-root .file .logo.has-art img{height:30px;width:auto;max-width:none;max-height:none;object-fit:contain;}
+/* Bigger on request (2026-09-18), still sized by height alone — the rule this
+   plate learned once: a percentage max-width lets the width win and the height
+   falls out of the bottom of the plate. 30px -> 42, and the plate's cap grows
+   with it so no mark is squeezed. The card is 200 wide, the plate starts at 22
+   and the dog-ear takes the last 46, so 150 is the room there is. */
+.ps-root .file .logo.has-art img{height:42px;width:auto;max-width:none;max-height:none;object-fit:contain;}
 .ps-root .file .idx{position:absolute;left:22px;top:94px;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--ink-3);}
 .ps-root .file .meta{position:absolute;left:22px;right:22px;bottom:22px;}
 .ps-root .file .name{display:block;font-size:19px;font-weight:600;letter-spacing:-.015em;line-height:1.15;color:#1B1B1B;}
@@ -19695,10 +19726,16 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
 .ps-root .head .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px;}
 .ps-root .head .name{font-size:46px;font-weight:600;letter-spacing:-.03em;line-height:1;color:var(--ink);}
 .ps-root .head .tag{font-size:16px;color:var(--ink-3);margin-top:12px;}
-.ps-root .head__actions{display:flex;align-items:center;gap:10px;margin-top:18px;}
-.ps-root .head .close,.ps-root .head .site{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);
-  background:none;border:1px solid var(--line);border-radius:999px;padding:7px 12px;cursor:pointer;transition:border-color .3s,color .3s,background .3s;}
-.ps-root .head .close:hover{border-color:var(--orange);color:var(--ink);}
+/* Three large buttons and nothing else in the sheet (2026-09-18, on request).
+   They were 10.5px mono pills sized to sit under a name and a tag; with the
+   sheet emptied they are the only controls on that half of the slide, and a
+   control a presenter has to aim at from a lectern is one that has to be seen
+   from one. Wrapped, because three at this size do not fit the 660px column on
+   one line at every scale. */
+.ps-root .head__actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:18px;}
+.ps-root .head .close,.ps-root .head .site,.ps-root .head .nextp{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+  background:none;border:1px solid var(--line);border-radius:999px;padding:14px 24px;cursor:pointer;transition:border-color .3s,color .3s,background .3s;}
+.ps-root .head .close:hover,.ps-root .head .nextp:hover{border-color:var(--orange);color:var(--ink);}
 /* The way into the site itself: the one filled control on the slide, because
    it is the one that changes what the monitor is showing. */
 .ps-root .head .site{border-color:var(--orange);background:var(--orange);color:#fff;}
@@ -19710,9 +19747,18 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
 .ps-root .head .site[hidden]{display:none;}
 
 /* detail sheet */
-.ps-root .detail{position:absolute;left:96px;top:330px;width:660px;opacity:0;transform:translateY(16px);
+/* The sheet is one mark now. It sits where the description used to start and
+   takes the height the whole of it used to take — the point of emptying it was
+   to give the product's own mark the room. Contained, never cropped: these are
+   eight different lockups at eight different ratios and a cover fit would take
+   the ends off the wide ones. */
+.ps-root .detail{position:absolute;left:96px;top:330px;width:660px;height:300px;opacity:0;transform:translateY(16px);
+  display:grid;place-items:center;
   transition:opacity .55s var(--ease),transform .55s var(--ease);pointer-events:none;}
 .ps-root .detail.show{opacity:1;transform:none;pointer-events:auto;transition-delay:.42s;}
+.ps-root .detail .mark{max-width:100%;max-height:300px;width:auto;height:auto;object-fit:contain;display:block;}
+/* A product with no file of its own is set in its own name. */
+.ps-root .detail .mark--type{font-family:var(--font);font-size:64px;font-weight:800;letter-spacing:-.02em;color:var(--ink);text-align:center;line-height:1.1;}
 .ps-root .detail .desc{font-size:16.5px;line-height:1.7;color:var(--ink-2);margin:0 0 26px;max-width:56ch;}
 .ps-root .detail .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);margin:0 0 12px;}
 .ps-root .detail ul{list-style:none;margin:0 0 26px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px 28px;}

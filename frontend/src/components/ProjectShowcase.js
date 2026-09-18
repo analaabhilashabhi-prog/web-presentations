@@ -149,15 +149,24 @@ export function ProjectShowcase(block = {}) {
   const count = h('span', {});
   const hName = h('div', { class: 'name' });
   const hTag = h('div', { class: 'tag' });
-  const closeBtn = h('button', { class: 'close', type: 'button' }, '← All projects');
+  const closeBtn = h('button', { class: 'close', type: 'button' }, 'Back to All Projects');
+  /* On request (2026-09-18): a presenter walks the products in order, and
+     having to go back to the list between each one is a press nobody needs. */
+  const nextBtn = h('button', { class: 'nextp', type: 'button' }, 'Next Project');
   /* The way into the site itself. Hidden until a project that has one is open. */
   const siteBtn = h('button', { class: 'site', type: 'button' },
-    h('span', { class: 'site__label', text: 'Open website' }),
+    h('span', { class: 'site__label', text: 'Open Website' }),
     h('span', { class: 'site__mark', 'aria-hidden': 'true', text: '↗' }));
+  /* THE OPENED PROJECT IS ITS MARK AND THREE BUTTONS, nothing else
+     (2026-09-18, on request). The eyebrow, the name and the tag are built and
+     kept because `renderDetail` and the monitor's title swap both read them,
+     and because a project whose mark is missing falls back to its name — they
+     are simply not drawn in the sheet. Everything that used to fill it — the
+     description, the features, the stack, the links and the demo logins — is
+     gone from the view; the logins are still on the block and still never
+     printed, which was always the rule. */
   const head = h('div', { class: 'head' },
-    h('div', { class: 'eyebrow', text: 'Project' }),
-    hName, hTag,
-    h('div', { class: 'head__actions' }, closeBtn, siteBtn));
+    h('div', { class: 'head__actions' }, closeBtn, nextBtn, siteBtn));
   const detail = h('div', { class: 'detail' });
   const dockStack = h('span', { class: 'stack' });
   const dockText = h('span', {});
@@ -239,7 +248,7 @@ export function ProjectShowcase(block = {}) {
   function setMedia(p) {
     onSite = false;
     root.classList.remove('on-site');
-    siteBtn.querySelector('.site__label').textContent = 'Open website';
+    siteBtn.querySelector('.site__label').textContent = 'Open Website';
     media.classList.remove('show');
     setTimeout(() => {
       media.innerHTML = '';
@@ -361,47 +370,15 @@ export function ProjectShowcase(block = {}) {
   }
 
   function renderDetail(p) {
-    const links = [];
-    if (p.links && p.links.live) links.push(`<a href="${p.links.live}" target="_blank" rel="noopener">Live project</a>`);
-    if (p.links && p.links.code) links.push(`<a href="${p.links.code}" target="_blank" rel="noopener">Source code</a>`);
-    /* A heading is drawn only when it has something under it. The original page
-       always drew both, which was fine when every project carried features and a
-       stack; a project added by name alone (2026-09-17) showed "Key features"
-       and "Built with" over empty space. */
-    const hasFeatures = (p.features || []).length > 0;
-    const hasStack = (p.stack || []).length > 0;
-    detail.innerHTML = `<p class="desc"></p>
-      ${hasFeatures ? `<p class="lbl">${p.featuresLabel || 'Key features'}</p>` : ''}<ul></ul>
-      ${hasStack ? `<p class="lbl">${p.stackLabel || 'Built with'}</p>` : ''}<div class="chips"></div>
-      ${links.length ? `<div class="links">${links.join('')}</div>` : ''}`;
-    detail.querySelector('.desc').textContent = p.description || '';
-    const ul = detail.querySelector('ul');
-    (p.features || []).forEach((x) => {
-      const li = document.createElement('li');
-      li.textContent = x;
-      ul.appendChild(li);
-    });
-    const chips = detail.querySelector('.chips');
-    (p.stack || []).forEach((x) => {
-      const s = document.createElement('span');
-      s.className = 'chip';
-      s.textContent = x;
-      chips.appendChild(s);
-    });
-    /* Demo access: one chip per login, its role and two copy buttons. Nothing
-       here prints the credential itself. */
-    const logins = (p.logins || []).filter((l) => l.role);
-    if (logins.length) {
-      const label = h('p', { class: 'lbl', text: `Demo access · ${logins.length} ${logins.length === 1 ? 'login' : 'logins'}` });
-      const row = h('div', { class: 'chips' });
-      logins.forEach((l) => {
-        const chip = h('span', { class: 'chip chip--login' }, h('b', { text: l.role }));
-        if (l.user) chip.append(h('button', { type: 'button', title: `Copy the ${l.role} username`, onclick: () => copy(l.user, 'Username') }, 'user'));
-        if (l.pass) chip.append(h('button', { type: 'button', title: `Copy the ${l.role} password`, onclick: () => copy(l.pass, 'Password') }, 'pass'));
-        row.append(chip);
-      });
-      detail.append(label, row);
-    }
+    /* One mark, as large as the sheet allows. A project with no file of its own
+       is set in its own name instead — the deck's standing fallback, and the
+       reason the name is still carried here: AI Anchor has no logo, and a blank
+       sheet would say less than a word. */
+    detail.replaceChildren(
+      p.logo
+        ? h('img', { class: 'mark', src: urlOf(p.logo), alt: p.name, decoding: 'async' })
+        : h('span', { class: 'mark mark--type', text: p.name }),
+    );
     hName.textContent = p.name;
     hTag.textContent = p.tag || '';
     siteBtn.hidden = !p.site;
@@ -437,6 +414,11 @@ export function ProjectShowcase(block = {}) {
      iframe does not reach here, so driving the site never steals its focus. */
   root.addEventListener('pointerdown', () => root.focus({ preventScroll: true }));
 
+  nextBtn.addEventListener('click', () => {
+    /* Wraps, so the last project leads back to the first rather than to a dead
+       button at the end of the shelf. */
+    select(active < 0 ? 0 : (active + 1) % projects.length);
+  });
   dock.addEventListener('click', () => { dockOpen = !dockOpen; layout(); });
   closeBtn.addEventListener('click', clear);
   siteBtn.addEventListener('click', () => {
