@@ -73,6 +73,29 @@ const SNAP_IDLE = 190;   // ms
 const WHEEL_GAIN = 1.25;
 const FLICK = 0.16;      // seconds of a drag's last velocity carried on release
 
+/* The idle drift. The row moves on its own when nobody is touching it — one
+   card every AUTO_PERIOD seconds, which is slow enough to read a name by and
+   not so slow that it reads as a fault.
+
+   The two taus are what make it soft, and they are deliberately NOT the same.
+   The drift is a velocity eased toward its aim rather than switched on and off,
+   but stopping has to answer the hand and starting has to not startle: at a
+   symmetrical 0.85s the row was still moving at 13px/s a second and a half
+   after the pointer arrived, which does not read as "it stopped when I hovered
+   it", it reads as a row that ignores you. Stopping is 0.32s — settled inside
+   half a second, and still nothing like a hard cut — and starting is 1.1s, slow
+   enough that the row eases away rather than jumping the moment the pointer
+   leaves.
+
+   AUTO_WAKE is the stillness owed to a presenter who has just moved the row by
+   hand. Without it the drift starts pulling against the gesture the moment it
+   ends, and a row that argues with the hand is worse than one that does not
+   move at all. */
+const AUTO_PERIOD = 3.4;  // seconds a card takes to cross
+const AUTO_RISE = 1.1;    // seconds to reach full drift
+const AUTO_FALL = 0.32;   // seconds to come to rest
+const AUTO_WAKE = 1100;   // ms of stillness owed after a gesture
+
 /* The shear, and the heat in the ground behind it, both come off the speed. Both
    are capped: past this the faces start to lean and the red starts to glare. */
 const SHEAR_AT = 2600;   // px/s that reads as full speed
@@ -227,6 +250,12 @@ export function SkewCarousel(block = {}) {
   let last = 0;
   let ghostName = null;
   let unfit = null;
+  /* The drift's own speed, eased rather than switched; `hovered` is what the
+     pointer being anywhere over the row sets, and `autoAfter` is the stillness
+     owed after a gesture. */
+  let autoV = 0;
+  let hovered = false;
+  let autoAfter = 0;
 
   const wrap = (d) => ((d + lap / 2) % lap + lap) % lap - lap / 2;
   const indexAt = (o) => ((Math.round(o / step) % count) + count) % count;
@@ -260,6 +289,11 @@ export function SkewCarousel(block = {}) {
 
   function frame(now) {
     raf = 0;
+    /* The deck rebuilds its DOM on every navigation, and the drift keeps this
+       loop alive for as long as the row is on screen — so without this it would
+       outlive the slide it drives, once per visit, and go on costing frames on
+       every other tab. */
+    if (!root.isConnected) return;
     /* Real elapsed time, not a nominal frame. `kick` is called from the end of
        this function, so resetting the clock there made every frame worth 16ms
        whatever the browser had actually spent on it — and the whole arrival then
@@ -273,7 +307,21 @@ export function SkewCarousel(block = {}) {
     if (freeUntil && now > freeUntil) {
       target = Math.round(target / step) * step;
       freeUntil = 0;
+      /* The row has just landed on a card after a gesture. Let it be seen there
+         before the drift takes it away again. */
+      autoAfter = now + AUTO_WAKE;
     }
+
+    /* The idle drift, added to the target rather than to the offset, so it runs
+       through the same easing everything else does and inherits its smoothness
+       instead of needing its own. Held at nothing while a pointer is over the
+       row, while one is down on it, while a gesture is still settling, and for
+       a moment afterwards. */
+    const wantAuto = !REDUCED?.matches && !hovered && !drag && !freeUntil
+      && !warm && now >= autoAfter;
+    const aim = wantAuto ? step / AUTO_PERIOD : 0;
+    autoV += (aim - autoV) * (1 - Math.exp(-dt / (wantAuto ? AUTO_RISE : AUTO_FALL)));
+    if (autoV > 0.05) target += autoV * dt;
 
     /* The arrival's long time constant is for the travel, not for the last few
        pixels of it: an exponential settling from four cards away to under half a
@@ -287,7 +335,7 @@ export function SkewCarousel(block = {}) {
 
     paint(vel);
 
-    if (Math.abs(target - offset) > 0.4 || freeUntil) {
+    if (Math.abs(target - offset) > 0.4 || freeUntil || autoV > 0.05 || wantAuto) {
       kick();
     } else {
       offset = target;
@@ -354,6 +402,9 @@ export function SkewCarousel(block = {}) {
     target = offset + wrap(j * step - offset);
     freeUntil = 0;
     warm = false;
+    /* Somebody chose this person. Hold the row on them rather than drifting off
+       the moment it arrives. */
+    autoAfter = performance.now() + AUTO_WAKE;
     kick();
   }
   const walk = (dir) => { goTo(Math.round(target / step) + dir); };
@@ -374,6 +425,7 @@ export function SkewCarousel(block = {}) {
     warm = false;
     target += delta * WHEEL_GAIN;
     freeUntil = event.timeStamp + SNAP_IDLE;
+    autoAfter = performance.now() + AUTO_WAKE;
     kick();
   }, { passive: false });
 
@@ -402,6 +454,21 @@ export function SkewCarousel(block = {}) {
     return true;
   });
 
+  /* THE HOVER STOPS THE DRIFT (2026-09-18, on request). Anywhere over the row,
+     not only over a card: the gap between two cards is still the row, and a
+     drift that restarted between faces would be worse than one that never
+     stopped. Both ends only set a flag and wake the loop — the easing in
+     `frame` is what makes the stop and the start soft, so there is one place
+     that decides how the movement feels rather than two.
+
+     `focusin`/`focusout` do the same for a presenter on the keyboard, who has
+     no pointer to park over the row. */
+  const hold = (on) => () => { hovered = on; kick(); };
+  stage.addEventListener('pointerenter', hold(true));
+  stage.addEventListener('pointerleave', hold(false));
+  stage.addEventListener('focusin', hold(true));
+  stage.addEventListener('focusout', hold(false));
+
   /* Dragging. The ribbon follows the hand exactly — no easing while a pointer is
      down, or the cards lag behind the finger holding them — and the release
      carries the last measured velocity on before it lands. */
@@ -429,6 +496,7 @@ export function SkewCarousel(block = {}) {
     if (!drag) return;
     target += Math.max(-900, Math.min(900, drag.vel * FLICK));
     freeUntil = event.timeStamp + 60;
+    autoAfter = performance.now() + AUTO_WAKE;
     drag = null;
     stage.classList.remove('is-dragging');
     kick();

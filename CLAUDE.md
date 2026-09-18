@@ -1891,6 +1891,61 @@ AI Ready Engineer takes 6, NGI's Executive Summary 3 for its paper tabs, NGI's
 own AI Ready Engineer 6). The dock's Next tab pressed from sub-tab 3 of 6 goes
 straight to Centers of Excellence, and Previous tab from there comes back.
 
+## The team ribbon drifts on its own
+
+**It moves when nobody is touching it and stops when the pointer is over it**
+(2026-09-18, on request: "soft auto scroll, not hard one, it should be
+premium"). One card every 3.4 seconds, which is slow enough to read a name by
+and not so slow that it reads as a fault.
+
+**The drift is added to the target, not to the offset.** The row already eases
+`offset` toward `target` every frame, so pushing the target along at a velocity
+means the movement inherits that easing instead of needing its own — no second
+opinion about how this row moves, and the constant lag between the two is what
+keeps it looking poured rather than stepped.
+
+**The two time constants are deliberately different, and that is the whole of
+"premium".** The drift is a velocity eased toward its aim rather than switched
+on and off, but stopping has to answer the hand and starting has to not startle.
+At a symmetrical 0.85s the row was still moving at 13px/s a second and a half
+after the pointer arrived, which does not read as "it stopped when I hovered
+it" — it reads as a row that ignores you. Stopping is 0.32s and starting is
+1.1s.
+
+| | px/s |
+| --- | --- |
+| drifting | 69 |
+| 0.0–0.3s after the pointer arrives | 56, gliding down |
+| 0.6–1.5s after it arrives | **5.4**, at rest |
+| 0.0–0.5s after it leaves | 19.5, easing away |
+| 1.6–2.5s after it leaves | 63.7, full speed |
+| frame time while drifting | 7.0ms, 0 frames over 16.7ms |
+
+Four things it has to respect, three of which are about not arguing with the
+presenter:
+
+  - **The hover is the whole row, not a card.** The gap between two cards is
+    still the row, and a drift that restarted between faces would be worse than
+    one that never stopped. `focusin`/`focusout` do the same for a presenter on
+    the keyboard, who has no pointer to park.
+  - **A gesture buys stillness.** A wheel, a drag, a click on a face or an arrow
+    press sets `autoAfter` a second ahead, and the snap onto a card sets it
+    again as it lands. Without that the drift starts pulling the moment a
+    gesture ends, and a row that argues with the hand is worse than one that
+    does not move.
+  - **It does not fight the arrival.** `warm` is true while the ribbon is
+    easing in from four cards out, and the drift is held at nothing until it is
+    over.
+  - **`prefers-reduced-motion` turns it off entirely**, like everything else
+    here.
+
+**And the loop needed a disconnect guard it had never needed before.** The row
+used to come to rest and stop asking for frames; drifting, it asks for ever. The
+deck rebuilds its DOM on every navigation, so without `if (!root.isConnected)
+return` the loop would outlive the slide it drives — once per visit — and go on
+costing frames on every other tab. Any component given a permanent animation
+needs this; the drift wall has had it from the start for the same reason.
+
 ## Collapsed, the editing view is the presenting view
 
 **The pane on its rail means full screen** (2026-09-18, on request: "when I
