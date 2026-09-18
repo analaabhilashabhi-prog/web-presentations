@@ -1,9 +1,17 @@
 import * as sectionService from '../services/section.service.js';
+import * as mediaManifestService from '../services/media-manifest.service.js';
 import { sendJson } from '../utils/http.js';
 
 export function listByOrg(req, res, ctx) {
   const sections = sectionService.listForRole(ctx.params.orgId, ctx.user?.role || 'presenter');
   sendJson(res, 200, { sections });
+}
+
+export function mediaManifest(req, res, ctx) {
+  sendJson(res, 200, mediaManifestService.manifestFor(
+    ctx.params.orgId,
+    ctx.user?.role || 'presenter',
+  ));
 }
 
 export function get(req, res, ctx) {

@@ -314,7 +314,56 @@ export function DriftWall(block, { editing = false } = {}) {
   wall.querySelectorAll('img').forEach((img) => {
     if (!img.complete) img.addEventListener('load', scheduleRemeasure, { once: true });
   });
+  /**
+   * Stops drawing the tiles that are not on screen.
+   *
+   * About 46 of this wall's 766 tiles are visible at any moment and the other
+   * 720 were being composited every frame regardless. Measured by ablation:
+   * the slide ran at 14.5ms a frame, 8.6ms with the off-screen tiles skipped —
+   * a bigger saving than deleting half the wall (9.9ms), and the only change
+   * left on this slide worth making. Everything else measured free: the images
+   * themselves 1.4ms, the drift 0.1, the saturate filter, the radius and the
+   * shadow nothing at all.
+   *
+   * It cannot just be declared in the stylesheet, which is the whole of the
+   * difficulty. A tile is as tall as its own photograph (`height: auto`), and
+   * the loop's length is `track.scrollHeight / copies` — so a tile whose
+   * layout is being skipped would report its `contain-intrinsic-size` rather
+   * than its real height, every column would measure short, and the wrap would
+   * show a band of ground once a lap. Each tile's measured height is pinned
+   * first; then the two can never disagree. Runs once, and only once every
+   * tile has a real height to pin.
+   */
+  let culled = false;
+  const cull = () => {
+    if (culled || !root.isConnected) return;
+    const pin = [];
+    for (const track of tracks) {
+      for (const tile of track.children) {
+        const height = tile.offsetHeight;
+        // Nothing settled yet. Leave the wall alone and let a later pass try.
+        if (!(height > 10)) return;
+        pin.push([tile, tile.offsetWidth, height]);
+      }
+    }
+    for (const [tile, width, height] of pin) {
+      tile.style.height = `${height}px`;
+      tile.style.containIntrinsicSize = `${width}px ${height}px`;
+    }
+    wall.classList.add('is-culled');
+    culled = true;
+    remeasure();
+  };
+
   [600, 1500, 3000, 5000].forEach((ms) => setTimeout(() => { if (root.isConnected) remeasure(); }, ms));
+  /* Tried early and repeatedly rather than once at the end. `cull` returns
+     without doing anything until every tile has a real height, so the first
+     attempt that finds the wall settled wins and the rest cost a loop. Early
+     matters: the pictures are warmed before the deck is opened now, so the
+     heights are usually there within a second, and waiting five seconds to
+     start culling left the slide at 16ms a frame for exactly as long as
+     anybody was likely to be looking at it. */
+  [700, 1200, 2000, 3200, 5200].forEach((ms) => setTimeout(() => cull(), ms));
 
 
 

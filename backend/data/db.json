@@ -7,19 +7,21 @@
   "users": [
     {
       "id": "usr_4d7c41e246a842a5",
-      "email": "admin@org.local",
+      "email": "Torii@123.com",
       "name": "Content Admin",
       "role": "admin",
       "passwordHash": "scrypt$db4661f9b01ba26312b00c7ddfb0dcda$6368a269a5dea47fb937a2b09783f99c29df2b4f9364e44f6c87cc5f0c9507b6b4ad889545a778c66938a3d81afd50aab536e0fec24342495b9b51f4fa96509c",
-      "createdAt": "2026-07-29T18:03:53.473Z"
+      "createdAt": "2026-07-29T18:03:53.473Z",
+      "updatedAt": "2026-09-18T07:39:23.467Z"
     },
     {
       "id": "usr_26e9b0c6f1cb4ed1",
-      "email": "presenter@org.local",
+      "email": "Torii@present.com",
       "name": "Presenter",
       "role": "presenter",
       "passwordHash": "scrypt$c403429eaeef2e34b45903a0272361bf$c862ed1c7e552d89426660c6cc8c59709198bb6f108b8c69a43fe7fb95850eb28484e011812daff992ec19b495b0afa777ca464674efb0487e8cbfeb1da247f8",
-      "createdAt": "2026-07-29T18:03:53.618Z"
+      "createdAt": "2026-07-29T18:03:53.618Z",
+      "updatedAt": "2026-09-18T07:39:23.474Z"
     }
   ],
   "sessions": [],

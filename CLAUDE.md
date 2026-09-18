@@ -1735,6 +1735,97 @@ slide measures 0 frames over 16.7ms; and `utils/dock.js`'s read/write loop now
 runs on one slide only, because the presenter bar stopped using it when the rail
 went.
 
+## Every picture is warmed before its tab is opened
+
+**A tab's photographs used to arrive after the tab did** (2026-09-18, on
+request: "every photo need to be loaded before even we are entering to the
+tab"). Nothing was slow — every slide but one already measured at the display's
+own limit — but Events fetched its 94 photographs when Events was first opened,
+and a picture landing after the slide it belongs to reads as a page still
+loading. On a three-metre screen that is the whole impression.
+
+`GET /api/orgs/:id/media-manifest` hands the client every image each section
+will ask for, and `utils/preload.js` walks that list in the background while the
+first slide is on screen. Measured: **806 images, 113.4MB, warmed in about four
+seconds** from localhost, after which Events, Centres of Excellence, the drift
+wall, Project Week and NT Square each open with **0 network fetches** and every
+image on the slide already decoded.
+
+**The manifest is computed on the server because the browser cannot.** A tab's
+pictures are only known once that tab is built, and building one is the
+expensive thing being got ahead of. The server has the blocks *and* the
+filesystem, which is what makes a guess checkable — and it has to be checked,
+because a stored path is not always a path from the uploads root: a wall stores
+photographs relative to its block's `base`, a centre of excellence stores
+`snowflake.png` and the component prefixes `coe/`, and `placement-wall` falls
+back to `Placements` in the component when no base is stored. Each candidate is
+tried against the disk and the first that exists wins; a reference that resolves
+nowhere is dropped, because a preloader requesting files that do not exist turns
+a silent non-problem into a screenful of 404s. Encoding each component's habits
+instead would rot the moment one changed.
+
+**Films are left out on purpose.** They are 57MB of the deck's 171 and they
+stream — the browser fetches the opening seconds and seeks for the rest, so
+downloading them whole in advance costs minutes of bandwidth to save nothing.
+Images are what flash in.
+
+**Four things keep the warming out of the way**, and together they cost nothing
+measurable: the open tab is warmed first and then the deck in order, so the
+work never competes with the slide the room is looking at; `fetchPriority:
+'low'` puts every one behind whatever the current slide wants; six at a time
+with the next batch on an idle callback, because the `load` handlers are on the
+main thread even though the fetch and decode are not; and a failed image
+resolves exactly like a loaded one, since a picture that will fail will fail
+again, visibly, when its slide draws it. Measured while the warm-up was in
+flight: 6.9ms a frame, 0 frames over 16.7ms. The JS heap after holding all 806
+is 6MB — the browser keeps the encoded bytes and decodes on demand, which is
+the whole point of holding the `Image` rather than decoding it.
+
+**The drift wall was drawing 720 tiles nobody could see.** It is the one slide
+that was not already at 60fps, and after the warming it measured 17.1ms a frame
+with 53 of 85 frames over budget. Ablated one suspect at a time on a fresh load,
+the way the earlier pass was:
+
+| what was changed | idle frame time |
+| --- | --- |
+| nothing, as it was | 14.5ms |
+| the images hidden | 13.9ms |
+| the drift stopped | 14.4ms |
+| `saturate` off | 14.4ms |
+| radius and shadow off | 15.7ms |
+| **half the tiles removed** | **9.9ms** |
+| **`content-visibility: auto` on the tile** | **8.6ms** |
+
+Only the tile count mattered, and skipping the off-screen ones beat deleting
+half the wall. 766 tiles exist and about 47 are on screen at any moment.
+
+**It cannot be declared in the stylesheet, and that is the whole difficulty.**
+A tile is as tall as its own photograph (`height: auto`), and the loop's length
+is `track.scrollHeight / copies` — so a tile whose layout was being skipped
+would report its `contain-intrinsic-size` instead of its real height, every
+column would measure short, and the wrap would show a band of ground once a lap.
+`DriftWall.cull` therefore pins every tile's measured height and its intrinsic
+size first, then adds `is-culled` to the wall; after that the two can never
+disagree. It runs once, refuses to run until every tile has a real height, and
+is attempted from 700ms rather than at the end — the pictures are warmed before
+the deck is opened now, so the heights are usually there within a second, and
+waiting five seconds left the slide at 16ms a frame for exactly as long as
+anybody was likely to be looking at it.
+
+Measured after, at 1600x900, where the harness's own frame is 6.9ms:
+
+| slide | before | after |
+| --- | --- | --- |
+| Organization Snapshot | 17.1ms, 53/85 frames over 16.7ms | **9.7ms, 0 over** |
+| Events, CoE, Project Street, NT Square, IT Development | 6.9ms | 6.9ms |
+| Certifications, settled | 7.7ms | 7.5ms, 0 over |
+| while the 806 images warm | n/a | 6.9ms, 0 over |
+
+Checked for the failure this invites: 49 tiles on screen, **0 unpainted**, and
+the wall photographs to a full frame with no gaps. Certifications spikes for a
+moment on arrival and is at 7.5ms once its entrance has run — a settled
+measurement is the only honest one on a slide with an entrance.
+
 ## Presenting: the forward gesture, and the dock
 
 **Forward walks the tab, then opens the next one** (2026-09-17). `advance` in

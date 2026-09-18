@@ -8987,6 +8987,15 @@ body.is-presenting .milestones__inner {
   outline: none;
 }
 
+/* Skip the tiles that are off screen — about 720 of 766 at any moment. Set by
+   DriftWall.js once it has pinned every tile's measured height, never from
+   here: a tile is sized by its own photograph, and skipping the layout of one
+   whose height had not been pinned would shorten the column the wrap length is
+   measured from. See the note on `cull` in that file. */
+.dw-wall.is-culled .dw-tile {
+  content-visibility: auto;
+}
+
 .dw-tile__inner {
   position: relative;
   display: block;

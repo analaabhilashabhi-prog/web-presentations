@@ -10,6 +10,7 @@ import {
   orgById,
   sectionByKeyOrId,
   visibleSections,
+  deckSections,
   resetSession,
 } from './context/appStore.js';
 import { LoginPage } from './pages/LoginPage.js';
@@ -19,6 +20,7 @@ import { toastError } from './components/Toast.js';
 import { confirmModal } from './components/Modal.js';
 import { startBuildWatch, flushPendingReload } from './utils/buildWatch.js';
 import { installTooltips } from './utils/tooltip.js';
+import { warmDeck } from './utils/preload.js';
 
 installTooltips();
 
@@ -133,6 +135,13 @@ async function route() {
 
   const sections = visibleSections();
   const section = target.sectionId ? sectionByKeyOrId(target.sectionId) : sections[0];
+
+  /* Warm every picture in the deck in the background, the tab on screen first
+     and then the order a presenter will walk. Started here rather than at login
+     because this is the first point where the deck's own order is known. It
+     returns immediately; nothing below waits on it, and a deck whose manifest
+     cannot be fetched simply loads each tab's pictures the way it always did. */
+  warmDeck(org.id, section?.id || null, deckSections().map((s) => s.id));
 
   // Nothing is authored in the browser, so these are dead ends that land back
   // on the section itself.
