@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Owl Code</title>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font:13px/1.45 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:#1B1B1B;background:#F7F6F5;}
+  header{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border-bottom:1px solid rgba(27,27,27,.08);}
+  .mark{width:18px;height:18px;border-radius:5px;background:#FF6F32;color:#fff;display:grid;place-items:center;font-size:11px;font-weight:700;}
+  .brand{font-weight:600;letter-spacing:-.01em;}
+  nav{margin-left:auto;display:flex;gap:4px;}
+  nav button{border:0;background:none;font:inherit;font-size:11px;color:#6E6862;padding:4px 8px;border-radius:999px;cursor:pointer;}
+  nav button[aria-current="true"]{background:#FF6F32;color:#fff;}
+  main{padding:14px;}
+  h1{margin:0 0 3px;font-size:16px;letter-spacing:-.02em;}
+  .sub{margin:0 0 12px;font-size:11.5px;color:#6E6862;}
+  ul{list-style:none;margin:0 0 12px;padding:0;display:grid;gap:6px;}
+  li{display:flex;justify-content:space-between;gap:10px;background:#fff;border:1px solid rgba(27,27,27,.08);border-radius:8px;padding:8px 10px;font-size:11.5px;cursor:pointer;}
+  li:hover{border-color:#FF6F32;}
+  li b{font-weight:600;color:#FF6F32;font-size:10px;}
+  .go{border:0;border-radius:999px;background:#FF6F32;color:#fff;font:inherit;font-size:12px;font-weight:600;padding:8px 16px;cursor:pointer;}
+  .go:hover{filter:brightness(.94);}
+  .out{margin-top:10px;font-size:11.5px;color:#2A2723;background:#fff;border:1px dashed #FF6F32;border-radius:8px;padding:8px 10px;min-height:32px;}
+  footer{position:fixed;left:0;right:0;bottom:0;padding:5px 14px;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#A29B95;background:#F7F6F5;}
+</style>
+</head>
+<body>
+<header>
+  <span class="mark">O</span>
+  <span class="brand">Owl Code</span>
+  <nav><button type="button" aria-current="true">Problems</button><button type="button" aria-current="false">Contests</button><button type="button" aria-current="false">Profile</button></nav>
+</header>
+<main>
+  <h1>Two Sum — Easy</h1>
+  <p class="sub">Company set · Accepted by 812 of 1,204</p>
+  <ul><li><span>Arrays</span><b>Easy · 2 min</b></li><li><span>Hash maps</span><b>Easy · 4 min</b></li><li><span>Sliding window</span><b>Medium · 9 min</b></li></ul>
+  <button class="go" type="button">Run tests</button>
+  <div class="out" id="out">Demo build — placeholder data.</div>
+</main>
+<footer>Owl Code · demo</footer>
+<script>
+  const out = document.getElementById('out');
+  document.querySelectorAll('nav button').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('nav button').forEach((x) => x.setAttribute('aria-current', String(x === b)));
+    out.textContent = b.textContent + ' \u2014 placeholder view.';
+  }));
+  document.querySelectorAll('li').forEach((li) => li.addEventListener('click', () => {
+    out.textContent = 'Opened: ' + li.firstElementChild.textContent;
+  }));
+  document.querySelector('.go').addEventListener('click', () => { out.textContent = "All 14 tests passed · 42 ms · 12.3 MB"; });
+</script>
+</body>
+</html>

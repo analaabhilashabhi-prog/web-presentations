@@ -50,6 +50,9 @@ export const DEFAULT_SIZE = {
   'event-orbit': { w: 12, h: 15 },
   'training-shelf': { w: 12, h: 15 },
   'photo-collage': { w: 12, h: 15 },
+  'event-wheel': { w: 12, h: 15 },
+  'photo-folder': { w: 12, h: 15 },
+  'project-showcase': { w: 12, h: 15 },
   'thread-board': { w: 12, h: 15 },
 };
 

@@ -1,6 +1,7 @@
 import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
 import { registerStepper } from '../utils/slideSteps.js';
+import { media } from '../utils/media.js';
 
 /**
  * A course prospectus, paged.
@@ -129,7 +130,12 @@ export function CourseDeck(block, { editing = false } = {}) {
     } else {
       body = h('div', { class: 'cd-cards', style: { '--cd-cols': String(frame.columns || 2) } },
         ...frame.items.map((item) => h('div', { class: 'cd-card' },
-          h('span', { class: 'cd-card__mark' }, icon(item.icon || 'sparkles', { class: 'ic' })),
+          /* A card with its own artwork — a credential badge — shows that in the
+             mark's disc instead of the line icon. */
+          item.logo
+            ? h('span', { class: 'cd-card__mark has-art' },
+                h('img', { src: media(`/uploads/${encodeURI(item.logo)}`), alt: '', loading: 'eager', decoding: 'async' }))
+            : h('span', { class: 'cd-card__mark' }, icon(item.icon || 'sparkles', { class: 'ic' })),
           h('div', {},
             h('h3', { class: 'cd-card__title' }, item.title),
             item.body ? h('p', { class: 'cd-card__body' }, item.body) : null,

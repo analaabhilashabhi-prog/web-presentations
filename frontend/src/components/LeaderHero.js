@@ -527,6 +527,23 @@ export function LeaderHero(block, { editing = false } = {}) {
     }),
   );
 
+  /* The career in figures, under the social row (2026-09-17, on request). They
+     were two sentences at the end of the body for a few hours and read as more
+     of the same paragraph; as a pair of marks they are the thing the eye lands
+     on after the name. The figure carries the accent, the line under it does
+     not — the deck's rule is that the accent marks what is primary. */
+  const marks = (block.highlights || []).length
+    ? h('div', { class: 'leader-hero__marks' },
+        ...block.highlights.map((x, i) => h('div', {
+          class: 'leader-hero__mark',
+          style: { '--mark-i': String(i) },
+        },
+          h('span', { class: 'leader-hero__mark-value' }, x.value),
+          h('span', { class: 'leader-hero__mark-label' }, x.label),
+        )),
+      )
+    : null;
+
   const pane = h(
     'div',
     { class: 'leader-hero__pane' },
@@ -539,6 +556,7 @@ export function LeaderHero(block, { editing = false } = {}) {
         )
       : null,
     socials,
+    marks,
   );
 
   /* The composition lives in a stage with a floored aspect rather than in the

@@ -61,7 +61,9 @@ function arcLayout(w, height, count) {
   if (!w || !height || !count) return null;
   const a = w / 2;
   const cx = a;
-  const size = clamp(w / 44, 26, 42);
+  /* The badge. Raised from `clamp(w/44, 26, 42)` on 2026-09-17 — 36px on a
+     1600px stage, which is a logo nobody at the back of a room can name. */
+  const size = clamp(w / 26, 40, 64);
   const k = height - 0.15 * height;
   const u = (a * a - k * k) / (2 * k);
   const r0 = u + k;
@@ -74,22 +76,25 @@ function arcLayout(w, height, count) {
     return { r, tMax: Math.min(byY, byX) };
   });
 
-  /* Share the badges out by how much of each arc is actually on stage, so the
-     spacing along one arc matches the spacing along the other. */
-  const weight = base.reduce((sum, g) => sum + g.tMax * g.r, 0);
-  const ideal = base.map((g) => (g.tMax * g.r * count) / weight);
-  const counts = ideal.map((v) => Math.max(4, Math.round(v)));
-  let total = counts.reduce((sum, v) => sum + v, 0);
-  let guard = 0;
-  while (total !== count && guard < 200) {
-    const dir = total < count ? 1 : -1;
-    let best = 0;
-    for (let i = 1; i < counts.length; i += 1) {
-      if (dir * (ideal[i] - counts[i]) > dir * (ideal[best] - counts[best])) best = i;
-    }
-    counts[best] += dir;
-    total += dir;
-    guard += 1;
+  /* How many badges an arc carries is a question about the arc, not about the
+     catalogue. It used to be the catalogue: the credentials were shared out
+     between the two arcs by length, so each arc always held its share of
+     however many there were — which is right at 42 and leaves 15 strung out
+     with 161px of air between them, the whole point of the band lost. The slots
+     are now set by density: one every 1.5 badge-widths along the path, so the
+     band reads as a band at any size of catalogue. The travel already wraps
+     with `% credentials.length`, so a short catalogue simply comes round again,
+     and because the slots are numbered straight through both arcs a repeat is
+     always a full catalogue away from itself — never two alike side by side.
+     A catalogue longer than the slots would lose its tail, so the density is
+     raised until there is at least one slot for every credential. */
+  const pitchPx = size * 1.5;
+  const lengths = base.map((g) => 2 * g.tMax * g.r);
+  let counts = base.map((g, i) => Math.max(4, Math.round(lengths[i] / pitchPx) + 1));
+  const fits = counts.reduce((sum, v) => sum + v, 0);
+  if (fits < count) {
+    const grow = count / fits;
+    counts = counts.map((v) => Math.ceil(v * grow));
   }
 
   let from = 0;
@@ -133,8 +138,17 @@ function evenOut(img) {
   img.style.transform = `scale(${Math.max(0.86, fill ** 0.18).toFixed(3)})`;
 }
 
-function badgeArt(item, cls, srcOf) {
-  if (!item.badge) return h('em', { class: cls }, (item.vendor || '?').slice(0, 2).toUpperCase());
+/* `ignoreBadge` draws the type treatment even for a credential that has badge
+   artwork — the register passes it for a badge that is a photograph of a badge
+   rather than the artwork (see `onRegister` in the schema). Skills Unlocked
+   never passes it, so every badge is still seen there. */
+function badgeArt(item, cls, srcOf, ignoreBadge = false) {
+  /* No badge: the vendor set in type. Two letters, or all of them for a name
+     as short as IBM — "IB" is not anyone's name. */
+  if (!item.badge || ignoreBadge) {
+    const v = String(item.vendor || '?');
+    return h('em', { class: cls }, v.slice(0, v.length <= 3 ? 3 : 2).toUpperCase());
+  }
   return h('img', {
     class: cls, src: srcOf(item.badge), alt: '', loading: 'lazy', decoding: 'async',
     onload: (e) => evenOut(e.currentTarget),
@@ -164,8 +178,11 @@ export function CertificationWall(block, { editing = false } = {}) {
   const cards = vendors.reduce((n, v) => n + v.certs.length, 0);
   const earned = credentials.reduce((n, c) => n + (c.held || 0), 0);
   const bodies = new Set(credentials.map((c) => c.vendor)).size;
+  /* The gallery is the cohort artwork; a deck that carries none has no third
+     act, and the tab for it is not drawn. Torii's block holds no cards. */
+  const acts_ = vendors.length ? ACTS : ACTS.filter((a) => a.key !== 'gallery');
 
-  let act = ACTS[0].key;
+  let act = acts_[0].key;
   const src = (p) => upload(String(p).split('/').map(encodeURIComponent).join('/'));
   const frames = [];
   const observers = [];
@@ -287,12 +304,12 @@ export function CertificationWall(block, { editing = false } = {}) {
         const cred = credentials[(g.from + j) % credentials.length];
         const el = h('button', {
           class: 'cs-pin', type: 'button',
-          style: { width: `${plan.size}px`, '--i': String(g.from + j) },
+          style: { width: `${plan.size}px`, '--cs-pin-size': `${plan.size}px`, '--i': String(g.from + j) },
           onclick: () => { act = 'skills'; pick = credentials.indexOf(cred); viewMode = 'detail'; drawSteps(); showAct(); },
         },
           h('span', { class: 'cs-pin__in' },
             h('span', { class: 'cs-pin__bob' },
-              h('span', { class: 'cs-pin__art' }, badgeArt(cred, '', src)))),
+              h('span', { class: 'cs-pin__art' }, badgeArt(cred, '', src, cred.onRegister === false)))),
         );
         pins.push(el);
         holders.push(el);
@@ -389,13 +406,27 @@ export function CertificationWall(block, { editing = false } = {}) {
         : null,
       drift,
       h('div', { class: 'cs-reg__mid' },
+        /* The total is what the credentials total — never typed in. The second
+           figure is the block's own (`trainees`), so a deck without one shows the
+           total alone in the middle; it used to be a literal "16,000+" here. */
         h('div', { class: 'cs-figs' },
           h('div', { class: 'cs-fig', style: { '--i': '0' } },
             h('strong', {}, nf(earned)), h('span', {}, 'Certifications')),
-          h('i', { class: 'cs-figs__rule' }),
-          h('div', { class: 'cs-fig', style: { '--i': '1' } },
-            h('strong', {}, '16,000+'), h('span', {}, 'Trainees Certified')),
+          ...(block.trainees ? [
+            h('i', { class: 'cs-figs__rule' }),
+            h('div', { class: 'cs-fig', style: { '--i': '1' } },
+              h('strong', {}, block.trainees), h('span', {}, 'Trainees Certified')),
+          ] : []),
         ),
+        /* How the total splits by year, when the block says. */
+        (block.years || []).length
+          ? h('div', { class: 'cs-figs cs-figs--years' },
+            ...block.years.flatMap((y, i) => [
+              i ? h('i', { class: 'cs-figs__rule' }) : null,
+              h('div', { class: 'cs-fig cs-fig--year', style: { '--i': String(2 + i) } },
+                h('strong', {}, nf(y.count)), h('span', {}, y.label)),
+            ]).filter(Boolean))
+          : null,
       ),
     );
     lastW = 0;
@@ -487,6 +518,7 @@ export function CertificationWall(block, { editing = false } = {}) {
             h('strong', {}, nf(c.held)),
             h('span', {}, 'certifications completed')
           ),
+          c.domain ? h('p', { class: 'cs-detail__where' }, c.domain) : null,
           h('i', { class: 'cs-detail__accent-bar' }),
         ),
       );
@@ -643,7 +675,7 @@ export function CertificationWall(block, { editing = false } = {}) {
   const acts = h('div', { class: 'cs-acts' });
 
   function drawSteps() {
-    steps.replaceChildren(...ACTS.map((a) => h('button', {
+    steps.replaceChildren(...acts_.map((a) => h('button', {
       class: `cs-step${a.key === act ? ' is-on' : ''}`,
       type: 'button', role: 'tab', 'aria-selected': String(a.key === act),
       onclick: () => { if (a.key !== act) { act = a.key; drawSteps(); showAct(); } },

@@ -124,6 +124,27 @@ export function FitSlide(content, { nominalWidth = NOMINAL_WIDTH, fill = false }
   };
 
   /**
+   * The same fit, but coalesced over time rather than over one frame.
+   *
+   * `schedule` collapses everything asked for within a single frame into one
+   * fit, which is right for a resize. It is wrong for images arriving: they land
+   * across hundreds of *different* frames, so a slide with a lot of them refits
+   * on nearly every frame for as long as they stream — and a fit is not cheap,
+   * because it clears the height and reads `scrollHeight` back, which is a
+   * forced synchronous layout of the whole slide.
+   *
+   * Measured on Torii's Organization Snapshot, which streams 1,149 images:
+   * the slide took 449ms to appear and then ran its first second at 152.8ms a
+   * frame — about six frames in that second. Waiting until the arrivals go quiet
+   * turns that into a handful of fits however many pictures there are.
+   */
+  let settleTimer = null;
+  const scheduleQuiet = () => {
+    if (settleTimer) clearTimeout(settleTimer);
+    settleTimer = setTimeout(() => { settleTimer = null; schedule(); }, 120);
+  };
+
+  /**
    * The blocks are still arriving when the first fit runs — entrance animations
    * are mid-flight and the KPI counters are counting, which measures as much as
    * 30px taller than the settled layout. That is the difference between a slide
@@ -147,14 +168,28 @@ export function FitSlide(content, { nominalWidth = NOMINAL_WIDTH, fill = false }
     }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
   }
 
-  // An image that has not decoded yet has no height, so refit as they arrive.
-  requestAnimationFrame(() => {
+  // An image that has not decoded yet has no height, so refit as they arrive —
+  // but once they have gone quiet, not once apiece. See `scheduleQuiet`.
+  const hookImages = () => {
     for (const image of inner.querySelectorAll('img')) {
       if (!image.complete) {
-        image.addEventListener('load', schedule, { once: true });
-        image.addEventListener('error', schedule, { once: true });
+        image.addEventListener('load', scheduleQuiet, { once: true });
+        image.addEventListener('error', scheduleQuiet, { once: true });
       }
     }
+  };
+
+  // A slide with a title card mounts its content late (see SlideView). What was
+  // measured at mount was a card over nothing, so the whole opening pass runs
+  // again when the content lands: hook its images, fit now, confirm as it moves.
+  inner.addEventListener('slide-content', () => {
+    hookImages();
+    schedule();
+    settle();
+  });
+
+  requestAnimationFrame(() => {
+    hookImages();
     document.fonts?.ready.then(schedule).catch(() => {});
     // Fit on this frame rather than scheduling another one: the slide must
     // never be painted at the wrong size, even for a single frame.

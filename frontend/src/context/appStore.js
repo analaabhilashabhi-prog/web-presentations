@@ -37,7 +37,65 @@ export function orgById(orgId) {
   return state.orgs.find((org) => org.id === orgId) || null;
 }
 
-const isShown = (section) => isAdmin() || (section.status === 'published' && !section.hidden);
+/**
+ * Rows switched off in the code, per organization, by section key.
+ * ---------------------------------------------------------------
+ * These are sections that still exist, still hold all their content and are
+ * still `published` in the store — they are simply not offered anywhere in the
+ * interface: not in the pane, not in the collapsed rail, and not in Prev/Next
+ * while presenting. Nothing is deleted and no data is touched, so switching one
+ * back on is a one-line edit here and a refresh.
+ *
+ * TO BRING A ROW BACK: delete its line below (or comment it out). That is all.
+ * TO HIDE ANOTHER ROW: add its `key` to that organization's list. The key is
+ * the section's own, which is not always its title — Torii's "Video Resumes"
+ * row is keyed `testimonials`, and its "Team" row is keyed `leadership-journey`
+ * — so take the key from `backend/data/db.json` rather than guessing it.
+ *
+ * This is deliberately separate from `hidden`/`status` in the store, which is
+ * what `tools/presenter-visibility.cjs` sets: that is per-deck editorial state
+ * an admin can still see through, and this is a switch in the code that hides
+ * the row from everyone, including an admin.
+ */
+export const HIDDEN_ROWS = {
+  /* NGI, on request 2026-09-16. The section — the register, the skills and the
+     gallery, 42 credentials — is intact and still published; only the row is
+     switched off. */
+  'technical-hub': [
+    'certifications',       // Certifications
+  ],
+  /* Torii, on request 2026-09-16; Placements added 2026-09-17. */
+  torii: [
+    'industry-alliances',   // Industry Alliances
+    'history-milestones',   // History & Milestones
+    'success-stories',      // Success Stories
+    'testimonials',         // Video Resumes  (the key is not the title)
+    'placements',           // Placements
+  ],
+};
+
+/**
+ * Organizations switched off in the code — the same idea as `HIDDEN_ROWS`, one
+ * level up. An id listed here is dropped as the organizations are loaded, so
+ * the pane's tab strip, the organizations page and the router never see it:
+ * its tab is not drawn, and a direct URL to one of its sections bounces to
+ * `#/orgs`. The organization and every section in it stay in the store, whole.
+ * Delete the line to bring it back.
+ *
+ * NGI and NCET, on request 2026-09-17: "I just want Torii ones."
+ */
+export const HIDDEN_ORGS = [
+  'technical-hub',        // NGI and NCET
+];
+
+/** Whether this section is switched off in the code — see `HIDDEN_ROWS`. */
+const isHiddenInCode = (section) => {
+  const org = section.orgId || state.orgId;
+  return (HIDDEN_ROWS[org] || []).includes(section.key);
+};
+
+const isShown = (section) => !isHiddenInCode(section)
+  && (isAdmin() || (section.status === 'published' && !section.hidden));
 
 /**
  * The navigation groups — top-level sections only. Subsections are their own
@@ -74,7 +132,7 @@ export function childSections(parentId) {
  * next group — which is the order a presenter clicks through in the pane.
  */
 export function deckSections() {
-  const shown = (section) => section.status === 'published' && !section.hidden;
+  const shown = (section) => !isHiddenInCode(section) && section.status === 'published' && !section.hidden;
   const children = (parentId) => state.sections
     .filter((s) => s.parentId === parentId && shown(s))
     .sort((a, b) => a.order - b.order);
@@ -103,7 +161,7 @@ export function sectionByKeyOrId(value) {
 
 export async function loadOrgs({ force = false } = {}) {
   if (state.orgs.length && !force) return state.orgs;
-  state.orgs = await contentService.listOrgs();
+  state.orgs = (await contentService.listOrgs()).filter((org) => !HIDDEN_ORGS.includes(org.id));
   return state.orgs;
 }
 

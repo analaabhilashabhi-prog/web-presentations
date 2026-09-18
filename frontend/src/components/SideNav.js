@@ -181,35 +181,6 @@ const groupFor = (section) => {
  * section's own title wins; the curated label is what a titleless section falls
  * back to, and the curated icon is what a section with no `iconKey` gets.
  */
-/**
- * What sits under a section, for the deck bar's hover menu.
- *
- * Real child pages win; a group whose pages have not been built yet falls back to
- * its curated labels, which is the same precedence the side pane uses. A curated
- * row carries no id — hovering shows it so the room can see what the group
- * covers, and clicking it opens the group's own page, because there is nothing
- * else to open yet.
- */
-export function sectionMenu(section) {
-  const own = childSections(section?.id);
-  if (own.length) return own.map((c) => ({ label: c.title, id: c.id }));
-
-  /* A page inside a group offers the rest of its group. The presenting deck is
-     flattened — group, then its pages, then the next group — so most entries in
-     the bar are child pages with no children of their own, and listing nothing
-     for them would leave the menu on a single section out of thirteen. Its
-     siblings are what a presenter actually wants to reach from there. */
-  if (section?.parentId) {
-    const family = childSections(section.parentId)
-      .filter((c) => c.id !== section.id)
-      .map((c) => ({ label: c.title, id: c.id }));
-    if (family.length) return family;
-  }
-
-  const [, , curated] = groupFor(section);
-  return (curated || []).map((label) => ({ label, id: null }));
-}
-
 export function sectionLabel(section) {
   const [title, iconKey] = groupFor(section);
   return {

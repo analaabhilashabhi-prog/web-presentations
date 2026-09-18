@@ -40,6 +40,9 @@ import { ButtonRow, IconBox, LogoBox } from './Elements.js';
 import { TextBox, ImageBox, ProfileBox } from './MediaBoxes.js';
 import { VideoBox } from './VideoBox.js';
 import { ThreadBoard } from './ThreadBoard.js';
+import { ProjectShowcase } from './ProjectShowcase.js';
+import { PhotoFolder } from './PhotoFolder.js';
+import { EventWheel } from './EventWheel.js';
 import {
   inReadingOrder,
   layoutOf,
@@ -171,6 +174,15 @@ export function renderBlock(block, options = {}) {
 
     case 'thread-board':
       return ThreadBoard(block);
+
+    case 'project-showcase':
+      return ProjectShowcase(block);
+
+    case 'photo-folder':
+      return PhotoFolder(block);
+
+    case 'event-wheel':
+      return EventWheel(block);
 
     case 'gallery-wall':
       return GalleryWall(block, options);
