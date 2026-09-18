@@ -14041,8 +14041,22 @@ body.is-presenting .vc {
 .pr-root {
   position: relative;
   display: flex; flex-direction: column;
-  height: 860px;
-  padding: 44px 30px 0;
+  /* Never a bare 860: a slide in presentation mode is the screen's shape, not
+     16:9, so a 16:10 display hands this section 1000 rows and a root pinned to
+     860 stops 140 short. Presenting pins it with !important further down; this
+     is what the collapsed view and the admin canvas read. */
+  /* A definite height, not a minimum, and `flex: 0 0 auto` with it:
+     `.canvas-block > *` sets `flex: 1`, whose `flex-basis: 0%` beats `height`
+     on the main axis. Without this the root collapsed to its content the moment
+     this block went full-bleed, and the fan sat at the top of a slide with a
+     band of white under it — the same trap `.fd-root`, `.tb-root` and
+     `.ev-root` each carry a note about. */
+  flex: 0 0 auto;
+  height: var(--slide-h, 860px);
+  max-height: var(--slide-h, 860px);
+  /* The head is gone, so the top padding is the air above the titles and
+     nothing more — the rows it used to take belong to the photographs. */
+  padding: 22px 30px 0;
   overflow: hidden;
   background:
     radial-gradient(120% 90% at 50% 0%, var(--nav-accent-soft, rgb(233 90 34 / 0.10)) 0%, transparent 62%),
@@ -14122,13 +14136,13 @@ body.is-presenting .vc {
 
 .pr-ring {
   position: relative;
-  width: 520px; height: 340px;
+  width: 890px; height: 560px;
   transform-style: preserve-3d;
 }
 
 .pr-slot {
   position: absolute; top: 0; left: 50%;
-  width: 520px; margin-left: -260px;
+  width: 890px; margin-left: -445px;
   display: block; padding: 0; border: 0; background: none;
   transform-style: preserve-3d;
   cursor: pointer;
@@ -14179,8 +14193,11 @@ body.is-presenting .vc {
    not its shape. Capped, or a panorama would reach across the whole slide. */
 .pr-card__frame {
   position: relative;
-  height: 300px; width: auto; aspect-ratio: var(--ar, 16 / 9);
-  max-width: 520px;
+  /* Bigger, because the fan now walks itself and the photographs are the
+     whole of the slide (2026-09-18, on request). 300 -> 430 tall, and the cap
+     follows so a 16:9 picture is not clipped back to the old width. */
+  height: 500px; width: auto; aspect-ratio: var(--ar, 16 / 9);
+  max-width: 890px;
   margin: 0 auto;
   border-radius: 16px; overflow: hidden;
   background: #0D1117;

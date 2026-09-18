@@ -377,6 +377,7 @@ still publishable only by hand.
 | `apply-review-2026-09-17b.cjs` | the review's second pass — the showcase cut to five products plus three named ones, the photographic badges off the register, the CEO's two figures |
 | `apply-review-2026-09-17.cjs` | Torii's content changes from the 2026-09-17 review — the Claude card, the CEO lines, About, the team and CoE orders, the film start, the Beyond and Certifications photograph |
 | `fix-uploads-path-case.cjs` | corrects the case of every stored `/uploads` path — run it before deploying, because Windows hides a wrong case and Linux does not |
+| `rename-beyond-group.cjs` | renames one of Beyond's chapters — the title and its photographs' labels, never the key or the paths |
 | `crop-image.cjs` | crops a photograph through headless Chrome's canvas — there is no image library and there is not going to be |
 | `drop-ncet.cjs` | removes the NCET organization and its sections, and renames NGI's tab — stop the server first; always backs up `db.json` |
 | `mirror-deck.cjs` | copies one organization's whole deck into another — `--replace` clears the target first; always backs up `db.json` to `backend/data/backups/` |
@@ -1922,6 +1923,70 @@ front of a room:
 
 Measured: closed at 1.2s and 2.0s, open by 2.7s, and still open at 3.6s, 6s,
 12s and 18s; focus never moves; and a press at 0.9s leaves it closed at 4.1s.
+
+## Beyond walks its own chapters
+
+**No head, and it plays itself** (2026-09-18, on request: "remove this in the
+top left corner… the title highlighted, then the photos scroll, then the next
+title"). The slide is the photographs and the name of the set being shown.
+
+**The head in the corner was the SLIDE's, not the block's.** `photo-ring` was
+missing from the `hasHero` list in `SlideView.js`, so the slide drew its own
+section head — the eyebrow, "Beyond" and the accent rule — above a block that
+already carried one of its own. Two heads, and the one being pointed at was the
+outer. It is on the list now, and the block's own `pr-head` is built but left
+unappended, so putting it back is one line.
+
+**The fan walks the whole section, not one set.** Every photograph of the open
+chapter is brought to the front in turn; when the last has been seen the next
+title takes over and starts on its first, and it runs until the tab is left.
+`index` wraps, so on its own it can never say "that was the last one" — a set of
+three would turn for ever. A count of what has been *seen* since the set opened
+is the only honest end, reset wherever a set begins, which is `buildCards`.
+
+"All" stays on the bar for a presenter to press and the walk carries on from it,
+but it is not a chapter: stepping into it on every lap would show all ten
+photographs twice. The slide opens on the first chapter rather than on "All",
+because the walk is meant to start with a title highlighted.
+
+**A set of one still has to hand on.** `start` used to refuse when
+`slots.length < 2`, which was right when the fan only turned within a set and
+wrong the moment it had somewhere to go — a single-photograph chapter would have
+stranded the walk for good.
+
+Measured, left alone, reading the highlighted tab and which card is at the front:
+
+| | |
+| --- | --- |
+| opens on | Snowflake 1/3 |
+| Snowflake 1→3, then Shine Mode 1→4, then Code Fall 1→3, then round again | a card every ~3.4s, a 3.4s beat on the last of a set |
+| pointer anywhere on the slide, 8s | no movement |
+| pointer away | carries on from where it was held |
+| frame time | 7.0ms, 0 frames over 16.7ms, 0 stale roots after leaving |
+
+**The photographs are 71% wider.** 520x293 nominal to 890x500 — the card, the
+ring, the slot and `STEP_X` all move together, or the fan reads as one picture
+with edges behind it rather than a group standing around the front one. Two
+things had to be fixed before the room was there to use:
+
+  - **`.pr-root` was missing `flex: 0 0 auto`.** `.canvas-block > *` sets
+    `flex: 1`, whose `flex-basis: 0%` beats `height` on the main axis — so the
+    moment this block went full-bleed the root collapsed to its content and the
+    fan sat at the top of the slide with a band of white under it. `.fd-root`,
+    `.tb-root` and `.ev-root` each carry a note about the same trap.
+  - **Its height was a bare `860px`**, which is the other documented trap: a
+    slide presenting is the screen's shape, not 16:9. It is
+    `var(--slide-h, 860px)` now, so the collapsed view and a 16:10 display both
+    get the rows they actually have.
+
+**"Beyond Boundaries" is "Snowflake"** (`tools/rename-beyond-group.cjs`). The
+group's `key` and its photographs' `src` paths are deliberately untouched — the
+key is identity only and the paths are the folder the files sit in, so renaming
+either would mean moving files to change a label, and a wrong guess moving media
+is unrecoverable where a stale folder name is only a name. The shots' own
+`label` goes with the title, because it is drawn under the card: a set called
+Snowflake whose every card said "Beyond Boundaries" would be the rename half
+done.
 
 ## Events plays itself
 

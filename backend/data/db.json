@@ -12571,23 +12571,23 @@
           "groups": [
             {
               "key": "beyond-boundaries",
-              "name": "Beyond Boundaries",
+              "name": "Snowflake",
               "shots": [
                 {
                   "src": "beyond-boundaries/01.jpg",
-                  "label": "Beyond Boundaries",
+                  "label": "Snowflake",
                   "w": 2048,
                   "h": 1151
                 },
                 {
                   "src": "beyond-boundaries/02.jpg",
-                  "label": "Beyond Boundaries",
+                  "label": "Snowflake",
                   "w": 1366,
                   "h": 911
                 },
                 {
                   "src": "beyond-boundaries/03.jpg",
-                  "label": "Beyond Boundaries",
+                  "label": "Snowflake",
                   "w": 800,
                   "h": 718
                 }
@@ -12652,7 +12652,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:50:52.410Z",
-      "updatedAt": "2026-09-17T13:06:02.893Z"
+      "updatedAt": "2026-09-18T12:26:31.947Z"
     },
     {
       "id": "sec_9709ee4e6c3a4b53",

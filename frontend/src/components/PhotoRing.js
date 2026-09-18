@@ -41,12 +41,23 @@ import { letterRevealPreset } from '../utils/letterReveal.js';
 const REDUCED = window.matchMedia?.('(prefers-reduced-motion: reduce)');
 
 /* How long a card stays the front one, and how long the turn to the next takes.
-   The hold dominates deliberately — see the note above. */
-const HOLD_MS = 3200;
+   The hold dominates deliberately — see the note above. It came down from 3200
+   when the fan started walking the whole section on its own (2026-09-18): at
+   4.3s a card a set of four took seventeen seconds, which is a long time to
+   stand beside a slide that is not going to do anything else. */
+const HOLD_MS = 2300;
 const TURN_MS = 1100;
+/* The beat on the last card of a set, before the next title takes over. Longer
+   than a card, for the reason the event wheel's is: the title changing is the
+   end of a chapter and should not read as one more step. */
+const SET_MS = 3400;
 
-const STEP_X = 268;   // across, per step out from the front
-const STEP_Z = 190;   // back, per step out
+/* Across and back, per step out from the front. Both grew with the card
+   (2026-09-18): at the old 268 a 760px card stood almost entirely over its
+   neighbour, and the fan read as one picture with edges behind it rather than
+   as a group standing around the front one. */
+const STEP_X = 404;   // across, per step out from the front
+const STEP_Z = 240;   // back, per step out
 const TILT = 34;      // degrees, leaning in toward the centre
 /* How many are drawn either side. Past the third the cards are behind each other
    and contribute nothing but overdraw. */
@@ -59,6 +70,9 @@ const WINGS = 3;
  * no groups. It still has to render, so that case becomes a single unnamed set
  * and the filter bar stays off — one filter is not a choice.
  */
+/** Whether a tab is the combined "everything" one rather than a chapter. */
+const isAll = (t) => t && t.key === 'all';
+
 function setsOf(block) {
   const groups = (Array.isArray(block.groups) ? block.groups : [])
     .map((g) => ({
@@ -101,7 +115,10 @@ export function PhotoRing(block, { editing = false } = {}) {
     ? [{ key: 'all', name: block.allLabel || 'All', shots: sets.flatMap((s) => s.shots) }, ...named]
     : named;
 
-  let active = tabs.length ? tabs[0] : sets[0];
+  /* Opens on the first CHAPTER, not on "All": the walk starts with a title
+     highlighted and that title's photographs, which is what the section is.
+     "All" is still on the bar and a presenter may press it. */
+  let active = tabs.find((t) => !isAll(t)) || tabs[0] || sets[0];
   let shots = active.shots;
   let slots = [];
   let index = 0;
@@ -118,6 +135,7 @@ export function PhotoRing(block, { editing = false } = {}) {
   function buildCards() {
     stop();
     index = 0;
+    shown = 1;
     /* The card the pointer was on is about to be destroyed, so its `pointerleave`
        will never arrive. Left set, `held` blocks `start()` for good and the fan
        never turns again after a filter is pressed with the pointer on a card —
@@ -214,13 +232,65 @@ export function PhotoRing(block, { editing = false } = {}) {
 
   const advance = () => { index = (index + 1) % slots.length; paint(); };
 
+  /* THE FAN WALKS THE WHOLE SECTION, NOT ONE SET (2026-09-18, on request:
+     "the title comes up and the photos scroll, then the next title"). Every
+     photograph of the open set is brought to the front in turn, and when the
+     last one has been seen the next title takes over and starts on its first.
+     It runs until the tab is left.
+
+     `shown` is what makes the difference: `index` wraps, so on its own it can
+     never say "that was the last one" — a set of three would turn for ever.
+     Counting what has been *seen* since the set opened is the only honest end,
+     and it is reset wherever a set begins, which is `buildCards`. */
+  let shown = 1;
+
+  /* The named sets only. "All" stays on the bar for a presenter to press — and
+     the walk carries on from it when they do — but it is not a chapter, and
+     stepping into it on every lap would show every photograph twice. */
+  const chapters = tabs.filter((t) => !isAll(t));
+
+  function nextChapter() {
+    const here = chapters.indexOf(active);
+    /* From "All", or from anywhere unexpected, begin the run again. */
+    return chapters[here < 0 ? 0 : (here + 1) % chapters.length] || active;
+  }
+
+  function goTo(t) {
+    if (!t || t === active) { shown = 1; index = 0; paint(); return; }
+    active = t;
+    shots = t.shots;
+    drawTabs();
+    buildCards();
+  }
+
+  function tick() {
+    if (held) return;
+    if (shown < slots.length) {
+      shown += 1;
+      advance();
+      /* Landing on the last card: hold it for the chapter beat, not a card's. */
+      reschedule(shown >= slots.length ? SET_MS : HOLD_MS + TURN_MS);
+      return;
+    }
+    goTo(nextChapter());
+  }
+
+  function reschedule(ms) {
+    stop();
+    if (held || REDUCED?.matches) return;
+    timer = setTimeout(tick, ms);
+  }
+
   function start() {
-    if (timer || held || REDUCED?.matches || slots.length < 2) return;
-    timer = setInterval(() => { if (!held) advance(); }, HOLD_MS + TURN_MS);
+    if (timer || held || REDUCED?.matches) return;
+    /* A set of one still has to hand on, so the guard is no longer
+       `slots.length < 2` — that stranded the walk on any single-photograph
+       chapter for good. */
+    reschedule(slots.length > 1 ? HOLD_MS + TURN_MS : SET_MS);
   }
   function stop() {
     if (!timer) return;
-    clearInterval(timer);
+    clearTimeout(timer);
     timer = null;
   }
   /** Bring a given card to the front — used when a card is pointed at. */
@@ -262,12 +332,27 @@ export function PhotoRing(block, { editing = false } = {}) {
     block.lead ? h('p', { class: 'pr-lead' }, block.lead) : null,
   );
 
-  root.appendChild(head);
+  /* NO HEAD (2026-09-18, on request: "remove this in the top left corner").
+     The eyebrow, the title and the lead are still on the block and still the
+     row's own name in the pane; they are simply not drawn on the slide. The
+     section is the photographs and the title of the set being shown, and every
+     row the head took came off the pictures — which is the other half of the
+     same request. `head` is built above and left unappended rather than deleted
+     so putting it back is one line. */
+  void head;
   if (tabs.length > 1) {
     drawTabs();
     root.appendChild(bar);
   }
   root.appendChild(stage);
+
+  /* The pointer anywhere over the section holds the walk, not only over a card:
+     the gap between two cards, the title bar and the ground around them are all
+     still this slide, and a presenter who has moved off a photograph to point at
+     a title has not stopped looking at it. Each card keeps its own handlers as
+     well, because those also bring that card to the front. */
+  root.addEventListener('pointerenter', () => { held = true; stop(); });
+  root.addEventListener('pointerleave', () => { held = false; start(); });
 
   buildCards();
 
