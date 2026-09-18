@@ -19753,7 +19753,13 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   background:linear-gradient(225deg,transparent 50%,#F3E9E3 50%,#E8D9D0 100%);
   filter:drop-shadow(-2px 3px 3px rgba(27,27,27,.10));}
 /* thin orange rule near the top */
-.ps-root .file-inner::after{content:"";position:absolute;left:22px;right:70px;top:74px;height:2px;border-radius:2px;background:var(--orange);opacity:.85;}
+/* NO RULE UNDER THE MARK (2026-09-18, on request). The original page drew a
+   2px orange bar across the card at top:74 — under a 40px logo plate it read as
+   an underline, and with the plate at 72px it runs straight through the mark.
+   The card is its logo and its name now, so there is nothing for a rule to
+   separate. Left as a commented selector rather than deleted, because it is the
+   supplied page's own detail and this deck keeps those recoverable. */
+/* .ps-root .file-inner::after{content:"";position:absolute;left:22px;right:70px;top:74px;height:2px;border-radius:2px;background:var(--orange);opacity:.85;} */
 .ps-root .file .logo{position:absolute;left:22px;top:20px;width:72px;height:72px;border-radius:50%;background:var(--orange);display:grid;place-items:center;overflow:hidden;
   color:#fff;font-weight:600;font-size:16px;box-shadow:0 6px 14px -6px rgba(255,111,50,.7);}
 .ps-root .file .logo img{width:100%;height:100%;object-fit:cover;display:block;max-width:none;}

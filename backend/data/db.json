@@ -12743,7 +12743,7 @@
             {
               "name": "AI Anchor",
               "tag": "",
-              "logo": "",
+              "logo": "Showcase/logos/ai-anchor.png",
               "description": "",
               "features": [],
               "stack": [],
@@ -12751,7 +12751,10 @@
                 "live": "",
                 "code": ""
               },
-              "media": null,
+              "media": {
+                "type": "video",
+                "src": "platforms/ai-anchor.mp4"
+              },
               "site": "",
               "logins": []
             },
@@ -12839,7 +12842,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:50:52.424Z",
-      "updatedAt": "2026-09-18T14:55:40.581Z"
+      "updatedAt": "2026-09-18T16:13:33.407Z"
     },
     {
       "id": "sec_b545ee30b43143ba",
