@@ -36,7 +36,7 @@ const ORG = 'technical-hub';
 let SECTION = 'sec_69c6554f56bd453e';
 const LAYOUT = { x: 0, y: 0, w: 12, h: 15 };
 const HOST = { host: '127.0.0.1', port: 4173 };
-const LOGIN = { email: 'admin@org.local', password: 'Admin@123' };
+const LOGIN = { email: (process.env.ADMIN_EMAIL || 'Torii@123.com'), password: (process.env.ADMIN_PASSWORD || 'Admin@123') };
 
 const DRY = process.argv.includes('--dry-run');
 

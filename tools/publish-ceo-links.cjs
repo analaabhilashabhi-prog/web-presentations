@@ -84,7 +84,7 @@ function request(method, path, body, cookie) {
 }
 
 (async () => {
-  const login = await request('POST', '/api/auth/login', { email: 'admin@org.local', password: 'Admin@123' });
+  const login = await request('POST', '/api/auth/login', { email: (process.env.ADMIN_EMAIL || 'Torii@123.com'), password: (process.env.ADMIN_PASSWORD || 'Admin@123') });
   const token = /op_session=([^;]+)/.exec(login.setCookie)?.[1];
   if (!token) throw new Error('login returned no session cookie');
 

@@ -72,7 +72,7 @@ export const env = {
   cookieSecure: readBool('COOKIE_SECURE', false),
   seedUsers: {
     admin: {
-      email: read('ADMIN_EMAIL', 'admin@org.local'),
+      email: read('ADMIN_EMAIL', 'Torii@123.com'),
       password: read('ADMIN_PASSWORD', 'Admin@123'),
       /* Whether that password was named by the environment or is the fallback
          above. `ensureSeedUsers` rotates an EXISTING account only when this is
@@ -84,7 +84,7 @@ export const env = {
       name: 'Content Admin',
     },
     presenter: {
-      email: read('PRESENTER_EMAIL', 'presenter@org.local'),
+      email: read('PRESENTER_EMAIL', 'Torii@present.com'),
       password: read('PRESENTER_PASSWORD', 'Present@123'),
       passwordFromEnv: read('PRESENTER_PASSWORD', null) !== null,
       name: 'Presenter',

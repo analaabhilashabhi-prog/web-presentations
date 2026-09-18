@@ -103,7 +103,7 @@ function backup() {
   if (!FROM || !TO) throw new Error('need --from <orgId> and --to <orgId>');
   if (FROM === TO) throw new Error('--from and --to are the same organization');
 
-  const admin = await login('admin@org.local', 'Admin@123');
+  const admin = await login((process.env.ADMIN_EMAIL || 'Torii@123.com'), (process.env.ADMIN_PASSWORD || 'Admin@123'));
 
   const orgs = (await request('GET', '/api/orgs', null, admin)).json.organizations;
   const src = orgs.find((o) => o.id === FROM);

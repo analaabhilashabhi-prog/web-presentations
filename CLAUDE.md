@@ -27,8 +27,16 @@ presentation time. Node 20+.
 
 | Role | Email | Password |
 | --- | --- | --- |
-| Admin | `admin@org.local` | `Admin@123` |
-| Presenter | `presenter@org.local` | `Present@123` |
+| Admin | `Torii@123.com` | `Admin@123` |
+| Presenter | `Torii@present.com` | `Present@123` |
+
+The addresses were `admin@org.local` and `presenter@org.local` until 2026-09-18.
+Neither is a mailbox; they are login identifiers and nothing is ever sent to
+them. `ensureSeedUsers` reconciles the account holding each **role**, not each
+address, so changing `ADMIN_EMAIL` renames the existing account rather than
+creating a second admin beside it — which is what it did before, leaving the
+old address live with its old password. The 31 publish tools read
+`ADMIN_EMAIL`/`ADMIN_PASSWORD` from the environment and fall back to these.
 
 ## Shape of the thing
 

@@ -14,6 +14,17 @@ export function findById(id) {
   return data().users.find((user) => user.id === id) || null;
 }
 
+/** Renames an account in place. The id is what sessions and every other
+    reference are keyed on, so changing the address signs nobody out. */
+export async function setEmail(id, email) {
+  const user = findById(id);
+  if (!user) return null;
+  user.email = email;
+  user.updatedAt = new Date().toISOString();
+  await persist();
+  return user;
+}
+
 /** Rotates a password in place. The account keeps its id, so live sessions and
     anything referencing the user survive the change. */
 export async function setPassword(id, passwordHash) {

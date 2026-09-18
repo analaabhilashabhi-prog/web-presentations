@@ -213,7 +213,7 @@ function readImage(rel) {
 }
 
 (async () => {
-  const admin = await login('admin@org.local', 'Admin@123');
+  const admin = await login((process.env.ADMIN_EMAIL || 'Torii@123.com'), (process.env.ADMIN_PASSWORD || 'Admin@123'));
 
   // ---------------------------------------------------------------- assets
   const existing = (await request('GET', '/api/assets', null, admin)).json.assets || [];

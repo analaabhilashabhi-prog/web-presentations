@@ -64,7 +64,7 @@ function call(method, urlPath, body, cookie) {
 }
 
 (async () => {
-  const login = await call('POST', '/api/auth/login', { email: 'admin@org.local', password: 'Admin@123' });
+  const login = await call('POST', '/api/auth/login', { email: (process.env.ADMIN_EMAIL || 'Torii@123.com'), password: (process.env.ADMIN_PASSWORD || 'Admin@123') });
   const jar = login.setCookie.map((c) => c.split(';')[0]).join('; ');
   if (!/op_session=/.test(jar)) throw new Error('no session cookie');
 

@@ -195,7 +195,7 @@ function walk(dir, rel = '') {
   }
 
   /* The tiles: re-encode, then upload what the library does not already hold. */
-  const admin = DRY ? null : (await request('POST', '/api/auth/login', { email: 'admin@org.local', password: 'Admin@123' }))
+  const admin = DRY ? null : (await request('POST', '/api/auth/login', { email: (process.env.ADMIN_EMAIL || 'Torii@123.com'), password: (process.env.ADMIN_PASSWORD || 'Admin@123') }))
     .setCookie.match(/op_session=([^;]+)/)[1];
   const existing = new Map();
   if (!DRY) {

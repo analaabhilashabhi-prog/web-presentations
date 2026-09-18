@@ -90,7 +90,7 @@ const login = async (email, password) => {
 };
 
 (async () => {
-  const admin = await login('admin@org.local', 'Admin@123');
+  const admin = await login((process.env.ADMIN_EMAIL || 'Torii@123.com'), (process.env.ADMIN_PASSWORD || 'Admin@123'));
   const load = async () => (await request('GET', `/api/orgs/${ORG}/sections`, null, admin)).json.sections;
   let all = await load();
   const byKey = (key) => all.find((s) => s.key === key);

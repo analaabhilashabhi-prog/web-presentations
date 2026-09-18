@@ -57,8 +57,22 @@ export async function ensureSeedUsers() {
     { ...env.seedUsers.presenter, role: 'presenter' },
   ];
   for (const candidate of wanted) {
-    const existing = userModel.findByEmail(candidate.email);
+    /* By address first, then by role. The role lookup is what makes renaming
+       work: change ADMIN_EMAIL, or the default beside it, and the account that
+       already holds the role is renamed in place. Without it a SECOND admin
+       was created alongside the first, and the old address went on working
+       with its old password — on a public deployment, a door nobody knew was
+       still open. Only a sole holder of a role is renamed; with two there is
+       no way to tell which was meant, so both are left alone. */
+    const holdingRole = userModel.all().filter((u) => u.role === candidate.role);
+    const existing = userModel.findByEmail(candidate.email)
+      || (holdingRole.length === 1 ? holdingRole[0] : null);
+
     if (existing) {
+      if (existing.email !== candidate.email) {
+        await userModel.setEmail(existing.id, candidate.email);
+        logger.info(`renamed the ${candidate.role} account to ${candidate.email}`);
+      }
       /* The account is already in the committed store, carrying the hash it was
          created with on somebody's laptop — so setting ADMIN_PASSWORD on a
          deployment used to do NOTHING, and the live deck went on accepting the

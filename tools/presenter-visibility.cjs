@@ -47,7 +47,7 @@ const login = async (email, password) => {
 (async () => {
   const mode = process.argv[2];
   const names = process.argv.slice(3).map((n) => n.toLowerCase());
-  const admin = await login('admin@org.local', 'Admin@123');
+  const admin = await login((process.env.ADMIN_EMAIL || 'Torii@123.com'), (process.env.ADMIN_PASSWORD || 'Admin@123'));
 
   for (const org of ORGS) {
     const all = (await request('GET', `/api/orgs/${org}/sections`, null, admin)).json.sections;

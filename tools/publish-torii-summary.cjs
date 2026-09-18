@@ -178,7 +178,7 @@ function probeMp4(file) {
   }
   if (DRY) { console.log('\n  dry run — nothing uploaded, nothing written'); return; }
 
-  const admin = (await request('POST', '/api/auth/login', { email: 'admin@org.local', password: 'Admin@123' }))
+  const admin = (await request('POST', '/api/auth/login', { email: (process.env.ADMIN_EMAIL || 'Torii@123.com'), password: (process.env.ADMIN_PASSWORD || 'Admin@123') }))
     .setCookie.match(/op_session=([^;]+)/)[1];
 
   /* An asset is stored under the filename it was uploaded with, extension and

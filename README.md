@@ -15,8 +15,8 @@ Then open **http://127.0.0.1:4173**.
 
 | Role | Email | Password | What they get |
 | --- | --- | --- | --- |
-| Admin | `admin@org.local` | `Admin@123` | Add, edit, delete, reorder, hide, publish content; org settings |
-| Presenter | `presenter@org.local` | `Present@123` | Clean read-only deck — no editing controls anywhere |
+| Admin | `Torii@123.com` | `Admin@123` | Add, edit, delete, reorder, hide, publish content; org settings |
+| Presenter | `Torii@present.com` | `Present@123` | Clean read-only deck — no editing controls anywhere |
 
 Both credentials are shown on the login screen for convenience. Set `SHOW_LOGIN_HINT=false` in `backend/.env` before a real presentation, and change the passwords via `ADMIN_PASSWORD` / `PRESENTER_PASSWORD` (see [backend/.env.example](backend/.env.example)).
 

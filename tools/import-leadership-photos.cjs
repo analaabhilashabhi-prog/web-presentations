@@ -68,7 +68,7 @@ function slotFor(filename, fallback) {
   files.forEach((f, i) => console.log(`  ${i + 1}. ${f}`));
   if (files.length !== 5) console.log(`\n  note: expected 5, got ${files.length} — mapping the first five in order.`);
 
-  const login = await request('POST', '/api/auth/login', { email: 'admin@org.local', password: 'Admin@123' });
+  const login = await request('POST', '/api/auth/login', { email: (process.env.ADMIN_EMAIL || 'Torii@123.com'), password: (process.env.ADMIN_PASSWORD || 'Admin@123') });
   const token = /op_session=([^;]+)/.exec(login.setCookie)?.[1];
 
   const PHASE_NAMES = ['Technology Foundation', 'Global Delivery Leadership',

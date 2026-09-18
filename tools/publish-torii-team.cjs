@@ -240,7 +240,7 @@ const login = async (email, password) => {
   JSON.parse(fs.readFileSync(saved, 'utf8'));
   console.log(`  backup  ${path.relative(ROOT, saved)}`);
 
-  const admin = await login('admin@org.local', 'Admin@123');
+  const admin = await login((process.env.ADMIN_EMAIL || 'Torii@123.com'), (process.env.ADMIN_PASSWORD || 'Admin@123'));
   await request('PATCH', `/api/sections/${section.id}`, { blocks: [block] }, admin);
 
   const stored = (await request('GET', `/api/sections/${section.id}`, null, admin)).json.section.blocks[0];

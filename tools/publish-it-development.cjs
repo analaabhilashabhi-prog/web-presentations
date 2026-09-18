@@ -317,7 +317,7 @@ const slug = (v) => String(v || '').toLowerCase().trim()
   JSON.parse(fs.readFileSync(saved, 'utf8'));
   console.log(`  backup  backend/data/backups/${path.basename(saved)}`);
 
-  const admin = (await request('POST', '/api/auth/login', { email: 'admin@org.local', password: 'Admin@123' }))
+  const admin = (await request('POST', '/api/auth/login', { email: (process.env.ADMIN_EMAIL || 'Torii@123.com'), password: (process.env.ADMIN_PASSWORD || 'Admin@123') }))
     .setCookie.match(/op_session=([^;]+)/)[1];
   await request('PATCH', `/api/sections/${section.id}`, { blocks: [block] }, admin);
 
