@@ -150,10 +150,10 @@ function centerCard(center, index, onOpen) {
     h('span', { class: 'coe-card__top' }, brandMark(center, { size: 52 })),
     h('span', { class: 'coe-card__name' }, center.name),
     center.tagline ? h('span', { class: 'coe-card__tag' }, center.tagline) : null,
+    /* The foot used to say "Photos & videos" (or the count); that option was
+       removed from this section on request (2026-09-17). */
     h('span', { class: 'coe-card__foot' },
-      h('span', {}, center.media?.length
-        ? `${center.media.length} item${center.media.length === 1 ? '' : 's'}`
-        : 'Photos & videos'),
+      h('span', {}),
       h('span', { class: 'coe-card__go' }, 'Open', icon('arrow-right', { class: 'ic ic--xs' })),
     ),
   );
@@ -259,8 +259,11 @@ export function CentersOfExcellence(block, { editing = false } = {}) {
     requestAnimationFrame(settleCards);
   };
 
+  /* The detail is the centre's mark, name and line. It used to carry a media
+     gallery beneath — photographs and films per centre — and that was removed
+     from this section on request (2026-09-17); `mediaTile` and the player
+     parameters above are kept for the day it is wanted back. */
   const paintDetail = (center) => {
-    const media = center.media || [];
     detail.replaceChildren(
       h('button', { class: 'coe-back', type: 'button', onclick: close },
         icon('chevron-left', { class: 'ic ic--xs' }), h('span', {}, 'All centers')),
@@ -272,22 +275,6 @@ export function CentersOfExcellence(block, { editing = false } = {}) {
         ),
       ),
       h('div', { class: 'coe-rule', style: { background: center.color } }),
-      h('div', { class: 'coe-gal__head' },
-        h('h4', {}, 'Media gallery'),
-        h('span', {}, media.length
-          ? `${media.length} photo${media.length === 1 ? '' : 's'} and video${media.length === 1 ? '' : 's'}`
-          : 'Nothing here yet'),
-      ),
-      media.length
-        ? h('div', {
-            class: 'coe-gal',
-            /* Column count follows the number of photos. Four columns is right
-               for a wall of fourteen and absurd for two — it would draw them a
-               quarter of the width and leave the rest of the slide empty. */
-            style: { 'column-count': String(media.length <= 2 ? 2 : media.length <= 6 ? 3 : 4) },
-          }, ...media.map((m) => mediaTile(m, center)))
-        : h('p', { class: 'coe-gal__none' },
-            `Drop photos or videos into backend/uploads/coepics/${center.key}/ and they appear here.`),
     );
     root.classList.add('is-open');
     detail.scrollTop = 0;

@@ -1,0 +1,611 @@
+{
+  "id": "sec_36db91d0532440aa",
+  "orgId": "technical-hub",
+  "key": "testimonials",
+  "title": "Video Gallery",
+  "subtitle": "",
+  "icon": "❞",
+  "order": 12,
+  "hidden": false,
+  "status": "published",
+  "blocks": [
+    {
+      "id": "blk_1205a0642d28457f",
+      "type": "video-resume",
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 15
+      },
+      "eyebrow": "Video resumes",
+      "title": "Meet them for yourself",
+      "lead": "Every student here recorded their own introduction. Search a name, or pick a letter, and the film plays across the whole screen.",
+      "people": [
+        {
+          "name": "Anjana",
+          "youtube": "mwMu4_6JcCI",
+          "src": ""
+        },
+        {
+          "name": "Divya Nandini",
+          "youtube": "dXELJOGLmy4",
+          "src": ""
+        },
+        {
+          "name": "Sayed Alisha",
+          "youtube": "BZTaXMKeIO0",
+          "src": ""
+        },
+        {
+          "name": "Bhanu",
+          "youtube": "trR1WrxnnKc",
+          "src": ""
+        },
+        {
+          "name": "Maheshwari",
+          "youtube": "JfwLH5orM2k",
+          "src": ""
+        },
+        {
+          "name": "Yashasvi",
+          "youtube": "AnqtDEitnqM",
+          "src": ""
+        },
+        {
+          "name": "Mujna Jawhar",
+          "youtube": "44jQeEluNcE",
+          "src": ""
+        },
+        {
+          "name": "Tulasi",
+          "youtube": "Op9vy5gslqc",
+          "src": ""
+        },
+        {
+          "name": "Leela prasanthi",
+          "youtube": "F7in-i80UTg",
+          "src": ""
+        },
+        {
+          "name": "Mounica",
+          "youtube": "YgAmcc3RxnY",
+          "src": ""
+        },
+        {
+          "name": "Anantha Lakshmi",
+          "youtube": "Cg_aQvy8XcU",
+          "src": ""
+        },
+        {
+          "name": "Yamini",
+          "youtube": "u8P2g_8T0z0",
+          "src": ""
+        },
+        {
+          "name": "Aman Kumar",
+          "youtube": "XcfZPd00giQ",
+          "src": ""
+        },
+        {
+          "name": "Azarunnisa",
+          "youtube": "93W68JYp-Nw",
+          "src": ""
+        },
+        {
+          "name": "Aaquelah",
+          "youtube": "k7TJFw0Ypac",
+          "src": ""
+        },
+        {
+          "name": "Nikhil",
+          "youtube": "QhTbuJe_J3o",
+          "src": ""
+        },
+        {
+          "name": "Sai Padma",
+          "youtube": "pBE2kRy0seE",
+          "src": ""
+        },
+        {
+          "name": "Aswini",
+          "youtube": "HcULhqshlE4",
+          "src": ""
+        },
+        {
+          "name": "Sweety",
+          "youtube": "UCdxI-6LlrY",
+          "src": ""
+        },
+        {
+          "name": "Venkat",
+          "youtube": "w5r_-IMDfsE",
+          "src": ""
+        },
+        {
+          "name": "Charan",
+          "youtube": "gDyGpYvdGps",
+          "src": ""
+        },
+        {
+          "name": "jitesh Kumar",
+          "youtube": "0iTu_rlbKqI",
+          "src": ""
+        },
+        {
+          "name": "Meghana",
+          "youtube": "bOZuhSIUHrQ",
+          "src": ""
+        },
+        {
+          "name": "Pravallika",
+          "youtube": "YxZZeigMoVg",
+          "src": ""
+        },
+        {
+          "name": "Vivek",
+          "youtube": "BUuLDPXKU3o",
+          "src": ""
+        },
+        {
+          "name": "Venkata Babu",
+          "youtube": "REFT9kZcK7w",
+          "src": ""
+        },
+        {
+          "name": "Abhinaya",
+          "youtube": "eQRDgCSai54",
+          "src": ""
+        },
+        {
+          "name": "Abhishek",
+          "youtube": "jKXtsNTOqc4",
+          "src": ""
+        },
+        {
+          "name": "Abhishek Varanasi",
+          "youtube": "R1x8Gr9I0Ps",
+          "src": ""
+        },
+        {
+          "name": "Akash",
+          "youtube": "4ROf8zAAlfE",
+          "src": ""
+        },
+        {
+          "name": "Amali",
+          "youtube": "8ndgGtUiCiQ",
+          "src": ""
+        },
+        {
+          "name": "Ankitha",
+          "youtube": "ZvIUxVOs_lM",
+          "src": ""
+        },
+        {
+          "name": "Usha",
+          "youtube": "06mstmIO_8E",
+          "src": ""
+        },
+        {
+          "name": "Neelima",
+          "youtube": "5vnETI8ls0E",
+          "src": ""
+        },
+        {
+          "name": "Divya Harshitha",
+          "youtube": "1CQhkiPtwmw",
+          "src": ""
+        },
+        {
+          "name": "Harshini",
+          "youtube": "KvmJ7Hb5z28",
+          "src": ""
+        },
+        {
+          "name": "Harshit",
+          "youtube": "cz4gqQSrFiQ",
+          "src": ""
+        },
+        {
+          "name": "Hema",
+          "youtube": "zC0sTOJT3Zk",
+          "src": ""
+        },
+        {
+          "name": "Roshan",
+          "youtube": "bexOd_ezS2Q",
+          "src": ""
+        },
+        {
+          "name": "Jansi Rani",
+          "youtube": "RQ3S8eqtTMA",
+          "src": ""
+        },
+        {
+          "name": "Sanjay",
+          "youtube": "Bw-Svlu8IL4",
+          "src": ""
+        },
+        {
+          "name": "Jyothi",
+          "youtube": "qZ6v7hShQIg",
+          "src": ""
+        },
+        {
+          "name": "Shiva",
+          "youtube": "sA2yFZXSaXM",
+          "src": ""
+        },
+        {
+          "name": "Jagadish",
+          "youtube": "FTIPGMlMiuw",
+          "src": ""
+        },
+        {
+          "name": "K Vivek",
+          "youtube": "vIFEnMkMFBs",
+          "src": ""
+        },
+        {
+          "name": "Prasanna Ramya",
+          "youtube": "GUnBTRJUlTg",
+          "src": ""
+        },
+        {
+          "name": "Susmitha",
+          "youtube": "41F65TRsWzA",
+          "src": ""
+        },
+        {
+          "name": "Raghava",
+          "youtube": "1mqGkQjXkxc",
+          "src": ""
+        },
+        {
+          "name": "Karthik",
+          "youtube": "rfCFh7pFs0k",
+          "src": ""
+        },
+        {
+          "name": "Mahalakshmi",
+          "youtube": "vi6NmQpd3b0",
+          "src": ""
+        },
+        {
+          "name": "Anusha",
+          "youtube": "bxeTdSElBkw",
+          "src": ""
+        },
+        {
+          "name": "Mukesh Varma",
+          "youtube": "8aNK-fsecrg",
+          "src": ""
+        },
+        {
+          "name": "Niharika",
+          "youtube": "YM42jpbV_pI",
+          "src": ""
+        },
+        {
+          "name": "Revathi",
+          "youtube": "uxEFZ2364-s",
+          "src": ""
+        },
+        {
+          "name": "Durga prasad",
+          "youtube": "UYQm7pJt-CA",
+          "src": ""
+        },
+        {
+          "name": "Shashank",
+          "youtube": "aljqiHUWg8I",
+          "src": ""
+        },
+        {
+          "name": "Lokesh",
+          "youtube": "H2CDJziuoro",
+          "src": ""
+        },
+        {
+          "name": "Sravya",
+          "youtube": "ctSMaUxWdZg",
+          "src": ""
+        },
+        {
+          "name": "Kishore",
+          "youtube": "b2s1vgopu4I",
+          "src": ""
+        },
+        {
+          "name": "Santhoshi",
+          "youtube": "vbLISWp7oVA",
+          "src": ""
+        },
+        {
+          "name": "Navyatha",
+          "youtube": "I9RwI4E6OZI",
+          "src": ""
+        },
+        {
+          "name": "iswaryambhika",
+          "youtube": "eGNtXJ17jt0",
+          "src": ""
+        },
+        {
+          "name": "Uday kiran",
+          "youtube": "EcPDJRJqGEk",
+          "src": ""
+        },
+        {
+          "name": "Alekhya",
+          "youtube": "PCa2lknY40M",
+          "src": ""
+        },
+        {
+          "name": "Kalyan",
+          "youtube": "VT8k1PCrQi0",
+          "src": ""
+        },
+        {
+          "name": "Bindeshwaar",
+          "youtube": "5kqx9NtNZQM",
+          "src": ""
+        },
+        {
+          "name": "Loki Venkat",
+          "youtube": "IraE-i7Pess",
+          "src": ""
+        },
+        {
+          "name": "Yaswanth",
+          "youtube": "s7OZdHDI3jI",
+          "src": ""
+        },
+        {
+          "name": "Durgesh",
+          "youtube": "Dt05uU1tLWY",
+          "src": ""
+        },
+        {
+          "name": "Robin Kumar",
+          "youtube": "2GNGnxXCnCA",
+          "src": ""
+        },
+        {
+          "name": "Meghana",
+          "youtube": "tc65WJm1a_Y",
+          "src": ""
+        },
+        {
+          "name": "Bhaskar",
+          "youtube": "AgpZTBIa3e8",
+          "src": ""
+        },
+        {
+          "name": "Srivalli",
+          "youtube": "r_EgWaSyWJk",
+          "src": ""
+        },
+        {
+          "name": "Vidhya",
+          "youtube": "U9hR1_viwqI",
+          "src": ""
+        },
+        {
+          "name": "Madhulatha",
+          "youtube": "WN4AEFWZekE",
+          "src": ""
+        },
+        {
+          "name": "Viswa Amit",
+          "youtube": "LzfKkqsZxGI",
+          "src": ""
+        },
+        {
+          "name": "Vindhya",
+          "youtube": "kbfNTKK5jeg",
+          "src": ""
+        },
+        {
+          "name": "Tarun",
+          "youtube": "rcyuu1sHRdQ",
+          "src": ""
+        },
+        {
+          "name": "Srinivas",
+          "youtube": "SDnhJC_R33o",
+          "src": ""
+        },
+        {
+          "name": "Ruchita",
+          "youtube": "25zzA4Mbu3k",
+          "src": ""
+        },
+        {
+          "name": "Nida Khanam",
+          "youtube": "MQPqFwL8FNI",
+          "src": ""
+        },
+        {
+          "name": "Mahalakshmi",
+          "youtube": "6sAC6DfP-gE",
+          "src": ""
+        },
+        {
+          "name": "Kowsalya",
+          "youtube": "4xsPiD7-IVQ",
+          "src": ""
+        },
+        {
+          "name": "Indu",
+          "youtube": "z63MZHRT5Og",
+          "src": ""
+        },
+        {
+          "name": "Babji",
+          "youtube": "EzW2d0RSMEg",
+          "src": ""
+        },
+        {
+          "name": "Bhavani Devi",
+          "youtube": "E6kNqjRJ2AI",
+          "src": ""
+        },
+        {
+          "name": "Jeelani",
+          "youtube": "DA_9WNwzBVk",
+          "src": ""
+        },
+        {
+          "name": "Jhonwesly",
+          "youtube": "mhIfhPScA3g",
+          "src": ""
+        },
+        {
+          "name": "Mahalakshmi",
+          "youtube": "GBVYUVJ0RTg",
+          "src": ""
+        },
+        {
+          "name": "Mahendra",
+          "youtube": "SirxjQwIKyA",
+          "src": ""
+        },
+        {
+          "name": "Sai Manju",
+          "youtube": "mTVnG98ZxF0",
+          "src": ""
+        },
+        {
+          "name": "Sukanya",
+          "youtube": "OhOKclObChE",
+          "src": ""
+        },
+        {
+          "name": "Usha",
+          "youtube": "OhOKclObChE",
+          "src": ""
+        },
+        {
+          "name": "Veerraju",
+          "youtube": "5_eDDI10htE",
+          "src": ""
+        },
+        {
+          "name": "Venkatesh",
+          "youtube": "wZMGqNRGoHw",
+          "src": ""
+        },
+        {
+          "name": "Vinay",
+          "youtube": "ays8uZy6hEA",
+          "src": ""
+        },
+        {
+          "name": "Vinay Ladi",
+          "youtube": "DWi8Vft2ImU",
+          "src": ""
+        },
+        {
+          "name": "Siva",
+          "youtube": "FaPSRBNWAKs",
+          "src": ""
+        },
+        {
+          "name": "Ruchitha",
+          "youtube": "cU64i0o-8J8",
+          "src": ""
+        },
+        {
+          "name": "Tejaswi",
+          "youtube": "rYiVrqiqAxQ",
+          "src": ""
+        },
+        {
+          "name": "Suma",
+          "youtube": "1_JMlGstbAc",
+          "src": ""
+        },
+        {
+          "name": "Suresh",
+          "youtube": "K0hryOdCrKs",
+          "src": ""
+        },
+        {
+          "name": "Rama Reddy",
+          "youtube": "RYvh84f9X5o",
+          "src": ""
+        },
+        {
+          "name": "Govind Raju",
+          "youtube": "Iuvi2oCulmc",
+          "src": ""
+        },
+        {
+          "name": "Madhu",
+          "youtube": "id9a8wnKKMg",
+          "src": ""
+        },
+        {
+          "name": "Manju",
+          "youtube": "Ah3nK4_5t20",
+          "src": ""
+        },
+        {
+          "name": "Sekhar",
+          "youtube": "wtJJrFHFSOA",
+          "src": ""
+        },
+        {
+          "name": "Kumar Rajesh",
+          "youtube": "RC4ZT37QQFo",
+          "src": ""
+        },
+        {
+          "name": "Pankaj",
+          "youtube": "9Hjdb8BLaH4",
+          "src": ""
+        },
+        {
+          "name": "Anasuya",
+          "youtube": "RHlMT1U6QKI",
+          "src": ""
+        },
+        {
+          "name": "sireesha",
+          "youtube": "YzCatxNPnyY",
+          "src": ""
+        },
+        {
+          "name": "Jaidheer",
+          "youtube": "YDIYzTm_OvI",
+          "src": ""
+        },
+        {
+          "name": "Swetha",
+          "youtube": "Rbs3WBdUxn4",
+          "src": ""
+        },
+        {
+          "name": "Manikanta",
+          "youtube": "l2-jem_4LMQ",
+          "src": ""
+        },
+        {
+          "name": "Sankar",
+          "youtube": "x266raHqDzU",
+          "src": ""
+        },
+        {
+          "name": "Ramya",
+          "youtube": "1OJ-_bUtOiw",
+          "src": ""
+        }
+      ]
+    }
+  ],
+  "createdAt": "2026-07-30T05:29:38.129Z",
+  "updatedAt": "2026-09-14T04:38:25.032Z",
+  "iconKey": "clapper"
+}

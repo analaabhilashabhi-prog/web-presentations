@@ -40,17 +40,42 @@ presentation time. Node 20+.
 - `frontend/public/styles/app.css` — the whole design system, one file.
 - `incoming/` — raw user drops. Not served; not live until Claude places it.
 
-Two orgs, each with its own palette applied at runtime as CSS custom properties:
+**Two** orgs, each with its own palette applied at runtime as CSS custom
+properties. There were three until 2026-09-17, when NCET was removed on request
+and NGI's tab took both names:
 
 | Tab | id | Primary | Accent | What it is |
 | --- | --- | --- | --- | --- |
-| NGI | `technical-hub` | `#008638` | `#FFBB00` | Nagarjuna Group of Institutions — the deck everything was built on. The id stayed `technical-hub` because every tool and the palette table key on it; only the display name changed. Its wordmark and rail mark were swapped off Technical Hub's on 2026-09-14: the pane shows the NGI letterform cut out of `uploads/Placements/Journeys/banner-1.jpg`, the rail the Nagarjuna emblem cut out of `Downloads/Claude Technical Hub/.../assets/logo-ngi.png`. The full stacked NGI lockup is not used — the pane's logo slot is 38px tall and its third line would land at about 4px. |
-| Torii | `torii` | `#000000` | `#E95A22` | Torii Minds. A mirror of NGI as of 2026-09-14, to be edited into its own deck. |
-| NCET | `ncet` | `#047738` | `#D6AB30` | Nagarjuna College of Engineering & Technology. Created 2026-09-14 as a mirror of NGI. Palette measured off the college's own logo on the Snowflake MOU card — no brand file has been supplied. No logo or mark yet: the pane sets the name in type. A `logo-ncet.png` exists in that same assets folder if one is wanted. |
+| NGI and NCET | `technical-hub` | `#008638` | `#FFBB00` | Nagarjuna Group of Institutions, presenting for both. The id stayed `technical-hub` because every tool and the palette table key on it; the display name has now changed twice — Technical Hub → NGI (2026-09-14) → NGI and NCET (2026-09-17) — and nothing but `name`/`shortName` moved either time. Its wordmark and rail mark were swapped off Technical Hub's on 2026-09-14: the pane shows the NGI letterform cut out of `uploads/Placements/Journeys/banner-1.jpg`, the rail the Nagarjuna emblem cut out of `Downloads/Claude Technical Hub/.../assets/logo-ngi.png`. The full stacked NGI lockup is not used — the pane's logo slot is 38px tall and its third line would land at about 4px. |
+| Torii | `torii` | `#000000` | `#E95A22` | Torii Minds. A mirror of NGI as of 2026-09-14, edited into its own deck ever since. |
 
-The three are tabs in the pane head — `.sidenav__orgs`, one filled in its own ink
+**NCET's deck was deleted** (2026-09-17, `tools/drop-ncet.cjs`): the
+organization and all nineteen of its sections — the fifteen rows that mirrored
+NGI plus the four pages under Governance Council. The one structure that remains
+is NGI's, which is what the tab now announces. Three things about that removal:
+
+  - **There is no DELETE route for an organization.** `org.routes.js` has list,
+    get, create and update and nothing else, so the tool edits `db.json`
+    directly — and *refuses to run while the server is up*, because the store is
+    held in memory and written back on every change, so the edit would be lost
+    the next time anything was published. Stop the server, run it, start again.
+  - **The backup is the way back.** `db-before-drop-ncet-*` holds all nineteen
+    sections whole, and NCET's palette is deliberately left in
+    `config/themes.js`, unused, so a restore needs nothing but the backup.
+  - **Its photographs stay in `uploads/`.** Assets are shared across
+    organizations and there is no delete route for them either; 73 of the 85
+    NCET referenced are used by no other deck and are left where they are. A
+    wrong guess deleting media is unrecoverable; an unused file is only bytes.
+
+Checked before writing: no user, session or template mentioned `ncet`, and the
+router sends a stale `/o/ncet/...` URL to `#/orgs` rather than to an error —
+verified after, along with the tab measuring 130px for a label that fits whole.
+
+The two are tabs in the pane head — `.sidenav__orgs`, one filled in its own ink
 for the current deck, stacked short names on the rail. They are a control, so
 they are the one filled element in a pane whose rows are colour rather than fill.
+The strip is `grid-auto-columns: 1fr`, so the tabs share the width however many
+there are; the tab draws `shortName || name`, which is why the rename sets both.
 `POST /api/orgs` creates an organization; add its palette to `config/themes.js`
 alongside, or it falls back to Torii's. `PATCH /api/orgs/:id` takes `order`, which is
 the tab order — NGI is 0 because it is the deck the room is shown first. Torii and NCET are meant to diverge: a
@@ -251,7 +276,65 @@ mirrored photograph is the same file, not a second upload.
 its CSS and `tools/publish-certifications.cjs` arrived as a bundle and were
 reverted to it once already after being rewritten. Three acts — The Register,
 Skills Unlocked, The Gallery — 42 credentials at 32,146 held, 19 vendors, 82
-cohort cards. Change it only when asked, and change only what is asked.
+cohort cards (that is still NCET's; NGI's row is switched off). Change it only
+when asked, and change only what is asked.
+
+Torii's copy was changed on request (2026-09-16), and only in the ways asked:
+its **fifteen** credentials and **3,120** total come from two tables the user
+supplied — B.E 1st year 1,277 · 2nd 1,070 · 3rd 595 · 4th (ServiceNow) 178 —
+transcribed to the unit and checked to add up before anything is written. The
+register shows the total alone in the middle with the year split as small
+figures beneath; the "16,000+ Trainees Certified" card is gone from Torii; the
+Gallery act is gone from Torii. Three things about how, because they had to
+touch the shared component:
+
+  - **Nothing in the component is Torii-specific.** "16,000+" was a literal in
+    the register; it is a block field now (`trainees`), and the same publish run
+    wrote "16,000+" onto NGI's and NCET's blocks so their register did not
+    change. The Gallery act is drawn only when `vendors` holds cohort artwork;
+    Torii's block holds none. `years` is a new optional list. The register's
+    total was never typed anywhere — the component sums the credentials, which
+    is why the table's own total has to be right first.
+  - **Badges by preference, then by vendor, then cropped, then in type.**
+    Nine credentials had a badge or a same-vendor badge in the library already.
+    Four are cropped through the canvas from cards that carry the real badge
+    — Red Hat's Python Programming badge and Oracle's Foundations Associate
+    Database badge from the user's own cohort cards, the Postman Student
+    Expert badge and the CodeChef lockup from the cards already in uploads —
+    into `uploads/certifications/torii/`. Infosys Springboard and IBM
+    SkillsBuild have no artwork anywhere in the library and stand in type;
+    the type fallback now keeps all three letters of a name as short as IBM.
+  - **`domain` carries where a count came from** ("354 (1st year) + 200 (2nd
+    year)"), shown under the count in the detail view.
+
+The skills lines are descriptions of each certification's syllabus as its
+awarding body publishes it — four a credential, not claims about results.
+
+**How many badges an arc carries is a question about the arc, not about the
+catalogue** (2026-09-17, after "the logos were too much small… too much gap…
+it needs to look filled"). The register used to share the credentials out
+between its two arcs by length, so each arc held its share of however many there
+were. That is right at 42 and wrong at 15: the same two arcs, 2,165px and
+1,589px of path, held fifteen 36px badges at 197px centre to centre — 161px of
+air between each — and the band stopped reading as a band. The badge is now
+`clamp(w/26, 40, 64)` (62px on a 1600px stage, 72% larger) and the slots are set
+by density instead: one every 1.5 badge-widths of path. Measured after: 42
+badges at 62px, 92px apart, a 30px gap. Three things make that safe:
+
+  - **The travel already wrapped.** `credentials[(g.from + j) % length]` was
+    there from the start, so a catalogue shorter than the slots simply comes
+    round again — no new mechanism, and the same discipline as the event wheel.
+  - **A repeat is always a full catalogue away from itself.** The slots are
+    numbered straight through both arcs, so with 15 credentials a badge recurs
+    15 slots later and never stands beside itself. Asserted: 0 adjacent
+    duplicates on Torii's 15 and on NGI's 42.
+  - **A catalogue longer than the slots would lose its tail**, so the density is
+    raised until there is a slot for every credential. NGI's 42 land in 42
+    slots, one each, and its register is unchanged but for the larger badge.
+
+The type fallback for a credential with no art (Infosys, IBM) was a fixed 12px,
+which was legible beside a 36px badge and lost beside a 62px one; the pin now
+publishes its own size as `--cs-pin-size` and the fallback is `0.28em` of it.
 
 ## Republishing a section
 
@@ -275,9 +358,18 @@ still publishable only by hand.
 | `publish-infrastructure.cjs` | NGI's Legacy & Infrastructure — the campus folders, as the tilted wall and the gallery behind it |
 | `publish-nt-square.cjs` | Torii's NT Square — the thirteen photographs as the card fan, and the GitHub Experience Center subfolder as the deck behind the third pill |
 | `publish-trainings.cjs` | Torii's Trainings — the bookshelf, and the placeholder list currently standing on it |
+| `publish-it-development.cjs` | Torii's IT Development — the five products as the project showcase, and the offline mock sites the monitor opens |
+| `publish-torii-certifications.cjs` | Torii's Certifications — the fifteen credentials and the year split from the user's two tables, four badges cropped from cohort cards, no gallery |
+| `publish-torii-snapshot.cjs` | Torii's Organization Snapshot — the whole Torii Minds photograph library as the drift wall, the Torii mark in the middle |
+| `publish-torii-events.cjs` | Torii's Events — the section's own grouped events re-issued as the wheel of albums |
+| `publish-torii-connect.cjs` | Torii Connect — the three photographs, de-framed, as the folder that opens into a bento |
 | `publish-project-street.cjs` | Torii's Project Street — the film and the thirty-two photographs, copied as they are, as the film screen and the thread board |
 | `publish-project-week.cjs` | Torii's Project Week — the nine collage photographs (re-encoded once, then reused) and the wall of sixteen more under them |
+| `publish-section-intros.cjs` | the title card on every row of both decks - the row's own title; `--clear` takes them off |
+| `apply-review-2026-09-17b.cjs` | the review's second pass — the showcase cut to five products plus three named ones, the photographic badges off the register, the CEO's two figures |
+| `apply-review-2026-09-17.cjs` | Torii's content changes from the 2026-09-17 review — the Claude card, the CEO lines, About, the team and CoE orders, the film start, the Beyond and Certifications photograph |
 | `crop-image.cjs` | crops a photograph through headless Chrome's canvas — there is no image library and there is not going to be |
+| `drop-ncet.cjs` | removes the NCET organization and its sections, and renames NGI's tab — stop the server first; always backs up `db.json` |
 | `mirror-deck.cjs` | copies one organization's whole deck into another — `--replace` clears the target first; always backs up `db.json` to `backend/data/backups/` |
 | `normalise-navicons.cjs` | evens the weight of the supplied nav artwork into `navicons-fit/` |
 
@@ -1088,6 +1180,810 @@ complaint-tracking system, a food-ordering app — Torii mentors in red reviewin
 them, a crowd at each board. "Step IN. Stand OUT." on the sign-off is the
 tagline in the Torii lockup on every photograph. No caption is written on any
 card. Replace the words when the user's arrive.
+
+Torii's IT Development is the Project Showcase (2026-09-16), a new block type
+`project-showcase` and a port of a page the user supplied — kept rule for rule,
+class name for class name. A 1920x1080 canvas cover-fitted into the slide: paper
+"files" on the left that open one at a time and drop the rest into a dock, a desk
+rig on the right whose monitor is put in perspective by one `matrix3d`, and the
+open project's name set 300px behind it, swapped character by character. It
+replaced the `platforms` block that branch had put there; NGI and NCET keep
+theirs.
+
+**What a supplied page has to give up to live in this deck, and nothing more.**
+Four changes, all forced:
+
+  - **Scope.** The original styles `:root` and `.hero`. `:root` there sets
+    `--ink`, `--line`, `--card`, `--font`, `--mono` and `--orange`, which are
+    this deck's own variables, and `.hero` is this deck's full-bleed hero block —
+    dropped in as written it would have restyled every other slide. Everything
+    is scoped under `.ps-root`; every inner class name is the original's, so the
+    markup is unchanged. The keyframes are prefixed `ps-` for the reason this
+    stylesheet already learned once: `@keyframes` names are global.
+  - **No web fonts.** The Google Fonts link is gone — there is no internet at
+    presentation time. Inter and JetBrains Mono are still named first in the
+    stacks and fall through to the system faces the original already listed.
+  - **The arrows are stopped, not only prevented,** and bound to the root rather
+    than to `document`; a `pointerdown` anywhere on the slide focuses the root so
+    they are armed. Without it the original's `document` listener walked the
+    projects *and* turned the slide.
+  - **The dock is lifted off the presenter bar.** It rests at y=934 of 1080,
+    which is exactly the band the bar floats over; presenting solves
+    `--ps-dock-top` from the bar's real height. Measured: 909 instead of 934, and
+    the dock's bottom edge 790 against a bar at 804 — it was 7px under before.
+
+**A custom property holding a `calc()` cannot be read back with `parseFloat`.**
+`--deck-bar-clear` is `calc(96px / var(--slide-scale,1))`, and
+`getComputedStyle(el).getPropertyValue('--deck-bar-clear')` hands back that
+unresolved token string, not a length — `parseFloat` of it is `NaN`, which
+silently became a lift of zero. The value has to be given to a real property
+before the browser will resolve it: a hidden zero-width probe with
+`height: var(--deck-bar-clear, 0px)`, read as `offsetHeight`. Any section
+needing that clearance as a *number* rather than as CSS has the same problem.
+
+**"Open website" puts the site in the monitor, live.** A project may carry a
+`site`; the button in the opened file's header swaps the screen's `<video>` for
+an `<iframe>` inside the same `.screen`, so it inherits the monitor's
+perspective transform and is driven from the slide — verified with a real
+pointer press through the transform, not just a synthetic click. Pressing it
+again returns to the film. Two things to know before a real URL goes in: there
+is no internet in the room, and most sites refuse to be framed at all
+(`X-Frame-Options`, `frame-ancestors`). A copy served from `uploads/` always
+works; a public URL may not.
+
+**The shelf is the Platforms block's own content, read rather than retyped**
+(2026-09-16). The seven files are the "Built to Deliver" panel's five products,
+with AI Engineer LMS and TAG each appearing twice because each has a portal and
+an admin console in its `views` — the same seven rows, and the same login counts
+(1, 1, 1, 2, 2, 3, 2), that panel lists. `publish-it-development.cjs` reads the
+block off **NGI**, since Torii's own copy is the thing this slide replaced.
+Each file plays the screen recording that already existed for that product in
+`uploads/platforms/<shot>.mp4`, and "Open website" opens the product's real URL.
+Checked 2026-09-16: all five hosts answer 200 and none sends `X-Frame-Options`
+or a `frame-ancestors` policy, so they frame; `--mocks` writes offline stand-ins
+instead, for a room with no internet.
+
+**Credentials are carried and never drawn.** Each project takes the demo
+`logins` from the same source; the detail sheet shows the role and two buttons
+that put the username or the password on the clipboard. That is `Platforms.js`'s
+rule — a password on a three-metre screen is a password given away — and the
+check asserts it, scanning the rendered slide for all eight known values.
+
+**A `.state` card at `opacity: 0` still eats every click.** The two cards that
+say "Select a project" and "Demo is being prepared" are `position: absolute;
+inset: 0` over the screen and are only faded out, and a transparent element is
+still hit-testable — so with a live site in the monitor, `elementFromPoint` at
+the centre of the screen returned `.orb` and not one click reached the product.
+They carry nothing interactive, so they take `pointer-events: none` outright.
+The original page never had anything clickable in that screen to notice it.
+
+**The monitor is as large as the slide allows** (2026-09-17, after "it's not
+that clear"). The rig went from `scale(1.7)` at `translate(690px,-76px)` to
+`scale(2.1)` at `translate(600px,-300px)`: the screen is 1055x739 of the
+1920x1080 canvas where it was 854x598 — 879x616 nominal, 23% wider — and it sits
+150 canvas pixels higher with its right edge 155 further right. Three things
+bound those numbers and were measured before choosing them, not after: the left
+column of files and the detail sheet end at canvas x=756, so the screen's left
+edge must stay past 780 (it is at 828, 60 nominal px clear); the canvas is 1920
+wide, so the right edge must stay inside 1900 (1883); and the presenter bar
+covers the last 138 canvas pixels, so the bottom must stay above 942 (827, 116
+nominal px clear). What it cost: the desk slats now begin at canvas y=938 rather
+than 926, so they read as a strip behind the bar rather than a band under the
+monitor — the trade taken, since the monitor is what the slide is for.
+
+**And the site inside it is laid out at 1280, not 1440.** The rig's scale makes
+the screen bigger without giving a site more room — the `.screen` is 503x338 CSS
+pixels whatever the rig does to it, because a transform is not a layout. So the
+other half of "not that clear" is the viewport: at 1280 a site still lays out its
+desktop breakpoint and gets 12% fewer CSS pixels to do it in, which is 12% larger
+type inside the same box. With the rig's 23% that is about 39% larger than
+before. Measured: laid out at 1280x860, scaled 0.393, filling the screen to the
+pixel.
+
+**The monitor shows a recording whole and a site at laptop size** (2026-09-16,
+after "it was cropped… and the website was zoomed up"). The screen recordings
+are browser-window captures at about 1.95:1 and the monitor's screen is 1.47:1,
+so `object-fit: cover` — right for a photograph filling a card — cut a quarter
+off both sides of every film. A recording is now `contain` on a screen that goes
+near-black behind it (`.media--video`): 100% of the frame, 66px of letterbox
+top and bottom, the way a monitor actually plays a wide film. And the iframe
+used to be the screen's own 503x338 CSS pixels, magnified 1.4x by the rig and
+the canvas — so a site laid itself out for a 503px viewport, its narrow
+breakpoint, and that was then blown up. It is now laid out at a laptop's 1440
+wide (the height follows the screen's ratio, 968) and `transform: scale(0.3493)`
+brings it into the screen: the desktop layout at the size it has on a desk,
+still live, with pointer events mapping through the transform. Measured: the
+scaled frame fills the screen box to the pixel. The screen is measured, not
+assumed — the monitor's bezel padding takes 13px of the 516.
+
+**The badge is the product's logo now** (2026-09-17, on request). The design
+draws a 40px orange disc with the product's initial, and that is still what a
+project with no `logo` gets. The user supplied five logos in
+`Downloads/TORII/It Development logos`; they are filed under
+`uploads/Showcase/logos/` with plain names, mapped by product name in `LOGOS` in
+`publish-it-development.cjs` (the two views of one product share one), and drawn
+on a white plate: 40px tall like the disc, shrink-to-fit up to 118px wide, the
+mark contained with 5px of air, a hairline so the plate reads as a plate on the
+paper. 118 is the room the card has — 200 wide, the plate starts at 22, the
+dog-ear fold takes the last 46.
+
+  - **Size the mark by height, and nothing else.** The first rule was
+    `width: auto; height: 100%; max-width: 100%`, and it measured 100x53 on a
+    1.89:1 mark inside a 30px-tall content box: the percentage max-width resolved
+    against the plate, the width won, the height followed the ratio out of the
+    bottom of the plate, and `overflow: hidden` cut it — which on screen was
+    "coder" and the bottom of "t@g" missing. `height: 30px; width: auto;
+    max-width: none` gives every mark its own width (55 to 102px) and every
+    plate wraps it (73 to 118px). Measured: no image overflows its plate.
+  - **One of the five needed a crop.** `AI ready engineer logo.png` is a
+    4500x4500 canvas with the mark in a 3,586x996 band across its middle and
+    transparent everywhere else; contained in a 30px-tall box it would have been
+    a 9px sliver. The ink was measured (x 455–4041, y 1794–2790), cut with 40px
+    of air by `crop-image.cjs` at 0.125% ratio drift, and written to PNG at 900
+    wide so the transparency survives.
+
+The older `platform-logos/` wordmarks are not used here; three of those are
+unreachable anyway under the names the Platforms data uses (`owlcoder.png`
+against `Owl Coder.png` on disk).
+
+**The descriptions, features and stacks are still placeholders**, written from
+the one-line blurbs the Platforms block carries and from nothing else. `COPY` in
+the publisher is the one place to change them.
+
+**Torii's rows are in the order the user asked for** (2026-09-17), set by
+`tools/order-torii-rows.cjs`, which posts the whole id list to
+`/orgs/:id/sections/reorder` — an endpoint that refuses a list holding another
+organization's section, so it cannot reach NGI by accident. Thirteen rows were
+named: Executive Summary, CEO Profile, Team, Trainings, Centers of Excellence,
+Certifications, Placements, Torii Connect, Project Week, Project Street, NT
+Square, Beyond, IT Development last. Two were not, and the script's header says
+where each went and why — **Organization Snapshot** after Team (the bridge from
+who Torii is into what it does) and **AI Ready Engineer** after Trainings (a
+programme, beside the programmes shelf).
+
+**Amended the same day: Placements and Events go after Beyond.** Events had been
+placed before Torii Connect, on the reasoning that Torii Connect, Project Week,
+Project Street, NT Square and Beyond are Torii's own occasions and Events is the
+general one; the user moved both record rows to the far side of that run
+instead, so it now reads summary → people → programmes → credentials → Torii's
+own occasions → the record → IT Development. Events keeps its place beside
+Placements rather than being re-derived: the two were moved together, so they
+stay a pair in the order they were in. IT Development is still last, which is
+the one position the user has now named twice. The four switched-off rows are
+parked after it, so switching one back on puts it at the end rather than in the
+middle of a sequence somebody chose. A key is not a title here and the script says so twice: Team is keyed
+`leadership-journey`, Centers of Excellence is keyed `team`, Events is keyed
+`achievements`, Video Resumes is keyed `testimonials`.
+
+**A walk of the deck has to press until the slide actually turns.** `advance`
+gives the slide's own steps first refusal, so a block with beats of its own eats
+the press — AI Ready Engineer's course deck takes six before the deck moves. A
+harness that presses once per slide and gives up when the hash does not change
+reports the deck ending four slides early, which is a bug in the harness and not
+in the deck; press the dock's Next tab instead, or keep pressing. Measured
+either way: 16 slides, in the order above, IT Development last, and the
+seventeenth press comes back round to Executive Summary.
+
+**And a check's own regex can invent the bug it reports.** The pane check read
+each row's `title` through `.replace(/\s+/g, ' ')` written inside a *template
+literal*, where `\s` is not an escape sequence and collapses to a bare `s` — so
+the expression the page actually ran was `.replace(/s+/g, ' ')`, which deleted
+every lowercase "s" from every label it read. It reported the order as a
+mismatch and printed "Organization Snap hot · Training · Center  of Excellence"
+as the evidence, which reads exactly like the letter-spacing artefact this brief
+already warns about, and sent a second investigation after a bug that was in the
+harness. A `title` holds no runs of whitespace and never needed normalising.
+Inside a template literal every backslash meant for the page has to be doubled;
+better still, do not put a regex there at all.
+
+## The review of 2026-09-17
+
+Sixteen numbered changes arrived from the reviewer with a standing instruction:
+make exactly these and nothing else. Fourteen were made, verified in headless
+Chrome and are recorded here; two could not be located and were left, and are
+recorded here too so nobody hunts for them twice. The content side is
+`tools/apply-review-2026-09-17.cjs`, one PATCH per row, backed up first; the
+title cards went through `publish-section-intros.cjs --clear` and the order
+through `order-torii-rows.cjs`. The server had to be restarted for the two
+schema fields below before the data would take.
+
+**Rows: About first, Organization Snapshot fifteenth, Placements after.** The
+review named fifteen rows in order and did not name Placements; nothing may be
+removed, so Placements follows the fifteen. Measured: the pane reads About · CEO
+Profile · Team · Trainings · Centers of Excellence · Certifications · AI Ready
+Engineer · Torii Connect · NT Square · Project Week · Project Street · Beyond ·
+Events · IT Development · Organization Snapshot · Placements, and the arrow key
+walks all sixteen and comes back round. "Executive Summary" is retitled "About"
+on Torii; NGI's row keeps its name.
+
+**The title cards are off, on both decks.** `intro` is empty on all 37
+sections. The late-mount machinery in `SlideView` is still there and inert: with
+no card there is nothing to hold for, and the content is built at once. Measured
+at 0.5s after arrival: no card, content up.
+
+**AI Ready Engineer** lost the frames "What the campus gains" and "Step In.
+Stand Out." (five frames to three, plus the cover the component draws) and its
+"What a student walks away with" frame gained a fifth card, **Claude
+Certification**, carrying the Claude Certified Architect badge. That needed a
+field: a course-deck card may now carry `logo`, a path under `/uploads`, and
+`.cd-card__mark.has-art` shows it in the disc instead of the line icon. The
+badge is the user's own `Downloads/claude badge.png`, filed as
+`uploads/Claude/claude-certified-architect.png`; `claude certification.png` in
+the same folder is a poster, not a mark.
+
+**CEO Profile** gained one line under the existing paragraph, on its own line
+via the `\n` the body's `inlineRich` already honours: "12+ years of experience
+in IBM and Wipro. 10+ years of entrepreneurship experience." Nothing above it
+changed.
+
+**Team** opens on Sudhir, Bhargava, Harshavardhini, Naveen, Abraham; the other
+nineteen follow in their old order. The review spelt two of them Sudheer and
+Bhargav; the stored names are the filenames the portraits arrived under and were
+not changed, since renaming was not asked. **The ten Claude Architect Certified
+Trainers** the review says must be present are `Downloads/claude trainers
+images/trainers/`: akhilesh, azar (Azarunnisa), bhargav (Bhargava), bobby,
+harshavardhini, manikanta, naveen, peter, prashat (one of the two Prasanths),
+sudhir — every one already among the 24 members, none duplicated. Nothing was
+changed for that item and nothing needed to be; no trainer carries a label
+saying so, because none was asked for.
+
+**Centers of Excellence** opens Snowflake, Claude, AWS Academy, Oracle Academy,
+Red Hat, GitHub, Cisco Networking Academy, o9, then the other twelve as they
+were. The **Photos & videos option is gone** from this section only: the card's
+foot no longer says "Photos & videos" (or a count), and an opened centre shows
+the mark, the name and its line above the rule and nothing below — `mediaTile`
+and the player parameters stay in the file for the day it is wanted back. That
+leaves an opened centre mostly empty, which is what was asked for and is noted
+here rather than filled.
+
+**Project Street's film begins at 0:13**, and the join is invisible. A
+thread-board may carry `videoStart`; the component opens the file at that point
+(`#t=13` on the src, a `loadedmetadata` seek behind it because a fragment is
+advisory), takes `loop` off since it always returns to zero and repeats from the
+offset on `ended` instead, and holds the element at opacity 0 until it is at the
+offset and playing, then eases it in over the film's own dark ground. Measured:
+at t+300ms the film is at 13.08s and half-way through its fade, at t+700ms at
+13.48s and fully up; no frame before 13 was ever painted.
+
+**Beyond** now opens on the group photograph the review supplied. That file was
+already in the section — it is `Beyond/beyond-boundaries/01.jpg`, 2048x1151, the
+first shot of the "Beyond Boundaries" group — so "add it" meant making it the
+card the fan opens on: the Beyond Boundaries group moved to the front and the
+filters read All · Beyond Boundaries · Shine Mode · Code Fall. Measured at 1.6s:
+the front card is 01.jpg; the fan then turns one card at a time as it always
+did.
+
+**Certifications** takes the same photograph as its register backdrop, in place
+of `certifications/register-crowd.jpg`, through the existing `.cs-reg__back`
+treatment untouched (38% opacity, half saturation, the Ken Burns drift, the
+scrim). The 3,120 and the four year figures stay legible over it; the poster's
+own "BEYOND BOUNDARIES" lettering reads faintly through the scrim behind the
+count, which is the photograph as supplied.
+
+**Organization Snapshot loads every tile with the slide again.** The staged
+load that stood for a few hours — sixteen tiles a column eager, the rest
+trickled in — was measured smooth and was wrong for the room: the plane is
+centred, so what is on screen on arrival is the *middle* of each track, not its
+head, and the tiles in view were the ones still waiting their turn. That is the
+lag the review saw. Every tile carries a `src` from construction now; the other
+gains (flat tiles, two copies, FitSlide's debounce) stand. Measured at 1s: 766
+of 766 decoded, 32 of 32 on screen.
+
+**Two items could not be located and were left as they were.** Item 4, remove
+"(Done)" from every Centers of Excellence card: the string is in neither the
+stored data, the hydrated API response, the component, the stylesheet nor the
+rendered slide (orbit, cards, opened centre all read), so there is nothing to
+remove; the only "Done" in the deck is "Certifications Done", a label on the
+Certifications grid. Item 12, add NGI and NCET "in the comments": nothing in
+either deck is a comments area, and the only NCET mentions in Torii's copy are
+About's "Technical partner to NCET", Beyond's lead and IT Development's TAG
+descriptions. Both need the reviewer to point at the screen.
+
+**Only Torii shows, and Placements is off** (2026-09-17, after the review:
+"I just want Torii ones"). Two switches in `context/appStore.js`, both code,
+both reversible by deleting a line:
+
+  - `HIDDEN_ORGS` lists `technical-hub`. `loadOrgs` drops a listed id as the
+    organizations arrive, so the pane's tab strip, the organizations page and
+    the router never see it: the strip draws Torii alone, and a direct URL to an
+    NGI section bounces to `#/orgs`. The organization and all seventeen of its
+    sections stay in the store, whole, and every NGI tool still works against
+    the API. This is the same idea as `HIDDEN_ROWS`, one level up, and it is
+    deliberately not a delete — NGI was the deck everything was built on.
+  - `placements` joined Torii's `HIDDEN_ROWS`. Fifteen rows show; the deck bar
+    reads "/ 15"; the arrow key walks all fifteen and comes back round.
+
+**The Certifications photograph is framed on the students** (same day: "move it
+up, I can't see the students"). The backdrop box shows 43% of the picture's
+height, and at the shared `object-position: center 30%` that band fell on the
+poster's lettering. `[data-org='torii'] .cs-reg__back img` sets 72%, which shows
+source rows 517–950 of 1151 — every row of faces (about 560–800) inside it, the
+title out of frame. Torii only; NGI's backdrop is a different photograph framed
+for 30% and is untouched.
+
+**The second pass of the review** (`tools/apply-review-2026-09-17b.cjs`, same
+discipline: one PATCH per row, backed up first, and the server restarted for the
+two schema fields it needs).
+
+**Sign out is no longer beside Present.** It sat in the top bar's action row,
+immediately right of Present, on the reasoning that a presenter's hand is
+already there when they have finished — which is precisely why it was the
+easiest control in the deck to hit by mistake while reaching for Present, and
+being signed out in front of a room is not a recoverable slip. It is gone from
+that row. The control in the navigation pane's head stays, and that head is
+drawn whether the pane is open or collapsed to its rail, so nothing is stranded.
+Measured: the top bar now holds Previous tab, Next tab, Present and nothing
+else; the remaining control is 1,262px from Present. Both were already hidden
+while presenting, so this is about the editing view, which is where the deck is
+driven from between runs.
+
+**The register drops a badge that is a photograph of a badge.** Four of Torii's
+fifteen were cropped from cohort cards and carry what was behind them — a brick
+wall, a dark plate, a green sheet, a brown bar — and on the register's clean
+sheet they read as stickers. They are not a hand-picked list: every badge in the
+block was measured for whether its four corners are opaque, and exactly those
+four are (0% transparent), while all eleven others are transparent artwork. A
+credential now carries `onRegister`, and `badgeArt` takes an `ignoreBadge`
+argument that only the register's pin passes — so the arcs draw the vendor's
+two-letter mark for those four, and **Skills Unlocked draws every badge**, which
+is what was asked. Measured after: 42 pins, 26 artwork, 16 in type, no
+photographic file left on the arcs; the Skills grid shows all fifteen
+credentials with all four photographs among them and nothing broken.
+
+**The CEO's two experience lines are figures now, not prose.** They were
+appended to the body paragraph in the first pass and read as more of the same
+sentence. `leader-hero` takes `highlights` — up to three `{ value, label }` —
+drawn under the social row: a hairline above, an accent rule beside each, the
+figure in the display face in `--accent-ink` at 25px and its line in the body's
+grey. The words are the reviewer's own, split into a figure and its description.
+Measured: two marks, 40px below the social row, and the numbers are out of the
+body.
+
+**The brand mark on that slide is the real logo now** (2026-09-17). The supplied
+page drew the gate with CSS borders — `.ps-root .brand i`, a 22px box with a 3px
+orange border and a dark bar — which is a fair likeness and is not the mark: the
+real one carries an orange starburst above the bar. `project-showcase` takes a
+`logo` path under `/uploads`, unset falling back to the drawn gate, and Torii's
+block points at `Snapshot/torii-logo.png`, the same 420px alpha crop the drift
+wall and the Centres of Excellence hub already use. It is drawn in a **28px**
+box, not 22: the file's ink runs 54–366 across and 45–374 down of its 420px
+square, so it is 78.6% of the height, and at 22px the gate would have stood
+about three-quarters of the size it replaced. Measured: 28x28 canvas px at
+canvas 96,64, the position the drawn one held.
+
+**IT Development is the five products asked for, plus three named ones.** Portal
+only — MYNA, Torii Minds & JPath, OwlCoder, AI Engineer LMS, TAG — with the two
+admin consoles dropped, and **Loop**, **AI Anchor** and **Hibi** added by name
+with nothing else, because nothing else was supplied. Each shows the design's
+initial disc (as every file did before the logos arrived) and the monitor's own
+"Demo is being prepared" card. The reviewer said "add two more" and then named
+three; all three are in, because a name that was said is a name that was wanted
+and removing one is a line in the tool, while a missing one has to be asked for
+again. Two notes for when the logos land: `LOGOS` in
+`publish-it-development.cjs` is where a logo path goes, and a project's
+description, features and stack are still empty — **the detail sheet now hides a
+heading with nothing under it**, which it did not before, because "Key features"
+and "Built with" over empty space is what a project added by name alone looked
+like.
+
+## Every tab announces itself
+
+**A title card on every row, in each deck's own colours** (2026-09-17, on
+request). The mechanism already existed and four of NGI's pages used it: a
+section carrying a non-empty `intro` gets `slide--intro` in `SlideView`, which
+lays the string full-screen over the slide, revealed letter by letter, and
+publishes `--intro-hold: 3s` that every entrance animation on that slide adds to
+its own delay, so the page behind arrives only once the card has gone.
+`tools/publish-section-intros.cjs` now sets `intro` on all 37 sections in both
+decks, and `--clear` takes them off again.
+
+**The card says the row's own title**, not a second name written into the tool.
+The pane, the dock's Next tab button and the card all say one thing, and
+renaming a row renames its card with nothing else to remember.
+
+**White, with the deck's colour as the type** (second cut the same day, on
+request: "no background colour, white background and colour for the text").
+The first cut set each card on the deck's own dark colour with light type; what
+was wanted was the reverse. The colours come off `data-org`, which `applyTheme`
+already stamps on the root, so neither the slide nor the section needs a field:
+
+| deck | ground | type | measured |
+| --- | --- | --- | --- |
+| NGI and NCET | white | its green, `--nav-accent-ink` | 5.1:1 |
+| Torii | white | its orange `#F05D29` | 3.3:1 |
+
+Torii's 3.3:1 is under the 4.5:1 body-text floor and above the 3:1 large-text
+one; this type is 160px, revealed letter by letter, on screen for three seconds.
+Torii's orange is the value measured off the gate in the brand film, not the
+older `#E95A22` in the palette table.
+
+**The page is not built until the card is most of the way through.** The
+request was "after the text, I want the entrance animation": with every tab
+carrying a card, the arrivals were playing out *behind* it and were over when it
+lifted. `--intro-hold` was the first answer to that and it only ever half
+worked, because a CSS delay is honoured only by the entrances written to read
+it — a JS arrival (an IntersectionObserver reveal, a rAF ease, a letter reveal
+with `trigger: true`) fires the moment its element exists, and under an opaque
+card that is to nobody. So `SlideView` now mounts the canvas late: at 66% of the
+card's run, read off the card's own computed `animation-duration` so
+reduced-motion's shorter card mounts proportionally earlier. The card holds
+opaque to 76%, so the entrances begin a beat before the fade and are arriving as
+it lifts. `--intro-hold` is 0 now and stays as a variable so the existing
+`calc(var(--intro-hold, 0s) + …)` staggers keep working. Three things this
+needed:
+
+  - **The slide has to hold its own height while it is empty**, or the card,
+    which is `inset: 0` of the slide, is a strip a few pixels tall. `is-holding`
+    gives it `min-height: var(--slide-h, 860px)` until the content lands.
+  - **`FitSlide` has to fit again when the content lands.** What it measured at
+    mount was a card over nothing. `SlideView` dispatches `slide-content` on the
+    slide and `FitSlide` runs its whole opening pass again on it — hooks the new
+    images, fits, settles. Measured: `--slide-h` 900px before and after.
+  - **The mount is guarded on the slide still being in the document.** The deck
+    rebuilds on every navigation; a slide left before its card finished must not
+    build its blocks — and register their steppers — into the slide that
+    replaced it.
+
+Measured on Project Week: at 1.0s no content built; at 2.1s nine collage cards
+at opacity 0; at 2.5s, card at 0.17, cards at 0 to 0.87; at 2.9s all arriving;
+settled by 4.6s. On Organization Snapshot, which now builds its 5,411 nodes
+under the card, the card runs at 6.9ms a frame with one 431ms spike at the
+build — on a static, opaque card, so nobody sees it — against 14.2ms before.
+The full Torii deck still walks end to end on the arrow key.
+
+## Sixty frames a second, measured
+
+**The deck was asked to feel like film** (2026-09-17). Measured before anything
+was changed, at 1600x900 in headless Chrome whose own frame is 6.9ms: scrolling
+was already perfect on every slide that scrolls, and so was every slide's idle
+frame time, except two. Organization Snapshot ran at **41.6ms a frame** (24fps)
+with six long tasks, the worst 276ms, took 449ms to arrive and then ran its first
+second at 152.8ms a frame. Certifications ran at 13.9ms with 25 frames over 20ms.
+Everything else was already at the display's own limit.
+
+**Ablate before optimising.** Each suspected cost on the drift wall was removed
+on its own, on a fresh load, and the slide re-measured:
+
+| what was removed | idle frame time |
+| --- | --- |
+| nothing, as it was | 48.7ms |
+| `saturate(0.92)` from all 1,149 images | 48.5ms |
+| the 0.42s transitions on tile, image and scrim | 48.6ms |
+| the hover `box-shadow` | 48.7ms |
+| `transform-style: preserve-3d` from the tiles | **20.9ms** |
+| one of the three copies, 1,149 tiles to 767 | **27.7ms** |
+| the last two together | **13.9ms** |
+
+Three of the five obvious suspects cost nothing measurable and all three are
+still there. The two that mattered are both fixed:
+
+  - **`.dw-tile` is flat now.** Nothing inside a tile was ever at a different
+    depth from the tile itself; the only Z was the hover lift. `DriftWall.js`
+    converts the block's `lift`, a distance in px toward the viewer, into the
+    scale that distance produces at the wall's own perspective and publishes it
+    as `--dw-lift-scale`, so the field keeps its meaning and the tile keeps its
+    look. `.dw-wall`, `.dw-plane`, `.dw-col` and `.dw-track` keep their 3D, so
+    the columns still stand in space and still turn with the pointer.
+  - **One spare copy, not two.** A column shows no seam as long as its track is
+    one visible column taller than the run it wraps on, which is
+    `ceil(visible / copyHeight) + 1` copies. The old `+ 2` with a floor of three
+    was a whole copy more than the wrap can need: 383 images and about 2,700
+    nodes on this slide.
+
+**`loading: 'lazy'` does nothing inside a 3D wall, and only a measurement showed
+it.** All 767 images decoded within a second of the slide mounting while 35 were
+ever on screen: the wall sits in a `perspective` container that is rotated and
+translated, and the browser resolves every tile in it as in-viewport. The near
+sixteen tiles of each column now carry a `src` and the rest carry the URL on the
+element, promoted four every 120ms. A trickle, not a burst, because the wall has
+minutes before it needs any of them: a column drifts a few dozen pixels a second
+over a track around 20,000px long. The `load` listener has to be attached at
+promotion, not before, because **an `<img>` with no `src` reports
+`complete === true`**, so the earlier pass skipped every one of them and nothing
+would have re-measured the columns as they landed.
+
+**`FitSlide` refit once per image, and that is what made changing tab stack.**
+`schedule()` collapses everything asked for within one frame into a single fit,
+which is right for a resize and wrong for images: they land across hundreds of
+*different* frames, so a slide with a lot of them refits on nearly every frame
+for as long as they stream, and a fit clears the height and reads `scrollHeight`
+back, a forced synchronous layout of the whole slide. Image arrivals now go
+through `scheduleQuiet`, a 120ms trailing debounce. This was never a drift-wall
+problem: it fixed Certifications outright, 13.9ms to 6.9, without that slide
+being touched.
+
+**`letterReveal` never released its layers.** Every glyph carried
+`will-change: opacity, transform, filter` from construction, and `filter`
+promotes each one to a compositor layer for as long as the declaration stands.
+That was a headline per slide when a few sections had a card; since every tab got
+one it is a screenful on every navigation. The hint is now put back before each
+reveal and dropped once the last letter has landed.
+
+Where it ended up, at 1600x900. The harness's own frame is 6.9ms, so 6.9 means
+the display is the limit; 16.7ms is 60fps.
+
+| | before | after |
+| --- | --- | --- |
+| Organization Snapshot, idle | 41.6ms, 6 long tasks | **13.9ms**, none |
+| Organization Snapshot, through its title card | 152.8ms over the first second | **14.2ms** |
+| Certifications, idle | 13.9ms, 25 frames over 20ms | **6.9ms**, none |
+| the other seven slides measured, idle | 6.9ms | 6.9ms |
+| scrolling, all five scrolling slides | 6.9ms, 0 frames over 16.7ms | unchanged |
+| a title card on any other slide | n/a | 6.9ms, 0% over 16.7ms |
+| changing tab, every slide but one | 7 to 110ms to appear | 7 to 93ms |
+| changing tab to Organization Snapshot | 449ms | about 490ms, then 20.8ms for one second |
+
+What is left: that one slide builds 5,411 nodes, so it takes about half a second
+to appear and runs its first second at roughly 48fps, all of it underneath its
+own three-second title card. Everything else in both decks, idle, scrolling and
+changing tab, is at or above 60fps. Fixing the last of it means building the wall
+incrementally, which is a real change to a section that currently works.
+
+Two things the survey flagged that the measurements did not support, recorded so
+they are not chased again: the wheel handlers that read then write `scrollTop`
+(`PlacementWall`, `VideoResumes`) cost nothing detectable, since every scrolling
+slide measures 0 frames over 16.7ms; and `utils/dock.js`'s read/write loop now
+runs on one slide only, because the presenter bar stopped using it when the rail
+went.
+
+## Presenting: the forward gesture, and the dock
+
+**Forward walks the tab, then opens the next one** (2026-09-17). `advance` in
+`PresentPage.js` offers the press to whatever the open slide holds of its own —
+a course deck's courses, a timeline's years, the panels of a leader's story —
+and turns the tab only once that is spent. So on AI Ready Engineer the first
+five presses walk the six courses and the sixth opens Centers of Excellence; on
+a slide with nothing of its own, one press is one tab. Backwards is the mirror:
+from the front of a slide, back opens the previous tab.
+
+`turn` is the other movement and it changes tab outright, from wherever inside a
+slide you are. The dock's two buttons call it, and so do Page Down and Page Up,
+because a presenter's clicker sends those. It is the only way to skip the rest
+of a run of sub-tabs.
+
+| | what it does | what drives it |
+| --- | --- | --- |
+| `advance(delta)` | the slide's own steps, then the next tab | ← → and Space |
+| `turn(delta)` | straight to the previous or next tab | the dock's two buttons, Page Down, Page Up, the admin top bar |
+
+**A cut in between made the arrows stop at the end of a slide**, so that only the
+dock could change tab. It was wrong in the room and was reverted the same day:
+it turned the last sub-tab into a wall, and a presenter had to move a hand to the
+dock to get past every slide with any depth. Keep the spill. The dock is for
+skipping, not for the ordinary press.
+
+A slide's sub-steps come from two places and only one was ever in this file's
+hands. Six blocks register with `utils/slideSteps.js` — course deck, gallery
+wall, leadership panels, leadership road, milestone timeline, paper tabs — and
+those are what `advance` offers the press to before it turns. Everything else
+that takes the arrows (the training shelf, the team ribbon, the card fan, the
+event wheel, the alliance accordion, the project showcase) binds them on its own
+root and calls `stopPropagation`, so the press never reaches `PresentPage` at
+all and those slides are turned by the dock or by Page Down.
+
+**The dock holds two buttons and nothing else** (2026-09-17, on request). It was
+a pair of named neighbours with a rail of sixteen section icons between them,
+each with a hover card of its subsections; the rail, the cards and
+`SideNav.sectionMenu` that fed them are gone. What is left is **Previous tab**
+and **Next tab**, each naming the tab it lands on, the position, and Exit. Three
+notes:
+
+  - **Exit stays, though only two buttons were asked for.** In fullscreen the
+    top bar is hidden and Escape is the only other way out; a presenter whose
+    hand is on a mouse would have none. It is the small ghost button at the end,
+    not one of the pair.
+  - **The names are 15.5px now, up from 12.5.** They were sized to leave room
+    for the rail. With the rail gone the dock is about 480px, and the point of a
+    dock a presenter glances at is that the glance works from the desk.
+  - **The dock is centred now, which the wide bar could not be.** `.deck-bar`
+    shifts left by half `--player-reserve` so that a 1180px bar and the film
+    player's controls in the bottom-right corner did not sit on each other. At
+    480px that shift is 123px of visible offset bought against a collision that
+    cannot happen, and it read as a dock somebody had nudged. `.deck-bar--pair`
+    takes `left: 50%` back and caps its width at `100vw - 2×reserve - 48px`, so
+    half the bar plus the whole reserve clears the corner at any window size.
+    Measured at 1600, 1280 and 1024: dead centre, nothing overlapping.
+
+Measured on both decks with the right arrow alone and nothing else touched:
+every tab is reached, in the stored order, and the deck comes back round to the
+first — 16 tabs on each, one press apiece except where a slide has depth (Torii's
+AI Ready Engineer takes 6, NGI's Executive Summary 3 for its paper tabs, NGI's
+own AI Ready Engineer 6). The dock's Next tab pressed from sub-tab 3 of 6 goes
+straight to Centers of Excellence, and Previous tab from there comes back.
+
+**Four Torii rows and one NGI row are switched off in the code** (2026-09-16),
+on request: Torii's Industry Alliances, History & Milestones, Success Stories
+and Video Resumes, and NGI's Certifications — the user-supplied section that is
+not to be redesigned, still intact and published underneath.
+`HIDDEN_ROWS` in `context/appStore.js` is the switch — one list of section keys
+per organization, and both `isShown` (the pane and the collapsed rail) and
+`deckSections` (Prev/Next while presenting) read it, so the two can never
+disagree. Deleting a line brings a row back; nothing else changes.
+
+It is deliberately *not* the `hidden`/`status` flags that
+`tools/presenter-visibility.cjs` writes. Those are editorial state in the store
+that an admin can still see through, which is right for a draft; this is a
+switch that hides the row from everyone, admin included, while leaving the
+section published and every block in it untouched. Measured: 16 slides in
+Torii's presenting deck instead of 20, none of the four in either pane, and
+NGI and NCET unchanged. A direct URL to one of those sections still renders it —
+the switch governs what is *offered*, not what exists — which is the escape
+hatch for checking one without turning it back on. One trap in the list: a key
+is not a title. Torii's "Video Resumes" row is keyed `testimonials`, so the
+keys are taken from `backend/data/db.json` rather than guessed.
+
+Torii Connect is a folder that opens into a bento (2026-09-16), a new block
+type `photo-folder`, built to a reference the user supplied: one big folder
+standing in the middle of the frame, cards peeking out of its mouth, its own
+name and count on the pocket across the front. The button empties it — each
+photograph flies out and lands in a wall of deliberately unequal tiles, each
+with a name and a line read off the picture — and Back sends them home along the
+same path. Three photographs, so a big tile and two stacked beside it.
+
+**The folder is the reference's silhouette, shape for shape** (second cut,
+2026-09-16, after "it's not looking like a folder"): the back panel is an SVG
+path whose top edge steps down on the right through one soft curve — the tab —
+inside a pocket that is a little wider than it; the cards are *documents*,
+white paper with a thin rule, the photograph set into the top and the name and
+a line beneath, fanned out of the mouth with the middle one highest and in
+front; the pocket carries the name in a plain semibold sans and "N Files", as
+the reference does, not the deck's display face. The reference's pale blue is
+done in Torii's warm tints. There is no eyebrow above it — the reference has
+nothing there and the user asked for the label to go.
+
+**One element per photograph, and only its transform ever moves.** A card's box
+*is* its bento slot, written once in px; the closed state is a
+`translate … scale … rotate` solved in JS that carries that box back into the
+mouth. Opening and closing are one transition played in opposite directions —
+measured, a card lands back on exactly the rectangle it left, to the pixel — and
+no width or height is ever animated. Scaled to 250px in the mouth, the caption
+reads as the two grey lines the reference draws on its documents, which is why
+the card can be one element in both states.
+
+**The cards stay behind the pocket, always.** That is the whole trick: going out,
+a card emerges from behind the pocket while the pocket fades; coming back, it
+slides behind the pocket as the pocket fades in. No z-index is touched
+mid-flight because none has to be.
+
+**`animation-fill-mode: both` outranks the state you switch to.** The folder's
+entrance holds `opacity: 1` in its last keyframe, and a filling animation beats
+every declaration in the cascade — so `.is-open { opacity: 0 }` did nothing and
+the folder simply never went away. `backwards` is the fill that was wanted:
+the from-state through the delay, and the declared style once it has run.
+Anything with both an entrance animation and a state that changes the same
+property has this bug waiting.
+
+**A tile is the photograph's own shape, exactly.** The first cut sized tiles as
+boxes and let `object-fit: cover` take the difference — 1.88 against pictures of
+1.41 on the small tiles, and even the big one at 1.37 was noticed ("not the same
+original ratio as before"). A composition now names only *columns of widths*;
+each tile's photograph height follows from its own `w/h`, a fixed caption band
+sits under it, columns are centred on one another and the whole is centred on
+the frame, and if it comes out taller than the space above the presenter bar
+the widths are scaled down together. Measured: −0.2%, −0.6%, −0.6% — rounding.
+Unequal is a composition, not a licence to crop.
+
+**The photographs had a frame burned into them.** All three arrived as 465px
+exports inside a black mat and a 6px red rule — a picture inside a picture,
+which in a bento reads as a mistake. The rule measured at rows 20–25 and columns
+32–35 / 422–426, the same in all three; `crop-image.cjs` cut past it at 0.000%
+ratio drift, leaving 384x272, and a check that counts red pixels on every edge
+now returns zero. The framed originals are kept beside them as `NN-framed.png`,
+the way the Snowflake card's was.
+
+**A replaced file keeps serving its old bytes for an hour.** `/uploads` goes out
+as `public, max-age=3600` with no ETag and no Last-Modified, so overwriting
+`01.png` in place changes nothing in any browser that has already seen it —
+including, for a long while, the one checking the work: three rounds of crops
+were verified as correct on disk and wrong on screen. The crops are published
+under new names (`aisle.png`, `stalls.png`, `myna.png`) instead. **When media
+changes, change its filename**; only that changes the URL.
+
+Torii's Events is a wheel of albums (2026-09-16), a new block type
+`event-wheel`, built to a reference the user supplied: on the left the
+rightmost sweep of a great ring whose centre stands 270px off the frame, its rim
+made of the photographs themselves — a continuous curved strip of tiles, one
+per event, each turned by its own angle to follow the arc, edge to edge — the
+open event's tile large and lit with its name and count on a card beside it; on
+the right the open album running down a 520px column, each photograph at its
+own ratio. Two things from the reference are left out on request: the ring of
+icons inside the wheel, and the dark room — this is Torii's light sheet with
+its two measured colours washing behind, like Torii Connect and NT Square. It
+replaced the `event-orbit` that branch had put there, reading that block's ten
+events and ninety-four photographs as they stood — nothing retyped, no order
+changed. Twelve more folders under `uploads/Events/` belong to the other decks
+and stay out.
+
+**The name sits inside the ring** (on request): "Events" at 44px in the display
+face, right-aligned against the inner rim in the sliver of the disc the frame
+shows, ink running into Torii's orange over its last letters, "10 EVENTS" in
+small caps beneath. The right-hand panel lost its "EVENTS" kicker with it —
+saying it twice on one slide is one time too many.
+
+**The wheel has no ends.** The tiles are the events repeated until there are at
+least fifteen (enough to fill the visible arc), and every tile is placed each
+frame from its distance to the wheel's position taken the *short way round* —
+so one step back from the first event is the last, and the strip is never seen
+to stop. Measured: AWS Summit → AI Cinema → AWS Summit. The first cut was a
+finite row of squares spaced along a dark band, which drew "I don't want to see
+ends" and "the shape behind should be photos too"; a tile is now 124 along the
+radius by 96 along the tangent, rotated by its angle, with a 6px seam, so the
+strip bends with the rim (tiles measured at −64°…+64°) and the band shows only
+in the seams. The card also ended at x=790 over an album that began at 760; it
+now ends at 750 and the album begins at 780.
+
+**Two eased values in one rAF loop, and nothing else moves.** `pos` is the
+wheel's position in events: every cover is placed each frame from
+`(i − pos) × 12°` around the ring's centre, so the rim turns rather than the
+covers sliding, with scale and dimming continuous in the distance from the
+front. `colY` is the album's scroll: a step is one photograph, and its target is
+that photograph's own top, never a fixed distance. Same clock discipline as the
+ribbon — real `dt`, capped so a pause costs one frame. Measured through one
+turn: per-frame moves 18.6, 16.1, 16.5, 11, 9.2 … monotone and eased; one
+notch over the album lands `colY` on the next photograph's top to the pixel.
+
+**No fixed cooldown fits both a mouse and a trackpad; the inertia tail is caught
+by its shape.** A trackpad gesture is a push and then a tail — dozens of events,
+each smaller than the last, that can run on for a second — and a cooldown long
+enough for the tail (it stepped twice at 380 *and* at 480) makes a mouse spun
+quickly lose every other notch (at 260, four notches 150ms apart stepped twice).
+The gate is disarmed after a step and re-arms only on a *fresh* event: one after
+120ms of quiet, or one at least as large as the event before it — a new notch or
+a new push, never the decay of the last one. The cooldown is then only 120ms,
+enough to outlast one notch's own burst from a smooth-scrolling mouse. Measured:
+a 22-event decaying tail over 900ms steps once; four notches 150ms apart step
+four times. The accordion and the shelf still use the plain cooldown.
+
+**Measure one element through a turn, not "whichever is lit".** The first
+per-frame check tracked the cover carrying `.is-open`, and at the moment that
+class moved to the next cover the trace showed a 118px "jump" that no pixel
+ever made. Track a fixed cover. And a press at y=850 to give the slide focus
+landed on the presenter bar and re-mounted the page — the check's own doing, not
+the slide's.
+
+Torii's Organization Snapshot is the drift wall it always was, refilled
+(2026-09-16): the 79 tiles it inherited from NGI's mirror — Technical Hub's
+campus, its app, its team, under the two-colour name "Technical Hub / 10 Years
+of Excellence" — went, and every photograph in `Downloads/TORII/Torii/Torii`
+came in: 383 tiles across twelve categories (Events 148, Trainings 68,
+Placements 57, Certifications 24, MOUs 23, NT Square 23 …), the category being
+the folder each came from, so the wall's own interleave keeps any one subject
+from stacking a column. Nothing about the wall's look changed — same columns,
+tile size, tilt, drift. NGI has no snapshot row; NCET's still shows the name.
+
+**The middle is the mark now, not the name.** `drift-wall` took three fields:
+`logo` (a file under `/uploads`, the way the newer blocks carry theirs — not an
+assetId, which this block otherwise insists on for tiles because a bare path
+resolves against whoever serves the page), `brand` (what the viewer's tag says
+when a tile has no category; it used to say "Technical Hub" for everyone), and
+`plate`, the colour of the wall's ground and of the scrim the centre sits on —
+one value, set on the root — which was NGI's deep green in the stylesheet and is
+now a variable with that as its default. Torii's is
+`#171514`, its ink warmed a shade so the mark's dark bar still reads on it.
+`Downloads/TORI LOGO.png` is 1024px with the mark in its middle 482x504 on
+transparency (93% of it clear — the grey a viewer shows behind it is the
+viewer's); it is cropped to the mark plus its glow and written at 420px with
+alpha kept, into `uploads/Snapshot/`. On the slide it is 210px, about what the
+64px title stood — six rows of tiles — and no more.
+
+**383 originals are 99MB; the wall carries 17.** A tile is 230x150, so each is
+re-encoded through the canvas to 560px wide at 0.82 — a little over twice the
+tile at presenting scale — and goes up as an asset named `snapshot-<path>.jpg`;
+a name already in the library is reused, so the script re-runs without
+re-uploading. Folder names are NFKC-folded first (several arrive in Unicode
+"mathematical bold" letters — 𝐒𝐂𝐈𝐍𝐎𝐕𝐀 — which fold back to plain text) and a
+short list of spellings is corrected by hand (`Achivers day`, `Hackthon`,
+`Sucess`); no caption is written that is not the folder's own name. The wall
+draws each tile three times for its loop, so a count of `img` elements on the
+slide is 1,149 for 383 tiles — measured all loaded, none broken.
+
+Torii's Centers of Excellence carries the Torii mark at its hub (2026-09-16),
+not Technical Hub's: `coe-wall.hubLogo` → `/uploads/Snapshot/torii-logo.png`
+(the same 420px alpha crop the snapshot wall uses) and `hubName` → "Torii
+Minds", changed on Torii's block only by a one-off PATCH (backup
+`db-before-coe-logo-torii-*`). NCET's hub still shows Technical Hub's mark and
+NGI's its own wordmark. The hub plate is white, where the mark's orange frame
+and dark bar both read; drawn at 116px inside the 190px disc.
 
 `tools/crop-image.cjs` writes PNG when the output path ends in `.png` and JPEG
 otherwise, and that choice is load-bearing for logos: a mark cut out of a

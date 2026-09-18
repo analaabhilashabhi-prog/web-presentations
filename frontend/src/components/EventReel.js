@@ -1,6 +1,8 @@
 import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
+import { media } from '../utils/media.js';
 import { filmStage, posterImg, bindStageLifetime } from '../utils/filmStage.js';
+import { openLightbox } from './Lightbox.js';
 
 /**
  * Events: the whole film library, one chapter at a time.
@@ -97,7 +99,23 @@ export function EventReel(block, { editing = false } = {}) {
     return root;
   }
 
-  const filmsIn = (c) => c.groups.reduce((n, g) => n + g.films.length, 0);
+  /* An entry is either a film (or a run of them) or a folder of photographs.
+     Not every event was filmed, and a card that can only be a film poster leaves
+     a photographed event with nowhere to go but a section of its own. The two
+     kinds share the card, the chapter and the grid; they differ only in what the
+     poster is taken from and what opens when it is clicked. */
+  const filmsOf = (g) => (Array.isArray(g.films) ? g.films : []);
+  const photosOf = (g) => (Array.isArray(g.images) ? g.images : []);
+  const isPhotos = (g) => filmsOf(g).length === 0 && photosOf(g).length > 0;
+
+  /* Photograph paths are stored relative to the block's own folder, the way the
+     placement wall stores them, so a folder of stills is a copy and a manifest
+     rather than an upload each. */
+  const base = String(block.base || 'Events').replace(/^\/+|\/+$/g, '');
+  const photoUrl = (src) =>
+    media(`/uploads/${base}/${String(src).split('/').map(encodeURIComponent).join('/')}`);
+
+  const filmsIn = (c) => c.groups.reduce((n, g) => n + filmsOf(g).length, 0);
   const total = chapters.reduce((n, c) => n + filmsIn(c), 0);
 
   let chapter = chapters[0];
@@ -111,12 +129,12 @@ export function EventReel(block, { editing = false } = {}) {
   /** Every film of the chapter, flattened, so the arrows walk the whole chapter. */
   function chapterFilms() {
     const out = [];
-    chapter.groups.forEach((g) => g.films.forEach((f, i) => out.push({
+    chapter.groups.forEach((g) => filmsOf(g).forEach((f, i) => out.push({
       youtube: f.youtube,
       src: f.src,
       title: f.label || g.title,
-      sub: g.films.length > 1
-        ? `${chapter.name} · part ${i + 1} of ${g.films.length}`
+      sub: filmsOf(g).length > 1
+        ? `${chapter.name} · part ${i + 1} of ${filmsOf(g).length}`
         : chapter.name,
     })));
     return out;
@@ -125,11 +143,19 @@ export function EventReel(block, { editing = false } = {}) {
   /** Where a given part of a given entry sits in that flat list. */
   function flatIndex(gi, fi) {
     let n = 0;
-    for (let i = 0; i < gi; i += 1) n += chapter.groups[i].films.length;
+    /* Photograph entries contribute nothing to it — the stage walks films, and a
+       folder of stills is not a stop on that run. */
+    for (let i = 0; i < gi; i += 1) n += filmsOf(chapter.groups[i]).length;
     return n + fi;
   }
 
   const openFilm = (gi, fi) => stage.open(chapterFilms(), flatIndex(gi, fi));
+
+  /** The event's own photographs, in the shared zoom viewer. */
+  const openPhotos = (g, i = 0) => openLightbox(
+    photosOf(g).map((p) => ({ url: photoUrl(p.src), name: p.label || g.title })),
+    i,
+  );
 
   /* ------------------------------------------------------------------ grid */
   const grid = h('div', { class: 'ev-grid' });
@@ -163,16 +189,31 @@ export function EventReel(block, { editing = false } = {}) {
       const rowEl = h('div', { class: 'ev-row' });
       rowGroups.forEach((g) => {
         const gi = globalIndex++;
-        const many = g.films.length > 1;
-        const shot = h('span', { class: 'ev-card__shot' },
-          posterImg(g.films[0]?.youtube, { eager: gi < 8 }),
-          h('span', { class: 'ev-card__play', 'aria-hidden': 'true' },
-            icon('play', { class: 'ic ic--sm' })),
-        );
+        const photos = isPhotos(g);
+        const many = !photos && filmsOf(g).length > 1;
+        /* A photographed event posters itself with its own first picture, and
+           says so with a stack badge where a film shows a play triangle — the
+           badge is the only thing telling a viewer which of the two a click is
+           about to open. */
+        const shot = photos
+          ? h('span', { class: 'ev-card__shot ev-card__shot--photos' },
+              h('img', {
+                class: 'fs-poster', src: photoUrl(photosOf(g)[0].src), alt: '',
+                loading: gi < 8 ? 'eager' : 'lazy', decoding: 'async',
+              }),
+              h('span', { class: 'ev-card__play ev-card__play--photos', 'aria-hidden': 'true' },
+                icon('image', { class: 'ic ic--sm' })),
+              h('span', { class: 'ev-card__count' }, String(photosOf(g).length)),
+            )
+          : h('span', { class: 'ev-card__shot' },
+              posterImg(filmsOf(g)[0]?.youtube, { eager: gi < 8 }),
+              h('span', { class: 'ev-card__play', 'aria-hidden': 'true' },
+                icon('play', { class: 'ic ic--sm' })),
+            );
 
         /* The run of parts. Each chip opens its own film. */
         const flow = many
-          ? h('div', { class: 'ev-flow' }, ...g.films.flatMap((f, fi) => {
+          ? h('div', { class: 'ev-flow' }, ...filmsOf(g).flatMap((f, fi) => {
               const chip = h('button', {
                 class: 'ev-flow__part', type: 'button',
                 title: f.label || `Part ${fi + 1}`,
@@ -180,7 +221,7 @@ export function EventReel(block, { editing = false } = {}) {
                 style: REDUCED?.matches ? {} : { '--i': String(fi) },
                 onclick: (e) => { e.stopPropagation(); openFilm(gi, fi); },
               }, ordinal(fi + 1));
-              return fi === g.films.length - 1 ? [chip] : [chip,
+              return fi === filmsOf(g).length - 1 ? [chip] : [chip,
                 h('span', { class: 'ev-flow__arrow', 'aria-hidden': 'true' },
                   icon('arrow-right', { class: 'ic ic--xs' }))];
             }))
@@ -192,7 +233,7 @@ export function EventReel(block, { editing = false } = {}) {
         },
           h('button', {
             class: 'ev-card__hit', type: 'button', title: g.title,
-            onclick: () => openFilm(gi, 0),
+            onclick: () => (photos ? openPhotos(g, 0) : openFilm(gi, 0)),
           }, shot),
           h('div', { class: 'ev-card__foot' },
             h('h3', { class: 'ev-card__title' }, g.title),

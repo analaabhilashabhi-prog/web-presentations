@@ -214,6 +214,14 @@ export function letterReveal(text, options = {}) {
         letterEl.setAttribute('aria-hidden', 'true');
         letterEl.style.display = 'inline-block';
         letterEl.style.transform = 'translateZ(0)';
+        /* Set while the reveal is in flight and cleared the moment it lands —
+           see `settleTimer` below. `will-change: filter` promotes every glyph to
+           a compositor layer of its own and holds it there for as long as the
+           declaration stands, which is the whole life of the element. That was
+           a headline's worth of layers per slide when a few sections had a
+           title card; since every tab in both decks got one (2026-09-17) it is
+           a screenful on every navigation. Measured through a card: the settled
+           slide behind it ran 7ms a frame and the card itself 21. */
         letterEl.style.willChange = 'opacity, transform, filter';
         if (renderAsDots) letterEl.appendChild(dotNode(char));
         else letterEl.textContent = char;
@@ -255,14 +263,32 @@ export function letterReveal(text, options = {}) {
   }
 
   let revealTimer = null;
+  let settleTimer = null;
+
+  /* The last letter's transition ends at its own delay plus the duration; a
+     little after that, nothing is animating and the hint is pure cost. Dropping
+     it hands the glyphs back to the ordinary paint path. */
+  const settleAfter = () => {
+    clearTimeout(settleTimer);
+    const last = letters.length ? (letters.length - 1) * stagger + duration : 0;
+    settleTimer = setTimeout(() => {
+      for (const el of letters) el.style.willChange = '';
+    }, last + 120);
+  };
+
   const reveal = () => {
     clearTimeout(revealTimer);
+    /* Put the hint back before animating again: a reveal can run more than once
+       — the observer re-fires on re-entry, and SkewCarousel rebuilds its ghost
+       on every centred card. */
+    for (const el of letters) el.style.willChange = 'opacity, transform, filter';
     // Two frames: the instant-reset styles must land before the transition is
     // re-attached, or the browser coalesces them and nothing animates.
-    requestAnimationFrame(() => requestAnimationFrame(() => paint(true)));
+    requestAnimationFrame(() => requestAnimationFrame(() => { paint(true); settleAfter(); }));
   };
   const hide = () => {
     clearTimeout(revealTimer);
+    clearTimeout(settleTimer);
     paint(false);
   };
 

@@ -79,18 +79,50 @@ export function ThreadBoard(block = {}) {
   let video = null;
   const film = h('div', { class: 'tb-film' });
   if (block.video) {
+    /* `videoStart` (2026-09-17, on request: Project Street's film is to begin at
+       0:13 with nothing to show it was moved). Three things make the join
+       invisible. The file is OPENED at the offset — a `#t=` media fragment on
+       the src is what the browser fetches from first, so the frames before it
+       are never decoded, let alone painted. A `loadedmetadata` seek backs that
+       up, because a fragment is advisory and a cached file can ignore it. And
+       the element is held at opacity 0 until it is actually at the offset and
+       playing, then eased in over the film's own dark ground — so the room sees
+       a film beginning, never a first frame being replaced. With an offset the
+       `loop` attribute comes off (it always returns to zero) and `ended`
+       repeats from the offset instead. At 0 none of this engages. */
+    const start = Math.max(0, Number(block.videoStart) || 0);
     video = h('video', {
-      class: 'tb-film__media',
-      src: urlOf(block.video),
+      class: `tb-film__media${start ? ' is-seeking' : ''}`,
+      src: urlOf(block.video) + (start ? `#t=${start}` : ''),
       autoplay: true,
       muted: true,
-      loop: true,
+      loop: !start,
       playsinline: true,
       preload: 'auto',
       'aria-hidden': 'true',
     });
     // Autoplay only sticks when the element is muted before it loads.
     video.muted = true;
+    if (start) {
+      const atStart = () => video.currentTime >= start - 0.35;
+      const reveal = () => {
+        if (!atStart()) return;
+        video.classList.remove('is-seeking');
+        video.removeEventListener('timeupdate', reveal);
+        video.removeEventListener('seeked', reveal);
+        video.removeEventListener('playing', reveal);
+      };
+      video.addEventListener('loadedmetadata', () => {
+        if (video.currentTime < start - 0.05) video.currentTime = start;
+      }, { once: true });
+      video.addEventListener('seeked', reveal);
+      video.addEventListener('playing', reveal);
+      video.addEventListener('timeupdate', reveal);
+      video.addEventListener('ended', () => {
+        video.currentTime = start;
+        video.play().catch(() => {});
+      });
+    }
     film.append(video, h('div', { class: 'tb-film__scrim', 'aria-hidden': 'true' }));
   }
   const filmCopy = h('div', { class: 'tb-film__copy' });

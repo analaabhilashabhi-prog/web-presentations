@@ -77,7 +77,7 @@ function titleLines(raw) {
 }
 
 export function StoryWall(block, { editing = false } = {}) {
-  const stories = (block.stories || []).filter((s) => s.photo);
+  const stories = (block.stories || []).filter((s) => s.photo || s.video);
   const root = h('div', { class: 'sw-root ph-root' });
 
   if (!stories.length) {
@@ -92,6 +92,11 @@ export function StoryWall(block, { editing = false } = {}) {
   }
 
   const src = (story) => media(`/uploads/${encodeURI(story.photo)}`);
+  /* A card may hold a film instead of a photograph. The path is stored the same
+     way — relative to /uploads — so the two share one resolver and differ only in
+     which element ends up playing them. */
+  const isFilm = (story) => Boolean(story.video);
+  const filmSrc = (story) => media(`/uploads/${encodeURI(story.video)}`);
   const count = stories.length;
   let centre = 0;
   let open = false;
@@ -106,6 +111,13 @@ export function StoryWall(block, { editing = false } = {}) {
      transformed ancestor becomes the containing block for fixed descendants, so
      inside the slide `inset: 0` would resolve to the slide and not the screen. */
   const bigImg = h('img', { class: 'sw-view__img', alt: '' });
+  /* The film's own element, sitting beside the photograph's rather than replacing
+     it. One of the two is shown per opening; keeping both built means stepping
+     from a picture to a film does not rebuild the frame around them. */
+  const bigVid = h('video', {
+    class: 'sw-view__img sw-view__vid', hidden: true,
+    controls: true, playsinline: true, preload: 'metadata',
+  });
   const bigCap = h('p', { class: 'sw-view__cap' });
   const viewer = h('div', {
     class: 'sw-view', hidden: true,
@@ -113,14 +125,24 @@ export function StoryWall(block, { editing = false } = {}) {
   },
     h('button', { class: 'sw-view__close', type: 'button', 'aria-label': 'Close' },
       icon('close', { class: 'ic ic--sm' })),
-    h('figure', { class: 'sw-view__frame' }, bigImg, h('figcaption', {}, bigCap)),
+    h('figure', { class: 'sw-view__frame' }, bigImg, bigVid, h('figcaption', {}, bigCap)),
   );
   document.body.appendChild(viewer);
 
   function shut() {
     viewer.hidden = true;
     viewer.classList.remove('is-on');
+    /* A film carries on playing behind a closed viewer otherwise — the element is
+       only hidden, and hidden audio is worse than none at all in a hall. */
+    stopFilm();
     document.removeEventListener('keydown', onViewKey, true);
+  }
+  function stopFilm() {
+    if (bigVid.hidden) return;
+    bigVid.pause();
+    bigVid.removeAttribute('src');
+    bigVid.load();
+    bigVid.hidden = true;
   }
   function onViewKey(e) {
     if (e.key === 'Escape') { e.stopPropagation(); shut(); }
@@ -128,8 +150,19 @@ export function StoryWall(block, { editing = false } = {}) {
   function view(i) {
     const story = stories[i];
     if (!story) return;
-    bigImg.src = src(story);
-    bigImg.alt = story.name || '';
+    stopFilm();
+    if (isFilm(story)) {
+      bigImg.hidden = true;
+      bigVid.hidden = false;
+      bigVid.src = filmSrc(story);
+      /* Sound is the point of a testimonial, so it opens unmuted — which is also
+         why it cannot autoplay: a browser blocks that, and a player that silently
+         refuses to start reads as broken. The presenter presses play. */
+    } else {
+      bigImg.hidden = false;
+      bigImg.src = src(story);
+      bigImg.alt = story.name || '';
+    }
     bigCap.textContent = story.name || '';
     viewer.hidden = false;
     requestAnimationFrame(() => viewer.classList.add('is-on'));
@@ -138,18 +171,41 @@ export function StoryWall(block, { editing = false } = {}) {
 
   /* -------------------------------------------------------------- the cards */
   const cards = stories.map((story, i) => {
-    const shot = h('img', {
-      class: 'sw-c__img', src: src(story), alt: story.name || '',
-      loading: i < 6 ? 'eager' : 'lazy', decoding: 'async',
-    });
-    /* Capped at twice its own pixels once the file has decoded — max-width alone
-       would not do it, because the image is sized by the card, not by itself. */
-    shot.addEventListener('load', () => {
-      const { naturalWidth: nw, naturalHeight: nh } = shot;
-      if (!nw || !nh) return;
-      shot.style.maxWidth = `min(100%, ${nw * MAX_ENLARGE}px)`;
-      shot.style.maxHeight = `min(100%, ${nh * MAX_ENLARGE}px)`;
-    });
+    const film = isFilm(story);
+    let shot;
+    if (film) {
+      /* No poster file is produced on upload unless ffmpeg is installed, so the
+         card shows the film's own first frame: `preload="metadata"` fetches just
+         enough for the browser to paint it, and a muted element is allowed to do
+         that without a gesture. The frame is the thumbnail — nothing to generate,
+         nothing to keep in step with the file. */
+      shot = h('video', {
+        class: 'sw-c__img sw-c__film', src: filmSrc(story),
+        preload: 'metadata', playsinline: true, tabindex: '-1',
+        'aria-label': story.name || 'Success story film',
+      });
+      shot.muted = true;
+      /* These films open on a fade from black, so frame zero is a black
+         rectangle — a card showing nothing but its play badge. A short step in
+         lands on picture instead. It is a seek, not playback: the element stays
+         paused, and the server answers ranges, so it costs one small request. */
+      shot.addEventListener('loadedmetadata', () => {
+        if (shot.duration > 1.2) shot.currentTime = 1;
+      }, { once: true });
+    } else {
+      shot = h('img', {
+        class: 'sw-c__img', src: src(story), alt: story.name || '',
+        loading: i < 6 ? 'eager' : 'lazy', decoding: 'async',
+      });
+      /* Capped at twice its own pixels once the file has decoded — max-width alone
+         would not do it, because the image is sized by the card, not by itself. */
+      shot.addEventListener('load', () => {
+        const { naturalWidth: nw, naturalHeight: nh } = shot;
+        if (!nw || !nh) return;
+        shot.style.maxWidth = `min(100%, ${nw * MAX_ENLARGE}px)`;
+        shot.style.maxHeight = `min(100%, ${nh * MAX_ENLARGE}px)`;
+      });
+    }
 
     /* The clip stays outside the swaying body, because a clip does not swing —
        the card hangs from it. Putting it inside would have the whole fixture
@@ -167,13 +223,22 @@ export function StoryWall(block, { editing = false } = {}) {
           '--sway-delay': `-${(i * 431) % 3300}ms`,
         },
       },
-        h('div', { class: 'sw-c__shot' }, shot),
+        h('div', { class: `sw-c__shot${film ? ' sw-c__shot--film' : ''}` },
+          shot,
+          /* A still frame gives no sign that it is a film. The badge says so
+             before anything is clicked, which is the whole of its job — it is
+             not a control, so the card's own click still does the opening. */
+          film
+            ? h('span', { class: 'sw-c__play', 'aria-hidden': 'true' },
+                icon('play', { class: 'ic ic--sm' }))
+            : null,
+        ),
         h('div', { class: 'sw-c__foot' },
           h('p', { class: 'sw-c__name' }, story.name || 'Untitled'),
           h('button', {
             class: 'sw-c__view', type: 'button',
             onclick: (e) => { e.stopPropagation(); view(i); },
-          }, 'View', icon('arrow-right', { class: 'ic ic--xs' })),
+          }, film ? 'Play' : 'View', icon('arrow-right', { class: 'ic ic--xs' })),
         ),
       ),
     );

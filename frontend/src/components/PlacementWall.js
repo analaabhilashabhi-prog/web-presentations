@@ -310,8 +310,21 @@ export function PlacementWall(block, { editing = false } = {}) {
   const chips = h('div', { class: 'pw-chips' });
   const rail = h('div', { class: 'pw-rail' });
 
+  /**
+   * What a chapter opens on.
+   *
+   * `null` means every group in it, which is what the "everything" chip selects.
+   * A chapter that has turned that chip off has no way to express `null`, so it
+   * opens on its first named group instead — otherwise it would start in a state
+   * none of its chips is showing as active.
+   */
+  const openingGroupFor = (c) => {
+    if (c.allChip !== false) return null;
+    return c.groups.find((g) => g.name)?.name ?? null;
+  };
+
   let activeChapter = chapters[0];
-  let activeGroup = null; // null means every group in the chapter
+  let activeGroup = openingGroupFor(activeChapter);
   let lastStageH = 0;     // the stage height the current rows were solved against
 
   /* --------------------------------------------------------------- render */
@@ -421,8 +434,16 @@ export function PlacementWall(block, { editing = false } = {}) {
       onclick: () => { activeGroup = value; drawChips(); drawStage(); },
     }, h('span', {}, label), h('em', {}, String(count)));
 
-    chips.appendChild(chip(block.allLabel || 'All companies', null,
-      activeChapter.groups.reduce((n, g) => n + g.images.length, 0)));
+    /* The "everything" chip earns its place only where the sets are alternatives
+       to each other — twenty companies, where seeing the whole year at once is
+       the point. Where a chapter is two named activities the combined view is
+       not a third thing anyone wants, and the chip reads as a category the two
+       belong to, which they do not. A chapter can turn it off, and then one of
+       the named chips is always the active one instead. */
+    if (activeChapter.allChip !== false) {
+      chips.appendChild(chip(block.allLabel || 'All companies', null,
+        activeChapter.groups.reduce((n, g) => n + g.images.length, 0)));
+    }
     named.forEach((g) => chips.appendChild(chip(g.name, g.name, g.images.length)));
   }
 
@@ -440,7 +461,7 @@ export function PlacementWall(block, { editing = false } = {}) {
         onclick: () => {
           if (c === activeChapter) return;
           activeChapter = c;
-          activeGroup = null;
+          activeGroup = openingGroupFor(c);
           drawRail(); drawChips(); drawStage();
         },
       },

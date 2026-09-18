@@ -1,5 +1,6 @@
 import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
+import { upload } from '../utils/media.js';
 
 /**
  * A wall of tiles drifting up and down a tilted 3D plane, with the title
@@ -65,7 +66,7 @@ function openLightbox(item) {
     h('div', { class: 'dw-modal__media' },
       h('img', { src: item.src, alt: item.title || item.tag || '' })),
     h('div', { class: 'dw-modal__meta' },
-      h('span', { class: 'dw-modal__tag' }, item.category || 'Technical Hub'),
+      h('span', { class: 'dw-modal__tag' }, item.category || item.brand || 'Technical Hub'),
       h('h3', { class: 'dw-modal__title' }, item.title || item.tag || ''),
     ),
   );
@@ -86,7 +87,7 @@ export function DriftWall(block, { editing = false } = {}) {
   }
 
   const items = interleave(source.map((i) => ({
-    src: i.asset.url, title: i.title || '', tag: i.tag || '', category: i.category || '',
+    src: i.asset.url, title: i.title || '', tag: i.tag || '', category: i.category || '', brand: block.brand || '',
   })));
 
   const columns = clamp(Number(block.columns) || 8, 2, 14);
@@ -117,15 +118,45 @@ export function DriftWall(block, { editing = false } = {}) {
     // the pictures have decoded, because each tile is now as tall as its own
     // photograph.
     const copyHeight = Math.max(unit, base.length * unit);
-    const copies = Math.max(3, Math.ceil((900 * 2.2) / copyHeight) + 2);
+    /* One spare copy, not two, and a floor of two rather than three (2026-09-17).
+       A column never shows a seam as long as the track is at least one visible
+       column taller than the run it wraps on — the offset wraps at `copyHeight`,
+       so at the worst moment the tail of one copy and the head of the next have
+       to cover the screen between them, which is `ceil(visible / copyHeight) + 1`
+       copies. The old `+ 2` and floor of 3 were a copy more than the wrap can
+       ever need, and on Torii's snapshot that copy is 383 images and about 2,700
+       nodes: measured, dropping it took idle frame time from 48.7ms to 27.7. */
+    const copies = Math.max(2, Math.ceil((900 * 2.2) / copyHeight) + 1);
     meta.push({ copyHeight, copies });
 
     const track = h('div', { class: 'dw-track' });
+    let inTrack = 0;
     for (let copy = 0; copy < copies; copy++) {
       for (const item of base) {
+        /* `loading: 'lazy'` does nothing here and it took a measurement to see
+           it: the wall lives inside a `perspective` container that is rotated
+           and translated in 3D, and the browser resolves every tile in it as
+           in-viewport. On Torii's snapshot all 767 images were decoded within a
+           second of the slide mounting while only 35 were ever on screen, and
+           that burst is what made the slide arrive in 449ms and then run its
+           first second at 41.8ms a frame.
+           So the near tiles carry a `src` and the rest carry the URL on the
+           element, to be promoted a few at a time once the slide is up — see
+           `promote` below. Late arrival was always the normal case here and is
+           already handled: `remeasure` recomputes each column's loop from the
+           real content height whenever pictures land. */
+        inTrack += 1;
+        /* Every tile loads with the slide (2026-09-17, on request: "images
+           should display immediately"). The staged load that stood here for a
+           few hours — the head of each column eager, the rest trickled in —
+           was measured smooth and was wrong for the room: the plane is
+           centred, so what is on screen on arrival is the MIDDLE of each
+           track, not its head, and the tiles in view were the ones still
+           waiting their turn. The burst costs the first second about 20ms a
+           frame on this one slide; blank tiles cost more. */
         const image = h('img', {
           src: item.src, alt: item.title || item.tag || '',
-          loading: 'lazy', decoding: 'async', draggable: 'false',
+          decoding: 'async', draggable: 'false',
         });
         const tile = h('div', {
           class: 'dw-tile', tabindex: '0', role: 'button',
@@ -242,19 +273,33 @@ export function DriftWall(block, { editing = false } = {}) {
   wall.style.setProperty('--dw-gap', `${gap}px`);
   wall.style.setProperty('--dw-radius', `${clamp(Number(block.radius) || 14, 0, 40)}px`);
   wall.style.setProperty('--dw-perspective', `${clamp(Number(block.perspective) || 1200, 200, 4000)}px`);
-  wall.style.setProperty('--dw-lift', `${clamp(Number(block.lift) ?? 50, 0, 200)}px`);
+  const lift = clamp(Number(block.lift) ?? 50, 0, 200);
+  wall.style.setProperty('--dw-lift', `${lift}px`);
+  /* The hover lift as a scale. A tile `lift` px nearer the viewer than the plane
+     it sits on subtends `p / (p - lift)` times its own size, so this is the same
+     movement the translateZ used to make — done as a scale, because the tiles
+     are no longer 3D contexts and a scale is what a compositor can do on its
+     own. The perspective is the wall's own default; a block that overrides
+     `--dw-perspective` overrides this with it. */
+  const perspective = Number(block.perspective) || 1200;
+  wall.style.setProperty('--dw-lift-scale', (perspective / Math.max(1, perspective - lift)).toFixed(4));
   wall.style.setProperty('--dw-dim', String(clamp(Number(block.dim) ?? 0.88, 0.2, 1)));
 
-  const hero = h('div', { class: 'dw-hero' },
-    h('h1', { class: 'dw-hero__title' },
+  /* The middle of the wall: the organization's name in two colours, or — when
+     the block carries a `logo` — its mark instead, on a plate in its own ink.
+     The plate colour is a variable so a deck whose palette is not NGI's green
+     can set it without a second stylesheet. */
+  const hero = h('div', { class: `dw-hero${block.logo ? ' dw-hero--logo' : ''}` },
+  block.logo
+    ? h('img', { class: 'dw-hero__logo', src: upload(block.logo), alt: block.brand || '', draggable: 'false', decoding: 'async' })
+    : h('h1', { class: 'dw-hero__title' },
       block.titleTop ? h('span', { class: 'dw-hero__top' }, block.titleTop) : null,
       block.titleTop && block.titleBottom ? ' ' : null,
       block.titleBottom ? h('span', { class: 'dw-hero__bottom' }, block.titleBottom) : null,
     ),
-    block.tagline ? h('p', { class: 'dw-hero__tagline' }, block.tagline) : null,
-  );
+  block.tagline ? h('p', { class: 'dw-hero__tagline' }, block.tagline) : null);
 
-  const root = h('div', { class: 'dw-root ph-root' }, wall, hero);
+  const root = h('div', { class: 'dw-root ph-root', style: block.plate ? { '--dw-plate': block.plate } : null }, wall, hero);
 
   applyPlane(0, 0);
 
@@ -269,7 +314,9 @@ export function DriftWall(block, { editing = false } = {}) {
   wall.querySelectorAll('img').forEach((img) => {
     if (!img.complete) img.addEventListener('load', scheduleRemeasure, { once: true });
   });
-  [600, 1500, 3000].forEach((ms) => setTimeout(() => { if (root.isConnected) remeasure(); }, ms));
+  [600, 1500, 3000, 5000].forEach((ms) => setTimeout(() => { if (root.isConnected) remeasure(); }, ms));
+
+
 
   if (!editing) requestAnimationFrame((ts) => { raf = requestAnimationFrame(frame); frame(ts); });
 

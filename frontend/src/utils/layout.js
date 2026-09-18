@@ -46,8 +46,13 @@ export const DEFAULT_SIZE = {
   'skew-carousel': { w: 12, h: 15 },
   'tilted-tiles': { w: 12, h: 15 },
   'card-fan': { w: 12, h: 15 },
+  'photo-ring': { w: 12, h: 15 },
+  'event-orbit': { w: 12, h: 15 },
   'training-shelf': { w: 12, h: 15 },
   'photo-collage': { w: 12, h: 15 },
+  'event-wheel': { w: 12, h: 15 },
+  'photo-folder': { w: 12, h: 15 },
+  'project-showcase': { w: 12, h: 15 },
   'thread-board': { w: 12, h: 15 },
 };
 

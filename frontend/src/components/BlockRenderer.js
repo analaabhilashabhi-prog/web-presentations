@@ -32,12 +32,17 @@ import { AllianceAccordion } from './AllianceAccordion.js';
 import { SkewCarousel } from './SkewCarousel.js';
 import { TiltedTiles } from './TiltedTiles.js';
 import { CardFan } from './CardFan.js';
+import { PhotoRing } from './PhotoRing.js';
+import { EventOrbit } from './EventOrbit.js';
 import { TrainingShelf } from './TrainingShelf.js';
 import { PhotoCollage } from './PhotoCollage.js';
 import { ButtonRow, IconBox, LogoBox } from './Elements.js';
 import { TextBox, ImageBox, ProfileBox } from './MediaBoxes.js';
 import { VideoBox } from './VideoBox.js';
 import { ThreadBoard } from './ThreadBoard.js';
+import { ProjectShowcase } from './ProjectShowcase.js';
+import { PhotoFolder } from './PhotoFolder.js';
+import { EventWheel } from './EventWheel.js';
 import {
   inReadingOrder,
   layoutOf,
@@ -155,6 +160,12 @@ export function renderBlock(block, options = {}) {
     case 'card-fan':
       return CardFan(block);
 
+    case 'photo-ring':
+      return PhotoRing(block, options);
+
+    case 'event-orbit':
+      return EventOrbit(block, options);
+
     case 'training-shelf':
       return TrainingShelf(block);
 
@@ -163,6 +174,15 @@ export function renderBlock(block, options = {}) {
 
     case 'thread-board':
       return ThreadBoard(block);
+
+    case 'project-showcase':
+      return ProjectShowcase(block);
+
+    case 'photo-folder':
+      return PhotoFolder(block);
+
+    case 'event-wheel':
+      return EventWheel(block);
 
     case 'gallery-wall':
       return GalleryWall(block, options);

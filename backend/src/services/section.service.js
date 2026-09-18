@@ -53,8 +53,13 @@ export const BLOCK_TYPES = [
   'skew-carousel',
   'tilted-tiles',
   'card-fan',
+  'photo-ring',
+  'event-orbit',
   'training-shelf',
   'photo-collage',
+  'event-wheel',
+  'photo-folder',
+  'project-showcase',
   'thread-board',
 ];
 
@@ -104,8 +109,13 @@ const DEFAULT_SIZE = {
   'skew-carousel': { w: 12, h: 15 },
   'tilted-tiles': { w: 12, h: 15 },
   'card-fan': { w: 12, h: 15 },
+  'photo-ring': { w: 12, h: 15 },
+  'event-orbit': { w: 12, h: 15 },
   'training-shelf': { w: 12, h: 15 },
   'photo-collage': { w: 12, h: 15 },
+  'event-wheel': { w: 12, h: 15 },
+  'photo-folder': { w: 12, h: 15 },
+  'project-showcase': { w: 12, h: 15 },
   'thread-board': { w: 12, h: 15 },
 };
 
@@ -356,6 +366,12 @@ function normalizeBlock(raw, index = 0, depth = 0) {
       block.lastName = text(raw.lastName, 40);
       block.watermark = text(raw.watermark, 40);
       block.tagline = text(raw.tagline, 240);
+      /* Figures set beside the portrait, under the social row — a career in two
+         numbers. Drawn only when supplied; nothing is derived. */
+      block.highlights = (Array.isArray(raw.highlights) ? raw.highlights : [])
+        .map((x) => ({ value: text(x?.value, 24), label: text(x?.label, 80) }))
+        .filter((x) => x.value && x.label)
+        .slice(0, 3);
       block.body = text(raw.body, 900);
       block.assetId = raw.assetId || null;
       block.alt = text(raw.alt, 240);
@@ -691,6 +707,13 @@ function normalizeBlock(raw, index = 0, depth = 0) {
               title: text(i?.title, 120),
               body: text(i?.body, 400),
               icon: iconKey(i?.icon),
+              /* A file under /uploads drawn in the card's mark instead of the
+                 icon — a credential's own badge, say. Same path rule as every
+                 other block's media field. */
+              logo: (() => {
+                const t = text(i?.logo, 240).replace(/^\/+/, '');
+                return /^[A-Za-z0-9][A-Za-z0-9 _.-]*(\/[A-Za-z0-9][A-Za-z0-9 _.-]*)*$/.test(t) ? t : '';
+              })(),
             }))
             .filter((i) => i.title).slice(0, 20),
           chips: (Array.isArray(f?.chips) ? f.chips : [])
@@ -714,6 +737,16 @@ function normalizeBlock(raw, index = 0, depth = 0) {
       block.titleTop = text(raw.titleTop, 40);
       block.titleBottom = text(raw.titleBottom, 40);
       block.tagline = text(raw.tagline, 80);
+      /* A mark in the middle instead of the two-colour name: a file under
+         /uploads, the way the newer blocks carry theirs. `brand` names the deck
+         in the viewer's tag when a tile has no category; `plate` is the colour
+         of the scrim the mark sits on. */
+      block.logo = (() => {
+        const t = text(raw.logo, 240).replace(/^\/+/, '');
+        return /^[A-Za-z0-9][A-Za-z0-9 _.\-]*(\/[A-Za-z0-9][A-Za-z0-9 _.\-]*)*$/.test(t) ? t : '';
+      })();
+      block.brand = text(raw.brand, 40);
+      block.plate = hexColor(raw.plate);
       block.columns = clampInt(raw.columns, 2, 14, 8);
       block.tileWidth = clampInt(raw.tileWidth, 80, 480, 230);
       block.tileHeight = clampInt(raw.tileHeight, 60, 400, 150);
@@ -738,7 +771,10 @@ function normalizeBlock(raw, index = 0, depth = 0) {
           category: text(i?.category, 40),
         }))
         .filter((i) => i.assetId)
-        .slice(0, 200);
+        /* Torii's snapshot is its whole photograph library, 383 tiles; the wall
+           lazy-loads and interleaves by category, so the count is not the
+           cost — the bytes per tile are, and the publisher keeps those small. */
+        .slice(0, 400);
       break;
 
     /* A wall of platform cards; opening one runs it inside the slide.
@@ -916,6 +952,14 @@ function normalizeBlock(raw, index = 0, depth = 0) {
       block.quoteBy = text(raw.quoteBy, 160);
       /* A wide cohort photograph held far back behind the register's type. */
       block.backdrop = text(raw.backdrop, 240);
+      /* The register's second figure, as the deck states it ("16,000+"); a deck
+         that leaves it out shows the total alone. And the total's split by year,
+         when the deck has one. Neither is derived from anything. */
+      block.trainees = text(raw.trainees, 20);
+      block.years = (Array.isArray(raw.years) ? raw.years : [])
+        .map((y) => ({ label: text(y?.label, 40), count: clampInt(y?.count, 0, 1000000, 0) }))
+        .filter((y) => y.label && y.count)
+        .slice(0, 6);
       /* The catalogue: named credentials, who awards them, how many hold each and
          what the exam tests. Counts come from the workbook via the publisher, so
          nothing here is recomputed. */
@@ -929,6 +973,13 @@ function normalizeBlock(raw, index = 0, depth = 0) {
              deck presents with no network; one the CDN refuses carries none and
              falls back to the vendor set in type. */
           badge: text(c?.badge, 240),
+          /* Whether the badge is shown on the register's arcs. False for a badge
+             that is a PHOTOGRAPH of a badge rather than the artwork — cropped
+             from a cohort card, so it carries a brick wall or a dark plate
+             behind it. Those read as stickers on the register's clean sheet.
+             Skills Unlocked shows every badge either way; this governs the arcs
+             alone, and an unset value means yes, as it always did. */
+          onRegister: c?.onRegister !== false,
           skills: (Array.isArray(c?.skills) ? c.skills : [])
             .map((k) => text(k, 140)).filter(Boolean).slice(0, 8),
         }))
@@ -959,10 +1010,80 @@ function normalizeBlock(raw, index = 0, depth = 0) {
         .slice(0, 40);
       break;
 
+    /* Events as a ring turned by hand. One group is one event: a poster (its
+       first picture) on the ring, and the whole set behind it when the card is
+       clicked. Paths are relative to `base`, the way the placement wall and the
+       event reel store theirs. */
+    case 'event-orbit':
+      block.eyebrow = text(raw.eyebrow, 120);
+      block.title = text(raw.title, 160);
+      block.base = text(raw.base, 120);
+      block.groups = (Array.isArray(raw.groups) ? raw.groups : [])
+        .map((g) => ({
+          title: text(g?.title, 160),
+          images: (Array.isArray(g?.images) ? g.images : [])
+            .map((im) => ({
+              src: text(im?.src, 240),
+              label: text(im?.label, 160),
+              w: Number(im?.w) || null,
+              h: Number(im?.h) || null,
+            }))
+            .filter((im) => im.src)
+            .slice(0, 60),
+        }))
+        /* The ring solves its radius from the count, so it widens rather than
+           overlapping as events are added; past two dozen the cards are edge-on
+           to each other whatever the radius. A display limit, not a storage one. */
+        .filter((g) => g.title && g.images.length)
+        .slice(0, 24);
+      break;
+
+    /* Cards standing on a turntable. Pictures are stored as paths relative to
+       `base`, the way the placement wall and the event reel store theirs — a set
+       arrives as a folder and a manifest, not as an upload each. */
+    case 'photo-ring': {
+      block.eyebrow = text(raw.eyebrow, 120);
+      block.title = text(raw.title, 160);
+      block.lead = text(raw.lead, 400);
+      block.base = text(raw.base, 120);
+      /* What the "everything" filter is called. Only ever shown when there is
+         more than one set to combine. */
+      block.allLabel = text(raw.allLabel, 60);
+
+      /* Past a couple of dozen the cards stand behind each other however wide
+         the fan gets. A display limit, not a storage one. */
+      const shotList = (arr) => (Array.isArray(arr) ? arr : [])
+        .map((s) => ({
+          src: text(s?.src, 200),
+          label: text(s?.label, 160),
+          w: Number(s?.w) || null,
+          h: Number(s?.h) || null,
+        }))
+        .filter((s) => s.src)
+        .slice(0, 24);
+
+      /* The sets behind the filters. A block written before the filters existed
+         carries a flat `shots` list instead, and both are kept: dropping the
+         flat one here would empty every ring saved before this. */
+      block.groups = (Array.isArray(raw.groups) ? raw.groups : [])
+        .map((g) => ({
+          key: text(g?.key, 40),
+          name: text(g?.name, 80),
+          shots: shotList(g?.shots),
+        }))
+        .filter((g) => g.name && g.shots.length)
+        .slice(0, 12);
+      block.shots = shotList(raw.shots);
+      break;
+    }
+
     case 'event-reel':
       block.eyebrow = text(raw.eyebrow, 120);
       block.title = text(raw.title, 160);
       block.lead = text(raw.lead, 400);
+      /* The folder under /uploads that photograph entries are stored relative
+         to. Films do not use it; an all-film reel can leave it unset. */
+      block.base = text(raw.base, 120);
       block.chapters = (Array.isArray(raw.chapters) ? raw.chapters : [])
         .map((c) => ({
           key: text(c?.key, 40),
@@ -984,8 +1105,24 @@ function normalizeBlock(raw, index = 0, depth = 0) {
                 }))
                 .filter((f) => f.youtube || f.src)
                 .slice(0, 24),
+              /* An entry may be a folder of photographs instead of a film: not
+                 every event was filmed. Paths are relative to the block's `base`
+                 and carry their true pixel dimensions, the way the placement
+                 wall stores them, so the grid can lay them out without waiting
+                 for each file to decode. */
+              images: (Array.isArray(g?.images) ? g.images : [])
+                .map((p) => ({
+                  src: text(p?.src, 200),
+                  label: text(p?.label, 160),
+                  w: Number(p?.w) || null,
+                  h: Number(p?.h) || null,
+                }))
+                .filter((p) => p.src)
+                .slice(0, 60),
             }))
-            .filter((g) => g.title && g.films.length)
+            /* Either kind makes an entry. The old films-only test would have
+               dropped every photographed event on the next save. */
+            .filter((g) => g.title && (g.films.length || g.images.length))
             .slice(0, 60),
         }))
         .filter((c) => c.key && c.name && c.groups.length)
@@ -1026,6 +1163,11 @@ function normalizeBlock(raw, index = 0, depth = 0) {
           // 'poster' is a designed card that must never be cropped; 'photo' is
           // a photograph; 'journey' is a tall infographic read on its own.
           kind: oneOf(text(c?.kind, 12), ['poster', 'photo', 'journey'], 'photo'),
+          /* Whether this chapter offers the "everything" chip. Default on, which
+             is what every chapter had before the flag existed; a chapter of two
+             named activities turns it off, because their combined view is not a
+             third thing anyone is looking for. */
+          allChip: c?.allChip !== false,
           icon: iconKey(c?.icon),
           groups: (Array.isArray(c?.groups) ? c.groups : [])
             .map((g) => ({
@@ -1283,6 +1425,9 @@ function normalizeBlock(raw, index = 0, depth = 0) {
       block.videoEyebrow = text(raw.videoEyebrow, 60);
       block.videoTitle = text(raw.videoTitle, 80);
       block.videoCta = text(raw.videoCta, 40);
+      /* Seconds into the film to begin at, 0 for the start. The component opens
+         the file at this point rather than seeking to it (see ThreadBoard). */
+      block.videoStart = Math.max(0, Math.min(3600, Number(raw.videoStart) || 0));
       block.eyebrow = text(raw.eyebrow, 60);
       block.title = text(raw.title, 120);
       block.lead = text(raw.lead, 320);
@@ -1300,6 +1445,128 @@ function normalizeBlock(raw, index = 0, depth = 0) {
         .slice(0, 60);
       break;
     }
+
+    case 'project-showcase': {
+      /* The product wall: paper "files" on the left, a desk rig on the right
+         whose monitor plays each project's film — or, at a press, the project's
+         own site, live, inside the same screen. */
+      const safePath = (v) => {
+        const t = text(v, 400).replace(/^\/+(?!\/)/, '');
+        /* Either an http(s) URL — a real product lives on the web — or a file
+           in the library. Nothing else: this value ends up in an iframe. */
+        if (/^https?:\/\//i.test(t)) return t;
+        return /^[A-Za-z0-9][A-Za-z0-9 _.\-]*(\/[A-Za-z0-9][A-Za-z0-9 _.\-]*)*$/.test(t) ? t : '';
+      };
+      block.brand = text(raw.brand, 40);
+      /* The mark beside the brand words. A file under /uploads; unset falls back
+         to the gate the stylesheet draws. */
+      block.logo = (() => {
+        const t = text(raw.logo, 240).replace(/^\/+/, '');
+        return /^[A-Za-z0-9][A-Za-z0-9 _.-]*(\/[A-Za-z0-9][A-Za-z0-9 _.-]*)*$/.test(t) ? t : '';
+      })();
+      block.defaultTitle = text(raw.defaultTitle, 40);
+      block.base = (() => {
+        const raw_ = text(raw.base, 80).replace(/^\/+|\/+$/g, '');
+        return /^[A-Za-z0-9][A-Za-z0-9 _-]*(\/[A-Za-z0-9][A-Za-z0-9 _-]*)*$/.test(raw_) ? raw_ : '';
+      })();
+      block.projects = (Array.isArray(raw.projects) ? raw.projects : [])
+        .map((p) => ({
+          name: text(p?.name, 40),
+          tag: text(p?.tag, 80),
+          logo: safePath(p?.logo),
+          description: text(p?.description, 600),
+          features: (Array.isArray(p?.features) ? p.features : [])
+            .map((f) => text(f, 80)).filter(Boolean).slice(0, 8),
+          stack: (Array.isArray(p?.stack) ? p.stack : [])
+            .map((f) => text(f, 32)).filter(Boolean).slice(0, 10),
+          links: {
+            live: safePath(p?.links?.live),
+            code: safePath(p?.links?.code),
+          },
+          /* The film on the monitor. */
+          media: (() => {
+            const src = safePath(p?.media?.src);
+            if (!src) return null;
+            return { type: oneOf(text(p?.media?.type, 8), ['video', 'image'], 'video'), src };
+          })(),
+          /* The site the monitor opens. */
+          site: safePath(p?.site),
+          /* Demo logins. The values are carried so a presenter can put one on
+             the clipboard; they are never rendered — see the note in
+             `Platforms.js`, which set that rule: a password on a three-metre
+             screen is a password given away. */
+          logins: (Array.isArray(p?.logins) ? p.logins : [])
+            .map((l) => ({
+              role: text(l?.role, 40),
+              user: text(l?.user, 120),
+              pass: text(l?.pass, 120),
+            }))
+            .filter((l) => l.role && (l.user || l.pass))
+            .slice(0, 6),
+        }))
+        .filter((p) => p.name)
+        /* The grid is three across and the dock holds what is left; past a
+           dozen the files no longer fit the left half. */
+        .slice(0, 12);
+      break;
+    }
+
+    case 'photo-folder':
+      /* A folder of photographs that opens into a bento wall. */
+      block.eyebrow = text(raw.eyebrow, 60);
+      block.title = text(raw.title, 80);
+      block.openLabel = text(raw.openLabel, 32);
+      block.backLabel = text(raw.backLabel, 32);
+      block.glow = text(raw.glow, 8) === 'none' ? 'none' : hexColor(raw.glow);
+      block.glow2 = hexColor(raw.glow2);
+      block.base = (() => {
+        const raw_ = text(raw.base, 80).replace(/^\/+|\/+$/g, '');
+        return /^[A-Za-z0-9][A-Za-z0-9 _-]*(\/[A-Za-z0-9][A-Za-z0-9 _-]*)*$/.test(raw_) ? raw_ : '';
+      })();
+      block.photos = (Array.isArray(raw.photos) ? raw.photos : [])
+        .map((p) => ({
+          src: text(p?.src, 240),
+          name: text(p?.name, 80),
+          desc: text(p?.desc, 200),
+          /* An object-position, and only that: two percentages or keywords. */
+          focus: /^\s*(\d{1,3}%|left|center|right)\s+(\d{1,3}%|top|center|bottom)\s*$/.test(String(p?.focus || ''))
+            ? String(p.focus).trim() : '',
+          w: clampInt(p?.w, 1, 20000, 0),
+          h: clampInt(p?.h, 1, 20000, 0),
+        }))
+        .filter((p) => p.src)
+        /* The compositions are written out to six; past twelve a folder is a
+           gallery and belongs in `placement-wall`. */
+        .slice(0, 12);
+      break;
+
+    case 'event-wheel':
+      /* Events as a wheel of albums beside the open album. */
+      block.eyebrow = text(raw.eyebrow, 40);
+      block.title = text(raw.title, 80);
+      block.base = (() => {
+        const raw_ = text(raw.base, 80).replace(/^\/+|\/+$/g, '');
+        return /^[A-Za-z0-9][A-Za-z0-9 _-]*(\/[A-Za-z0-9][A-Za-z0-9 _-]*)*$/.test(raw_) ? raw_ : '';
+      })();
+      block.groups = (Array.isArray(raw.groups) ? raw.groups : [])
+        .map((g) => ({
+          title: text(g?.title, 80),
+          /* Optional, written as text: the reference shows a date under the name
+             and the data may one day carry one. Nothing derives it. */
+          date: text(g?.date, 40),
+          images: (Array.isArray(g?.images) ? g.images : [])
+            .map((im) => ({
+              src: text(im?.src, 240),
+              label: text(im?.label, 120),
+              w: clampInt(im?.w, 1, 20000, 0),
+              h: clampInt(im?.h, 1, 20000, 0),
+            }))
+            .filter((im) => im.src)
+            .slice(0, 60),
+        }))
+        .filter((g) => g.title && g.images.length)
+        .slice(0, 40);
+      break;
 
     case 'program-deck':
       block.eyebrow = text(raw.eyebrow, 120);
@@ -1344,6 +1611,10 @@ function normalizeBlock(raw, index = 0, depth = 0) {
       block.stories = (Array.isArray(raw.stories) ? raw.stories : [])
         .map((s) => ({
           photo: text(s?.photo, 200),
+          /* A card may hold a film instead of a photograph — the student
+             testimonials are filmed, not photographed. Same shape and the same
+             path under /uploads; only the element that plays it differs. */
+          video: text(s?.video, 200),
           /* The rest of that achievement's photographs. The card carries one of
              them; these fill the wall behind it while the card is centred, so a
              folder of six pictures shows all six rather than hiding five. A
@@ -1356,7 +1627,9 @@ function normalizeBlock(raw, index = 0, depth = 0) {
           body: text(s?.body, 900),
           quote: text(s?.quote, 600),
         }))
-        .filter((s) => s.photo)
+        /* Either is enough to make a card. Keeping the old photo-only test here
+           would silently drop every film on the next save. */
+        .filter((s) => s.photo || s.video)
         .slice(0, 80);
       break;
 

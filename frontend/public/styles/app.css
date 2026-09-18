@@ -5733,6 +5733,62 @@ body.is-presenting .fit-slide__inner .profile-box__frame {
   animation: block-in 0.7s cubic-bezier(0.22, 0.68, 0, 1) 0.52s both;
 }
 
+/* ---------------------------------------------------- the career in figures */
+/* Under the social row. A hairline rule above sets them apart from the links
+   without drawing a box, the figure takes the deck's accent ink and the line
+   under it stays in the body's grey — so the pair reads as two facts, not as a
+   badge. Arrives after the socials, on the same easing as everything else in
+   the pane. */
+.leader-hero__marks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 34px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(32, 30, 29, 0.14);
+  max-width: 46ch;
+  animation: block-in 0.7s cubic-bezier(0.22, 0.68, 0, 1) 0.74s both;
+}
+
+.leader-hero__mark {
+  display: grid;
+  gap: 3px;
+  position: relative;
+  padding-left: 14px;
+}
+
+/* The accent, as a rule rather than as a fill: the deck reserves filled accent
+   for what is active, and these are facts. */
+.leader-hero__mark::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--nav-accent, var(--brand-accent, #E95A22));
+}
+
+.leader-hero__mark-value {
+  color: var(--accent-ink, #B4451A);
+  font-family: var(--display, inherit);
+  font-size: 25px;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.leader-hero__mark-label {
+  color: rgba(32, 30, 29, 0.66);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leader-hero__marks { animation: none; }
+}
+
 /* ------------------------------------------------------------- socials */
 .leader-hero__follow {
   display: grid;
@@ -8550,6 +8606,10 @@ body.is-presenting .milestones__inner {
   background: rgba(255, 255, 255, 0.04);
 }
 
+/* A card carrying its own artwork (the Claude Certified badge): the disc holds
+   the picture instead of a line icon. Same 46px, same ring; the picture fills it. */
+.cd-card__mark.has-art { overflow: hidden; padding: 0; background: #fff; }
+.cd-card__mark.has-art img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 999px; }
 .cd-card__mark {
   flex: none;
   display: grid;
@@ -8746,7 +8806,10 @@ body.is-presenting .milestones__inner {
   min-height: 860px;
   overflow: hidden;
   border-radius: var(--radius-lg);
-  background: #0c140f;
+  /* NGI's deep green unless the block names its own plate; the ground and the
+     scrim behind the centre are the same colour, so a deck sets it once. */
+  --dw-plate: #0c140f;
+  background: var(--dw-plate);
   color: #eaf1ec;
 }
 
@@ -8793,13 +8856,25 @@ body.is-presenting .milestones__inner {
    cropped, and no letterbox bars appear either. Column loops are re-measured
    from the real content height once the images land (see DriftWall.js), so the
    varying heights stay seamless. */
+/* NOT `transform-style: preserve-3d`, and this is the wall's whole performance
+   story (measured 2026-09-17). Torii's snapshot draws 1,149 tiles, and giving
+   each one its own 3D context costs more than everything else on the slide put
+   together: idle frame time 48.7ms with it and 20.9ms without — 20fps against
+   48. Nothing inside a tile is at a different depth from the tile itself; the
+   only Z was the hover lift, which is a scale now (see below). The wall's depth
+   is unchanged: `.dw-wall` still holds the perspective and `.dw-plane`,
+   `.dw-col` and `.dw-track` still keep their 3D contexts, so the columns still
+   stand in space and still turn with the pointer.
+   Measured and found NOT to matter, so all three stay: the `saturate(0.92)` on
+   every image (48.5 without it), the 0.42s transitions (48.6), and the hover
+   box-shadow (48.7). Ablate before optimising — two of the three obvious
+   suspects here cost nothing at all. */
 .dw-tile {
   position: relative;
   flex: 0 0 auto;
   width: 100%;
   padding: calc(var(--dw-gap) / 2);
   outline: none;
-  transform-style: preserve-3d;
 }
 
 .dw-tile__inner {
@@ -8840,10 +8915,16 @@ body.is-presenting .milestones__inner {
   transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* The lift is a scale, not a translateZ. With the tile flat (see above) a Z
+   translation renders as nothing at all, so `DriftWall.js` converts the block's
+   `lift` — a distance in px toward the viewer — into the scale that distance
+   would have produced at this wall's own perspective, and publishes it as
+   `--dw-lift-scale`. The block field keeps its meaning and the tile keeps its
+   look; the difference is that a scale composites and a 3D context does not. */
 .dw-tile:hover .dw-tile__inner,
 .dw-tile:focus-visible .dw-tile__inner {
   opacity: 1;
-  transform: translateZ(var(--dw-lift));
+  transform: scale(var(--dw-lift-scale, 1.043));
   box-shadow: 0 24px 60px -18px rgba(0, 0, 0, 0.7);
 }
 
@@ -8904,8 +8985,19 @@ body.is-presenting .milestones__inner {
   text-align: center;
   pointer-events: none;
   background: radial-gradient(ellipse 116% 132% at 50% 50%,
-    #0c140f 34%, rgba(12, 20, 15, 0.86) 56%, rgba(12, 20, 15, 0) 76%);
+    var(--dw-plate) 34%, color-mix(in srgb, var(--dw-plate) 86%, transparent) 56%, transparent 76%);
 }
+/* The mark instead of the name. Sized so it leads the wall the way the 64px
+   title did — about six rows of tiles — and no more. */
+.dw-hero--logo { padding: 26px 74px 30px; }
+.dw-hero__logo {
+  display: block;
+  width: 210px;
+  height: 210px;
+  margin: 0 auto;
+  object-fit: contain;
+}
+.dw-hero--logo .dw-hero__tagline { margin-top: 2px; color: rgba(255, 255, 255, 0.74); }
 
 .dw-hero__title {
   margin: 0;
@@ -10588,17 +10680,47 @@ body.is-presenting .pg-player { z-index: 30; }
 
    These are designed cards with a student's name, their branch and their
    package set into them. A crop takes a name off. The solved width is final. */
+/* The cards arrive with depth rather than just fading up: each one starts tipped
+   back and a little below its place, then stands up into the row. The perspective
+   has to live on the row, not the card — on the card itself every tile gets its
+   own vanishing point and the ones at the edges of a wide row visibly skew. */
+.pw-row { perspective: 1400px; perspective-origin: 50% 40%; }
+
 .pw-tile {
   position: relative; flex: 0 0 auto; padding: 0;
   border: 0; border-radius: var(--radius-sm); overflow: hidden;
   background: #f3f4f6; cursor: zoom-in;
-  opacity: 0; transform: translateY(16px) scale(0.985);
-  transition: opacity 520ms cubic-bezier(.2,.7,.3,1),
-              transform 520ms cubic-bezier(.2,.7,.3,1),
+  opacity: 0; transform: translateY(26px) scale(0.94) rotateX(12deg);
+  transform-origin: 50% 100%;
+  transition: opacity 620ms cubic-bezier(.2,.7,.3,1),
+              transform 620ms cubic-bezier(.2,.7,.3,1),
               box-shadow 200ms ease;
 }
 .pw-tile.is-in { opacity: 1; transform: none; }
-.pw-tile:hover { box-shadow: 0 12px 30px rgb(0 0 0 / 0.16); z-index: 2; }
+
+/* A sheen that crosses the card as it lands, and again when it is pointed at.
+   It is a gradient on a pseudo-element rather than a filter, so it costs one
+   composited layer and not a repaint of the picture — which matters at fifty
+   cards on a wall that is already animating all of them. */
+.pw-tile::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(105deg, transparent 38%, rgb(255 255 255 / 0.42) 50%, transparent 62%);
+  transform: translateX(-120%);
+  pointer-events: none;
+  /* Under the company tag, which has to stay legible over it. */
+  z-index: 1;
+}
+.pw-tile.is-in::after { animation: pw-sheen 900ms cubic-bezier(.2,.7,.3,1) 160ms 1; }
+.pw-tile:hover::after { animation: pw-sheen 720ms cubic-bezier(.2,.7,.3,1) 1; }
+@keyframes pw-sheen {
+  from { transform: translateX(-120%); }
+  to   { transform: translateX(120%); }
+}
+
+.pw-tile:hover {
+  box-shadow: 0 18px 38px rgb(0 0 0 / 0.22); z-index: 2;
+  transform: translateY(-4px) scale(1.012);
+}
 .pw-tile img {
   display: block; width: 100%; height: 100%;
   /* The box was solved from this image's own width and height, so cover has
@@ -10613,6 +10735,8 @@ body.is-presenting .pg-player { z-index: 30; }
   background: linear-gradient(to top, rgb(0 0 0 / 0.72), transparent);
   color: #fff; font-size: 11.5px; font-weight: 700; letter-spacing: 0.01em;
   text-align: left; opacity: 0; transition: opacity 200ms ease;
+  /* Above the sheen, or the company name flashes white as it passes. */
+  z-index: 2;
 }
 .pw-tile:hover .pw-tile__tag, .pw-tile:focus-visible .pw-tile__tag { opacity: 1; }
 
@@ -10654,7 +10778,11 @@ body.is-presenting .pg-player { z-index: 30; }
 @media (prefers-reduced-motion: reduce) {
   .pw-rule, .pw-tab { animation: none; }
   .pw-tile { opacity: 1; transform: none; transition: none; }
+  .pw-tile:hover { transform: none; }
   .pw-tile:hover img { transform: none; }
+  /* The sheen is decoration only — nothing is communicated by it, so it goes
+     entirely rather than being slowed down. */
+  .pw-tile::after { display: none; }
   .pw-light, .pw-light__frame { transition: none; }
 }
 
@@ -10688,155 +10816,68 @@ body.is-presenting .pg-player { z-index: 30; }
    The presenter bar — named neighbours, and one dot per slide to jump with
    ========================================================================== */
 
-/* The bar is the existing rounded pill, widened to hold the dots. Named
-   neighbours matter more than symmetry here: "‹" alone asks a presenter to
-   remember the running order of sixteen sections while a room watches. */
-.deck-bar {
-  max-width: min(1320px, calc(100vw - 40px));
-  /* Deliberately NOT re-declaring `position`. The original rule is fixed, and
-     restating it as relative here dropped the bar out of the viewport — it fell
-     39px below the fold and grew the page a scrollbar. A fixed box is already
-     the containing block for an absolute child, so the hover label needs
-     nothing from this rule. */
-  gap: 8px;
-  padding: 8px 10px;
-  max-width: min(1180px, calc(100vw - 48px));
+/* The dock holds two controls, so it is sized by them rather than widened.
+   It used to carry a rail of every section between them — sixteen icons, only
+   the one in hand named — and that went on request (2026-09-17) along with the
+   hover cards above it. What is left is the pair of named tabs, the position,
+   and the way out. `position` is deliberately NOT re-declared: the base rule is
+   `fixed`, and restating it as `relative` here once dropped the bar 39px below
+   the fold and grew the page a scrollbar. */
+.deck-bar--pair {
+  gap: 10px;
+  padding: 9px 11px;
+  /* Dead centre, which the wide bar could not be. The base rule shifts the bar
+     left by half `--player-reserve` so a 1180px bar and the film player's
+     controls in the bottom-right corner sat side by side rather than on each
+     other. This bar is about 480px, so that shift is 123px of visible offset
+     bought to avoid a collision that can no longer happen — it reads as a dock
+     someone nudged. Centred instead, with the width capped so that half the bar
+     plus the whole reserve still clears the corner at any window size: at
+     1600px the bar's right edge is 1039 against a player starting at 1370. */
+  left: 50%;
+  max-width: min(980px, calc(100vw - (2 * var(--player-reserve)) - 48px));
 }
 
+/* Each button names where it lands, so it is a label with a chevron rather than
+   a chevron with a label: the name is 15.5px, up from the 12.5px it was when a
+   rail of sixteen dots had to fit beside it. That is the size a presenter reads
+   from the desk without leaning in, which is the whole reason the dock exists. */
 .deck-step {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 7px 12px; border: 0; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 9px 16px; border: 0; border-radius: 999px;
   background: rgb(255 255 255 / 0.10); color: #fff;
   font: inherit; cursor: pointer;
   transition: background 160ms ease, transform 160ms ease;
 }
-.deck-step:hover { background: rgb(255 255 255 / 0.2); }
+.deck-step:hover { background: rgb(255 255 255 / 0.22); }
 .deck-step:active { transform: scale(0.97); }
-.deck-step .ic { flex: 0 0 auto; opacity: 0.8; }
+.deck-step:focus-visible { outline: 2px solid rgb(255 255 255 / 0.7); outline-offset: 2px; }
+.deck-step .ic { flex: 0 0 auto; opacity: 0.75; }
 .deck-step__text {
-  display: flex; flex-direction: column; align-items: flex-start; gap: 1px;
-  min-width: 0; max-width: 148px;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+  min-width: 0; max-width: 260px;
 }
 .deck-step__text em {
-  font-style: normal; font-size: 9.5px; font-weight: 800;
-  letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.55;
+  font-style: normal; font-size: 10px; font-weight: 800;
+  letter-spacing: 0.13em; text-transform: uppercase; opacity: 0.55;
 }
 .deck-step__text span {
-  font-size: 12.5px; font-weight: 650; line-height: 1.15;
-  max-width: 148px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 15.5px; font-weight: 650; line-height: 1.15;
+  max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
+/* The next tab's name sits against its own chevron, so the two buttons mirror. */
 .deck-step--next .deck-step__text { align-items: flex-end; }
 
-/* ------------------------------------------------------------- the section rail */
-.deck-dots {
-  display: flex; align-items: center; gap: 3px;
-  padding: 0 4px; min-width: 0;
-  overflow-x: auto; scrollbar-width: none;
-}
-.deck-dots::-webkit-scrollbar { width: 0; height: 0; }
-
-/* The cell is what the menu hangs off, so the menu can be positioned against
-   its own section rather than against the whole bar. */
-.deck-cell { position: relative; flex: 0 0 auto; }
-
-.deck-dot {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 9px 12px;
-  border: 0; border-radius: 999px; background: transparent;
-  font: inherit; color: rgb(255 255 255 / 0.62); cursor: pointer;
-  white-space: nowrap;
-  transition: color 160ms ease, background 160ms ease, transform 180ms cubic-bezier(.2,.9,.3,1.25);
-}
-/* Only the section in hand is named, which is the pattern in the reference: one
-   filled pill carrying its label, the rest plain icons. Thirteen names do not fit
-   1180px — they overflowed into a horizontal scroll that hid most of the deck,
-   which defeats the point of a jump bar. Hovering names one too, and the menu
-   above it repeats the name in its heading. */
-.deck-dot__name {
-  font-size: 13.5px; font-weight: 700; letter-spacing: -0.005em;
-  max-width: 0; overflow: hidden; white-space: nowrap;
-  opacity: 0;
-  transition: max-width .26s cubic-bezier(.2,.7,.3,1), opacity .18s ease, margin .26s ease;
-}
-/* Only the active section expands. Naming the hovered one too made the rail
-   wider than the bar every time the pointer crossed it, and the rail's own
-   overflow then clipped the label — "AI Ready Engineer" arrived as "AI Ready
-   Engineere". The hover menu's heading already names what is under the pointer,
-   so nothing is lost and the bar keeps one width. */
-.deck-dot.is-on .deck-dot__name { max-width: 260px; opacity: 1; }
-/* 16px read as specks on a projector. */
-.deck-dot .ic { flex: 0 0 auto; width: 20px; height: 20px; }
-.deck-cell:hover .deck-dot,
-.deck-dot:focus-visible {
-  color: #fff; background: rgb(255 255 255 / 0.14);
-  transform: translateY(-2px);
-  outline: none;
-}
-.deck-dot.is-on {
-  color: #fff;
-  background: var(--nav-accent-ink, var(--accent-ink, #E95A22));
-}
-
-/* ------------------------------------------------- the subsection menu ---- */
-/* Springs up over the bar, sized to its contents. Rendered above rather than
-   below for the obvious reason: the bar sits at the bottom of the screen. */
-.deck-menu {
-  position: absolute;
-  bottom: calc(100% + 12px);
-  left: 50%;
-  min-width: 190px; max-width: 280px;
-  padding: 10px;
-  border-radius: 16px;
-  background: #0b0d10;
-  border: 1px solid rgb(255 255 255 / 0.14);
-  box-shadow: 0 22px 50px rgb(0 0 0 / 0.5);
-  opacity: 0;
-  transform: translate(-50%, 8px) scale(0.9);
-  transform-origin: bottom center;
-  pointer-events: none;
-  /* Overshoots on the way in, which is what the reference's spring reads as
-     without a physics library — mass 0.5, damping 11.5, stiffness 100 is
-     underdamped, so unlike the dock this one genuinely does bounce. */
-  transition: opacity .16s ease, transform .28s cubic-bezier(.16,1.02,.3,1.42);
-  z-index: 6;
-}
-.deck-cell.is-open .deck-menu {
-  opacity: 1;
-  transform: translate(-50%, 0) scale(1);
-  pointer-events: auto;
-}
-.deck-menu__head {
-  display: block; padding: 2px 10px 8px;
-  color: rgb(255 255 255 / 0.45);
-  font-size: 9.5px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
-}
-.deck-menu__list { display: flex; flex-direction: column; gap: 1px; }
-.deck-menu__row {
-  display: block; width: 100%;
-  padding: 9px 11px;
-  border: 0; border-radius: 9px; background: transparent;
-  color: rgb(255 255 255 / 0.82);
-  font: inherit; font-size: 13px; font-weight: 600;
-  text-align: left; white-space: normal; cursor: pointer;
-  transition: color 140ms ease, background 140ms ease;
-}
-.deck-menu__row:hover, .deck-menu__row:focus-visible {
-  color: #fff; background: rgb(255 255 255 / 0.1); outline: none;
-}
-
 @media (max-width: 900px) {
-  /* On a narrow display the names are the first thing to go; the dots and the
-     count still tell the presenter where they are. */
+  /* The names are the first thing to go; the chevrons and the count still say
+     which way is forward and where the presenter is. */
   .deck-step__text { display: none; }
-  .deck-step { padding: 7px 9px; }
-  /* Section names go before the icons do — the icons plus the count still say
-     where the presenter is. */
-  .deck-dot.is-on .deck-dot__name { max-width: 150px; }
+  .deck-step { padding: 9px 11px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .deck-step, .deck-dot, .deck-menu, .deck-dot__name { transition: none; }
-  .deck-dot:hover, .deck-dot:focus-visible { transform: none; }
+  .deck-step { transition: none; }
+}
 }
 
 /* --- the digits that moved, in the logo's two colours -------------------- */
@@ -11728,6 +11769,29 @@ body.is-presenting .pg-player { z-index: 30; }
    and a fixed crop would slice the ends off the wide ones. */
 .sw-c__img { display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; }
 
+/* --- cards that hold a film --------------------------------------------- */
+/* Contained rather than cropped, like every other card here, so the speaker is
+   never the part that gets cut. The padding goes and the ground turns dark: a
+   film sits in its own frame the way it would in a player, and the letterbox a
+   16:9 clip leaves in a squarer card should read as black bars, not as a card
+   with grey margins. */
+.sw-c__shot--film { position: relative; padding: 0; background: #0D1117; }
+.sw-c__film { width: 100%; height: 100%; max-width: 100%; max-height: 100%; }
+/* Sits over the still frame, not over the controls — there are none on the card;
+   the film only plays in the viewer. Pointer events off, so the click passes
+   through to the card, which is what opens it. */
+.sw-c__play {
+  position: absolute; inset: 0; margin: auto;
+  display: grid; place-items: center;
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.9); color: #111827;
+  box-shadow: 0 6px 18px -6px rgb(11 18 32 / 0.6);
+  pointer-events: none;
+  transition: transform .2s ease, background .2s ease;
+}
+.sw-c:hover .sw-c__play, .sw-c.is-centre .sw-c__play { transform: scale(1.08); background: #fff; }
+
 .sw-c__foot {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   padding: 16px 18px 18px;
@@ -11814,6 +11878,24 @@ body.is-presenting .pg-player { z-index: 30; }
   max-width: 100%; max-height: calc(100vh - 18vh);
   border-radius: 14px; background: #111;
 }
+/* A film fills the frame, where a photograph is left at its own pixels. The
+   sources here are 873px and 1280px wide, and held to that a testimonial plays
+   as a small window in the middle of a projector screen. Enlarging a film is not
+   the same bargain as enlarging a photograph: the motion carries it, and the
+   audience is across a hall. The width is whatever a 16:9 clip needs to use the
+   height available, so anything wider than that is limited by the frame instead
+   and nothing can overflow either way. */
+.sw-view__vid {
+  width: min(100%, calc((100vh - 18vh) * 16 / 9));
+  height: auto;
+  max-height: calc(100vh - 18vh);
+  background: #000;
+}
+/* Both carry `display: block` from .sw-view__img, which outranks a bare [hidden]
+   and would leave the one that is off still drawn. Said here at two classes of
+   specificity so whichever is hidden actually goes. */
+.sw-view__img[hidden], .sw-view__vid[hidden] { display: none; }
+
 .sw-view__cap { margin: 0; color: #fff; font-size: 14px; font-weight: 600; }
 .sw-view__close {
   position: absolute; top: 22px; right: 24px;
@@ -12163,6 +12245,12 @@ body.is-presenting .vc {
   min-height: 0;
   display: flex;
   flex-direction: column;
+  /* `safe` is what makes this usable with both a full chapter and a short one:
+     a chapter of two entries is centred in the band instead of clinging to the
+     top under a screen of white, and one of twenty-three — which overflows and
+     scrolls — falls back to flex-start rather than centring its overflow and
+     putting the first row out of reach above the scroll origin. */
+  justify-content: safe center;
   gap: 20px;
   padding: 14px 30px 28px;
   overflow-y: auto !important;
@@ -12224,6 +12312,22 @@ body.is-presenting .vc {
 }
 .ev-card:hover .ev-card__play .ic {
   background: var(--nav-accent, #008638); transform: scale(1.12);
+}
+
+/* --- entries that are photographs, not film ------------------------------ */
+/* The card keeps the 16:9 poster shape the grid solves its columns from, so a
+   folder of square photographs sits in the same row as the film posters without
+   the row changing height. The first picture is cropped to that frame here and
+   only here — the viewer it opens shows every one of them whole. */
+.ev-card__shot--photos .fs-poster { object-fit: cover; }
+/* The count sits in the corner rather than under the title, because the title
+   row is already solved for two lines of event name and a run of part chips. */
+.ev-card__count {
+  position: absolute; right: 8px; bottom: 8px;
+  min-width: 22px; padding: 2px 7px; border-radius: 999px;
+  background: rgba(8, 10, 13, 0.62); color: #fff;
+  font-size: 11px; font-weight: 700; line-height: 1.5; text-align: center;
+  letter-spacing: 0.02em;
 }
 .ev-card__foot {
   flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; gap: 6px;
@@ -12514,6 +12618,14 @@ body.is-presenting .vc {
   opacity: 0.38; filter: saturate(0.5) contrast(0.95);
   animation: cs-burns 52s ease-in-out infinite alternate;
 }
+/* Torii's backdrop is the Beyond Boundaries group photograph (2026-09-17), whose
+   students stand in the lower half under the poster's title. The band this box
+   shows is 43% of the picture's height, and at 30% it fell on the lettering;
+   at 72% it shows source rows 517–950 of 1151, with every row of faces (about
+   560–800) inside it and the poster's title out of frame, which is what was
+   asked for ("move it up, I can't see the students"). Torii only — NGI's
+   backdrop is a different photograph framed for 30%. */
+[data-org='torii'] .cs-reg__back img { object-position: center 72%; }
 .cs-reg__back::after {
   content: ''; position: absolute; inset: 0;
   background: linear-gradient(to bottom,
@@ -12584,9 +12696,14 @@ body.is-presenting .vc {
   max-width: 100%; max-height: 100%; width: auto; height: auto; display: block;
   filter: drop-shadow(0 7px 13px rgba(40, 42, 80, 0.22));
 }
+/* The vendor set in type, for a credential with no badge art. Sized off the
+   pin rather than fixed at 12px, which was legible beside a 36px badge and lost
+   beside a 60px one. */
 .cs-pin__art em {
-  font-style: normal; font-size: 12px; font-weight: 800; color: var(--muted);
+  font-style: normal; font-size: 0.28em; font-weight: 800; color: var(--muted);
+  line-height: 1; letter-spacing: 0.02em;
 }
+.cs-pin__art { font-size: var(--cs-pin-size, 60px); }
 .cs-pin:hover .cs-pin__art { transform: scale(1.34); }
 .cs-pin__tag {
   position: absolute; left: 50%; top: calc(100% + 9px);
@@ -12628,6 +12745,12 @@ body.is-presenting .vc {
   display: block; margin-top: 11px; color: var(--muted);
   font-size: 10.5px; font-weight: 700; letter-spacing: 0.19em; text-transform: uppercase;
 }
+/* The year split under the total: the same figures a size down, quieter. */
+.cs-figs--years { margin-top: -6px; gap: clamp(18px, 3vw, 44px); }
+.cs-fig--year strong { font-size: clamp(18px, 1.7vw, 26px); font-weight: 700; color: var(--ink, #111827); }
+.cs-fig--year span { margin-top: 7px; font-size: 9.5px; letter-spacing: 0.16em; }
+/* Where a credential's count came from, under the count in the detail view. */
+.cs-detail__where { margin: 0; font-size: 12px; color: var(--muted); letter-spacing: 0.01em; }
 .cs-quote { margin: 0; max-width: 660px; animation: cs-rise 1400ms 1250ms cubic-bezier(0.16, 1, 0.3, 1) backwards; }
 .cs-quote p { margin: 0; font-size: clamp(15px, 1.5vw, 21px); font-style: italic; line-height: 1.5; }
 .cs-quote cite {
@@ -13675,6 +13798,323 @@ body.is-presenting .vc {
 
 
 /* ==========================================================================
+   Photo ring — cards standing on a turntable
+   ==========================================================================
+   Cards placed around a vertical axis and seen in perspective. The ring holds
+   on each card and then turns by exactly one, so there is always a subject
+   rather than a drift. Placement, idle turn and hover are on three different
+   elements because one `transform` cannot carry all three.
+   ========================================================================== */
+.pr-root {
+  position: relative;
+  display: flex; flex-direction: column;
+  height: 860px;
+  padding: 44px 30px 0;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 50% 0%, var(--nav-accent-soft, rgb(233 90 34 / 0.10)) 0%, transparent 62%),
+    var(--page-bg, #F8FAFC);
+}
+
+.pr-head { flex: 0 0 auto; text-align: center; }
+.pr-eyebrow {
+  margin: 0 0 8px;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--nav-accent, var(--accent));
+}
+.pr-title {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 54px; line-height: 1.02; letter-spacing: -0.015em;
+  color: var(--text);
+}
+.pr-lead {
+  margin: 12px auto 0; max-width: 780px;
+  font-size: 15px; line-height: 1.55; color: var(--text-muted, #4B5563);
+}
+
+/* --- the filters ---------------------------------------------------------- */
+.pr-tabs {
+  flex: 0 0 auto;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+  margin: 20px 0 0;
+}
+.pr-tab {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 18px;
+  border: 1px solid rgb(11 18 32 / 0.14); border-radius: 999px;
+  background: var(--surface, #fff); color: var(--text);
+  font-family: inherit; font-size: 13px; font-weight: 600; letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background 200ms ease, color 200ms ease, border-color 200ms ease, transform 200ms ease;
+  animation: pr-tab-in 460ms cubic-bezier(.2, .7, .3, 1) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+.pr-tab:hover { transform: translateY(-1px); border-color: rgb(11 18 32 / 0.3); }
+.pr-tab.is-on {
+  background: var(--nav-accent, var(--accent));
+  /* `--nav-on-accent`, not `--nav-accent-ink`: the two are easy to confuse and
+     only one is right here. The *ink* is a darkened shade of the brand colour,
+     for brand-coloured text on a light ground; on the accent fill itself it is
+     the same hue twice and measures 1.5:1. The *on-accent* is the one the deck
+     picks for contrast against that fill — white on Torii's orange, dark on
+     Technical Hub's gold — which is what a pill filled with the brand colour
+     needs. */
+  color: var(--nav-on-accent, var(--on-accent, #fff));
+  border-color: transparent;
+}
+/* The count rides inside the chip, so a filter says how much is behind it
+   before it is pressed. */
+.pr-tab__n {
+  min-width: 18px; padding: 1px 6px; border-radius: 999px;
+  background: rgb(11 18 32 / 0.08);
+  font-size: 11px; font-weight: 700; text-align: center;
+}
+.pr-tab.is-on .pr-tab__n { background: rgb(255 255 255 / 0.22); }
+@keyframes pr-tab-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* The perspective lives on the stage, not the ring: put it on the element that
+   is itself rotating and the vanishing point rotates with it, which flattens the
+   whole effect at a quarter turn. `perspective-origin` sits above centre so the
+   ring is read slightly from above, the way the reference is drawn. */
+.pr-stage {
+  flex: 1 1 auto; position: relative;
+  display: grid; place-items: center;
+  perspective: 1500px;
+  perspective-origin: 50% 42%;
+}
+
+.pr-ring {
+  position: relative;
+  width: 520px; height: 340px;
+  transform-style: preserve-3d;
+}
+
+.pr-slot {
+  position: absolute; top: 0; left: 50%;
+  width: 520px; margin-left: -260px;
+  display: block; padding: 0; border: 0; background: none;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  /* Each card carries its own move, because they do not travel together: on a
+     step the front card leaves to one side while the next arrives from the
+     other, and both are the same eased transition running on different values.
+     Eased at both ends so a step starts and settles rather than snapping — this
+     is the whole of the "one by one" motion. */
+  transition:
+    transform var(--turn, 1100ms) cubic-bezier(.34, .08, .18, 1),
+    opacity var(--turn, 1100ms) ease;
+  will-change: transform;
+}
+
+.pr-card {
+  position: relative;
+  display: flex; flex-direction: column; gap: 10px;
+  /* Resting size. Cards sit back a little so that pointing at one is a change
+     rather than the whole ring already being at full size. Each step further
+     round the ring takes a little more off, to a floor, so depth reads as depth
+     and the back of the ring never disappears entirely. */
+  transform: scale(calc(0.86 - min(var(--away, 0), 3) * 0.045));
+  opacity: calc(1 - min(var(--away, 0), 3) * 0.2);
+  transition: transform 420ms cubic-bezier(.2, .7, .3, 1), opacity 420ms ease;
+  will-change: transform;
+}
+.pr-slot.is-front .pr-card { transform: scale(1); opacity: 1; }
+/* Pointed at, a card comes up past full size. The ring has already stopped and
+   brought it to the front by this point, so this is the only growth left. */
+.pr-slot:hover .pr-card,
+.pr-slot:focus-visible .pr-card { transform: scale(1.12); opacity: 1; }
+
+/* The entrance, replayed whenever the filter changes. The cards are rebuilt on a
+   swap, so the animation runs again by itself — no class to add and remove, and
+   no chance of it being left on. The stagger runs along the fan, so a set
+   arrives card by card rather than appearing all at once. */
+.pr-card__in {
+  animation: pr-card-in 640ms cubic-bezier(.2, .7, .3, 1) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+@keyframes pr-card-in {
+  from { opacity: 0; transform: translateY(26px) scale(0.9); filter: blur(6px); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+
+/* One height for every card, width from the picture's own ratio — so the fan
+   stands on a single line and no photograph is letterboxed into a frame that is
+   not its shape. Capped, or a panorama would reach across the whole slide. */
+.pr-card__frame {
+  position: relative;
+  height: 300px; width: auto; aspect-ratio: var(--ar, 16 / 9);
+  max-width: 520px;
+  margin: 0 auto;
+  border-radius: 16px; overflow: hidden;
+  background: #0D1117;
+  box-shadow: 0 26px 54px -22px rgb(11 18 32 / 0.55);
+  transition: box-shadow 420ms ease;
+}
+.pr-slot.is-front .pr-card__frame { box-shadow: 0 38px 76px -26px rgb(11 18 32 / 0.62); }
+/* Contained, never cropped — the deck's rule everywhere else, and these are
+   designed cards whose own titles would be the first thing a crop cut off. */
+.pr-card__img {
+  display: block; width: 100%; height: 100%;
+  object-fit: contain;
+}
+.pr-card__label {
+  margin: 0; text-align: center;
+  font-size: 13px; font-weight: 600; letter-spacing: -0.005em;
+  color: var(--text);
+  /* Only the front card names itself. Six labels around a ring is a list of
+     captions nobody can read, and it competes with the headline. */
+  opacity: 0; transition: opacity 320ms ease;
+}
+.pr-slot.is-front .pr-card__label { opacity: 1; }
+
+.pr-empty {
+  flex: 1 1 auto; display: grid; place-content: center; gap: 10px; text-align: center;
+}
+.pr-hint { margin: 0; font-size: 13px; color: var(--text-muted, #4B5563); }
+
+@media (prefers-reduced-motion: reduce) {
+  /* No turning at all, and no growth on hover — the fan is then a still
+     arrangement that can still be filtered and clicked through. JS already
+     refuses to start the timer under the same query; this covers the rest. */
+  .pr-slot, .pr-card, .pr-card__frame, .pr-card__label, .pr-tab { transition: none; }
+  .pr-slot:hover .pr-card, .pr-slot:focus-visible .pr-card { transform: scale(1); }
+  /* The swap still has to *show*, or a filter press looks like nothing happened
+     — so it keeps a plain fade and loses the movement and the blur. */
+  .pr-card__in { animation: pr-card-in-still 200ms ease both; animation-delay: 0ms; }
+  .pr-tab { animation: none; }
+}
+@keyframes pr-card-in-still {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+
+/* ==========================================================================
+   Event orbit — a ring of events you turn with your hand
+   ==========================================================================
+   Panels standing at every angle, seen in perspective. Drag across to turn it,
+   up and down to tip it, click a card to open that event's photographs. The
+   ground is the deck's own page colour: every other section in the deck stands
+   on it, and a black panel in the middle of them read as a different product
+   rather than as a different section.
+   ========================================================================== */
+.eo-root {
+  position: relative;
+  display: flex; flex-direction: column;
+  /* `.canvas-block > *` sets `flex: 1`, whose `flex-basis: 0%` beats `height` on
+     the main axis — without a basis of its own this root collapses to its
+     content, which for a ring whose cards are absolutely positioned is almost
+     nothing: it measured 220px inside an 848px slide and the ring was clipped
+     against the top edge. Every other full-bleed root in the deck pins the
+     basis the same way. */
+  flex: 0 0 auto;
+  height: 860px;
+  padding: 30px 30px 0;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 50% 0%, var(--nav-accent-soft, rgb(233 90 34 / 0.10)) 0%, transparent 62%),
+    var(--page-bg, #F8FAFC);
+  color: var(--text);
+}
+
+.eo-title {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 52px; line-height: 1.02; letter-spacing: -0.015em;
+  color: var(--text);
+}
+
+/* The perspective is on the stage, not the ring: put it on the element that is
+   itself rotating and the vanishing point rotates with it, which flattens the
+   whole thing a quarter turn in. */
+.eo-stage {
+  flex: 1 1 auto; position: relative;
+  display: grid; place-items: center;
+  /* Deeper than the fan's, because a closed ring is twice as long front to back
+     and a short perspective blows the near cards up past the frame. */
+  /* Deep. At 1700 the near card was magnified 1.46x and ran past the bottom of
+     the panel; this holds it to about 1.3x, which still reads as depth. */
+  perspective: 2200px;
+  /* Dead centre. Lifting the vanishing point above the middle pushes the whole
+     ring visibly down the panel and leaves the top third empty. */
+  perspective-origin: 50% 50%;
+  cursor: grab;
+  touch-action: none;   /* the drag is ours, not the browser's scroll */
+  outline: none;
+}
+.eo-stage.is-held { cursor: grabbing; }
+
+.eo-ring {
+  position: relative;
+  width: 300px; height: 190px;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.eo-card {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  padding: 0; border: 0; background: none;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  /* The far half of the ring is turned away from the viewer, and drawing it
+     means drawing the backs of those cards — which renders their photographs
+     and their names mirrored. Reversed type reads as a fault, not as depth, so
+     a card facing away is not drawn at all. `--away` still dims the ones
+     turning through the sides, so the ring keeps its falloff. */
+  backface-visibility: hidden;
+  opacity: calc(1 - var(--away, 0) * 0.72);
+  transition: opacity 180ms linear;
+  outline: none;
+}
+.eo-card__shot {
+  position: relative; display: block;
+  width: 300px; height: 168px;
+  border-radius: 10px; overflow: hidden;
+  background: #0d1117;
+  box-shadow: 0 22px 46px -20px rgb(11 18 32 / 0.5);
+  /* A hairline edge so a pale photograph does not dissolve into the page. */
+  border: 1px solid rgb(11 18 32 / 0.1);
+  transition: border-color 200ms ease, box-shadow 200ms ease, transform 260ms cubic-bezier(.2,.7,.3,1);
+}
+.eo-card__img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.eo-card:hover .eo-card__shot,
+.eo-card:focus-visible .eo-card__shot {
+  border-color: var(--nav-accent, #E95A22);
+  box-shadow: 0 30px 58px -18px rgb(11 18 32 / 0.6), 0 0 0 3px rgb(233 90 34 / 0.3);
+  transform: translateZ(26px) scale(1.04);
+}
+.eo-card__foot {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 9px 4px 0;
+}
+.eo-card__name {
+  font-size: 12.5px; font-weight: 700; letter-spacing: 0.01em;
+  color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.eo-card__n {
+  flex: 0 0 auto;
+  min-width: 18px; padding: 1px 6px; border-radius: 999px;
+  background: rgb(11 18 32 / 0.08);
+  font-size: 10.5px; font-weight: 700; color: var(--text-muted, #4B5563);
+}
+
+.eo-empty { flex: 1 1 auto; display: grid; place-content: center; gap: 10px; text-align: center; }
+.eo-hint { margin: 0; font-size: 13px; color: var(--text-muted, #4B5563); }
+
+@media (prefers-reduced-motion: reduce) {
+  /* No idle drift — the JS refuses to start its loop under the same query, so
+     the ring is a still arrangement that can still be dragged and clicked. */
+  .eo-card, .eo-card__shot { transition: none; }
+  .eo-card:hover .eo-card__shot, .eo-card:focus-visible .eo-card__shot { transform: none; }
+}
+
+
+/* ==========================================================================
    Sections must not be shorter than their slide
    ==========================================================================
    A slide in presentation mode is not 16:9 — it is the *screen's* shape. FitSlide
@@ -13713,7 +14153,12 @@ body.is-presenting .fit-slide__inner .tt-root,
 body.is-presenting .fit-slide__inner .cf-root,
 body.is-presenting .fit-slide__inner .ts-root,
 body.is-presenting .fit-slide__inner .pc-root,
+body.is-presenting .fit-slide__inner .ew-root,
+body.is-presenting .fit-slide__inner .fd-root,
+body.is-presenting .fit-slide__inner .ps-root,
 body.is-presenting .fit-slide__inner .tb-root,
+body.is-presenting .fit-slide__inner .pr-root,
+body.is-presenting .fit-slide__inner .eo-root,
 body.is-presenting .fit-slide__inner .aa-root {
   /* !important because the per-section rules use it, and !important beats
      specificity however deep this selector is. */
@@ -14076,8 +14521,21 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
 /* The whole card, start to finish. Every entrance animation on an intro slide
    adds this to its own delay, so one number moves the entire sequence and the
    page can never begin before the title has left. */
+/* Was 3s, and every entrance on an intro slide added it to its own delay so
+   the page could not begin before the card had left. It is 0 now (2026-09-17)
+   because the page is not *built* until the card is on its way out — see
+   `SlideView`, which mounts the canvas at about two-thirds of the card's run.
+   The two approaches solve the same problem, and only the second one works for
+   everything: a CSS delay is honoured only by the entrances written to read it,
+   and a JS arrival — an IntersectionObserver reveal, a rAF ease-in — fires the
+   moment its element exists, which under an opaque card is to nobody. That is
+   what "I can't see the entrance animation" was: the arrivals were playing out
+   behind the card and were over when it lifted. Mounting late, every kind of
+   entrance starts as the card goes, whether or not it knows about the card.
+   The variable stays, at 0, so the `calc(var(--intro-hold, 0s) + …)` delays
+   already written keep their own staggers. */
 .slide--intro {
-  --intro-hold: 3s;
+  --intro-hold: 0s;
 }
 
 /* Laid over the slide, not in it: an in-flow title card would add height and
@@ -14108,13 +14566,45 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   line-height: 1.02;
   text-align: center;
   text-transform: uppercase;
-  /* Black, on instruction: the title card is the one place the deck steps
-     outside orange, navy and white. */
+  /* The default, for a deck with no palette of its own. Each organization
+     overrides the pair below. */
   color: #000000;
   /* One line, so the fit can size to the full width instead of wrapping. */
   white-space: nowrap;
   padding: 0 4%;
 }
+
+/* ---- the card in each deck's own colours (2026-09-17, on request) ---------
+   `applyTheme` stamps `data-org` on the root, so the card can be branded
+   without a class on the slide or a field on the section. Both are the
+   organization's own two colours and nothing else: the ground is deep so the
+   card reads as a cut to black between two bright slides, the way a title card
+   in a film does, and the type is the colour that names the deck.
+
+   The ground is set on `.slide-intro` rather than on the text's parent because
+   the card is `position: absolute; inset: 0` over the whole slide — it has to
+   cover the page arriving underneath it, or the two are seen at once. */
+
+/* White ground on both decks (2026-09-17, second cut, on request: "no
+   background colour, white background and colour for the text"). The first cut
+   set each card on the deck's own dark colour; what was wanted is the deck's
+   colour *as the type*, on white. */
+.slide-intro { background: #FFFFFF; }
+
+/* NGI: its own green. `--nav-accent-ink` is the palette's readable derivative
+   of the lead colour, which for NGI is the green the logo leads with. */
+[data-org='technical-hub'] .slide-intro__text { color: var(--nav-accent-ink, #008638); }
+
+/* Torii: its orange. #F05D29 is the value measured off the gate in the brand
+   film, not the older #E95A22 in the palette table. On white it is 3.4:1, which
+   is above the 3:1 large-text floor, and this type is 160px. */
+[data-org='torii'] .slide-intro__text { color: #F05D29; }
+
+/* While the card is up the page under it has not been built yet (see
+   `SlideView`), so the slide has to hold its height on its own or the card,
+   which is `inset: 0` of the slide, is a strip a few pixels tall. `--slide-h`
+   is the screen's own height while presenting and filling; 860 is the canvas. */
+.slide--intro.is-holding { min-height: var(--slide-h, 860px); }
 
 
 /* The card itself only needs to be opaque, then not. Holding full opacity to
@@ -14134,7 +14624,7 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
    quickly. */
 @media (prefers-reduced-motion: reduce) {
   .slide--intro {
-    --intro-hold: 1.2s;
+    --intro-hold: 0s;
   }
 
   .slide-intro {
@@ -18340,7 +18830,11 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: opacity 0.35s ease;
 }
+/* Held invisible over the film's own dark ground until it is at `videoStart`
+   and playing, so the room sees a film begin rather than a frame replaced. */
+.tb-film__media.is-seeking { opacity: 0; }
 .tb-film__scrim {
   position: absolute;
   inset: 0;
@@ -18638,4 +19132,961 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
 @media (prefers-reduced-motion: reduce) {
   .tb-seg, .tb-pin, .tb-card, .tb-card__paper, .tb-card__shot img, .tb-note, .tb-intro > *, .tb-cta { transition: none; }
   .tb-cta .tb-chev { animation: none; }
+}
+
+
+/* ==========================================================================
+   Torii Minds — Project Showcase  (ProjectShowcase.js)
+   ==========================================================================
+   A port of the page the user supplied, kept rule for rule. Everything is
+   scoped under `.ps-root` rather than living on `:root`/`.hero`, because the
+   original sets `--ink`, `--line`, `--card`, `--font`, `--mono` and `--orange`
+   — which are this deck's own variables — and because `.hero` is this deck's
+   full-bleed hero block. Every other class name is the original's. The
+   keyframes are prefixed for the same reason: `@keyframes` names are global,
+   and this stylesheet already lost one animation to a name collision.
+   The web fonts are gone (no internet at presentation time); the families are
+   still named first and fall through to the stack the original listed.
+   ========================================================================== */
+.ps-root{
+  --orange:#FF6F32; --orange-deep:#F05E25;
+  --ink:#1B1B1B; --ink-2:#4A4744; --ink-3:#8B8681;
+  --line:rgba(27,27,27,.10); --card:#FFFFFF;
+  --bg-top:#F6F5F4; --bg-bottom:#E7E5E3;
+  --title-top:#E3DDD8; --title-mid:#FFB58E; --title-bottom:var(--orange);
+
+  --bezel:#212121; --bezel-edge:#151515; --bezel-lit:#3a3a3a; --screen:#F9F8FD;
+  --neck-l:#666666; --neck-r:#4e4e4e; --neck-edge:#1c1c1c;
+  --plate:#333333; --plate-dark:#2a2a2a;
+  --slat-hi:#7e7e7e; --slat-hi2:#666666; --slat-mid:#414141; --slat-mid2:#303030; --slat-gap:#282828;
+
+  --ease:cubic-bezier(.16,1,.3,1);
+  --font:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+
+  position:relative;
+  /* A definite height, not a minimum: `.canvas-block > *` sets `flex: 1`, whose
+     `flex-basis: 0%` beats `height` on the main axis. */
+  flex:0 0 auto;
+  height:860px;
+  max-height:860px;
+  overflow:hidden;
+  border-radius:var(--radius-lg);
+  background:linear-gradient(180deg,var(--bg-top),var(--bg-bottom));
+  font-family:var(--font);
+  color:var(--ink);
+  outline:none;
+}
+.ps-root.dark{
+  --ink:#F3EFEB; --ink-2:#C9C2BC; --ink-3:#8D857F; --line:rgba(255,255,255,.10);
+  --card:#1E1B19; --bg-top:#171412; --bg-bottom:#0E0C0B;
+  --title-top:#2B2624; --title-mid:#7A3B22;
+}
+.ps-root *{box-sizing:border-box;}
+/* Measures `--deck-bar-clear` — see the note in the component. */
+.ps-root .ps-probe{position:absolute;left:0;top:0;width:0;height:var(--deck-bar-clear,0px);visibility:hidden;pointer-events:none;}
+.ps-root .canvas{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;
+  transform:translate(var(--ox,0px),var(--oy,0px)) scale(var(--s,1));}
+.ps-root .canvas::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(55% 50% at 70% 40%,rgba(255,255,255,.55),rgba(255,255,255,0) 70%),
+             radial-gradient(38% 38% at 90% 18%,rgba(255,111,50,.08),rgba(255,111,50,0) 70%);}
+.ps-root.dark .canvas::before{background:radial-gradient(55% 50% at 70% 40%,rgba(255,255,255,.04),rgba(255,255,255,0) 70%),
+             radial-gradient(38% 38% at 90% 18%,rgba(255,111,50,.14),rgba(255,111,50,0) 70%);}
+
+/* ---------------- brand ---------------- */
+.ps-root .brand{position:absolute;left:96px;top:64px;display:flex;align-items:center;gap:12px;z-index:5;
+  font-weight:600;font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);
+  opacity:0;animation:ps-fadeUp .9s var(--ease) 1.4s forwards;}
+.ps-root .brand i{display:block;width:22px;height:22px;border:3px solid var(--orange);border-bottom:0;position:relative;}
+.ps-root .brand i::after{content:"";position:absolute;left:8px;top:6px;width:3px;height:16px;background:var(--ink);}
+/* The real mark, sized to the drawn gate it replaces. The file is a 420px square
+   whose ink runs 54–366 across and 45–374 down — 78.6% of the height — so a 28px
+   box puts the gate at the 22px the drawn one stood, rather than three-quarters
+   of it. `contain`, so the transparent margin stays margin. */
+.ps-root .brand__mark{display:block;width:28px;height:28px;object-fit:contain;max-width:none;}
+
+/* ---------------- title behind the monitor ---------------- */
+.ps-root .title{position:absolute;left:770px;top:52px;margin:0;z-index:1;font-weight:500;font-size:300px;line-height:1.1;
+  letter-spacing:-.045em;white-space:nowrap;padding-bottom:.12em;pointer-events:none;user-select:none;
+  opacity:0;transform:translateY(40px);filter:blur(14px);font-family:var(--font);}
+.ps-root .title.in{animation:ps-titleIn 1.3s var(--ease) .95s forwards;}
+.ps-root .title .ch{display:inline-block;background:linear-gradient(180deg,var(--title-top) 0%,var(--title-mid) 58%,var(--title-bottom) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;}
+.ps-root .title .ch.space{width:.22em;}
+.ps-root .title.swap-out .ch{animation:ps-chOut .32s var(--ease) both;}
+.ps-root .title.swap-in .ch{animation:ps-chIn .7s var(--ease) both;}
+@keyframes ps-titleIn{to{opacity:1;transform:none;filter:blur(0);}}
+@keyframes ps-chOut{to{opacity:0;transform:translateY(-.18em);filter:blur(10px);}}
+@keyframes ps-chIn{from{opacity:0;transform:translateY(.22em);filter:blur(12px);}to{opacity:1;transform:none;filter:blur(0);}}
+
+/* ---------------- the rig (measured 735x870), shifted right ---------------- */
+/* Raised from scale 1.7 and moved up and right (2026-09-17): the screen was
+   854x598 of the 1920x1080 canvas and a recording or a site in it could not be
+   read from a room. The three numbers are bounded by things that must not move:
+   the left column of files and the detail sheet end at canvas x=756, so the
+   screen's left edge stays past 780; the canvas is 1920 wide, so its right edge
+   stays inside 1900; and the presenter bar covers the last 138 canvas pixels, so
+   its bottom edge stays above 942. At 2.1 the screen is 1055x739 — 23% wider —
+   from (829,88) to (1884,827), which is as large as those three allow. */
+.ps-root .rig{position:absolute;left:0;top:0;width:735px;height:870px;transform-origin:0 0;transform:translate(600px,-300px) scale(2.1);z-index:2;}
+.ps-root .desk{position:absolute;inset:0;opacity:0;transform:translateY(70px);animation:ps-riseIn 1s var(--ease) .05s forwards;}
+.ps-root .display{position:absolute;inset:0;opacity:0;transform:translateY(46px);animation:ps-riseIn 1.05s var(--ease) .45s forwards;}
+@keyframes ps-riseIn{to{opacity:1;transform:none;}}
+.ps-root .panel{position:absolute;left:-1500px;top:642px;width:4000px;height:600px;transform-origin:1867.5px 0;transform:rotate(-1.4deg);
+  background:repeating-linear-gradient(90deg,var(--slat-hi) 0px,var(--slat-hi2) 5px,var(--slat-mid) 5px,var(--slat-mid2) 20px,var(--slat-gap) 20px,var(--slat-gap) 33px);background-position:2px 0;}
+.ps-root .panel::before{content:"";position:absolute;left:0;right:0;top:0;height:12px;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.14) 0px,rgba(255,255,255,.10) 5px,rgba(255,255,255,0) 5px,rgba(255,255,255,0) 20px,rgba(0,0,0,.10) 20px,rgba(0,0,0,.10) 33px),
+             linear-gradient(180deg,#6d6d6d 0%,#626262 40%,#555555 100%);background-position:2px 0,0 0;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 1px 0 rgba(0,0,0,.35);}
+.ps-root .panel::after{content:"";position:absolute;inset:12px 0 0 0;background:linear-gradient(180deg,rgba(0,0,0,.10),rgba(0,0,0,0) 30%,rgba(0,0,0,0) 70%,rgba(0,0,0,.08));}
+.ps-root .neck{position:absolute;left:336px;top:470px;width:120px;height:162px;transform:skewX(-3deg);transform-origin:0 100%;
+  background:linear-gradient(90deg,var(--neck-l) 0%,#5a5a5a 45%,var(--neck-r) 93%,#6a6a6a 94.5%,var(--neck-edge) 96%,#202020 100%);}
+.ps-root .neck::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.22) 0%,rgba(0,0,0,.22) 44%,rgba(0,0,0,0) 70%,rgba(0,0,0,.08) 84%,rgba(0,0,0,.34) 100%);}
+.ps-root .plate{position:absolute;left:287px;top:636px;width:176px;height:10px;border-radius:3px 4px 3px 3px;
+  background:linear-gradient(180deg,#5c5c5c 0,#565656 3px,#3a3a3a 4px,var(--plate) 60%,var(--plate-dark) 100%);
+  box-shadow:0 1px 1px rgba(0,0,0,.45),inset 1px 0 0 rgba(255,255,255,.08);}
+.ps-root .monitor{position:absolute;left:0;top:0;width:516px;height:350px;transform-origin:0 0;
+  transform:matrix3d(0.96430412,-0.06434557,0,-0.00005601, 0,0.96,0,0, 0,0,1,0, 104.5,208,0,1);
+  background:var(--bezel);border-radius:5px 6px 6px 5px;padding:4px 9px 8px 4px;
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.06),inset -1px 0 0 var(--bezel-lit),inset 0 -1px 0 #2c2c2c,0 40px 80px -30px rgba(0,0,0,.35);}
+.ps-root .screen{position:relative;width:100%;height:100%;background:var(--screen);border-radius:2px;overflow:hidden;box-shadow:0 0 0 1px var(--bezel-edge);}
+.ps-root .screen .media{position:absolute;inset:0;opacity:0;transition:opacity .6s var(--ease);}
+.ps-root .screen .media.show{opacity:1;}
+.ps-root .screen .media > img,.ps-root .screen .media > video{display:block;width:100%;height:100%;object-fit:cover;border:0;}
+/* A screen recording is shown whole, at its own ratio. These are browser-window
+   captures at about 1.95:1 on a 1.47:1 screen, and `cover` cut a quarter off the
+   sides — so the film is letterboxed on a dark screen, as a monitor would. */
+.ps-root .screen .media > video{object-fit:contain;}
+.ps-root .screen .media.media--video{background:#0B0B0B;}
+/* The site is laid out for a real laptop viewport and scaled down into the
+   screen, so it looks the way it does on a desk rather than as its own narrow
+   breakpoint blown up 1.4x. The component writes the size and the scale from
+   the screen it is given; pointer events map through the transform. */
+.ps-root .screen .media > iframe{display:block;border:0;background:#fff;transform-origin:0 0;}
+.ps-root .state{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:#2A2723;
+  opacity:0;transform:translateY(8px);transition:opacity .5s var(--ease),transform .5s var(--ease);
+  /* The two state cards sit over the screen whether or not they are shown, and
+     `opacity:0` is still hit-testable — with a live site in the screen they ate
+     every click. They carry nothing interactive, so they never take the
+     pointer. The original page had nothing clickable in there to notice. */
+  pointer-events:none;}
+.ps-root .state.show{opacity:1;transform:none;}
+.ps-root .state .orb{position:absolute;left:50%;top:50%;width:260px;height:260px;border-radius:50%;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(255,111,50,.20),rgba(255,111,50,0) 70%);animation:ps-breathe 4.5s ease-in-out infinite;}
+@keyframes ps-breathe{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.8;}50%{transform:translate(-50%,-50%) scale(1.22);opacity:1;}}
+.ps-root .state .k{font-family:var(--mono);font-size:8px;letter-spacing:.24em;text-transform:uppercase;color:#8B8681;margin-bottom:8px;}
+.ps-root .state .h{font-size:20px;font-weight:600;letter-spacing:-.02em;line-height:1.15;color:#1B1B1B;}
+.ps-root .state .sub{font-size:9.5px;color:#6E6862;margin-top:8px;line-height:1.5;}
+.ps-root .state .arrow{display:inline-block;width:26px;height:1.5px;background:#1B1B1B;position:relative;vertical-align:middle;margin-right:8px;animation:ps-nudge 1.8s var(--ease) infinite;}
+.ps-root .state .arrow::before{content:"";position:absolute;left:0;top:-3.5px;width:8px;height:8px;border-left:1.5px solid #1B1B1B;border-bottom:1.5px solid #1B1B1B;transform:rotate(45deg);}
+@keyframes ps-nudge{0%,100%{transform:translateX(0);}50%{transform:translateX(-6px);}}
+.ps-root .state .bar{width:120px;height:2px;margin:14px auto 0;border-radius:2px;background:#E8E4E0;overflow:hidden;position:relative;}
+.ps-root .state .bar::after{content:"";position:absolute;left:-40%;top:0;width:40%;height:100%;background:linear-gradient(90deg,transparent,var(--orange),transparent);animation:ps-shimmer 1.6s linear infinite;}
+@keyframes ps-shimmer{to{left:100%;}}
+
+/* ---------------- left: files ---------------- */
+.ps-root .files{position:absolute;left:0;top:0;width:1920px;height:1080px;z-index:4;pointer-events:none;}
+.ps-root .files > *{pointer-events:auto;}
+
+.ps-root .list-head{position:absolute;left:96px;top:150px;width:656px;display:flex;justify-content:space-between;
+  font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);
+  opacity:0;animation:ps-fadeUp .8s var(--ease) 1.3s forwards;transition:opacity .4s var(--ease);}
+.ps-root.has-selection .list-head{opacity:0 !important;pointer-events:none;}
+
+/* the file — outer is positioned by JS, inner carries the look + entrance */
+.ps-root .file{position:absolute;left:0;top:0;width:200px;height:250px;transform-origin:0 0;
+  transition:transform .8s var(--ease),opacity .5s var(--ease);cursor:pointer;}
+.ps-root .file-inner{
+  position:relative;width:100%;height:100%;
+  --g1:#FFFFFF; --g2:#FFE3D5;
+  background:linear-gradient(160deg,var(--g1) 0%,var(--g2) 100%);
+  clip-path:polygon(0 0,calc(100% - 46px) 0,100% 46px,100% 100%,0 100%);
+  border-radius:14px 0 14px 14px;
+  box-shadow:0 1px 2px rgba(27,27,27,.05),0 22px 44px -26px rgba(27,27,27,.35);
+  transition:transform .5s var(--ease),box-shadow .5s var(--ease);
+  opacity:0;animation:ps-fadeUp .9s var(--ease) calc(1.35s + var(--d,0ms)) forwards;
+}
+.ps-root .file:hover .file-inner{transform:translateY(-6px) rotate(-.6deg);box-shadow:0 2px 4px rgba(27,27,27,.05),0 34px 60px -28px rgba(255,111,50,.35);}
+.ps-root .file.selected .file-inner,.ps-root .file.mini .file-inner{transform:none;}
+/* dog-ear fold */
+.ps-root .file-inner::before{content:"";position:absolute;right:0;top:0;width:46px;height:46px;
+  background:linear-gradient(225deg,transparent 50%,#F3E9E3 50%,#E8D9D0 100%);
+  filter:drop-shadow(-2px 3px 3px rgba(27,27,27,.10));}
+/* thin orange rule near the top */
+.ps-root .file-inner::after{content:"";position:absolute;left:22px;right:70px;top:74px;height:2px;border-radius:2px;background:var(--orange);opacity:.85;}
+.ps-root .file .logo{position:absolute;left:22px;top:22px;width:40px;height:40px;border-radius:50%;background:var(--orange);display:grid;place-items:center;overflow:hidden;
+  color:#fff;font-weight:600;font-size:16px;box-shadow:0 6px 14px -6px rgba(255,111,50,.7);}
+.ps-root .file .logo img{width:100%;height:100%;object-fit:cover;display:block;max-width:none;}
+/* A product's own logo (2026-09-17, on request). The design's badge is a 40px
+   orange disc with the product's initial, and the five logos supplied are
+   wordmarks 1.9:1 to 3.4:1 — in a 40px circle each is a cropped middle nobody
+   can name, which is why the initial stood in until real art arrived. With art
+   the badge is a white plate the same 40px tall, as wide as the wordmark needs
+   up to 118px, the mark contained inside with 5px of air, and a hairline so
+   the plate reads as a plate on the paper rather than as a mark floating on it.
+   118 is the room the card has: it is 200 wide, the plate starts at 22, and the
+   dog-ear fold takes the last 46 — 22 + 118 leaves 14 before the fold. Height
+   stays 40 so the orange rule at 74 and the index at 94 keep their places. */
+.ps-root .file .logo.has-art{width:auto;max-width:118px;min-width:40px;padding:5px 8px;border-radius:10px;
+  background:#fff;border:1px solid rgba(27,27,27,.10);box-shadow:0 6px 14px -8px rgba(27,27,27,.25);}
+/* Sized by HEIGHT, and nothing else. `width:auto; height:100%; max-width:100%`
+   measured 100x53 on a 1.89:1 mark inside a 30px-tall content box — the
+   percentage max-width resolved against the plate, the width won, and the
+   height followed the ratio out of the bottom of the plate, where
+   `overflow:hidden` cut it. A fixed height with an unconstrained width gives a
+   1.85:1 mark 55px and a 3.41:1 mark 102px, both inside the 102px the plate's
+   padding leaves; the plate, being shrink-to-fit, then wraps each mark rather
+   than standing at its maximum for all seven. */
+.ps-root .file .logo.has-art img{height:30px;width:auto;max-width:none;max-height:none;object-fit:contain;}
+.ps-root .file .idx{position:absolute;left:22px;top:94px;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--ink-3);}
+.ps-root .file .meta{position:absolute;left:22px;right:22px;bottom:22px;}
+.ps-root .file .name{display:block;font-size:19px;font-weight:600;letter-spacing:-.015em;line-height:1.15;color:#1B1B1B;}
+.ps-root .file .tag{display:block;font-size:12px;color:#6E6862;margin-top:5px;line-height:1.35;}
+.ps-root .file .kind{position:absolute;right:20px;bottom:22px;font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--ink-3);writing-mode:vertical-rl;transform:rotate(180deg);opacity:.7;}
+
+/* opened header text next to the selected file */
+.ps-root .head{position:absolute;left:224px;top:156px;width:520px;opacity:0;transform:translateY(10px);transition:opacity .5s var(--ease) .35s,transform .5s var(--ease) .35s;pointer-events:none;}
+.ps-root.has-selection .head{opacity:1;transform:none;pointer-events:auto;}
+.ps-root .head .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px;}
+.ps-root .head .name{font-size:46px;font-weight:600;letter-spacing:-.03em;line-height:1;color:var(--ink);}
+.ps-root .head .tag{font-size:16px;color:var(--ink-3);margin-top:12px;}
+.ps-root .head__actions{display:flex;align-items:center;gap:10px;margin-top:18px;}
+.ps-root .head .close,.ps-root .head .site{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);
+  background:none;border:1px solid var(--line);border-radius:999px;padding:7px 12px;cursor:pointer;transition:border-color .3s,color .3s,background .3s;}
+.ps-root .head .close:hover{border-color:var(--orange);color:var(--ink);}
+/* The way into the site itself: the one filled control on the slide, because
+   it is the one that changes what the monitor is showing. */
+.ps-root .head .site{border-color:var(--orange);background:var(--orange);color:#fff;}
+.ps-root .head .site:hover{background:var(--orange-deep);border-color:var(--orange-deep);}
+.ps-root .head .site__mark{font-size:12px;line-height:1;transition:transform .3s var(--ease);}
+.ps-root .head .site:hover .site__mark{transform:translate(2px,-2px);}
+.ps-root.on-site .head .site{background:none;color:var(--ink-3);border-color:var(--line);}
+.ps-root.on-site .head .site .site__mark{transform:rotate(180deg);}
+.ps-root .head .site[hidden]{display:none;}
+
+/* detail sheet */
+.ps-root .detail{position:absolute;left:96px;top:330px;width:660px;opacity:0;transform:translateY(16px);
+  transition:opacity .55s var(--ease),transform .55s var(--ease);pointer-events:none;}
+.ps-root .detail.show{opacity:1;transform:none;pointer-events:auto;transition-delay:.42s;}
+.ps-root .detail .desc{font-size:16.5px;line-height:1.7;color:var(--ink-2);margin:0 0 26px;max-width:56ch;}
+.ps-root .detail .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);margin:0 0 12px;}
+.ps-root .detail ul{list-style:none;margin:0 0 26px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px 28px;}
+.ps-root .detail li{position:relative;padding-left:22px;font-size:14.5px;line-height:1.5;color:var(--ink-2);}
+.ps-root .detail li::before{content:"";position:absolute;left:0;top:8px;width:8px;height:8px;border-radius:50%;background:var(--orange);}
+.ps-root .detail .chips{display:flex;flex-wrap:wrap;gap:8px;}
+.ps-root .detail .chip{font-family:var(--mono);font-size:11px;padding:7px 11px;border-radius:999px;border:1px solid var(--line);color:var(--ink-2);background:rgba(255,255,255,.5);}
+.ps-root.dark .detail .chip{background:rgba(255,255,255,.04);}
+/* A demo login: the role, and two buttons that copy. The credential itself is
+   never drawn — see the note at the top of Platforms.js. */
+.ps-root .detail .chip--login{display:inline-flex;align-items:center;gap:8px;padding:5px 6px 5px 12px;}
+.ps-root .detail .chip--login b{font-weight:600;letter-spacing:.02em;}
+.ps-root .detail .chip--login button{border:0;border-radius:999px;background:rgba(27,27,27,.07);color:var(--ink-2);
+  font:inherit;font-family:var(--mono);font-size:10px;letter-spacing:.06em;padding:4px 9px;cursor:pointer;transition:background .2s,color .2s;}
+.ps-root .detail .chip--login button:hover{background:var(--orange);color:#fff;}
+.ps-root .detail .links{display:flex;gap:18px;margin-top:24px;}
+.ps-root .detail .links a{font-size:13.5px;font-weight:500;color:var(--ink);text-decoration:none;border-bottom:1.5px solid var(--orange);padding-bottom:2px;}
+.ps-root .detail > *{opacity:0;transform:translateY(8px);transition:opacity .5s var(--ease),transform .5s var(--ease);}
+.ps-root .detail.show > *{opacity:1;transform:none;}
+.ps-root .detail.show > *:nth-child(1){transition-delay:.5s}.ps-root .detail.show > *:nth-child(2){transition-delay:.56s}
+.ps-root .detail.show > *:nth-child(3){transition-delay:.62s}.ps-root .detail.show > *:nth-child(4){transition-delay:.68s}
+.ps-root .detail.show > *:nth-child(5){transition-delay:.74s}.ps-root .detail.show > *:nth-child(6){transition-delay:.80s}
+
+/* dock */
+.ps-root .dock{position:absolute;left:96px;top:var(--ps-dock-top,934px);display:flex;align-items:center;gap:12px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);
+  background:rgba(255,255,255,.55);border:1px solid var(--line);border-radius:999px;padding:10px 16px 10px 14px;cursor:pointer;
+  backdrop-filter:blur(8px);opacity:0;transform:translateY(14px);transition:opacity .5s var(--ease),transform .6s var(--ease),border-color .3s;pointer-events:none;}
+.ps-root.dark .dock{background:rgba(255,255,255,.06);}
+.ps-root.has-selection .dock{opacity:1;transform:none;pointer-events:auto;transition-delay:.45s;}
+.ps-root .dock:hover{border-color:var(--orange);}
+.ps-root .dock .stack{display:flex;}
+.ps-root .dock .stack i{display:block;width:12px;height:15px;border-radius:2px 0 2px 2px;background:linear-gradient(160deg,#fff,#FFD9C6);border:1px solid rgba(27,27,27,.12);margin-left:-5px;}
+.ps-root .dock .stack i:first-child{margin-left:0;}
+.ps-root .dock svg{width:14px;height:14px;transition:transform .45s var(--ease);}
+.ps-root.dock-open .dock svg{transform:rotate(180deg);}
+.ps-root .dock-label{position:absolute;left:96px;top:706px;font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);
+  opacity:0;transform:translateY(6px);transition:opacity .4s var(--ease),transform .4s var(--ease);pointer-events:none;}
+.ps-root.dock-open .dock-label{opacity:1;transform:none;transition-delay:.25s;}
+
+@keyframes ps-fadeUp{to{opacity:1;transform:none;}}
+
+/* The dock is the one control at the floor of the slide, and presenting floats
+   the deck bar over exactly that band — so `--ps-dock-top` is solved in the
+   component, in canvas pixels, once the scale is known. */
+
+@media (prefers-reduced-motion:reduce){
+  .ps-root *{animation-duration:.01ms !important;animation-delay:0s !important;transition-duration:.01ms !important;transition-delay:0s !important;}
+  .ps-root .title,.ps-root .brand,.ps-root .list-head,.ps-root .file-inner,.ps-root .desk,.ps-root .display{opacity:1 !important;transform:none !important;filter:none !important;}
+}
+
+/* ==========================================================================
+   Torii Connect — the folder that opens into a bento  (PhotoFolder.js)
+   ==========================================================================
+   Built to a reference the user supplied, shape for shape: a manila folder in
+   the middle of the frame — back panel with its tab, document cards fanned out
+   of the mouth, the pocket across the front with the folder's name and count.
+   The button empties it into a bento of unequal tiles; Back sends the cards
+   home along the same path. The reference is pale blue on blue-white; this is
+   the same tonal structure in Torii's warm tints — cream fills, a faint orange
+   rule, white paper.
+
+   A card's box is its bento slot; `--fd-tucked` is the transform that carries
+   that box back into the mouth, solved in the component. Opening and closing
+   are one transition played in both directions, and nothing but a transform
+   ever moves.
+   ========================================================================== */
+.fd-root {
+  --fd-ink: #14110F;
+  --fd-muted: rgba(20, 17, 15, 0.52);
+  --fd-paper: #FFFFFF;
+  --fd-accent: #F05D29;      /* measured off the mark on the brand film */
+  --fd-accent-2: #D91823;    /* measured off the team's polo */
+  /* The folder's own tints: the reference's pale blue, done in Torii's orange. */
+  --fd-fill: #FFF6F1;
+  --fd-fill-deep: #FDEDE4;
+  --fd-rule: #F3CDBB;
+
+  position: relative;
+  /* A definite height, not a minimum: `.canvas-block > *` sets `flex: 1`, whose
+     `flex-basis: 0%` beats `height` on the main axis. */
+  flex: 0 0 auto;
+  height: 860px;
+  max-height: 860px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(176deg, #FFFFFF 0%, #FCF7F4 46%, #F7EFEA 100%);
+  color: var(--fd-ink);
+  outline: none;
+}
+
+/* ----------------------------------------------------------------- the ground */
+/* Two soft washes of Torii's two colours, drifting. Each blob is its own element
+   because a background's positions cannot be animated smoothly, and the drift
+   repeats the centring translate in both keyframes. */
+.fd-glow {
+  --fd-glow: #F05D29;
+  --fd-glow-2: #D91823;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.fd-blob {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  filter: blur(84px);
+  will-change: transform;
+}
+.fd-blob--a {
+  left: 24%; top: 12%;
+  width: 760px; height: 760px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--fd-glow) 34%, transparent), transparent 68%);
+  opacity: 0.5;
+  transform: translate(-50%, -50%);
+  animation: fd-blob-drift 34s ease-in-out infinite;
+}
+.fd-blob--b {
+  left: 82%; top: 30%;
+  width: 640px; height: 640px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--fd-glow-2) 26%, transparent), transparent 68%);
+  opacity: 0.38;
+  transform: translate(-50%, -50%);
+  animation: fd-blob-drift 44s ease-in-out infinite reverse;
+}
+.fd-blob--c {
+  left: 56%; top: 88%;
+  width: 900px; height: 900px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--fd-glow) 22%, transparent), transparent 70%);
+  opacity: 0.42;
+  transform: translate(-50%, -50%);
+  animation: fd-blob-drift 52s ease-in-out infinite;
+}
+@keyframes fd-blob-drift {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%      { transform: translate(-50%, -50%) scale(1.16) translateX(38px); }
+}
+
+/* ------------------------------------------------------------------- the head */
+/* Only the way back lives up here, and only while the wall is open. */
+.fd-head {
+  position: absolute;
+  left: 60px;
+  right: 60px;
+  top: 52px;
+  z-index: 40;
+  display: flex;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+.fd-head > * { pointer-events: auto; }
+.fd-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 18px 10px 14px;
+  border: 1px solid rgba(20, 17, 15, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(8px);
+  color: var(--fd-ink);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 420ms ease, transform 520ms cubic-bezier(0.22, 0.7, 0.28, 1), border-color 240ms ease;
+}
+.fd-root.is-open .fd-back {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  transition-delay: 520ms;
+}
+.fd-back:hover { border-color: var(--fd-accent); }
+.fd-back__arrow { transition: transform 240ms cubic-bezier(0.22, 0.7, 0.28, 1); }
+.fd-back:hover .fd-back__arrow { transform: translateX(-3px); }
+
+/* ----------------------------------------------------------------- the folder */
+/* The back panel — an SVG, because the tab needs a real path: a rounded sheet
+   whose top edge steps down on the right through one soft curve. */
+.fd-shell {
+  position: absolute;
+  z-index: 10;
+  overflow: visible;
+  transform-origin: 50% 100%;
+  /* `backwards`, never `both`: a filling animation keeps writing its last
+     keyframe and outranks every declaration, so with `both` the `opacity: 0`
+     the open state asks for lost to the entrance's own `opacity: 1` and the
+     folder simply never went away. */
+  animation: fd-rise 900ms cubic-bezier(0.19, 0.84, 0.28, 1) backwards;
+  animation-delay: var(--intro-hold, 0s);
+  transition: opacity 420ms ease, transform 620ms cubic-bezier(0.22, 0.7, 0.28, 1);
+  filter: drop-shadow(0 26px 44px rgba(20, 17, 15, 0.10));
+}
+.fd-shell__body {
+  fill: var(--fd-fill);
+  stroke: var(--fd-rule);
+  stroke-width: 1.5;
+}
+/* The pocket across the front, with the folder's own name on it. */
+.fd-pocket {
+  position: absolute;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 0 44px 0 46px;
+  border: 1.5px solid var(--fd-rule);
+  border-radius: 30px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 42%, var(--fd-fill) 100%);
+  box-shadow:
+    0 1px 2px rgba(20, 17, 15, 0.04),
+    0 30px 56px -34px rgba(20, 17, 15, 0.40);
+  animation: fd-rise 900ms cubic-bezier(0.19, 0.84, 0.28, 1) backwards;
+  animation-delay: calc(var(--intro-hold, 0s) + 120ms);
+  transition: opacity 380ms ease, transform 620ms cubic-bezier(0.22, 0.7, 0.28, 1);
+}
+@keyframes fd-rise {
+  from { opacity: 0; transform: translateY(48px) scale(0.985); }
+  to   { opacity: 1; transform: none; }
+}
+/* Open: the folder gets out of the way — and it is *behind* the cards the whole
+   time, so a card reads as leaving the mouth rather than appearing over it. */
+.fd-root.is-open .fd-shell,
+.fd-root.is-open .fd-pocket {
+  opacity: 0;
+  transform: translateY(26px) scale(0.97);
+  pointer-events: none;
+}
+
+.fd-pocket__copy { min-width: 0; }
+/* The reference sets its name in a plain sans, dark, semibold — not the deck's
+   display face — and this follows it. */
+.fd-pocket__title {
+  margin: 0;
+  font-family: var(--font, 'Open Sans', 'Segoe UI', sans-serif);
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 1.08;
+  letter-spacing: -0.022em;
+  color: var(--fd-ink);
+}
+.fd-pocket__line { display: block; }
+.fd-pocket__count {
+  margin: 10px 0 0;
+  font-size: 22px;
+  color: var(--fd-muted);
+  font-variant-numeric: tabular-nums;
+}
+.fd-open {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 26px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--fd-ink);
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: transform 220ms cubic-bezier(0.22, 0.7, 0.28, 1), background 220ms ease;
+}
+.fd-open:hover { transform: translateY(-2px); background: var(--fd-accent); }
+.fd-open__arrow { font-size: 13px; transition: transform 220ms cubic-bezier(0.22, 0.7, 0.28, 1); }
+.fd-open:hover .fd-open__arrow { transform: translate(2px, -2px); }
+
+/* ------------------------------------------------------------- a document */
+/* Its box is the bento slot; closed, `--fd-tucked` carries that box into the
+   folder's mouth. One transition, played both ways. */
+.fd-card {
+  position: absolute;
+  z-index: 20;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  transform: var(--fd-tucked);
+  transition:
+    transform 900ms cubic-bezier(0.22, 0.86, 0.26, 1) var(--fd-delay, 0ms),
+    opacity 420ms ease;
+  /* The cards are in the folder when the slide arrives, so the entrance only
+     fades them — `transform` is the property carrying the tuck. */
+  animation: fd-fade 700ms cubic-bezier(0.22, 0.7, 0.28, 1) backwards;
+  animation-delay: calc(var(--intro-hold, 0s) + 160ms + var(--fd-delay, 0ms));
+}
+.fd-root.is-open .fd-card { transform: none; }
+.fd-card:focus-visible { outline: none; }
+/* White paper with the reference's thin rule, the photograph set into it at its
+   own ratio, the caption beneath. */
+.fd-card__paper {
+  position: absolute;
+  inset: 0;
+  display: block;
+  padding: 14px;
+  border: 1.5px solid var(--fd-rule);
+  border-radius: 22px;
+  background: var(--fd-paper);
+  box-shadow:
+    0 1px 2px rgba(20, 17, 15, 0.04),
+    0 22px 44px -26px rgba(20, 17, 15, 0.38);
+  transition: transform 340ms cubic-bezier(0.22, 0.7, 0.28, 1), box-shadow 340ms ease;
+}
+/* Closed, the cards are a fan in a pocket and must not lift out of it. */
+.fd-root.is-open .fd-card:hover .fd-card__paper,
+.fd-root.is-open .fd-card:focus-visible .fd-card__paper {
+  transform: translateY(-8px) scale(1.012);
+  box-shadow:
+    0 2px 6px rgba(20, 17, 15, 0.06),
+    0 36px 64px -28px rgba(20, 17, 15, 0.46);
+}
+.fd-card__shot {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #EFE9E6;
+}
+.fd-card__shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;   /* the box is the photograph's own ratio, so nothing is cropped */
+}
+.fd-card__text {
+  display: block;
+  height: var(--fd-cap, 96px);
+  padding: 14px 6px 0;
+  overflow: hidden;
+}
+.fd-card__name {
+  display: block;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.014em;
+  line-height: 1.2;
+  color: var(--fd-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fd-card--small .fd-card__name { font-size: 17px; }
+.fd-card__desc {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  margin-top: 6px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--fd-muted);
+  overflow: hidden;
+}
+
+@keyframes fd-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fd-blob { animation: none; }
+  .fd-card, .fd-card__paper, .fd-shell, .fd-pocket, .fd-back, .fd-open { transition: none; }
+  .fd-shell, .fd-pocket, .fd-card { animation: none; opacity: 1; }
+}
+
+/* ==========================================================================
+   Events — the wheel of albums  (EventWheel.js)
+   ==========================================================================
+   Built to a reference the user supplied: on the left the rightmost sweep of a
+   great ring whose rim is the photographs themselves — a continuous curved strip
+   of tiles, one per event, each turned to follow the arc — the open event's tile
+   large and lit with its name on a card beside it; on the right the open album
+   running down a column. The reference's dark room and its ring of icons are
+   both left out on request: this is Torii's light sheet with its two measured
+   colours washing softly behind. Everything that moves is placed by the
+   component's own rAF loop — the tiles each frame from the wheel's position,
+   the column from its scroll — so nothing here transitions `transform`.
+   ========================================================================== */
+.ew-root {
+  --ew-ink: #14110F;
+  --ew-muted: rgba(20, 17, 15, 0.56);
+  --ew-faint: rgba(20, 17, 15, 0.22);
+  --ew-accent: #F05D29;          /* measured off the mark on the brand film */
+  --ew-accent-2: #D91823;        /* measured off the team's polo */
+  --ew-band: #F1EBE6;            /* the rim between tiles */
+  --ew-card: #FFFFFF;
+
+  position: relative;
+  /* A definite height, not a minimum: `.canvas-block > *` sets `flex: 1`, whose
+     `flex-basis: 0%` beats `height` on the main axis. */
+  flex: 0 0 auto;
+  height: 860px;
+  max-height: 860px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(176deg, #FFFFFF 0%, #FCF7F4 46%, #F7EFEA 100%);
+  color: var(--ew-ink);
+  outline: none;
+}
+
+/* ----------------------------------------------------------------- the ground */
+/* Two soft washes of Torii's two colours, drifting — the same ground as Torii
+   Connect, NT Square and Project Week, at the same strength. */
+.ew-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.ew-blob {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  filter: blur(84px);
+  will-change: transform;
+}
+.ew-blob--a {
+  left: 62%; top: 10%;
+  width: 760px; height: 760px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--ew-accent) 30%, transparent), transparent 68%);
+  opacity: 0.46;
+  transform: translate(-50%, -50%);
+  animation: ew-blob-drift 34s ease-in-out infinite;
+}
+.ew-blob--b {
+  left: 92%; top: 62%;
+  width: 640px; height: 640px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--ew-accent-2) 24%, transparent), transparent 68%);
+  opacity: 0.36;
+  transform: translate(-50%, -50%);
+  animation: ew-blob-drift 44s ease-in-out infinite reverse;
+}
+.ew-blob--c {
+  left: 34%; top: 96%;
+  width: 900px; height: 900px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--ew-accent) 20%, transparent), transparent 70%);
+  opacity: 0.4;
+  transform: translate(-50%, -50%);
+  animation: ew-blob-drift 52s ease-in-out infinite;
+}
+@keyframes ew-blob-drift {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%      { transform: translate(-50%, -50%) scale(1.16) translateX(38px); }
+}
+
+/* ------------------------------------------------------------------- the ring */
+.ew-wheel {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.ew-band {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1600px;
+  height: 900px;
+  overflow: visible;
+  pointer-events: none;
+}
+/* The rim shows only in the seams between tiles and beyond the ends of the
+   visible strip — a soft, slightly darker sheet. */
+.ew-band__ring { fill: none; stroke: var(--ew-band); }
+
+/* A tile on the rim: one event's cover. Placed, turned and scaled by the loop;
+   only its look is here. Its box is radial x tangential, so at the front it
+   stands a little taller than wide and the strip reads as a bent ribbon. */
+.ew-tile {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #E8E1DB;
+  cursor: pointer;
+  transform-origin: 50% 50%;
+  box-shadow: 0 8px 22px -12px rgba(20, 17, 15, 0.45);
+  /* Entrance only — the loop owns `transform`, so this fades. */
+  animation: ew-fade 700ms cubic-bezier(0.22, 0.7, 0.28, 1) backwards;
+  animation-delay: calc(var(--intro-hold, 0s) + 120ms);
+  outline: 3px solid transparent;
+  outline-offset: 0;
+  transition: outline-color 260ms ease, box-shadow 260ms ease;
+}
+.ew-tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ew-tile.is-open {
+  outline-color: var(--ew-accent);
+  box-shadow: 0 22px 44px -18px rgba(20, 17, 15, 0.5);
+}
+.ew-tile:focus-visible { outline-color: var(--ew-accent); }
+
+/* ------------------------------------------------------------ the name */
+/* Inside the ring, against the inner rim. The word carries a quiet gradient —
+   ink into Torii's orange over its last letters — and nothing else. */
+.ew-title {
+  position: absolute;
+  left: 0;
+  z-index: 4;
+  padding-left: 40px;
+  text-align: right;
+  transform: translateY(-50%);
+  pointer-events: none;
+  animation: ew-rise 800ms cubic-bezier(0.22, 0.7, 0.28, 1) backwards;
+  animation-delay: calc(var(--intro-hold, 0s) + 260ms);
+}
+.ew-title__word {
+  display: block;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  background: linear-gradient(100deg, var(--ew-ink) 0%, var(--ew-ink) 46%, #7A3B22 74%, var(--ew-accent) 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+}
+.ew-title__sub {
+  display: block;
+  margin-top: 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ew-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------- the card */
+.ew-card {
+  position: absolute;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transform: translateY(-50%);
+}
+/* The leader from the lit tile to the card, as the reference draws it. */
+.ew-card__lead {
+  display: block;
+  width: 34px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--ew-faint), rgba(20, 17, 15, 0.5));
+}
+.ew-card__body {
+  width: 236px;
+  padding: 16px 18px 14px;
+  border-radius: 14px;
+  background: var(--ew-card);
+  border: 1px solid rgba(240, 93, 41, 0.16);
+  box-shadow:
+    0 1px 2px rgba(20, 17, 15, 0.04),
+    0 24px 48px -30px rgba(20, 17, 15, 0.4);
+}
+.ew-card.is-in .ew-card__body > * {
+  animation: ew-rise 520ms cubic-bezier(0.22, 0.7, 0.28, 1) both;
+}
+.ew-card.is-in .ew-card__body > :nth-child(2) { animation-delay: 60ms; }
+.ew-card.is-in .ew-card__body > :nth-child(3) { animation-delay: 110ms; }
+.ew-card.is-in .ew-card__body > :nth-child(4) { animation-delay: 150ms; }
+.ew-card.is-in .ew-card__body > :nth-child(5) { animation-delay: 190ms; }
+.ew-card__kicker {
+  margin: 0 0 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ew-accent);
+}
+.ew-card__name {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  line-height: 1.2;
+  color: var(--ew-ink);
+}
+.ew-card__meta {
+  margin: 6px 0 0;
+  font-size: 12.5px;
+  color: var(--ew-muted);
+}
+.ew-card__meta[hidden] { display: none; }
+.ew-card__count {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  color: var(--ew-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The pills: two arrows, one pair for events in the card, one for photographs
+   beside the album. Same drawing. */
+.ew-pill {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(20, 17, 15, 0.05);
+  border: 1px solid rgba(20, 17, 15, 0.08);
+}
+.ew-pill--events { margin-top: 14px; }
+.ew-pill--photos { flex-direction: column; }
+.ew-pill__btn {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ew-ink);
+  cursor: pointer;
+  transition: background 180ms ease, color 180ms ease, opacity 180ms ease;
+}
+.ew-pill__btn:hover { background: var(--ew-accent); color: #fff; }
+.ew-pill__btn:disabled { opacity: 0.28; cursor: default; }
+.ew-pill__btn:disabled:hover { background: transparent; color: var(--ew-ink); }
+.ew-chev { width: 18px; height: 18px; display: block; }
+/* In the card the pair lies side by side and points left and right. */
+.ew-pill--events .ew-pill__btn:first-child .ew-chev { transform: rotate(90deg) !important; }
+.ew-pill--events .ew-pill__btn:last-child .ew-chev { transform: rotate(-90deg) !important; }
+
+/* ------------------------------------------------------------------ the album */
+.ew-album {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+  /* The column runs off both ends; the sheet swallows it rather than a hard cut. */
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 84px, #000 calc(100% - 84px), transparent 100%);
+          mask-image: linear-gradient(180deg, transparent 0, #000 84px, #000 calc(100% - 84px), transparent 100%);
+}
+.ew-column {
+  position: absolute;
+  left: 0;
+  top: 84px;
+  width: 100%;
+  will-change: transform;
+  transition: opacity 260ms ease;
+}
+.ew-column.is-leaving { opacity: 0; pointer-events: none; }
+.ew-photo {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #EFE9E6;
+  cursor: zoom-in;
+  box-shadow:
+    0 1px 2px rgba(20, 17, 15, 0.05),
+    0 18px 40px -24px rgba(20, 17, 15, 0.45);
+  animation: ew-rise 640ms cubic-bezier(0.22, 0.7, 0.28, 1) backwards;
+  animation-delay: calc(var(--ew-n, 0) * 60ms);
+  transition: transform 300ms cubic-bezier(0.22, 0.7, 0.28, 1), box-shadow 300ms ease;
+}
+.ew-photo:hover { transform: translateY(-3px) scale(1.008); box-shadow: 0 2px 6px rgba(20, 17, 15, 0.06), 0 30px 56px -26px rgba(20, 17, 15, 0.5); }
+.ew-photo:focus-visible { outline: 2px solid var(--ew-accent); outline-offset: 2px; }
+.ew-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;   /* the box is the photograph's own ratio, so nothing is cropped */
+}
+
+/* ------------------------------------------------------------------- the meta */
+.ew-meta {
+  position: absolute;
+  top: 50%;
+  width: 220px;
+  transform: translateY(-50%);
+  z-index: 5;
+}
+.ew-meta__kicker {
+  margin: 0 0 10px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ew-muted);
+}
+.ew-meta__name {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--ew-ink);
+}
+.ew-meta__count {
+  margin: 8px 0 18px;
+  font-size: 13px;
+  color: var(--ew-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes ew-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ew-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ew-blob, .ew-tile, .ew-photo, .ew-card.is-in .ew-card__body > * { animation: none; }
+  .ew-photo, .ew-column, .ew-pill__btn, .ew-tile { transition: none; }
 }
