@@ -1891,6 +1891,85 @@ AI Ready Engineer takes 6, NGI's Executive Summary 3 for its paper tabs, NGI's
 own AI Ready Engineer 6). The dock's Next tab pressed from sub-tab 3 of 6 goes
 straight to Centers of Excellence, and Previous tab from there comes back.
 
+## Four keys run the whole deck
+
+**Left and right explore a tab; up and down change tab** (2026-09-18, on
+request). That is the entire control surface, and a presenter learns it in one
+sentence.
+
+| key | what it does |
+| --- | --- |
+| → | the next thing *in* this tab — the next portrait, book, file, card — and the next tab once they are spent |
+| ← | the previous one, and the previous tab from the first |
+| ↓ | the next tab, from wherever inside a slide you are |
+| ↑ | the previous tab |
+
+Page Down and Page Up do what up and down do, because a presenter's clicker
+sends those and not arrows. Space still goes forward.
+
+**The spill was already right; the problem was that seven slides never let the
+press reach it.** `advance` offers a press to whatever the slide holds of its
+own and turns the tab only once that is spent — but only six blocks registered a
+stepper, and the training shelf, the team ribbon, the event wheel, the project
+showcase, the thread board, the alliance accordion and the event orbit each
+bound the arrows on their own root and called `stopPropagation`. So those slides
+could not be left with the forward key at all, and five of them had **up and
+down doubled onto the same job**, which would have taken the new tab gesture
+away on exactly the slides that most needed it. All seven register a stepper
+now and none of them binds an arrow. `utils/slideSteps.js` is the only route in.
+
+**A stepper returns whether it consumed the press**, and the honest way to know
+is to measure rather than to keep a second opinion of where the end is: walk,
+then compare the index, the page or the band position across the call. The
+shelf, the story deck and the thread board all do that; the showcase and the
+accordion stop at their bounds instead of wrapping, because a run that comes
+back to where it started has no end for the deck to spill out of, which is
+precisely why the forward key used to be trapped on IT Development.
+
+**A row with no ends needs "spent" defined rather than detected.** The team
+ribbon and the event wheel deliberately have none — one step back from the first
+event is the last — so they count instead: the slide is entered at position 0,
+forward is spent after one lap, and back from 0 leaves the tab exactly as it
+does on a row with real ends. A presenter should not have to learn that some
+rows go backwards for a lap and others do not. Two traps in that count, both
+found by walking the deck: the wheel's `N` is the length of the *strip*, which
+repeats the events until the arc is full, so a lap measured on it took twenty
+presses to leave a ten-event wheel — it is `groups.length`; and the orbit's
+up/down tilt had to go with the rest, since it is a flourish and the four keys
+are the whole control surface now.
+
+**Project Street reads on one gesture now.** Its page turn was on up and down —
+film, then board — and the band on left and right. Forward now carries the whole
+slide: onto the board, along the thread card by card, and out into the next tab
+after the last one. Back at the very start of the band it returns to the film
+rather than leaving, because the film is part of that slide.
+
+Measured on Torii by dispatching real key events, nothing else touched:
+
+| | |
+| --- | --- |
+| ↓ from About | walks all fifteen tabs, one press each, and comes back round |
+| ↑ | one tab back |
+| → on Team | 24 presses, one a portrait, then Trainings |
+| → on Trainings | 7 presses, one a book, then Centres of Excellence |
+| → on Events | 10 presses, one an event, then IT Development |
+| → on IT Development | 9 presses, one a file, then Organization Snapshot |
+| → on Project Street | 34 presses — the film, 32 cards — then Beyond |
+| 5 × → then 5 × ← on Team | still on Team; the sixth ← goes to CEO Profile |
+
+**Nine tabs have nothing to step through and take one press.** About, CEO
+Profile and Organization Snapshot have nothing discrete in them and are right as
+they are. The other six do have something a presenter might want to walk and no
+way to walk it yet — Centres of Excellence (20 centres), Certifications (its
+acts), Torii Connect (3 photographs), NT Square (13 cards), Project Week (25)
+and Beyond (its ring). Adding a stepper to each means deciding what a step *is*
+on a wall, a fan and a ring, which is a design question rather than a
+mechanical one; the mechanism is ready for them.
+
+The overlays keep their own keys and should: `Lightbox`, and the viewers inside
+Certifications and Placements, bind in the capture phase and stop the event, so
+arrows walk the photographs while one is open and the deck stays where it is.
+
 **Four Torii rows and one NGI row are switched off in the code** (2026-09-16),
 on request: Torii's Industry Alliances, History & Milestones, Success Stories
 and Video Resumes, and NGI's Certifications — the user-supplied section that is

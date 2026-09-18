@@ -2,6 +2,7 @@ import { h } from '../utils/dom.js';
 import { upload } from '../utils/media.js';
 import { openLightbox } from './Lightbox.js';
 import { letterRevealPreset } from '../utils/letterReveal.js';
+import { registerStepper } from '../utils/slideSteps.js';
 
 /**
  * A film, then a board of photographs pinned along a thread.
@@ -394,20 +395,23 @@ export function ThreadBoard(block = {}) {
     kick();
   }, { passive: false });
 
-  root.addEventListener('keydown', (event) => {
-    const k = event.key;
-    let handled = true;
-    if (k === 'ArrowDown') goPage(1);
-    else if (k === 'ArrowUp') { if (page === 1 && bandTarget <= 0) goPage(0); else if (page === 1) { bandTarget = 0; kick(); } }
-    else if (k === 'ArrowRight') step(1);
-    else if (k === 'ArrowLeft') step(-1);
-    else handled = false;
-    if (!handled) return;
-    /* Stopped as well as prevented: presenting binds the arrows to the whole
-       deck, so without this an arrow pressed here walks the band *and* leaves
-       the slide. */
-    event.stopPropagation();
-    event.preventDefault();
+  /* The arrows are not bound here (2026-09-18). Up and down turned this slide's
+     own page; they change tab now, and the whole slide reads on left and right
+     instead — forward from the film onto the board, along the thread card by
+     card, and out into the next tab once the last card is reached. One gesture
+     for the whole of it, which is what it looked like on paper anyway.
+
+     Consumed is measured, not assumed: `step` clamps at both ends of the band,
+     so comparing the page and the band position across the call says whether
+     anything actually moved. */
+  registerStepper((delta) => {
+    /* Back at the very start of the board: return to the film rather than
+       leaving, since the film is part of this slide and not the one before. */
+    if (delta < 0 && page === 1 && bandTarget <= 1) { goPage(0); return true; }
+    const wasPage = page;
+    const wasBand = bandTarget;
+    step(delta);
+    return page !== wasPage || bandTarget !== wasBand;
   });
 
   // The transform is written by the loop; make sure it is written once even

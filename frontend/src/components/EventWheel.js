@@ -1,6 +1,7 @@
 import { h } from '../utils/dom.js';
 import { upload } from '../utils/media.js';
 import { openLightbox } from './Lightbox.js';
+import { registerStepper } from '../utils/slideSteps.js';
 
 /**
  * Events as a wheel of albums beside the open album.
@@ -346,18 +347,28 @@ export function EventWheel(block = {}) {
   root.addEventListener('wheel', gate(step), { passive: false });
 
   root.addEventListener('pointerdown', () => root.focus({ preventScroll: true }));
-  root.addEventListener('keydown', (event) => {
-    const k = event.key;
-    let handled = true;
-    if (k === 'ArrowRight') step(1);
-    else if (k === 'ArrowLeft') step(-1);
-    else if (k === 'ArrowDown') stepPhoto(1);
-    else if (k === 'ArrowUp') stepPhoto(-1);
-    else handled = false;
-    if (!handled) return;
-    /* Stopped as well as prevented: presenting binds the arrows to the deck. */
-    event.stopPropagation();
-    event.preventDefault();
+  /* The arrows are not bound here (2026-09-18). Up and down used to walk the
+     open album's photographs; they change tab now, which is the deck's own
+     gesture, and the album is still scrolled by the wheel over it. Left and
+     right turn the wheel through a stepper, so the tab can be left once every
+     event has been round.
+
+     THE WHEEL HAS NO ENDS on purpose — one step back from the first event is
+     the last — so being spent is a count rather than a position: one lap of
+     the events from wherever the slide was entered. */
+  let turned = 0;
+  registerStepper((delta) => {
+    /* The EVENTS, not the tiles. `N` counts the strip, which repeats the
+       events until there are enough to fill the visible arc — so using it
+       would take two laps of a ten-event wheel to leave the tab. */
+    const lap = Math.max(1, groups.length);
+    const next = turned + delta;
+    /* Entered at the first event; back from there leaves the tab, forward is
+       spent after one lap. The same rule as every row with real ends. */
+    if (next > lap - 1 || next < 0) return false;
+    turned = next;
+    step(delta);
+    return true;
   });
 
   open(0);

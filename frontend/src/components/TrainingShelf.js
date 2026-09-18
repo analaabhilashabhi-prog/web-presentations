@@ -3,6 +3,7 @@ import { icon } from '../utils/icons.js';
 import { upload } from '../utils/media.js';
 import { openLightbox } from './Lightbox.js';
 import { justifyRows } from './PlacementWall.js';
+import { registerStepper } from '../utils/slideSteps.js';
 
 /**
  * The trainings, as a bookshelf — and, one press deeper, as a page each.
@@ -466,15 +467,23 @@ export function TrainingShelf(block = {}) {
 
   root.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && open) { event.stopPropagation(); event.preventDefault(); closeDetail(); return; }
-    const forward = event.key === 'ArrowRight' || event.key === 'ArrowDown';
-    const back = event.key === 'ArrowLeft' || event.key === 'ArrowUp';
-    if (!forward && !back) return;
-    /* Stopped as well as prevented: presenting binds the arrows to the whole
-       deck, so without this an arrow pressed here walks the shelf *and* leaves
-       the slide. */
-    event.stopPropagation();
-    event.preventDefault();
-    walk(forward ? 1 : -1);
+    /* The arrows are NOT bound here any more (2026-09-18). Four keys run the
+       deck: left and right walk this shelf and then spill into the next tab,
+       up and down change tab outright. Both of those are decisions only
+       PresentPage can make, so the shelf registers a stepper below and says
+       whether it consumed the press instead of swallowing it. Binding them
+       here as well would take up and down away from the deck, which is exactly
+       the bug this replaced. */
+  });
+
+  /* Left and right walk the shelf, and the deck turns the tab once it will not
+     move any further. `clampIndex` already refuses to go past either end, so
+     "did the landing change" is the whole test for whether the press was
+     consumed — no second notion of an end to keep in step with the first. */
+  registerStepper((delta) => {
+    const before = landing();
+    walk(delta);
+    return landing() !== before;
   });
 
   place();

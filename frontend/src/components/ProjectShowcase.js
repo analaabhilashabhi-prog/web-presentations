@@ -1,6 +1,7 @@
 import { h } from '../utils/dom.js';
 import { upload } from '../utils/media.js';
 import { toastSuccess, toastError } from './Toast.js';
+import { registerStepper } from '../utils/slideSteps.js';
 
 /**
  * Torii Minds — Project Showcase.
@@ -455,15 +456,21 @@ export function ProjectShowcase(block = {}) {
       e.stopPropagation(); e.preventDefault();
       return;
     }
-    if (k === 'ArrowRight' || k === 'ArrowDown') {
-      e.stopPropagation(); e.preventDefault();
-      select((active + 1 + projects.length) % projects.length);
-      return;
-    }
-    if (k === 'ArrowLeft' || k === 'ArrowUp') {
-      e.stopPropagation(); e.preventDefault();
-      select((active - 1 + projects.length) % projects.length);
-    }
+    /* The arrows are not handled here (2026-09-18) — see the stepper below.
+       They used to wrap round the files for ever, which meant the forward key
+       could never leave this tab, and they doubled up and down onto the same
+       job the deck now uses to change tab. */
+  });
+
+  /* Left and right walk the files; the deck turns the tab once there is no
+     further to go. Not wrapped any more: a run that comes back to where it
+     started has no end for the deck to spill out of. Nothing is selected when
+     the slide arrives, so the first forward press opens the first file. */
+  registerStepper((delta) => {
+    const next = active < 0 ? (delta > 0 ? 0 : projects.length - 1) : active + delta;
+    if (next < 0 || next >= projects.length) return false;
+    select(next);
+    return true;
   });
 
   layout();

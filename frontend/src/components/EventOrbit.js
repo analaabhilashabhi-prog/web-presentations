@@ -1,6 +1,7 @@
 import { h } from '../utils/dom.js';
 import { media } from '../utils/media.js';
 import { openLightbox } from './Lightbox.js';
+import { registerStepper } from '../utils/slideSteps.js';
 
 /**
  * The events as a ring you can turn with your hand.
@@ -228,19 +229,25 @@ export function EventOrbit(block, { editing = false } = {}) {
   stage.addEventListener('pointerup', release);
   stage.addEventListener('pointercancel', release);
 
-  /* Keyboard reaches the same two axes, so the ring is not pointer-only. */
-  stage.addEventListener('keydown', (e) => {
-    const k = e.key;
-    if (k === 'ArrowLeft' || k === 'ArrowRight') {
-      e.preventDefault(); e.stopPropagation();
-      spin += (k === 'ArrowLeft' ? -1 : 1) * step;
-      velocity = 0; paint();
-    }
-    if (k === 'ArrowUp' || k === 'ArrowDown') {
-      e.preventDefault(); e.stopPropagation();
-      tilt = Math.max(-TILT_LIMIT, Math.min(TILT_LIMIT, tilt + (k === 'ArrowUp' ? -6 : 6)));
-      paint();
-    }
+  /* The keyboard reaches the ring through the deck's own stepper (2026-09-18),
+     not through a listener here. Left and right turn it one event at a time and
+     the deck opens the next tab once it has been all the way round; up and down
+     belong to the deck and change tab. Tilting the ring was on up and down and
+     is gone with them — it is a flourish, and the four keys are the whole of
+     the control surface now. The pointer still tilts it.
+
+     The ring has no ends, so spent is a count: one lap from where the slide was
+     entered. */
+  let turned = 0;
+  registerStepper((delta) => {
+    const lap = Math.max(1, count);
+    const next = turned + delta;
+    if (next > lap - 1 || next < 0) return false;
+    turned = next;
+    spin += delta * step;
+    velocity = 0;
+    paint();
+    return true;
   });
 
   /* ------------------------------------------------------------------- frame */

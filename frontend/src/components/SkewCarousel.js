@@ -3,6 +3,7 @@ import { icon } from '../utils/icons.js';
 import { upload } from '../utils/media.js';
 import { deepen, rgba } from '../utils/theme.js';
 import { letterRevealPreset, fitToWidth } from '../utils/letterReveal.js';
+import { registerStepper } from '../utils/slideSteps.js';
 
 /**
  * The team, as a skewed ribbon of cards.
@@ -376,16 +377,29 @@ export function SkewCarousel(block = {}) {
     kick();
   }, { passive: false });
 
-  stage.addEventListener('keydown', (event) => {
-    const forward = event.key === 'ArrowRight' || event.key === 'ArrowDown';
-    const back = event.key === 'ArrowLeft' || event.key === 'ArrowUp';
-    if (!forward && !back) return;
-    /* Stopped as well as prevented: presenting binds the arrows to the whole
-       deck, so without this an arrow pressed on a focused ribbon walks the row
-       *and* leaves the slide. */
-    event.stopPropagation();
-    event.preventDefault();
-    walk(forward ? 1 : -1);
+  /* The arrows are not bound here (2026-09-18). Four keys run the deck — left
+     and right walk this row and then spill into the next tab, up and down
+     change tab outright — and both of those are PresentPage's decisions to
+     make. The ribbon registers a stepper below instead of swallowing the key.
+
+     THE ROW HAS NO ENDS, so "spent" has to be defined rather than detected:
+     one lap. A press is consumed until the presenter has passed every member
+     once, counted from wherever the slide was entered, and the press after
+     that turns the tab. Without a count this row would take the forward key
+     for ever and the deck could never be walked with it. Going back the way
+     you came gives the count back, so a correction never costs a tab. */
+  let walked = 0;
+  registerStepper((delta) => {
+    const lap = Math.max(1, count);
+    const next = walked + delta;
+    /* The slide is entered at position 0 and that counts as the first member,
+       so back from there leaves the tab exactly as it does on a row with real
+       ends — a presenter should not have to learn that some rows go backwards
+       for a lap and others do not. Forward is spent after one lap. */
+    if (next > lap - 1 || next < 0) return false;
+    walked = next;
+    walk(delta);
+    return true;
   });
 
   /* Dragging. The ribbon follows the hand exactly — no easing while a pointer is

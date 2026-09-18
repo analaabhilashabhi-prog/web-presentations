@@ -1,6 +1,7 @@
 import { h, svg } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
 import { media } from '../utils/media.js';
+import { registerStepper } from '../utils/slideSteps.js';
 
 /**
  * Success Stories as a card carousel that arrives folded.
@@ -376,6 +377,14 @@ export function StoryWall(block, { editing = false } = {}) {
 
   const go = (i) => { centre = Math.max(0, Math.min(count - 1, i)); place(); };
 
+  /* `go` already clamps at both ends, so whether the centre moved is the whole
+     test for whether the press was consumed and the deck should stay put. */
+  registerStepper((delta) => {
+    const before = centre;
+    go(centre + delta);
+    return centre !== before;
+  });
+
   function deal() {
     open = true;
     root.classList.add('is-open');
@@ -422,8 +431,9 @@ export function StoryWall(block, { editing = false } = {}) {
 
   root.addEventListener('keydown', (event) => {
     if (!open) return;
-    if (event.key === 'ArrowRight') { event.stopPropagation(); event.preventDefault(); go(centre + 1); }
-    if (event.key === 'ArrowLeft') { event.stopPropagation(); event.preventDefault(); go(centre - 1); }
+    /* The arrows are not taken here (2026-09-18): they run the deck now — left
+       and right walk this deck of stories and spill into the next tab, up and
+       down change tab. See the stepper at the foot of this file. */
     if (event.key === 'Escape') { event.stopPropagation(); fold(); }
   });
 

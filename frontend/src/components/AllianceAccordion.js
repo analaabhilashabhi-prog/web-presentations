@@ -1,5 +1,6 @@
 import { h } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
+import { registerStepper } from '../utils/slideSteps.js';
 
 /**
  * The MOUs, as an accordion.
@@ -266,14 +267,19 @@ export function AllianceAccordion(block = {}) {
     step(delta > 0 ? 1 : -1);
   }, { passive: false });
 
-  row.addEventListener('keydown', (event) => {
-    const forward = event.key === 'ArrowRight' || event.key === 'ArrowDown';
-    const back = event.key === 'ArrowLeft' || event.key === 'ArrowUp';
-    if (!forward && !back) return;
-    event.preventDefault();
-    const next = (active + (forward ? 1 : -1) + count) % count;
+  /* The arrows are not bound here (2026-09-18). This row never called
+     `stopPropagation`, so an arrow pressed on it walked the row *and* turned
+     the slide — a latent bug this replaces rather than papers over. It also
+     wrapped, which left the forward key no way out of the tab.
+
+     Left and right walk the agreements and the deck turns the tab past either
+     end; up and down change tab from anywhere. */
+  registerStepper((delta) => {
+    const next = active + delta;
+    if (next < 0 || next >= count) return false;
     setActive(next);
     els[next].focus();
+    return true;
   });
 
   // ----------------------------------------------------------------- painting

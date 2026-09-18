@@ -86,7 +86,13 @@ export function PresentPage(container, { org, section, onLogout }) {
     ArrowRight: () => advance(1),
     ArrowLeft: () => advance(-1),
     Space: () => advance(1),
-    /* a whole tab at a time, whatever the slide is showing */
+    /* A whole tab at a time, whatever the slide is showing. Four keys run the
+       deck (2026-09-18, on request): left and right explore what is *in* a tab
+       and spill into the next one when it is spent, up and down change tab
+       outright from wherever you are. Page Up and Page Down do the same as up
+       and down because a presenter's clicker sends those and not arrows. */
+    ArrowDown: () => turn(1),
+    ArrowUp: () => turn(-1),
     PageDown: () => turn(1),
     PageUp: () => turn(-1),
     Escape: () => state.presenting && exitPresenting(),
