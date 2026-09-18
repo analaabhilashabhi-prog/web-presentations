@@ -18583,6 +18583,28 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   top: 44px;
   width: 470px;
 }
+
+/* The section's wordmark, where the eyebrow, the headline and the lead were.
+   It fills the copy column rather than being set to a fixed size, so it is as
+   large as that column allows — 470px wide, which on a 1600px slide is the
+   whole of the left third the copy used to occupy.
+
+   No `invert` here, deliberately. Project Street's mark is black on a dark
+   film and has to be turned white; this one is two-tone black and orange on
+   this slide's pale ground, its orange already the deck's own accent, and
+   inverting it would throw both away. Two marks, two treatments, and the
+   difference is the ground each one stands on. */
+.pc-mark {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 470px;
+  margin: 8px 0 34px;
+}
+
+@media (max-width: 900px) {
+  .pc-mark { max-width: 340px; margin-bottom: 22px; }
+}
 .pc-eyebrow {
   margin: 0 0 36px;
   display: inline-flex;

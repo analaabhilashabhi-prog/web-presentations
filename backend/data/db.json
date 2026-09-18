@@ -11865,6 +11865,8 @@
           "eyebrow": "Torii Minds",
           "title": "Project Week",
           "lead": "Project Week puts students into numbered teams with chart paper, laptops and a week — while Torii mentors move table to table as the ideas take shape.",
+          "logo": "ProjectWeek/project-week-wordmark.png",
+          "logoAlt": "Project Week",
           "ctaLabel": "See every photograph",
           "glow": "#F05D29",
           "glow2": "#D91823",
@@ -12059,7 +12061,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:50:52.376Z",
-      "updatedAt": "2026-09-17T13:06:02.866Z"
+      "updatedAt": "2026-09-18T15:25:38.589Z"
     },
     {
       "id": "sec_d34af78851b04f86",

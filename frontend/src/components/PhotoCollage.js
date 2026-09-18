@@ -99,12 +99,29 @@ export function PhotoCollage(block = {}) {
 
   // ------------------------------------------------------------------ the copy
   const copy = h('div', { class: 'pc-copy' });
-  if (block.eyebrow) {
+  /* THE MARK STANDS FOR ALL THREE (2026-09-18, on request: "I don't want all
+     the stuff in the top left — place that logo and the button, that's it").
+     The eyebrow, the headline and the lead are all still on the block, so
+     nothing is thrown away and a deck with no mark of its own still sets them
+     in type; they are simply not drawn when there is a wordmark to show.
+
+     NOT inverted, unlike Project Street's. That one is black on a dark film;
+     this is two-tone black and orange on this slide's pale ground, and its
+     orange is already the deck's own accent. */
+  if (block.logo) {
+    copy.append(h('img', {
+      class: 'pc-mark',
+      src: upload(block.logo),
+      alt: block.logoAlt || block.title || '',
+      loading: 'eager',
+      decoding: 'async',
+    }));
+  } else if (block.eyebrow) {
     copy.append(h('p', { class: 'pc-eyebrow' },
       h('span', { class: 'pc-eyebrow__mark', 'aria-hidden': 'true' }),
       h('span', { text: block.eyebrow })));
   }
-  const lines = String(block.title || '').split('\n').filter(Boolean);
+  const lines = block.logo ? [] : String(block.title || '').split('\n').filter(Boolean);
   if (lines.length) {
     const title = h('h2', { class: 'pc-title', 'aria-label': lines.join(' ') });
     lines.forEach((line) => {
@@ -114,7 +131,7 @@ export function PhotoCollage(block = {}) {
     });
     copy.append(title);
   }
-  if (block.lead) copy.append(h('p', { class: 'pc-lead', text: block.lead }));
+  if (block.lead && !block.logo) copy.append(h('p', { class: 'pc-lead', text: block.lead }));
   const cta = h('button', {
     class: 'pc-cta',
     type: 'button',

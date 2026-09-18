@@ -1412,6 +1412,14 @@ function normalizeBlock(raw, index = 0, depth = 0) {
       block.eyebrow = text(raw.eyebrow, 80);
       block.title = text(raw.title, 120);
       block.lead = text(raw.lead, 300);
+      /* The section's own wordmark, in place of the eyebrow, the title and the
+         lead. A file under /uploads, the same path rule as every other block's
+         media field. Unset, the copy is set in type as it always was. */
+      block.logo = (() => {
+        const t = text(raw.logo, 240).replace(/^\/+/, '');
+        return /^[A-Za-z0-9][A-Za-z0-9 _.-]*(\/[A-Za-z0-9][A-Za-z0-9 _.-]*)*$/.test(t) ? t : '';
+      })();
+      block.logoAlt = text(raw.logoAlt, 160);
       block.ctaLabel = text(raw.ctaLabel, 40);
       /* The two colours of the blobs behind the collage. 'none' turns them off;
          unset leaves the stylesheet's own, which are the organization's. Never
