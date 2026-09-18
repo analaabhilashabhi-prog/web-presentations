@@ -19685,7 +19685,7 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   filter:drop-shadow(-2px 3px 3px rgba(27,27,27,.10));}
 /* thin orange rule near the top */
 .ps-root .file-inner::after{content:"";position:absolute;left:22px;right:70px;top:74px;height:2px;border-radius:2px;background:var(--orange);opacity:.85;}
-.ps-root .file .logo{position:absolute;left:22px;top:20px;width:54px;height:54px;border-radius:50%;background:var(--orange);display:grid;place-items:center;overflow:hidden;
+.ps-root .file .logo{position:absolute;left:22px;top:20px;width:72px;height:72px;border-radius:50%;background:var(--orange);display:grid;place-items:center;overflow:hidden;
   color:#fff;font-weight:600;font-size:16px;box-shadow:0 6px 14px -6px rgba(255,111,50,.7);}
 .ps-root .file .logo img{width:100%;height:100%;object-fit:cover;display:block;max-width:none;}
 /* A product's own logo (2026-09-17, on request). The design's badge is a 40px
@@ -19698,7 +19698,7 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
    118 is the room the card has: it is 200 wide, the plate starts at 22, and the
    dog-ear fold takes the last 46 — 22 + 118 leaves 14 before the fold. Height
    stays 40 so the orange rule at 74 and the index at 94 keep their places. */
-.ps-root .file .logo.has-art{width:auto;max-width:150px;min-width:54px;padding:6px 10px;border-radius:11px;
+.ps-root .file .logo.has-art{width:auto;max-width:132px;min-width:72px;padding:7px 10px;border-radius:12px;
   background:#fff;border:1px solid rgba(27,27,27,.10);box-shadow:0 6px 14px -8px rgba(27,27,27,.25);}
 /* Sized by HEIGHT, and nothing else. `width:auto; height:100%; max-width:100%`
    measured 100x53 on a 1.89:1 mark inside a 30px-tall content box — the
@@ -19713,7 +19713,16 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
    falls out of the bottom of the plate. 30px -> 42, and the plate's cap grows
    with it so no mark is squeezed. The card is 200 wide, the plate starts at 22
    and the dog-ear takes the last 46, so 150 is the room there is. */
-.ps-root .file .logo.has-art img{height:42px;width:auto;max-width:none;max-height:none;object-fit:contain;}
+/* BOTH dimensions are capped here, which is the opposite of the rule this
+   plate learned the first time — and the reason is that the mark is bigger now.
+   Height alone was right while every mark fitted the card's width at that
+   height; at 58px tall a 3.6:1 lockup wants 209px and the card has 132, so the
+   plate's `overflow: hidden` cut it. With `width` and `height` both auto and a
+   cap on each, the image scales down to fit inside whichever it meets first and
+   keeps its ratio — no overflow, no squeeze, and the tall marks are unaffected
+   because they never reach the width. The card is 200 wide, the plate starts at
+   22 and the dog-ear takes the last 46, so 132 is the room there is. */
+.ps-root .file .logo.has-art img{height:auto;width:auto;max-height:58px;max-width:112px;object-fit:contain;}
 .ps-root .file .idx{position:absolute;left:22px;top:94px;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--ink-3);}
 .ps-root .file .meta{position:absolute;left:22px;right:22px;bottom:22px;}
 .ps-root .file .name{display:block;font-size:19px;font-weight:600;letter-spacing:-.015em;line-height:1.15;color:#1B1B1B;}
@@ -20481,3 +20490,17 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   .ew-blob, .ew-tile, .ew-photo, .ew-card.is-in .ew-card__body > * { animation: none; }
   .ew-photo, .ew-column, .ew-pill__btn, .ew-tile { transition: none; }
 }
+
+/* The open project's card is hidden by `layout()`, which writes opacity inline
+   and would beat a rule here anyway; this only stops it catching the pointer. */
+.ps-root .file.selected{pointer-events:none;}
+
+/* The name under the mark in the opened sheet. */
+.ps-root .detail .mark-name{display:block;margin-top:22px;font-family:var(--font);font-size:34px;font-weight:800;letter-spacing:-.015em;color:var(--ink);text-align:center;line-height:1.15;}
+
+/* The three buttons: black, heavy and large. They are the only controls on that
+   half of the slide and a presenter aims at them from a lectern. */
+.ps-root .head .close,.ps-root .head .site,.ps-root .head .nextp{font-family:var(--font);font-size:17px;font-weight:800;letter-spacing:.01em;text-transform:none;color:#12100F;border-width:2px;border-color:#12100F;padding:16px 30px;}
+.ps-root .head .close:hover,.ps-root .head .nextp:hover{background:#12100F;border-color:#12100F;color:#fff;}
+.ps-root .head .site{color:#fff;border-color:var(--orange);}
+.ps-root.on-site .head .site{color:#12100F;border-color:#12100F;}

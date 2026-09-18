@@ -320,15 +320,17 @@ export function ProjectShowcase(block = {}) {
     /* `has-art` turns the orange initial-disc into a white plate the wordmark
        sits on whole — see the stylesheet. The disc stays for a project with no
        logo, so the two never look like one of them is broken. */
+    /* A MARK AND A NAME, AND NOTHING ELSE (2026-09-18, on request). The card
+       used to carry its number, a one-line description and a vertical "Project"
+       label down its edge. At the size a card is on this shelf none of the
+       three could be read from a room, and the two that could be were the only
+       two worth reading. */
     f.innerHTML = `<div class="file-inner" style="--d:${i * 90}ms">
         <div class="logo${p.logo ? ' has-art' : ''}">${logo}</div>
-        <div class="idx">${String(i + 1).padStart(2, '0')}</div>
-        <div class="meta"><span class="name"></span><span class="tag"></span></div>
-        <div class="kind">Project</div>
+        <div class="meta"><span class="name"></span></div>
       </div>`;
     // Set by hand rather than interpolated: a project's name is content.
     f.querySelector('.meta .name').textContent = p.name;
-    f.querySelector('.meta .tag').textContent = p.tag || '';
     f.addEventListener('click', () => onFile(i));
     f.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); onFile(i); }
@@ -358,7 +360,19 @@ export function ProjectShowcase(block = {}) {
         f.style.opacity = 1;
         return;
       }
-      if (i === active) { place(f, 96, 150, 0.5, 0); return; }
+      if (i === active) {
+        /* The open project's own card is NOT drawn (2026-09-18, on request:
+           "after opening the project I can still see the file in the top
+           left"). It is still placed, because coming back out is a transition
+           from this rectangle to the grid; it is only invisible. Hidden here
+           rather than in the stylesheet because the grid branch writes
+           `opacity` inline, and an inline style beats any rule without
+           `!important` — two places saying the same thing, with one of them
+           losing, is the bug this replaces. */
+        place(f, 96, 150, 0.5, 0);
+        f.style.opacity = 0;
+        return;
+      }
       const k = others.indexOf(i);
       if (dockOpen) { place(f, 96 + k * 126, 740, 0.55, 0); f.style.opacity = 1; }
       else { place(f, 96 + k * 7, 940 - 2 * k, 0.11, -6 + k * 3); f.style.opacity = 0; }
@@ -378,6 +392,10 @@ export function ProjectShowcase(block = {}) {
       p.logo
         ? h('img', { class: 'mark', src: urlOf(p.logo), alt: p.name, decoding: 'async' })
         : h('span', { class: 'mark mark--type', text: p.name }),
+      /* The name under the mark (2026-09-18, on request). Not drawn for a
+         product with no file of its own, whose mark IS its name set large —
+         printing it twice would read as a mistake. */
+      p.logo ? h('span', { class: 'mark-name', text: p.name }) : null,
     );
     hName.textContent = p.name;
     hTag.textContent = p.tag || '';
