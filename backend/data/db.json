@@ -6704,7 +6704,7 @@
               "domain": "361 (1st year) + 180 (2nd year)",
               "held": 541,
               "badge": "certifications/torii/codechef.png",
-              "onRegister": true,
+              "onRegister": false,
               "skills": [
                 "Problem solving under time limits",
                 "Algorithms and data structures",
