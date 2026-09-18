@@ -1923,6 +1923,57 @@ front of a room:
 Measured: closed at 1.2s and 2.0s, open by 2.7s, and still open at 3.6s, 6s,
 12s and 18s; focus never moves; and a press at 0.9s leaves it closed at 4.1s.
 
+## Events plays itself
+
+**The wheel walks an event's photographs, then turns to the next event**
+(2026-09-18, on request). One photograph every 1.9 seconds; the last one of an
+event is held 2.8, and then the wheel turns — a longer beat, so the turn reads
+as the end of a chapter rather than as one more step. The pointer anywhere over
+the slide stops it, and whatever the presenter chose is what stays on screen.
+
+Measured, left alone, reading the event name and the `n / N` counter off the
+slide rather than any internal state:
+
+| | |
+| --- | --- |
+| within an event | 1/7 → 7/7, a step every ~1.87s |
+| AWS Summit 7/7 → ServiceNow 1/6 | at 11.2s, a 2.75s beat |
+| ServiceNow 6/6 → Achievers Day 1/16 | at 23.6s, a 2.86s beat |
+| pointer parked on the slide for 9s | no movement at all |
+| a photograph chosen, then the pointer leaves | their choice still up 1.2s later, and it carries on from there |
+| frame time with it running | 6.9ms, 0 frames over 16.7ms |
+
+**One branch walks and the other moves on, and nothing remembers which.** `step`
+opens the next event, which rebuilds the album at its first photograph — so the
+tick is "if there is another photograph, take it; otherwise turn the wheel", and
+there is no second notion of where an event ends to keep in step with the first.
+
+**Every way of moving this slide already goes through `step`, `stepPhoto` or
+`turnTo`**, so marking those three is the whole of "the presenter did
+something" — the pills, the wheel, a tile, the deck's arrow keys, and anything
+added later, with no list to maintain. `driving` tells the autoplay's own moves
+from a hand's; without it the chain would push its own schedule back on every
+tick and never advance. And because the tick reads `current` and `photoIndex`
+live, resuming needs no state of its own: it simply carries on from whatever is
+on screen.
+
+**Not `focusin`/`focusout` for the pause, which is a trap here.** `pointerdown`
+focuses the root, so after any click the root holds focus and `focusout` would
+not fire until focus left the slide entirely — the autoplay would stop for good
+on the first press. Pointer enter and leave only; the keyboard is covered by the
+`userMoved` marking, since the deck's arrow keys reach this slide through
+`step`.
+
+**`isConnected` must be checked when the timer FIRES, never when it is set**,
+and that one cost a full measurement to find. The opening schedule is made while
+the component is still being built — before the caller has appended it — so
+testing `root.isConnected` at schedule time dropped the first chain on the floor
+and the slide sat on photograph 1 for as long as nobody touched it. It only
+appeared to work in testing because the pointer leaving rescheduled it once the
+slide *was* mounted, which hid the bug behind the very interaction meant to
+exercise it. Checked at fire time it still does its job: measured after
+navigating away, 0 stale wheels in the DOM and the next tab back at 6.9ms.
+
 ## The team ribbon drifts on its own
 
 **It moves when nobody is touching it and stops when the pointer is over it**

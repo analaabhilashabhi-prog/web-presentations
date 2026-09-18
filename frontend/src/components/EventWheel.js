@@ -63,6 +63,24 @@ const WHEEL_THRESHOLD = 24;
 /* Only has to outlast one notch's own burst — a smooth-scrolling mouse sends a
    dozen equal events per notch inside ~100ms. The inertia tail is caught by its
    shape, not by this; at 260 a mouse spun quickly lost every other notch. */
+/* The slide plays itself. An event's photographs are walked one at a time, and
+   when the last one has been seen the wheel turns to the next event and starts
+   again — the order a presenter would use, without a hand on anything.
+
+   The gaps are what make it watchable rather than a slideshow: long enough to
+   look at a photograph, and a longer beat on the last one of an event so the
+   turn of the wheel reads as the end of a chapter rather than as one more
+   step. RESUME is what is owed to a presenter who has just moved it themselves,
+   or has taken the pointer off it. */
+const AUTO_FIRST = 2600;  // ms after the slide arrives before it starts
+const AUTO_PHOTO = 1900;  // ms a photograph is held
+const AUTO_EVENT = 2800;  // ms the last photograph of an event is held
+const AUTO_RESUME = 2600; // ms of stillness owed after the presenter's own move
+
+const REDUCED = typeof matchMedia === 'function'
+  ? matchMedia('(prefers-reduced-motion: reduce)')
+  : null;
+
 const WHEEL_COOLDOWN = 120;
 const WHEEL_QUIET = 120;              // ms of silence that ends a gesture
 
@@ -226,11 +244,13 @@ export function EventWheel(block = {}) {
   // ----------------------------------------------------------------- events
   /** Turn the wheel so tile `k` is at the front, the short way round. */
   function turnTo(k) {
+    userMoved();
     posTarget += around(k, posTarget);
     open(items[mod(Math.round(posTarget), N)]);
     kick();
   }
   function step(dir) {
+    userMoved();
     posTarget += dir;
     open(items[mod(Math.round(posTarget), N)]);
     kick();
@@ -293,6 +313,7 @@ export function EventWheel(block = {}) {
     return Math.max(0, colHeight + ALBUM.pad * 2 - viewport);
   }
   function stepPhoto(dir) {
+    userMoved();
     const count = groups[current].images.length;
     photoIndex = clamp(photoIndex + dir, 0, count - 1);
     /* One step is one photograph: land its top at the album's own padding. */
@@ -371,8 +392,71 @@ export function EventWheel(block = {}) {
     return true;
   });
 
+  /* ------------------------------------------------------------- autoplay */
+  /* Every way of moving this slide goes through `step`, `stepPhoto` or
+     `turnTo`, so marking those is the whole of "the presenter did something" —
+     the pills, the wheel, a tile, the deck's arrow keys, and anything added
+     later, without a list to keep in step. `driving` is how the autoplay's own
+     moves are told from a hand's: it would otherwise push its own schedule back
+     on every tick and never advance. */
+  let hovered = false;
+  let timer = 0;
+  let driving = false;
+
+  const canAuto = () => root.isConnected && !hovered && !REDUCED?.matches;
+  const stop = () => { if (timer) { clearTimeout(timer); timer = 0; } };
+  const after = (ms) => {
+    stop();
+    if (hovered || REDUCED?.matches) return;
+    timer = setTimeout(tick, ms);
+  };
+  /* `isConnected` is checked when the timer FIRES, never when it is set. The
+     first schedule is made while this component is still being built, before
+     the caller has appended it — so testing it here dropped the opening chain
+     on the floor and the slide sat on photograph 1 for as long as nobody
+     touched it. Checked at fire time it still does the job it is there for:
+     the deck rebuilds its DOM on every navigation, and a chain left running
+     would otherwise go on turning a wheel that is no longer on screen. */
+  /* A longer beat on an event's last photograph: the wheel turning next is the
+     end of a chapter, not one more step. */
+  const gap = () => (photoIndex >= groups[current].images.length - 1 ? AUTO_EVENT : AUTO_PHOTO);
+
+  function tick() {
+    timer = 0;
+    if (!canAuto()) return;
+    driving = true;
+    /* `step` opens the next event, which rebuilds the album at its first
+       photograph — so one branch walks within an event and the other moves on,
+       and nothing has to remember which of the two it is doing. */
+    if (photoIndex < groups[current].images.length - 1) stepPhoto(1);
+    else step(1);
+    driving = false;
+    after(gap());
+  }
+
+  function userMoved() {
+    if (driving) return;
+    /* Whatever they have just chosen is what stays on screen, and the autoplay
+       picks up from there rather than from where it had got to — `tick` reads
+       `current` and `photoIndex` live, so there is nothing to reset. */
+    after(AUTO_RESUME);
+  }
+
+  /* The pointer anywhere over the slide holds it — the ring and the album are
+     one thing to look at, and a presenter who has moved to the album to talk
+     about a photograph has not stopped using the ring.
+
+     Deliberately NOT focusin/focusout: `pointerdown` focuses the root, so after
+     any click the root holds focus and `focusout` would not fire until focus
+     left the slide entirely — the autoplay would stop for good on the first
+     press. The keyboard is covered by `userMoved` instead, since the deck's
+     arrow keys reach this slide through `step`. */
+  root.addEventListener('pointerenter', () => { hovered = true; stop(); });
+  root.addEventListener('pointerleave', () => { hovered = false; after(AUTO_RESUME); });
+
   open(0);
   placeTiles();
+  after(AUTO_FIRST);
   return root;
 }
 
