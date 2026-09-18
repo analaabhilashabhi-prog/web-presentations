@@ -17753,7 +17753,11 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   position: absolute;
   z-index: 1;
   left: 50%;
-  bottom: calc(var(--cf-sink) * -1);
+  /* Lifted (2026-09-18, on request: "move the photos slightly upward so that
+     every photo is clearly visible"). The hand still stands out of the floor —
+     that is the layout it was built to — but 210px less of it is below the
+     frame, which is what the end cards were losing. */
+  bottom: calc(var(--cf-sink) * -1 + 210px);
   width: 0;
   height: 0;
 }

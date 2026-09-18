@@ -9,7 +9,9 @@ import { letterRevealPreset } from '../utils/letterReveal.js';
  * Built to a reference the user supplied, shape for shape: a manila folder
  * standing in the middle of the frame — the back panel with its tab, three
  * document cards fanned out of the mouth, the pocket across the front carrying
- * the folder's own name and "N Files". Pressing the button empties it: every
+ * the folder's own name. (The reference also puts "N Files" on the pocket and
+ * this did too until 2026-09-18; it went when the folder started opening
+ * itself.) Pressing the button empties it: every
  * card flies out of the mouth and lands in a bento of deliberately unequal
  * tiles, and Back sends them home along the same path.
  *
@@ -201,7 +203,11 @@ export function PhotoFolder(block = {}) {
   },
   h('div', { class: 'fd-pocket__copy' },
     title,
-    h('p', { class: 'fd-pocket__count', text: `${photos.length} ${photos.length === 1 ? 'File' : 'Files'}` })),
+    /* NO FILE COUNT (2026-09-18, on request). The reference the folder was
+       built to puts "N Files" on the pocket, and it earned its place while the
+       folder was something a presenter chose to open. It opens itself now, so
+       the count is a number on screen for two seconds that nobody needs and
+       that says nothing the photographs about to fly out of it do not. */),
   openBtn);
 
   /* --------------------------------------------------------- the documents */

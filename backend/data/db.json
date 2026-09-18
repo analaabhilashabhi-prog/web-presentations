@@ -12318,13 +12318,13 @@
             "w": 12,
             "h": 15
           },
-          "eyebrow": "NT Square",
-          "title": "Torii, on campus.\nStep IN. Stand OUT.",
+          "eyebrow": "",
+          "title": "",
           "glow": "#F05D29",
           "base": "NTSquare",
           "buttons": [
             {
-              "label": "See inside",
+              "label": "See Inside",
               "kind": "solid",
               "target": 6
             }
@@ -12410,7 +12410,7 @@
             }
           ],
           "deck": {
-            "label": "GitHub Experience Center",
+            "label": "Get Git Experience Center",
             "eyebrow": "NT Square",
             "title": "GitHub Experience Center",
             "photos": [
@@ -12479,7 +12479,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:50:52.401Z",
-      "updatedAt": "2026-09-17T13:06:02.883Z"
+      "updatedAt": "2026-09-18T13:57:24.855Z"
     },
     {
       "id": "sec_e7b1eee845884989",
