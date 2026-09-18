@@ -12089,6 +12089,8 @@
           "video": "film.mp4",
           "videoEyebrow": "Torii Minds",
           "videoTitle": "Project Street",
+          "videoLogo": "ProjectStreet/project-street-wordmark.png",
+          "videoLogoAlt": "Project Street",
           "videoCta": "Walk the street",
           "videoStart": 13,
           "eyebrow": "Torii Minds",
@@ -12292,7 +12294,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:50:52.388Z",
-      "updatedAt": "2026-09-17T13:06:02.875Z"
+      "updatedAt": "2026-09-18T15:17:19.423Z"
     },
     {
       "id": "sec_9383bf77b4c946fc",

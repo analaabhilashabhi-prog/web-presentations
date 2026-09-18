@@ -1460,6 +1460,14 @@ function normalizeBlock(raw, index = 0, depth = 0) {
       block.video = safePath(raw.video);
       block.videoEyebrow = text(raw.videoEyebrow, 60);
       block.videoTitle = text(raw.videoTitle, 80);
+      /* The section's own wordmark, over the film, instead of its name in type.
+         A file under /uploads, the same path rule as every other block's media
+         field. Unset, the name is set in type as it always was. */
+      block.videoLogo = (() => {
+        const t = text(raw.videoLogo, 240).replace(/^\/+/, '');
+        return /^[A-Za-z0-9][A-Za-z0-9 _.-]*(\/[A-Za-z0-9][A-Za-z0-9 _.-]*)*$/.test(t) ? t : '';
+      })();
+      block.videoLogoAlt = text(raw.videoLogoAlt, 160);
       block.videoCta = text(raw.videoCta, 40);
       /* Seconds into the film to begin at, 0 for the start. The component opens
          the file at this point rather than seeking to it (see ThreadBoard). */

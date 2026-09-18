@@ -19203,6 +19203,33 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   color: #fff;
 }
 
+/* The section's own wordmark, where the name was set in type. Sized to stand
+   where the 110px line stood rather than to the file's own pixels, so the
+   screen's composition is unchanged.
+
+   `invert(1)` is what makes it white. The file is black on transparency, so
+   inverting turns every black pixel white and leaves the transparency exactly
+   as it was — including the anti-aliased edges, which keep their alpha and so
+   stay clean. That is why no second white copy of the file is needed, and why
+   there is nothing to keep in step if the original is ever replaced.
+
+   The drop-shadow is not decoration. The film runs bright in places and the
+   scrim cannot be deepened without changing the other two decks that share it,
+   so the mark carries its own separation — the same reasoning that put a black
+   plate under the alliance captions rather than a deeper gradient. */
+.tb-film__mark {
+  display: block;
+  width: auto;
+  height: 132px;
+  max-width: min(560px, 100%);
+  object-fit: contain;
+  filter: invert(1) drop-shadow(0 6px 26px rgb(0 0 0 / 0.55));
+}
+
+@media (max-width: 900px) {
+  .tb-film__mark { height: 88px; }
+}
+
 /* The outlined pill the reference sets above its headline. */
 .tb-pill {
   margin: 0;

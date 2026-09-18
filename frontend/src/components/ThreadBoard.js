@@ -128,7 +128,19 @@ export function ThreadBoard(block = {}) {
   }
   const filmCopy = h('div', { class: 'tb-film__copy' });
   if (block.videoEyebrow) filmCopy.append(h('p', { class: 'tb-pill tb-pill--light', text: block.videoEyebrow }));
-  if (block.videoTitle) {
+  if (block.videoLogo) {
+    /* The section's own wordmark, in place of its name in type. It is the same
+       words — printing both would say it twice — and it is the mark the event's
+       own signage carries, so the film screen introduces the section the way
+       the street did. Inverted to white by the stylesheet: the file is black on
+       transparency and the film behind it is dark. */
+    filmCopy.append(h('img', {
+      class: 'tb-film__mark',
+      src: upload(block.videoLogo),
+      alt: block.videoLogoAlt || block.videoTitle || '',
+      loading: 'eager', decoding: 'async',
+    }));
+  } else if (block.videoTitle) {
     filmCopy.append(letterRevealPreset(block.videoTitle, 'heading', {
       as: 'h2', className: 'tb-film__title', trigger: true,
     }).node);
