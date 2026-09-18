@@ -1891,6 +1891,38 @@ AI Ready Engineer takes 6, NGI's Executive Summary 3 for its paper tabs, NGI's
 own AI Ready Engineer 6). The dock's Next tab pressed from sub-tab 3 of 6 goes
 straight to Centers of Excellence, and Previous tab from there comes back.
 
+## Torii Connect opens itself
+
+**The folder empties itself after a beat** (2026-09-18, on request: "it should
+open itself automatically... till we go to the next step it should stay like
+that"). 2.4 seconds from mount, which clears the slide's own entrance of about
+0.7s and still leaves the folder on screen long enough to be read as a folder —
+which is the whole of that slide's first impression and the reason the deal is
+worth watching.
+
+Four things it does not do, each of them a way this could have gone wrong in
+front of a room:
+
+  - **It never closes.** Once open it stays open until the tab is left. Back and
+    Escape still work, and nothing puts the photographs away on a timer while
+    somebody is talking about them.
+  - **It does not take focus.** `open()` moves focus to Back when a presenter
+    presses the button, because that is the answer to a press; opening on its
+    own, there has been no press, and pulling the focus ring onto a control
+    nobody asked for is the kind of thing a room notices.
+  - **It yields to a hand.** Any pointer or key press on the slide before the
+    timer runs cancels it. A presenter who has already opened the folder, or
+    deliberately left it shut to talk about it, is not overruled — the one thing
+    worse than a folder that will not open is one that opens over somebody's
+    hand.
+  - **It cannot open the wrong slide.** The deck rebuilds its DOM on every
+    navigation, so the timer checks `root.isConnected` before acting. Without
+    that, a tab left at 2.3 seconds would open the folder in whatever replaced
+    it.
+
+Measured: closed at 1.2s and 2.0s, open by 2.7s, and still open at 3.6s, 6s,
+12s and 18s; focus never moves; and a press at 0.9s leaves it closed at 4.1s.
+
 ## The team ribbon drifts on its own
 
 **It moves when nobody is touching it and stops when the pointer is over it**

@@ -254,11 +254,14 @@ export function PhotoFolder(block = {}) {
 
   // ----------------------------------------------------------------- state
   let openState = false;
-  function open() {
+  /* `focus` is false when the folder opens itself: moving focus is an answer to
+     a press, and there has not been one. Taking it anyway would also pull the
+     ring onto a control nobody asked for, in front of a room. */
+  function open({ focus = true } = {}) {
     if (openState) return;
     openState = true;
     root.classList.add('is-open');
-    backBtn.focus({ preventScroll: true });
+    if (focus) backBtn.focus({ preventScroll: true });
   }
   function close() {
     if (!openState) return;
@@ -266,6 +269,29 @@ export function PhotoFolder(block = {}) {
     root.classList.remove('is-open');
     openBtn.focus({ preventScroll: true });
   }
+
+  /* IT OPENS ITSELF (2026-09-18, on request: "it should open itself
+     automatically... till we go to the next step it should stay like that").
+     The folder is the slide's first impression and has to be seen as a folder
+     before it is emptied, so the deal is left alone for a beat and then runs on
+     its own. AUTO_OPEN is measured from mount and clears the slide's own
+     entrance, which is about 0.7s, with time to read the pocket after it.
+
+     It fires once and never closes anything. Back and Escape still work, and a
+     presenter who has already pressed something is never overruled: any press
+     on this slide before the timer cancels it, because the one thing worse than
+     a folder that does not open is one that opens over somebody's hand. */
+  const AUTO_OPEN = 2400;
+  let pressed = false;
+  const takeOver = () => { pressed = true; };
+  root.addEventListener('pointerdown', takeOver, true);
+  root.addEventListener('keydown', takeOver, true);
+  setTimeout(() => {
+    /* The deck rebuilds its DOM on every navigation, so a slide left before the
+       timer ran must not open the folder in the one that replaced it. */
+    if (!root.isConnected || pressed || openState) return;
+    open({ focus: false });
+  }, AUTO_OPEN);
 
   root.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && openState) {
