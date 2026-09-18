@@ -28,3 +28,13 @@ services:
       # marked Secure. Left off locally, where the deck is served over http.
       - key: COOKIE_SECURE
         value: "1"
+      # Render prompts for these at the first deploy rather than reading a value
+      # from this file — that is what `sync: false` means, and it is why they are
+      # not written here. Deploy WITHOUT setting them and the app falls back to
+      # the defaults in config/env.js, Admin@123 and Present@123, which are
+      # printed in CLAUDE.md and README in a public repository: anybody who can
+      # read the repo could then sign in to the live deck as admin and edit it.
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: PRESENTER_PASSWORD
+        sync: false

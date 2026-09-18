@@ -8,13 +8,26 @@ run `node backend/src/server.js`.
 
 ---
 
+## Set the passwords, or the deploy publishes its own
+
+`render.yaml` declares `ADMIN_PASSWORD` and `PRESENTER_PASSWORD` as `sync: false`,
+so Render asks for both when the blueprint is first applied. Give it real ones.
+Left blank, the app uses the defaults in `config/env.js` — `Admin@123` and
+`Present@123` — and those are written in `CLAUDE.md` in a public repository, so
+the live deck would be editable by anyone who reads it.
+
+`SHOW_LOGIN_HINT` is off by default and must stay off in production: it serves
+working credentials to anonymous callers on `/api/auth/me`.
+
+---
+
 ## Before the first deploy
 
 **Commit the content and the media.** These two must be in git or the deployed
 site has no sections and no pictures:
 
     backend/data/db.json      the sections, blocks and asset records
-    backend/uploads/          the image and video files themselves  (~65 MB)
+    backend/uploads/          the image and video files themselves  (283 MB)
 
 Check `.gitignore` is not excluding them.
 
@@ -31,7 +44,9 @@ Then commit `backend/data/db.json` again — that file *is* the release.
 
 ## Deploy
 
-1. Push to `https://github.com/harshavardhinijncet/Webpresentation.git`
+1. Push to `main` on `https://github.com/analaabhilashabhi-prog/web-presentations`
+   (the deck's own repo; an earlier draft of this file named
+   `harshavardhinijncet/Webpresentation`, which is a different remote)
 2. Render → **New** → **Blueprint** → pick the repo. It reads `render.yaml`.
 3. Deploy. First boot takes a couple of minutes.
 
@@ -61,7 +76,8 @@ Two ways to avoid it:
   reliable option if a presenter may open the link unannounced.
 
 Nothing else about the free plan affects presenting: bandwidth is ample for a
-65 MB deck, and the deck itself is paged, not streamed.
+283 MB deck, and the deck itself is paged, not streamed — a slide fetches only
+its own pictures.
 
 ---
 
@@ -80,6 +96,34 @@ Everything the presenter sees is read from the committed `db.json` and
 If you later want to publish directly from the deployed site, that needs a
 persistent disk — a paid Render plan, or Railway with a volume attached. Only
 then would S3 be worth adding.
+
+---
+
+## Not Vercel, and not any serverless host
+
+Tried 2026-09-18; it returns `500 FUNCTION_INVOCATION_FAILED`. Four things are
+wrong with it, and the first is fatal on its own:
+
+  - **There is no handler to invoke.** `backend/src/server.js` calls
+    `server.listen()` and exports the server. A Vercel function has to export a
+    `(req, res)` function; Vercel invokes nothing, nothing answers, and that is
+    the 500. No `vercel.json` existed either, so the platform guessed at the
+    layout.
+  - **Every login writes to disk.** `session.model.js` calls `persist()`, which
+    rewrites `db.json`. A serverless filesystem is read-only apart from `/tmp`,
+    so the first sign-in throws `EROFS` and 500s even once a handler exists.
+  - **283 MB of media cannot live in a function.** The bundle limit is 250 MB,
+    so `backend/uploads/` would have to be served as static assets instead —
+    a second deployment shape to keep in step with the first.
+  - **Containers are disposable.** Sessions are held in `db.json`, so every cold
+    start signs the room out.
+
+None of that is a fault in the app: it is one long-running process with a
+writable store, which is what Render and Railway run and what serverless does
+not. A serverless deployment could only ever be view-only, and would need a
+handler wrapper, a static route for `/uploads`, and stateless signed cookies.
+Not worth it for a link that exists so people can look at the deck — the
+presentation itself runs locally, with no internet, as it always has.
 
 ---
 
