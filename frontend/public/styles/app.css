@@ -19982,11 +19982,36 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   position: absolute;
   left: 60px;
   right: 60px;
-  top: 52px;
+  /* 52 while the head held only the way back. The wordmark is taller than that
+     button, so the row starts higher and the wall below it was given the ground
+     this frees — see WALL_CY in PhotoFolder.js. */
+  top: 34px;
   z-index: 40;
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  /* The mark at one end and the way back at the other. `space-between` puts
+     them there without either one needing a width. */
+  justify-content: space-between;
+  gap: 24px;
   pointer-events: none;
+}
+
+/* The section's wordmark. Sized by height so its own width follows, and drawn
+   in both states — folder standing and wall open — so the slide is named the
+   whole time it is on screen. No `invert`: black and orange on a pale ground. */
+.fd-mark {
+  display: block;
+  height: 86px;
+  width: auto;
+  max-width: min(460px, 46%);
+  object-fit: contain;
+}
+
+/* With no mark the way back keeps the right-hand end to itself. */
+.fd-head:not(:has(.fd-mark)) { justify-content: flex-end; }
+
+@media (max-width: 900px) {
+  .fd-mark { height: 56px; }
 }
 .fd-head > * { pointer-events: auto; }
 .fd-back {

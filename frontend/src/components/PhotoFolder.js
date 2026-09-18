@@ -71,19 +71,37 @@ const PEEK = [
    "random but intentional" is a composition, not a random number. Heights are
    never written — they follow from each photograph's own ratio. */
 const COLUMNS = {
-  1: [[820]],
-  2: [[640], [480]],
-  3: [[700], [340, 340]],
-  4: [[560], [380, 380], [300]],
-  5: [[520], [380, 380], [340, 340]],
-  6: [[460, 460], [360, 360], [360, 360]],
+  1: [[980]],
+  2: [[760], [560]],
+  /* Widened (2026-09-18, on request: "so much space was around and empty").
+     Three photographs made 1066 of a 1600 canvas and the rest was ground. */
+  3: [[900], [440, 440]],
+  4: [[660], [450, 450], [360]],
+  5: [[620], [450, 450], [400, 400]],
+  6: [[540, 540], [430, 430], [430, 430]],
 };
 const GAP = 26;
 const PAD = 14;               // the paper around the photograph
-const CAP_FULL = 96;          // caption band: name and two lines
-const CAP_SMALL = 54;         // caption band: name only, on a tile under 400 wide
-const WALL_CY = 458;          // the wall is centred on this line
-const WALL_MAX_H = 612;       // and never taller than this — the bar is below
+/* The caption bands. Trimmed (2026-09-18): the wall's size is governed by its
+   HEIGHT, not by the widths above — the stacked column reaches the ceiling
+   first and everything is then scaled down together — so every row a caption
+   takes comes straight off every photograph on the slide. These are the bands
+   the type actually needs rather than the bands it was given. */
+const CAP_FULL = 72;          // caption band: name and two lines
+const CAP_SMALL = 46;         // caption band: name only, on a tile under 400 wide
+/* The wall is centred on WALL_CY and never taller than WALL_MAX_H, and the two
+   are one measurement rather than two: the wall runs from `WALL_CY - MAX_H/2`
+   to `WALL_CY + MAX_H/2`, so its foot has to land on the line the presenter bar
+   starts at and its head on whatever the slide's own head leaves.
+
+   They were 458 and 612, which put the foot at 764 — exactly the bar — and the
+   head at 152, which left eighty-odd rows of ground doing nothing under the
+   back button. Moving the centre up to 420 and the height to 688 keeps the
+   same foot and takes that ground: 420 + 344 = 764, and 420 - 344 = 76, just
+   below the head. Every tile grows with it, because the widths above are
+   scaled down together only when the wall would be taller than this. */
+const WALL_CY = 428;
+const WALL_MAX_H = 700;
 
 function layoutWall(photos) {
   const n = photos.length;
@@ -104,7 +122,14 @@ function layoutWall(photos) {
         const p = photos[i++];
         const w = Math.round(w0 * scale);
         const ph = Math.round((w - 2 * PAD) / aspect(p));
-        const cap = w >= 400 ? CAP_FULL : CAP_SMALL;
+        /* By what the caption HAS, not by how wide the tile is. The band was
+           chosen on width alone, so a large tile was given room for a name and
+           two lines whether or not it had a line — and on this wall, where the
+           height governs everything and the widths are then scaled down
+           together, those unused rows came off every photograph on the slide.
+           It is the same principle the showcase's detail sheet already follows:
+           a heading is drawn only when it has something under it. */
+        const cap = (p && p.line && w >= 400) ? CAP_FULL : CAP_SMALL;
         const item = { x, y, w, h: PAD + ph + cap + PAD, ph, cap, small: w < 400 };
         y += item.h + GAP;
         return item;
@@ -174,7 +199,22 @@ export function PhotoFolder(block = {}) {
     onclick: () => close(),
   }, h('span', { class: 'fd-back__arrow', 'aria-hidden': 'true', text: '←' }),
   h('span', { text: block.backLabel || 'Back to the folder' }));
-  root.append(h('div', { class: 'fd-head' }, backBtn));
+  /* The section's wordmark, opposite the way back. It is drawn in both states —
+     the folder standing and the wall open — so the slide is named the whole
+     time it is on screen, which the pocket alone could not do once the folder
+     opens itself and goes.
+
+     NOT inverted: black and orange on this slide's warm, pale ground. */
+  const mark = block.logo
+    ? h('img', {
+        class: 'fd-mark',
+        src: upload(block.logo),
+        alt: block.logoAlt || block.title || '',
+        loading: 'eager',
+        decoding: 'async',
+      })
+    : null;
+  root.append(h('div', { class: 'fd-head' }, mark, backBtn));
 
   /* ------------------------------------------------------------ the folder */
   const shell = svgEl('svg', {

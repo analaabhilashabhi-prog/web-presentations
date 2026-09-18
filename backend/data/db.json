@@ -12889,6 +12889,8 @@
           },
           "eyebrow": "",
           "title": "Torii Connect",
+          "logo": "Torii Connect/torii-connect-wordmark.png",
+          "logoAlt": "Torii Connect",
           "openLabel": "View photos",
           "backLabel": "Back to the folder",
           "glow": "#F05D29",
@@ -12923,7 +12925,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:50:52.434Z",
-      "updatedAt": "2026-09-17T13:06:02.854Z"
+      "updatedAt": "2026-09-18T15:41:26.116Z"
     }
   ],
   "assets": [

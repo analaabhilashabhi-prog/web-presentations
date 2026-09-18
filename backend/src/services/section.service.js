@@ -1574,6 +1574,13 @@ function normalizeBlock(raw, index = 0, depth = 0) {
       /* A folder of photographs that opens into a bento wall. */
       block.eyebrow = text(raw.eyebrow, 60);
       block.title = text(raw.title, 80);
+      /* The section's own wordmark, in the head. A file under /uploads, the
+         same path rule as every other block's media field. */
+      block.logo = (() => {
+        const t = text(raw.logo, 240).replace(/^\/+/, '');
+        return /^[A-Za-z0-9][A-Za-z0-9 _.-]*(\/[A-Za-z0-9][A-Za-z0-9 _.-]*)*$/.test(t) ? t : '';
+      })();
+      block.logoAlt = text(raw.logoAlt, 160);
       block.openLabel = text(raw.openLabel, 32);
       block.backLabel = text(raw.backLabel, 32);
       block.glow = text(raw.glow, 8) === 'none' ? 'none' : hexColor(raw.glow);
