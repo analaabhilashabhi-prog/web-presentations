@@ -17900,7 +17900,10 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
 
 .cf-deck__head {
   position: absolute;
-  top: 9%;
+  /* A fixed distance, not a percentage: the ring below is placed off the
+     slide's real height and the two have to keep their gap on a canvas of 860
+     and on a filled screen of 900 alike. */
+  top: 34px;
   left: 0;
   right: 0;
   display: flex;
@@ -17925,55 +17928,87 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   color: var(--muted, rgba(17, 24, 39, 0.6));
 }
 
-/* The hand. Every card is positioned at the same spot — the pile — and turned
-   about a pivot far below the frame; the turn is what spreads them, the way a
-   hand of cards spreads. Dealt: `--cf-deal` is each card's own lean, and the
-   transition from zero to it, staggered outward from the middle, is the deal. */
+/* The section's mark, in the corner the ring leaves empty. Not inverted, for
+   the reason `.cf-mark` is not: this mark is a green N, an orange T and SQUARE
+   in black, and the panel's ground is a pale frost. */
+.cf-deck__mark {
+  position: absolute;
+  top: 40px;
+  right: 56px;
+  z-index: 300;
+  display: block;
+  height: 76px;
+  width: auto;
+  max-width: 300px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* The ring. Every card is placed by JS on an ellipse — a circle lying away from
+   you — and the whole of it turns, one card every few seconds, for ever. The
+   seat is written on the button and nothing in this file touches that transform;
+   the entrance and the hover both live on the face inside it, which is the same
+   division the fan in front of this panel uses and for the same reason. */
 .cf-deck__hand {
   position: absolute;
   left: 50%;
-  top: 25%;
+  /* The ring rides up by most of the presenter bar's height when there is one.
+     Presenting gives the slide a taller canvas AND takes 96 nominal px of it
+     back for the bar, so a flat percentage puts the nearest card's foot on the
+     Back button on exactly the display the deck is shown on. Measured both
+     ways: 46px of daylight under the ring on the 860 canvas, 23px presenting. */
+  top: calc(50% - var(--deck-bar-clear, 0px) * 0.55);
   width: 0;
   height: 0;
 }
 .cf-deck__card {
   position: absolute;
-  left: -150px;
+  left: 0;
   top: 0;
-  width: 300px;
-  height: 300px;
+  width: 320px;
+  height: 320px;
+  margin: 0;
   padding: 0;
   border: 0;
   background: none;
   cursor: pointer;
-  transform-origin: 50% 900px;
-  transform: rotate(0deg);
-  transition: transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--cf-deal-delay, 0ms);
+  /* The seat only. JS writes it every frame; a transition here would put a
+     second opinion on the same property and the ring would lag its own loop. */
+  transform: translate(-50%, -50%);
 }
-.cf-deck.is-dealt .cf-deck__card { transform: rotate(var(--cf-deal, 0deg)); }
 .cf-deck__card:focus-visible { outline: none; }
 .cf-deck__card:hover,
-.cf-deck__card:focus-visible { z-index: 200 !important; }
+.cf-deck__card:focus-visible { z-index: 300 !important; }
 .cf-deck__face {
   display: block;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border-radius: 18px;
+  border-radius: 20px;
   background: var(--panel, #F3F4F6);
   box-shadow:
     0 1px 2px rgba(17, 24, 39, 0.06),
-    0 14px 32px rgba(17, 24, 39, 0.16);
-  /* A hairline of white, so cards on the pile read as a stack of cards and not
-     as one thick card. */
+    0 18px 40px rgba(17, 24, 39, 0.18);
+  /* A hairline of white, so two cards standing edge to edge on the ring read as
+     two cards and not as one long picture. */
   outline: 2px solid #fff;
   outline-offset: -1px;
-  transition: transform 300ms cubic-bezier(0.22, 0.7, 0.28, 1), box-shadow 300ms ease;
+  transform: scale(0.42);
+  opacity: 0;
+  transition:
+    transform 620ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--cf-in-delay, 0ms),
+    opacity 520ms ease var(--cf-in-delay, 0ms),
+    box-shadow 300ms ease;
 }
-.cf-deck__card:hover .cf-deck__face,
-.cf-deck__card:focus-visible .cf-deck__face {
-  transform: translateY(-46px) scale(1.08);
+/* Arriving: each card grows into the seat it has already been placed in. */
+.cf-deck.is-dealt .cf-deck__face { transform: scale(1); opacity: 1; }
+.cf-deck.is-dealt .cf-deck__card:hover .cf-deck__face,
+.cf-deck.is-dealt .cf-deck__card:focus-visible .cf-deck__face {
+  transform: scale(1.1);
   box-shadow: 0 34px 64px rgba(17, 24, 39, 0.3);
+  transition:
+    transform 300ms cubic-bezier(0.22, 0.7, 0.28, 1),
+    box-shadow 300ms ease;
 }
 .cf-deck__face img {
   display: block;
@@ -18000,6 +18035,7 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   .cf-btn,
   .cf-deck__card,
   .cf-deck__face { transition: none; }
+  .cf-deck__face { transform: scale(1); opacity: 1; }
 }
 
 /* ==========================================================================

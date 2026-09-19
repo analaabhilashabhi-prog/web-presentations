@@ -11563,8 +11563,8 @@
           "standfirst": "An intensive, hands-on journey from language-model foundations to shipping production-grade, agentic AI products.",
           "stats": [
             {
-              "value": "Offline",
-              "label": "Classroom Training"
+              "value": "16",
+              "label": "Modules"
             },
             {
               "value": "50+",
@@ -11814,7 +11814,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:18:23.183Z",
-      "updatedAt": "2026-09-19T01:28:19.849Z"
+      "updatedAt": "2026-09-18T16:04:41.419Z"
     },
     {
       "id": "sec_70ab49dedfb7479c",

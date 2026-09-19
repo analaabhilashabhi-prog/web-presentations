@@ -7,21 +7,19 @@
   "users": [
     {
       "id": "usr_4d7c41e246a842a5",
-      "email": "Torii@123.com",
+      "email": "admin@org.local",
       "name": "Content Admin",
       "role": "admin",
       "passwordHash": "scrypt$db4661f9b01ba26312b00c7ddfb0dcda$6368a269a5dea47fb937a2b09783f99c29df2b4f9364e44f6c87cc5f0c9507b6b4ad889545a778c66938a3d81afd50aab536e0fec24342495b9b51f4fa96509c",
-      "createdAt": "2026-07-29T18:03:53.473Z",
-      "updatedAt": "2026-09-18T07:39:23.467Z"
+      "createdAt": "2026-07-29T18:03:53.473Z"
     },
     {
       "id": "usr_26e9b0c6f1cb4ed1",
-      "email": "Torii@present.com",
+      "email": "presenter@org.local",
       "name": "Presenter",
       "role": "presenter",
       "passwordHash": "scrypt$c403429eaeef2e34b45903a0272361bf$c862ed1c7e552d89426660c6cc8c59709198bb6f108b8c69a43fe7fb95850eb28484e011812daff992ec19b495b0afa777ca464674efb0487e8cbfeb1da247f8",
-      "createdAt": "2026-07-29T18:03:53.618Z",
-      "updatedAt": "2026-09-18T07:39:23.474Z"
+      "createdAt": "2026-07-29T18:03:53.618Z"
     }
   ],
   "sessions": [],
@@ -339,142 +337,26 @@
           "hubName": "Nagarjuna Group of Institutions",
           "centers": [
             {
-              "key": "snowflake",
-              "name": "Snowflake",
-              "mono": "SF",
-              "tagline": "Data cloud & analytics",
-              "color": "#29B5E8",
-              "ink": "#06222E",
-              "logo": "snowflake.png",
-              "logoFull": "snowflake full.webp",
-              "media": [
-                {
-                  "src": "coepics/snowflake/01.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/snowflake/02.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/snowflake/03.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/snowflake/04.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/snowflake/05.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/snowflake/06.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/snowflake/07.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/snowflake/08.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/snowflake/09.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                }
-              ]
+              "key": "claude",
+              "name": "Claude",
+              "mono": "C",
+              "tagline": "Applied AI, agents & assistants",
+              "color": "#D97757",
+              "ink": "#FFFFFF",
+              "logo": "claude.webp",
+              "logoFull": "claude full.png",
+              "media": []
             },
             {
-              "key": "github",
-              "name": "GitHub",
-              "mono": "GH",
-              "tagline": "DevOps, source & collaboration",
-              "color": "#8B7ED8",
+              "key": "gcp",
+              "name": "Google Cloud",
+              "mono": "GC",
+              "tagline": "Cloud infrastructure & data platforms",
+              "color": "#4285F4",
               "ink": "#FFFFFF",
-              "logo": "github.png",
-              "logoFull": "github full.png",
-              "media": [
-                {
-                  "src": "coepics/github/01.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/github/02.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/github/03.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/github/04.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/github/05.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/github/06.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/github/07.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/github/08.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/github/09.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/github/10.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                }
-              ]
+              "logo": "google.webp",
+              "logoFull": "google full.png",
+              "media": []
             },
             {
               "key": "aws",
@@ -487,43 +369,37 @@
               "logoFull": "aws full.png",
               "media": [
                 {
-                  "src": "coepics/aws/01.jpg",
+                  "src": "coepics/aws/1.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/aws/02.jpg",
+                  "src": "coepics/aws/2.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
+            },
+            {
+              "key": "oracle",
+              "name": "Oracle Academy",
+              "mono": "O",
+              "tagline": "Database & enterprise applications",
+              "color": "#C74634",
+              "ink": "#FFFFFF",
+              "logo": "oracle.png",
+              "logoFull": "oracle full.webp",
+              "media": [
+                {
+                  "src": "coepics/oracle/1.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/aws/03.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/aws/04.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/aws/05.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/aws/06.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/aws/07.jpg",
+                  "src": "coepics/oracle/2.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
@@ -541,43 +417,91 @@
               "logoFull": "redhat full.png",
               "media": [
                 {
-                  "src": "coepics/redhat/01.jpg",
+                  "src": "",
+                  "youtube": "QRYe7MaEqdU",
+                  "kind": "video",
+                  "label": "RedHat Academy"
+                },
+                {
+                  "src": "coepics/redhat/1.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/02.jpg",
+                  "src": "coepics/redhat/2.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/03.jpg",
+                  "src": "coepics/redhat/3.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/04.jpg",
+                  "src": "coepics/redhat/4.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/05.jpg",
+                  "src": "coepics/redhat/5.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/06.jpg",
+                  "src": "coepics/redhat/6.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/07.jpg",
+                  "src": "coepics/redhat/7.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/8.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/9.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/10.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/11.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/13.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/Redhat Academey Challenge.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/Redhat Challenge 1.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
@@ -585,212 +509,46 @@
               ]
             },
             {
-              "key": "claude",
-              "name": "Claude",
-              "mono": "C",
-              "tagline": "Applied AI, agents & assistants",
-              "color": "#D97757",
-              "ink": "#FFFFFF",
-              "logo": "claude.webp",
-              "logoFull": "claude full.png",
+              "key": "snowflake",
+              "name": "Snowflake",
+              "mono": "SF",
+              "tagline": "Data cloud & analytics",
+              "color": "#29B5E8",
+              "ink": "#06222E",
+              "logo": "snowflake.png",
+              "logoFull": "snowflake full.webp",
               "media": [
                 {
-                  "src": "coepics/claude/01.jpg",
+                  "src": "coepics/snowflake/1.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/claude/02.jpg",
+                  "src": "coepics/snowflake/2.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/claude/03.jpg",
+                  "src": "coepics/snowflake/3.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/claude/04.jpg",
+                  "src": "coepics/snowflake/4.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/claude/05.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/06.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/07.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/08.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/09.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/10.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/11.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/12.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/13.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/14.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/15.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/16.jpg",
+                  "src": "coepics/snowflake/5.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 }
               ]
-            },
-            {
-              "key": "o9",
-              "name": "o9",
-              "mono": "o9",
-              "tagline": "",
-              "color": "#161821",
-              "ink": "#FFFFFF",
-              "logo": "09.png",
-              "logoFull": "o9 full.png",
-              "media": [
-                {
-                  "src": "coepics/o9/01.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/o9/02.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/o9/03.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/o9/04.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/o9/05.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                }
-              ]
-            },
-            {
-              "key": "mile2",
-              "name": "Mile2",
-              "mono": "M2",
-              "tagline": "Cybersecurity certifications",
-              "color": "#C8102E",
-              "ink": "#FFFFFF",
-              "logo": "mile2 full.webp",
-              "logoFull": "mile2 full.webp",
-              "media": [
-                {
-                  "src": "coepics/mile2/01.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/mile2/02.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/mile2/03.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/mile2/04.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                }
-              ]
-            },
-            {
-              "key": "gcp",
-              "name": "Google Cloud",
-              "mono": "GC",
-              "tagline": "Cloud infrastructure & data platforms",
-              "color": "#4285F4",
-              "ink": "#FFFFFF",
-              "logo": "google.webp",
-              "logoFull": "google full.png",
-              "media": []
-            },
-            {
-              "key": "oracle",
-              "name": "Oracle Academy",
-              "mono": "O",
-              "tagline": "Database & enterprise applications",
-              "color": "#C74634",
-              "ink": "#FFFFFF",
-              "logo": "oracle.png",
-              "logoFull": "oracle full.webp",
-              "media": []
             },
             {
               "key": "pega",
@@ -819,6 +577,48 @@
                   "youtube": "ljYucKe7ZEc",
                   "kind": "video",
                   "label": "PEGA Project Space"
+                },
+                {
+                  "src": "coepics/pega/1.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/2.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/3.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/4.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/5.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/6.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/8.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
                 }
               ]
             },
@@ -842,6 +642,17 @@
               "ink": "#052915",
               "logo": "mongo.webp",
               "logoFull": "mongo full.webp",
+              "media": []
+            },
+            {
+              "key": "github",
+              "name": "GitHub",
+              "mono": "GH",
+              "tagline": "DevOps, source & collaboration",
+              "color": "#8B7ED8",
+              "ink": "#FFFFFF",
+              "logo": "github.png",
+              "logoFull": "github full.png",
               "media": []
             },
             {
@@ -886,7 +697,38 @@
               "ink": "#FFFFFF",
               "logo": "automation anywhere.png",
               "logoFull": "automation anywhere full.webp",
-              "media": []
+              "media": [
+                {
+                  "src": "coepics/aa/1.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aa/2.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aa/3.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aa/4.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aa/5.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
             },
             {
               "key": "splunk",
@@ -922,6 +764,24 @@
               "media": []
             },
             {
+              "key": "mile2",
+              "name": "Mile2",
+              "mono": "M2",
+              "tagline": "Cybersecurity certifications",
+              "color": "#C8102E",
+              "ink": "#FFFFFF",
+              "logo": "mile2 full.webp",
+              "logoFull": "mile2 full.webp",
+              "media": [
+                {
+                  "src": "",
+                  "youtube": "nL4bXn93yOM",
+                  "kind": "video",
+                  "label": "Mile 2"
+                }
+              ]
+            },
+            {
               "key": "microsoft",
               "name": "Microsoft",
               "mono": "MS",
@@ -930,6 +790,17 @@
               "ink": "#061E2B",
               "logo": "microsoft.webp",
               "logoFull": "microsoft full.webp",
+              "media": []
+            },
+            {
+              "key": "o9",
+              "name": "o9",
+              "mono": "o9",
+              "tagline": "",
+              "color": "#161821",
+              "ink": "#FFFFFF",
+              "logo": "09.png",
+              "logoFull": "o9 full.png",
               "media": []
             }
           ]
@@ -3033,7 +2904,7 @@
             "w": 12,
             "h": 15
           },
-          "eyebrow": "In association with Torii",
+          "eyebrow": "Technical Hub · in association with Torii",
           "titleLines": [
             "AI Ready",
             "Engineer"
@@ -3051,7 +2922,7 @@
           ],
           "credential": {
             "ring": "Foundations",
-            "name": "Claude Certified Architect",
+            "name": "Claude Certified Associate",
             "note": ""
           },
           "partners": [
@@ -3202,7 +3073,7 @@
               "contact": []
             },
             {
-              "kind": "split",
+              "kind": "cards",
               "eyebrow": "Student benefits",
               "title": "What a student walks away with",
               "subtitle": "",
@@ -3227,91 +3098,6 @@
                   "title": "Internship Completion Letter",
                   "body": "A completion letter issued and signed off by our AI partners.",
                   "icon": "document"
-                }
-              ],
-              "chips": [],
-              "stats": [],
-              "lines": [],
-              "contact": [],
-              "figure": "Claude/claude-certified-architect-certificate.png",
-              "figureAlt": "Claude Certified Architect"
-            },
-            {
-              "kind": "people",
-              "eyebrow": "Who teaches it",
-              "title": "Claude Certified Architect — 10 Team Members",
-              "subtitle": "",
-              "columns": 5,
-              "items": [
-                {
-                  "title": "Sudhir",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": "Team/sudhir.webp"
-                },
-                {
-                  "title": "Bhargava",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": "Team/bhargava.webp"
-                },
-                {
-                  "title": "Harshavardhini",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": "Team/harshavardhini.webp"
-                },
-                {
-                  "title": "Naveen",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": "Team/naveen.webp"
-                },
-                {
-                  "title": "Akhilesh",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": "Team/akhilesh.webp"
-                },
-                {
-                  "title": "Azarunnisa",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": "Team/azarunnisa.webp"
-                },
-                {
-                  "title": "Bobby",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": "Team/bobby.webp"
-                },
-                {
-                  "title": "Manikanta",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": "Team/manikanta.webp"
-                },
-                {
-                  "title": "Peter",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": "Team/peter.webp"
-                },
-                {
-                  "title": "Prasanth",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": "Team/prasanth-sir.webp"
                 }
               ],
               "chips": [],
@@ -3397,8 +3183,7 @@
                 }
               ]
             }
-          ],
-          "logo": "are/ai-ready-engineer-logo.png"
+          ]
         }
       ],
       "createdAt": "2026-08-07T14:45:25.144Z",
@@ -3975,7 +3760,7 @@
               "vendor": "Microsoft",
               "domain": "Database fundamentals",
               "held": 76,
-              "badge": "certifications/logos/mta-database-fundamentals.png",
+              "badge": "",
               "skills": [
                 "Relational concepts and normalisation",
                 "Table design, keys and constraints",
@@ -5530,7 +5315,7 @@
       "icon": "",
       "iconKey": "climb-steps",
       "iconAssetId": null,
-      "order": 1,
+      "order": 2,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -5685,13 +5470,13 @@
       "icon": "▤",
       "iconKey": "www-globe",
       "iconAssetId": null,
-      "order": 2,
+      "order": 3,
       "hidden": false,
       "status": "published",
       "blocks": [
         {
           "id": "blk_e3b9b13b59bc499d",
-          "type": "curriculum-deck",
+          "type": "training-shelf",
           "layout": {
             "x": 0,
             "y": 0,
@@ -5700,111 +5485,133 @@
           },
           "eyebrow": "Torii Minds",
           "title": "Trainings",
+          "lead": "Every programme we run, on one shelf. Take one off it to read what is in it.",
+          "openLabel": "Open the programme",
+          "backLabel": "Back to the shelf",
           "teachLabel": "What we teach",
-          "backLabel": "All programmes",
-          "programs": [
+          "photosLabel": "From the programme",
+          "base": "Trainings",
+          "trainings": [
             {
-              "name": "Programming Foundations",
-              "topics": [
+              "name": "Ninja",
+              "track": "Foundation",
+              "duration": "2 subjects",
+              "level": "",
+              "mode": "",
+              "blurb": "Where everyone starts. C first, because it makes memory, control flow and the cost of a line impossible to hand-wave — then Python, for the speed of getting an idea running. A trainee leaves able to read code they did not write.",
+              "tint": "#D91823",
+              "subjects": [
                 "C Programming",
-                "Python Programming",
-                "Problem Solving — Level 1",
-                "Coding Platform Onboarding",
-                "Prompt Engineering & GPT Models"
-              ]
+                "Python"
+              ],
+              "highlights": [],
+              "photos": []
             },
             {
-              "name": "Data Structures, Java & Databases",
-              "topics": [
-                "Data Structures & Algorithms",
-                "Java Programming",
-                "SQL & NoSQL",
-                "Problem Solving — Level 2",
-                "GitHub Copilot, GPT & Basic LLM"
-              ]
+              "name": "Ninja Plus",
+              "track": "Core computer science",
+              "duration": "4 subjects",
+              "level": "",
+              "mode": "",
+              "blurb": "The computer science every technical round assumes you already have. Java as a working language, then the three that sit underneath the questions: how data is structured, how databases are built and queried, and how to tell one algorithm from another.",
+              "tint": "#B00E1B",
+              "subjects": [
+                "Java",
+                "Data Structures",
+                "DBMS",
+                "DAA"
+              ],
+              "highlights": [],
+              "photos": []
             },
             {
-              "name": "AI Ready",
-              "topics": [
-                "AI Ready Engineer Roadmap",
-                "Advanced Data Structures (ADS)",
-                "Advanced Problem Solving",
-                "AI Projects",
-                "The 3 C's — Claude, Codex, Copilot"
-              ]
+              "name": "Ninja Pro",
+              "track": "Industry tracks",
+              "duration": "7 subjects",
+              "level": "",
+              "mode": "",
+              "blurb": "Seven tracks, each one a job title. Cloud on AWS, analytics, security, full stack and mobile with Flutter — alongside ServiceNow and Salesforce, the two enterprise platforms that hire on the platform itself. Trainees pick a direction and go deep.",
+              "tint": "#8E0A15",
+              "subjects": [
+                "AWS",
+                "Data Analytics",
+                "Cyber Security",
+                "Full Stack Development",
+                "Flutter",
+                "ServiceNow",
+                "Salesforce"
+              ],
+              "highlights": [],
+              "photos": []
             },
             {
-              "name": "FDE Role",
-              "topics": [
-                "Forward Deployed Engineering",
-                "Deployment",
-                "AI Testing",
-                "AI Security",
-                "Placement Training"
-              ]
+              "name": "AI Ready Engineer",
+              "track": "Complete AI syllabus",
+              "duration": "7 subjects",
+              "level": "",
+              "mode": "",
+              "blurb": "The whole of AI, taught as a working practice rather than a topic. How large language models behave and where they fail, how to ground them with RAG, how to prompt precisely, how to build alongside them in Claude Code — and where the security of all of it ends.",
+              "tint": "#F05D29",
+              "subjects": [
+                "Claude Code",
+                "LLMs",
+                "RAG Systems",
+                "Generative AI",
+                "Vibe Coding",
+                "Prompt Engineering",
+                "AI Security"
+              ],
+              "highlights": [],
+              "photos": []
             },
             {
-              "name": "ServiceNow",
-              "topics": [
-                "ServiceNow Platform Overview",
-                "ServiceNow Instance & Navigation",
-                "Lists, Filters & Forms",
-                "Form Configuration",
-                "Incident Management",
-                "Change & Problem Management",
-                "Reporting & Dashboards",
-                "Service Catalog",
-                "Tables & Data Schema",
-                "Access Control",
-                "CMDB",
-                "UI Policies & Business Rules",
-                "Flow Designer",
-                "Application Development",
-                "Scripting Basics"
-              ]
+              "name": "Industry Readiness Program",
+              "track": "Aptitude & problem solving",
+              "duration": "1 subject",
+              "level": "",
+              "mode": "",
+              "blurb": "The round before the technical round. Aptitude and problem solving worked against the clock, because on the day the clock is the difficulty — and a trainee who has only ever solved untimed is meeting it for the first time in the exam hall.",
+              "tint": "#C41220",
+              "subjects": [
+                "Problem Solving"
+              ],
+              "highlights": [],
+              "photos": []
             },
             {
-              "name": "FSD",
-              "topics": [
-                "HTML & CSS",
-                "JavaScript",
-                "React",
-                "Backend Development",
-                "Databases",
-                "REST APIs",
-                "Git & GitHub",
-                "Full Stack Projects"
-              ]
+              "name": "LaunchPad",
+              "track": "Entry level",
+              "duration": "4 subjects",
+              "level": "",
+              "mode": "",
+              "blurb": "The first rung, for trainees starting from nothing. Basic C for the habit of thinking in ordered steps, and the tools an office actually runs on — so somebody is useful in their first week, whichever way they go afterwards.",
+              "tint": "#E8452C",
+              "subjects": [
+                "Basic C Programming",
+                "Excel",
+                "PowerPoint",
+                "Power BI"
+              ],
+              "highlights": [],
+              "photos": []
             },
             {
-              "name": "Flutter",
-              "topics": [
-                "Dart Programming",
-                "Flutter Fundamentals",
-                "UI Development",
-                "State Management",
-                "API Integration",
-                "Firebase",
-                "App Development Projects"
-              ]
-            },
-            {
-              "name": "AWS",
-              "topics": [
-                "Cloud Fundamentals",
-                "IAM",
-                "EC2",
-                "S3",
-                "RDS",
-                "VPC",
-                "AWS Deployment"
-              ]
+              "name": "Skill Sprint",
+              "track": "On demand",
+              "duration": "On demand",
+              "level": "",
+              "mode": "",
+              "blurb": "Short workshops, called rather than scheduled. A tool a team needs this month, a company stack before a drive, a gap a cohort has just found in itself — run in days instead of waiting for the next term to come round.",
+              "tint": "#CE1F2E",
+              "subjects": [],
+              "highlights": [],
+              "photos": []
             }
           ]
         }
       ],
       "createdAt": "2026-09-14T04:18:23.138Z",
-      "updatedAt": "2026-09-18T15:54:10.124Z"
+      "updatedAt": "2026-09-17T13:06:02.826Z"
     },
     {
       "id": "sec_284b3435656a4e16",
@@ -5817,7 +5624,7 @@
       "icon": "⬢",
       "iconKey": "handshake-check",
       "iconAssetId": null,
-      "order": 3,
+      "order": 4,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -5833,7 +5640,7 @@
           "eyebrow": "",
           "title": "The platforms industry runs on, and we are tied up with them",
           "subtitle": "",
-          "hubLogo": "/uploads/snapshot/torii-logo.png",
+          "hubLogo": "/uploads/Snapshot/torii-logo.png",
           "hubName": "Torii Minds",
           "centers": [
             {
@@ -5847,55 +5654,31 @@
               "logoFull": "snowflake full.webp",
               "media": [
                 {
-                  "src": "coepics/snowflake/01.jpg",
+                  "src": "coepics/snowflake/1.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/snowflake/02.jpg",
+                  "src": "coepics/snowflake/2.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/snowflake/03.jpg",
+                  "src": "coepics/snowflake/3.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/snowflake/04.jpg",
+                  "src": "coepics/snowflake/4.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/snowflake/05.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/snowflake/06.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/snowflake/07.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/snowflake/08.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/snowflake/09.jpg",
+                  "src": "coepics/snowflake/5.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
@@ -5903,76 +5686,15 @@
               ]
             },
             {
-              "key": "github",
-              "name": "GitHub",
-              "mono": "GH",
-              "tagline": "DevOps, source & collaboration",
-              "color": "#8B7ED8",
+              "key": "claude",
+              "name": "Claude",
+              "mono": "C",
+              "tagline": "Applied AI, agents & assistants",
+              "color": "#D97757",
               "ink": "#FFFFFF",
-              "logo": "github.png",
-              "logoFull": "github full.png",
-              "media": [
-                {
-                  "src": "coepics/github/01.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/github/02.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/github/03.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/github/04.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/github/05.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/github/06.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/github/07.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/github/08.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/github/09.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/github/10.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                }
-              ]
+              "logo": "claude.webp",
+              "logoFull": "claude full.png",
+              "media": []
             },
             {
               "key": "aws",
@@ -5985,43 +5707,37 @@
               "logoFull": "aws full.png",
               "media": [
                 {
-                  "src": "coepics/aws/01.jpg",
+                  "src": "coepics/aws/1.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/aws/02.jpg",
+                  "src": "coepics/aws/2.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
+            },
+            {
+              "key": "oracle",
+              "name": "Oracle Academy",
+              "mono": "O",
+              "tagline": "Database & enterprise applications",
+              "color": "#C74634",
+              "ink": "#FFFFFF",
+              "logo": "oracle.png",
+              "logoFull": "oracle full.webp",
+              "media": [
+                {
+                  "src": "coepics/oracle/1.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/aws/03.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/aws/04.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/aws/05.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/aws/06.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/aws/07.jpg",
+                  "src": "coepics/oracle/2.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
@@ -6039,43 +5755,91 @@
               "logoFull": "redhat full.png",
               "media": [
                 {
-                  "src": "coepics/redhat/01.jpg",
+                  "src": "",
+                  "youtube": "QRYe7MaEqdU",
+                  "kind": "video",
+                  "label": "RedHat Academy"
+                },
+                {
+                  "src": "coepics/redhat/1.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/02.jpg",
+                  "src": "coepics/redhat/2.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/03.jpg",
+                  "src": "coepics/redhat/3.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/04.jpg",
+                  "src": "coepics/redhat/4.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/05.jpg",
+                  "src": "coepics/redhat/5.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/06.jpg",
+                  "src": "coepics/redhat/6.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
                 },
                 {
-                  "src": "coepics/redhat/07.jpg",
+                  "src": "coepics/redhat/7.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/8.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/9.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/10.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/11.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/13.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/Redhat Academey Challenge.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/redhat/Redhat Challenge 1.jpg",
                   "youtube": "",
                   "kind": "image",
                   "label": ""
@@ -6083,200 +5847,14 @@
               ]
             },
             {
-              "key": "claude",
-              "name": "Claude",
-              "mono": "C",
-              "tagline": "Applied AI, agents & assistants",
-              "color": "#D97757",
+              "key": "github",
+              "name": "GitHub",
+              "mono": "GH",
+              "tagline": "DevOps, source & collaboration",
+              "color": "#8B7ED8",
               "ink": "#FFFFFF",
-              "logo": "claude.webp",
-              "logoFull": "claude full.png",
-              "media": [
-                {
-                  "src": "coepics/claude/01.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/02.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/03.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/04.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/05.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/06.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/07.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/08.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/09.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/10.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/11.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/12.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/13.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/14.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/15.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/claude/16.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                }
-              ]
-            },
-            {
-              "key": "o9",
-              "name": "o9",
-              "mono": "o9",
-              "tagline": "",
-              "color": "#161821",
-              "ink": "#FFFFFF",
-              "logo": "09.png",
-              "logoFull": "o9 full.png",
-              "media": [
-                {
-                  "src": "coepics/o9/01.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/o9/02.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/o9/03.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/o9/04.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/o9/05.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                }
-              ]
-            },
-            {
-              "key": "mile2",
-              "name": "Mile2",
-              "mono": "M2",
-              "tagline": "Cybersecurity certifications",
-              "color": "#C8102E",
-              "ink": "#FFFFFF",
-              "logo": "mile2 full.webp",
-              "logoFull": "mile2 full.webp",
-              "media": [
-                {
-                  "src": "coepics/mile2/01.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/mile2/02.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/mile2/03.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                },
-                {
-                  "src": "coepics/mile2/04.jpg",
-                  "youtube": "",
-                  "kind": "image",
-                  "label": ""
-                }
-              ]
-            },
-            {
-              "key": "oracle",
-              "name": "Oracle Academy",
-              "mono": "O",
-              "tagline": "Database & enterprise applications",
-              "color": "#C74634",
-              "ink": "#FFFFFF",
-              "logo": "oracle.png",
-              "logoFull": "oracle full.webp",
+              "logo": "github.png",
+              "logoFull": "github full.png",
               "media": []
             },
             {
@@ -6288,6 +5866,17 @@
               "ink": "#FFFFFF",
               "logo": "cisco.webp",
               "logoFull": "cisco full.png",
+              "media": []
+            },
+            {
+              "key": "o9",
+              "name": "o9",
+              "mono": "o9",
+              "tagline": "",
+              "color": "#161821",
+              "ink": "#FFFFFF",
+              "logo": "09.png",
+              "logoFull": "o9 full.png",
               "media": []
             },
             {
@@ -6328,6 +5917,48 @@
                   "youtube": "ljYucKe7ZEc",
                   "kind": "video",
                   "label": "PEGA Project Space"
+                },
+                {
+                  "src": "coepics/pega/1.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/2.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/3.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/4.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/5.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/6.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/pega/8.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
                 }
               ]
             },
@@ -6395,7 +6026,38 @@
               "ink": "#FFFFFF",
               "logo": "automation anywhere.png",
               "logoFull": "automation anywhere full.webp",
-              "media": []
+              "media": [
+                {
+                  "src": "coepics/aa/1.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aa/2.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aa/3.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aa/4.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                },
+                {
+                  "src": "coepics/aa/5.jpg",
+                  "youtube": "",
+                  "kind": "image",
+                  "label": ""
+                }
+              ]
             },
             {
               "key": "splunk",
@@ -6418,6 +6080,24 @@
               "logo": "cadence.png",
               "logoFull": "cadence full.png",
               "media": []
+            },
+            {
+              "key": "mile2",
+              "name": "Mile2",
+              "mono": "M2",
+              "tagline": "Cybersecurity certifications",
+              "color": "#C8102E",
+              "ink": "#FFFFFF",
+              "logo": "mile2 full.webp",
+              "logoFull": "mile2 full.webp",
+              "media": [
+                {
+                  "src": "",
+                  "youtube": "nL4bXn93yOM",
+                  "kind": "video",
+                  "label": "Mile 2"
+                }
+              ]
             },
             {
               "key": "microsoft",
@@ -6569,7 +6249,7 @@
       "icon": "",
       "iconKey": "seal-check",
       "iconAssetId": null,
-      "order": 4,
+      "order": 5,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -6613,7 +6293,7 @@
               "vendor": "Cisco",
               "domain": "1st year",
               "held": 312,
-              "badge": "coe/cisco.webp",
+              "badge": "certifications/badges/cisco-certified-ccna.png",
               "onRegister": true,
               "skills": [
                 "Python syntax, data types and operators",
@@ -6655,8 +6335,8 @@
               "vendor": "Red Hat",
               "domain": "354 (1st year) + 200 (2nd year)",
               "held": 554,
-              "badge": "coe/redhat.png",
-              "onRegister": true,
+              "badge": "certifications/torii/redhat-python-programming-course-attendance.png",
+              "onRegister": false,
               "skills": [
                 "Python on Red Hat Enterprise Linux",
                 "Data structures and modules",
@@ -6669,7 +6349,7 @@
               "vendor": "Red Hat",
               "domain": "2nd year",
               "held": 190,
-              "badge": "coe/redhat.png",
+              "badge": "certifications/badges/redhat-certified-system-administrator.png",
               "onRegister": true,
               "skills": [
                 "Enterprise Java on JBoss EAP",
@@ -6697,7 +6377,7 @@
               "vendor": "Oracle",
               "domain": "2nd year",
               "held": 183,
-              "badge": "coe/oracle.png",
+              "badge": "certifications/badges/oracle-foundation-associate-java.png",
               "onRegister": true,
               "skills": [
                 "Java basics, types and operators",
@@ -6711,8 +6391,8 @@
               "vendor": "Oracle",
               "domain": "2nd year",
               "held": 125,
-              "badge": "coe/oracle.png",
-              "onRegister": true,
+              "badge": "certifications/torii/oracle-certified-foundations-associate-database.png",
+              "onRegister": false,
               "skills": [
                 "PL/SQL blocks, variables and control",
                 "Cursors and exception handling",
@@ -6767,7 +6447,7 @@
               "vendor": "Infosys",
               "domain": "3rd year",
               "held": 116,
-              "badge": "certifications/logos/infosys.svg",
+              "badge": "",
               "onRegister": true,
               "skills": [
                 "Self-paced courses across technology and business",
@@ -6781,7 +6461,7 @@
               "vendor": "IBM",
               "domain": "3rd year",
               "held": 82,
-              "badge": "certifications/logos/ibm.svg",
+              "badge": "",
               "onRegister": true,
               "skills": [
                 "Cloud, data and AI fundamentals",
@@ -6809,8 +6489,8 @@
               "vendor": "Postman",
               "domain": "3rd year",
               "held": 25,
-              "badge": "certifications/logos/postman-mark.png",
-              "onRegister": true,
+              "badge": "certifications/torii/postman-api-fundamentals-student-expert.png",
+              "onRegister": false,
               "skills": [
                 "What an API is and how HTTP requests work",
                 "Sending requests and reading responses",
@@ -6836,7 +6516,7 @@
       "icon": "",
       "iconKey": "camera-photo",
       "iconAssetId": null,
-      "order": 13,
+      "order": 14,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -6852,7 +6532,7 @@
           "titleTop": "",
           "titleBottom": "",
           "tagline": "Torii Minds",
-          "logo": "snapshot/torii-logo.png",
+          "logo": "Snapshot/torii-logo.png",
           "brand": "Torii Minds",
           "plate": "#171514",
           "columns": 8,
@@ -9346,7 +9026,7 @@
       "icon": "",
       "iconKey": "ceo-podium",
       "iconAssetId": null,
-      "order": 14,
+      "order": 1,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -10270,7 +9950,7 @@
       "icon": "✧",
       "iconKey": "event-sign",
       "iconAssetId": null,
-      "order": 11,
+      "order": 12,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -11542,7 +11222,7 @@
       "icon": "",
       "iconKey": "ai-figure",
       "iconAssetId": null,
-      "order": 5,
+      "order": 6,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -11555,7 +11235,7 @@
             "w": 12,
             "h": 15
           },
-          "eyebrow": "In association with Torii",
+          "eyebrow": "Technical Hub · in association with Torii",
           "titleLines": [
             "AI Ready",
             "Engineer"
@@ -11563,159 +11243,72 @@
           "standfirst": "An intensive, hands-on journey from language-model foundations to shipping production-grade, agentic AI products.",
           "stats": [
             {
-              "value": "Offline",
-              "label": "Classroom Training"
+              "value": "16",
+              "label": "Modules"
             },
             {
               "value": "50+",
               "label": "AI tools & platforms"
-            },
-            {
-              "value": "300+",
-              "label": "Hours of Training"
             }
           ],
-          "credential": null,
+          "credential": {
+            "ring": "Foundations",
+            "name": "Claude Certified Associate",
+            "note": ""
+          },
           "partners": [
             {
               "name": "Claude Partner Network",
-              "note": "Member",
-              "logo": "Claude/claude-partner-network.jpeg"
+              "note": "Member"
             },
             {
               "name": "OpenAI Select Partner",
-              "note": "",
-              "logo": "Claude/openai-select-partner.jpeg"
-            },
-            {
-              "name": "Sarvam AI",
-              "note": "Partnership",
-              "logo": "Claude/sarvam-ai.jpeg"
+              "note": ""
             }
           ],
           "frames": [
             {
-              "kind": "modules",
-              "eyebrow": "The curriculum",
-              "title": "16 Modules. End to End.",
-              "subtitle": "The complete modern AI stack — foundations to deployment.",
+              "kind": "cards",
+              "eyebrow": "Why it stands out",
+              "title": "Built to make engineers, not attendees",
+              "subtitle": "",
               "columns": 2,
-              "figure": "",
-              "figureAlt": "",
-              "badge": "Claude/claude-certified-associate.png",
-              "badgeAlt": "Foundations — Claude Certified Associate",
               "items": [
                 {
-                  "title": "LLM Foundation",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
+                  "title": "Comprehensive 200-Hour Learning Journey",
+                  "body": "200 hours of structured, hands-on training across the full AI stack.",
+                  "icon": "clock",
+                  "logo": ""
                 },
                 {
-                  "title": "Generative AI",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
+                  "title": "Training by AI-Certified Experts",
+                  "body": "Every module taught by Claude-certified practitioners.",
+                  "icon": "certificate",
+                  "logo": ""
                 },
                 {
-                  "title": "AI Tools",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
+                  "title": "Internship Completion Letter",
+                  "body": "An official completion letter issued by our AI partners.",
+                  "icon": "document",
+                  "logo": ""
                 },
                 {
-                  "title": "Prompt Engineering",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
+                  "title": "Industry-Ready AI Engineers",
+                  "body": "Mentored by working engineers, so you graduate job-ready.",
+                  "icon": "users",
+                  "logo": ""
                 },
                 {
-                  "title": "GitHub & Version Control",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
+                  "title": "AIRE Learning Platform Access",
+                  "body": "Live classes, assessments and progress tracking in one portal.",
+                  "icon": "grid-4",
+                  "logo": ""
                 },
                 {
-                  "title": "Vibe Coding",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "Database",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "AI API Integration",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "RAG Systems",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "AI Agents",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "3 C's — Claude · Codex · Copilot",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "AI Security",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "Agentic AI",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "Deployment",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "LLM Creation",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "Cloud AI",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
+                  "title": "AI Projects",
+                  "body": "Build and ship real AI products, from prompt to deployment.",
+                  "icon": "code",
+                  "logo": ""
                 }
               ],
               "chips": [],
@@ -11724,85 +11317,150 @@
               "contact": []
             },
             {
-              "kind": "people",
-              "eyebrow": "Who teaches it",
-              "title": "Claude Certified Architect Team",
-              "subtitle": "",
-              "columns": 5,
-              "figure": "",
-              "figureAlt": "",
-              "badge": "Claude/claude-certified-architect.png",
-              "badgeAlt": "Foundations — Claude Certified Architect",
+              "kind": "modules",
+              "eyebrow": "The curriculum",
+              "title": "16 Modules. End to End.",
+              "subtitle": "The complete modern AI stack — foundations to deployment.",
+              "columns": 2,
               "items": [
                 {
-                  "title": "Sudhir",
+                  "title": "LLM Foundation",
                   "body": "",
                   "icon": "",
-                  "logo": "",
-                  "photo": "Team/sudhir.webp"
+                  "logo": ""
                 },
                 {
-                  "title": "Bhargava",
+                  "title": "Generative AI",
                   "body": "",
                   "icon": "",
-                  "logo": "",
-                  "photo": "Team/bhargava.webp"
+                  "logo": ""
                 },
                 {
-                  "title": "Harshavardhini",
+                  "title": "AI Tools",
                   "body": "",
                   "icon": "",
-                  "logo": "",
-                  "photo": "Team/harshavardhini.webp"
+                  "logo": ""
                 },
                 {
-                  "title": "Naveen",
+                  "title": "Prompt Engineering",
                   "body": "",
                   "icon": "",
-                  "logo": "",
-                  "photo": "Team/naveen.webp"
+                  "logo": ""
                 },
                 {
-                  "title": "Akhilesh",
+                  "title": "GitHub & Version Control",
                   "body": "",
                   "icon": "",
-                  "logo": "",
-                  "photo": "Team/akhilesh.webp"
+                  "logo": ""
                 },
                 {
-                  "title": "Azarunnisa",
+                  "title": "Vibe Coding",
                   "body": "",
                   "icon": "",
-                  "logo": "",
-                  "photo": "Team/azarunnisa.webp"
+                  "logo": ""
                 },
                 {
-                  "title": "Bobby",
+                  "title": "Database",
                   "body": "",
                   "icon": "",
-                  "logo": "",
-                  "photo": "Team/bobby.webp"
+                  "logo": ""
                 },
                 {
-                  "title": "Manikanta",
+                  "title": "AI API Integration",
                   "body": "",
                   "icon": "",
-                  "logo": "",
-                  "photo": "Team/manikanta.webp"
+                  "logo": ""
                 },
                 {
-                  "title": "Peter",
+                  "title": "RAG Systems",
                   "body": "",
                   "icon": "",
-                  "logo": "",
-                  "photo": "Team/peter.webp"
+                  "logo": ""
                 },
                 {
-                  "title": "Prasanth",
+                  "title": "AI Agents",
                   "body": "",
                   "icon": "",
-                  "logo": "",
-                  "photo": "Team/prasanth-sir.webp"
+                  "logo": ""
+                },
+                {
+                  "title": "3 C's — Claude · Codex · Copilot",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "AI Security",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "Agentic AI",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "Deployment",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "LLM Creation",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "Cloud AI",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                }
+              ],
+              "chips": [],
+              "stats": [],
+              "lines": [],
+              "contact": []
+            },
+            {
+              "kind": "cards",
+              "eyebrow": "Student benefits",
+              "title": "What a student walks away with",
+              "subtitle": "",
+              "columns": 2,
+              "items": [
+                {
+                  "title": "Not a Fast-Track Program",
+                  "body": "A steady, deliberate pace — time to absorb every concept properly.",
+                  "icon": "clock",
+                  "logo": ""
+                },
+                {
+                  "title": "Authorised AI Certifications",
+                  "body": "Earn the authorised Claude Associate Certification.",
+                  "icon": "certificate",
+                  "logo": ""
+                },
+                {
+                  "title": "Trained by AI-Certified Experts",
+                  "body": "Industry-ready, AI-certified practitioners teach every module.",
+                  "icon": "users",
+                  "logo": ""
+                },
+                {
+                  "title": "Internship Completion Letter",
+                  "body": "A completion letter issued and signed off by our AI partners.",
+                  "icon": "document",
+                  "logo": ""
+                },
+                {
+                  "title": "Claude Certification",
+                  "body": "",
+                  "icon": "certificate",
+                  "logo": "Claude/claude-certified-architect.png"
                 }
               ],
               "chips": [],
@@ -11814,7 +11472,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:18:23.183Z",
-      "updatedAt": "2026-09-19T01:28:19.849Z"
+      "updatedAt": "2026-09-17T13:06:02.831Z"
     },
     {
       "id": "sec_70ab49dedfb7479c",
@@ -11827,7 +11485,7 @@
       "icon": "",
       "iconKey": "calendar",
       "iconAssetId": null,
-      "order": 8,
+      "order": 9,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -11843,8 +11501,6 @@
           "eyebrow": "Torii Minds",
           "title": "Project Week",
           "lead": "Project Week puts students into numbered teams with chart paper, laptops and a week — while Torii mentors move table to table as the ideas take shape.",
-          "logo": "ProjectWeek/project-week-wordmark.png",
-          "logoAlt": "Project Week",
           "ctaLabel": "See every photograph",
           "glow": "#F05D29",
           "glow2": "#D91823",
@@ -12039,7 +11695,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:50:52.376Z",
-      "updatedAt": "2026-09-18T15:25:38.589Z"
+      "updatedAt": "2026-09-17T13:06:02.866Z"
     },
     {
       "id": "sec_d34af78851b04f86",
@@ -12052,7 +11708,7 @@
       "icon": "",
       "iconKey": "route",
       "iconAssetId": null,
-      "order": 9,
+      "order": 10,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12069,8 +11725,6 @@
           "video": "film.mp4",
           "videoEyebrow": "Torii Minds",
           "videoTitle": "Project Street",
-          "videoLogo": "ProjectStreet/project-street-wordmark.png",
-          "videoLogoAlt": "Project Street",
           "videoCta": "Walk the street",
           "videoStart": 13,
           "eyebrow": "Torii Minds",
@@ -12274,7 +11928,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:50:52.388Z",
-      "updatedAt": "2026-09-18T15:17:19.423Z"
+      "updatedAt": "2026-09-17T13:06:02.875Z"
     },
     {
       "id": "sec_9383bf77b4c946fc",
@@ -12287,7 +11941,7 @@
       "icon": "",
       "iconKey": "grid-4",
       "iconAssetId": null,
-      "order": 7,
+      "order": 8,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12300,15 +11954,13 @@
             "w": 12,
             "h": 15
           },
-          "eyebrow": "",
-          "logo": "NTSquare/nt-square-wordmark.png",
-          "logoAlt": "NT Square",
-          "title": "",
+          "eyebrow": "NT Square",
+          "title": "Torii, on campus.\nStep IN. Stand OUT.",
           "glow": "#F05D29",
           "base": "NTSquare",
           "buttons": [
             {
-              "label": "See Inside",
+              "label": "See inside",
               "kind": "solid",
               "target": 6
             }
@@ -12394,7 +12046,7 @@
             }
           ],
           "deck": {
-            "label": "Get Git Experience Center",
+            "label": "GitHub Experience Center",
             "eyebrow": "NT Square",
             "title": "GitHub Experience Center",
             "photos": [
@@ -12463,7 +12115,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:50:52.401Z",
-      "updatedAt": "2026-09-18T15:33:03.015Z"
+      "updatedAt": "2026-09-17T13:06:02.883Z"
     },
     {
       "id": "sec_e7b1eee845884989",
@@ -12476,7 +12128,7 @@
       "icon": "",
       "iconKey": "rocket",
       "iconAssetId": null,
-      "order": 10,
+      "order": 11,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12497,23 +12149,23 @@
           "groups": [
             {
               "key": "beyond-boundaries",
-              "name": "Snowflake",
+              "name": "Beyond Boundaries",
               "shots": [
                 {
                   "src": "beyond-boundaries/01.jpg",
-                  "label": "Snowflake",
+                  "label": "Beyond Boundaries",
                   "w": 2048,
                   "h": 1151
                 },
                 {
                   "src": "beyond-boundaries/02.jpg",
-                  "label": "Snowflake",
+                  "label": "Beyond Boundaries",
                   "w": 1366,
                   "h": 911
                 },
                 {
                   "src": "beyond-boundaries/03.jpg",
-                  "label": "Snowflake",
+                  "label": "Beyond Boundaries",
                   "w": 800,
                   "h": 718
                 }
@@ -12578,7 +12230,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:50:52.410Z",
-      "updatedAt": "2026-09-18T12:26:31.947Z"
+      "updatedAt": "2026-09-17T13:06:02.893Z"
     },
     {
       "id": "sec_9709ee4e6c3a4b53",
@@ -12591,7 +12243,7 @@
       "icon": "",
       "iconKey": "code",
       "iconAssetId": null,
-      "order": 12,
+      "order": 13,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12605,7 +12257,7 @@
             "h": 15
           },
           "brand": "Torii Minds",
-          "logo": "snapshot/torii-logo.png",
+          "logo": "Snapshot/torii-logo.png",
           "defaultTitle": "Torii Minds",
           "base": "",
           "projects": [
@@ -12639,6 +12291,71 @@
                   "role": "Demo user",
                   "user": "demo2@demo.com",
                   "pass": "torii@123"
+                }
+              ]
+            },
+            {
+              "name": "Torii Minds & JPath",
+              "tag": "The Torii learning platform and the JPath journey.",
+              "logo": "Showcase/logos/jpath.png",
+              "description": "The Torii learning platform and the JPath journey — the route a trainee takes from the first module to placement, and the site that carries it.",
+              "features": [
+                "The learning path end to end",
+                "Journey tracking",
+                "Programme catalogue",
+                "One sign-in across Torii"
+              ],
+              "stack": [
+                "Web",
+                "REST API"
+              ],
+              "links": {
+                "live": "https://toriiminds.com/",
+                "code": ""
+              },
+              "media": {
+                "type": "video",
+                "src": "platforms/torii-minds.mp4"
+              },
+              "site": "https://toriiminds.com/",
+              "logins": [
+                {
+                  "role": "Student",
+                  "user": "2000000018",
+                  "pass": "Torii@1234"
+                }
+              ]
+            },
+            {
+              "name": "OwlCoder",
+              "tag": "Coding practice and assessment.",
+              "logo": "Showcase/logos/owlcoder.png",
+              "description": "Coding practice and assessment: problem sets a trainee works through, run and scored automatically, with the record kept against their profile.",
+              "features": [
+                "Graded problem sets",
+                "Automatic evaluation",
+                "Attempt history per learner",
+                "Assessment mode for a batch"
+              ],
+              "stack": [
+                "Web",
+                "Judge service",
+                "REST API"
+              ],
+              "links": {
+                "live": "https://owlcoder.technicalhub.io/",
+                "code": ""
+              },
+              "media": {
+                "type": "video",
+                "src": "platforms/owlcoder.mp4"
+              },
+              "site": "https://owlcoder.technicalhub.io/",
+              "logins": [
+                {
+                  "role": "Student",
+                  "user": "2000000018",
+                  "pass": "Torii@1234"
                 }
               ]
             },
@@ -12724,26 +12441,8 @@
             },
             {
               "name": "Loop",
-              "tag": "Loop Recording.",
-              "logo": "Showcase/logos/loop.png",
-              "description": "",
-              "features": [],
-              "stack": [],
-              "links": {
-                "live": "https://loop.toriiminds.com/login",
-                "code": ""
-              },
-              "media": {
-                "type": "video",
-                "src": "platforms/loop.mp4"
-              },
-              "site": "https://loop.toriiminds.com/login",
-              "logins": []
-            },
-            {
-              "name": "AI Anchor",
               "tag": "",
-              "logo": "Showcase/logos/ai-anchor.png",
+              "logo": "",
               "description": "",
               "features": [],
               "stack": [],
@@ -12751,98 +12450,45 @@
                 "live": "",
                 "code": ""
               },
-              "media": {
-                "type": "video",
-                "src": "platforms/ai-anchor.mp4"
+              "media": null,
+              "site": "",
+              "logins": []
+            },
+            {
+              "name": "AI Anchor",
+              "tag": "",
+              "logo": "",
+              "description": "",
+              "features": [],
+              "stack": [],
+              "links": {
+                "live": "",
+                "code": ""
               },
+              "media": null,
               "site": "",
               "logins": []
             },
             {
               "name": "Hibi",
               "tag": "",
-              "logo": "Showcase/logos/hibi.jpg",
+              "logo": "",
               "description": "",
               "features": [],
               "stack": [],
               "links": {
-                "live": "https://hibiplatform.com/",
+                "live": "",
                 "code": ""
               },
               "media": null,
-              "site": "https://hibiplatform.com/",
+              "site": "",
               "logins": []
-            },
-            {
-              "name": "Torii Minds & JPath",
-              "tag": "The Torii learning platform and the JPath journey.",
-              "logo": "Showcase/logos/jpath.png",
-              "description": "The Torii learning platform and the JPath journey — the route a trainee takes from the first module to placement, and the site that carries it.",
-              "features": [
-                "The learning path end to end",
-                "Journey tracking",
-                "Programme catalogue",
-                "One sign-in across Torii"
-              ],
-              "stack": [
-                "Web",
-                "REST API"
-              ],
-              "links": {
-                "live": "https://toriiminds.com/",
-                "code": ""
-              },
-              "media": {
-                "type": "video",
-                "src": "platforms/torii-minds.mp4"
-              },
-              "site": "https://toriiminds.com/",
-              "logins": [
-                {
-                  "role": "Student",
-                  "user": "2000000018",
-                  "pass": "Torii@1234"
-                }
-              ]
-            },
-            {
-              "name": "OwlCoder",
-              "tag": "Coding practice and assessment.",
-              "logo": "Showcase/logos/owlcoder.png",
-              "description": "Coding practice and assessment: problem sets a trainee works through, run and scored automatically, with the record kept against their profile.",
-              "features": [
-                "Graded problem sets",
-                "Automatic evaluation",
-                "Attempt history per learner",
-                "Assessment mode for a batch"
-              ],
-              "stack": [
-                "Web",
-                "Judge service",
-                "REST API"
-              ],
-              "links": {
-                "live": "https://owlcoder.technicalhub.io/",
-                "code": ""
-              },
-              "media": {
-                "type": "video",
-                "src": "platforms/owlcoder.mp4"
-              },
-              "site": "https://owlcoder.technicalhub.io/",
-              "logins": [
-                {
-                  "role": "Student",
-                  "user": "2000000018",
-                  "pass": "Torii@1234"
-                }
-              ]
             }
           ]
         }
       ],
       "createdAt": "2026-09-14T04:50:52.424Z",
-      "updatedAt": "2026-09-18T16:13:33.407Z"
+      "updatedAt": "2026-09-17T15:34:57.393Z"
     },
     {
       "id": "sec_b545ee30b43143ba",
@@ -12855,7 +12501,7 @@
       "icon": "",
       "iconKey": "link",
       "iconAssetId": null,
-      "order": 6,
+      "order": 7,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12870,8 +12516,6 @@
           },
           "eyebrow": "",
           "title": "Torii Connect",
-          "logo": "Torii Connect/torii-connect-wordmark.png",
-          "logoAlt": "Torii Connect",
           "openLabel": "View photos",
           "backLabel": "Back to the folder",
           "glow": "#F05D29",
@@ -12906,7 +12550,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:50:52.434Z",
-      "updatedAt": "2026-09-18T15:41:26.116Z"
+      "updatedAt": "2026-09-17T13:06:02.854Z"
     }
   ],
   "assets": [

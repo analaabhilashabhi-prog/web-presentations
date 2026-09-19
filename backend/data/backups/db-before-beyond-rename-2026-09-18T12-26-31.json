@@ -5530,7 +5530,7 @@
       "icon": "",
       "iconKey": "climb-steps",
       "iconAssetId": null,
-      "order": 1,
+      "order": 2,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -5685,13 +5685,13 @@
       "icon": "▤",
       "iconKey": "www-globe",
       "iconAssetId": null,
-      "order": 2,
+      "order": 3,
       "hidden": false,
       "status": "published",
       "blocks": [
         {
           "id": "blk_e3b9b13b59bc499d",
-          "type": "curriculum-deck",
+          "type": "training-shelf",
           "layout": {
             "x": 0,
             "y": 0,
@@ -5700,111 +5700,133 @@
           },
           "eyebrow": "Torii Minds",
           "title": "Trainings",
+          "lead": "Every programme we run, on one shelf. Take one off it to read what is in it.",
+          "openLabel": "Open the programme",
+          "backLabel": "Back to the shelf",
           "teachLabel": "What we teach",
-          "backLabel": "All programmes",
-          "programs": [
+          "photosLabel": "From the programme",
+          "base": "Trainings",
+          "trainings": [
             {
-              "name": "Programming Foundations",
-              "topics": [
+              "name": "Ninja",
+              "track": "Foundation",
+              "duration": "2 subjects",
+              "level": "",
+              "mode": "",
+              "blurb": "Where everyone starts. C first, because it makes memory, control flow and the cost of a line impossible to hand-wave — then Python, for the speed of getting an idea running. A trainee leaves able to read code they did not write.",
+              "tint": "#D91823",
+              "subjects": [
                 "C Programming",
-                "Python Programming",
-                "Problem Solving — Level 1",
-                "Coding Platform Onboarding",
-                "Prompt Engineering & GPT Models"
-              ]
+                "Python"
+              ],
+              "highlights": [],
+              "photos": []
             },
             {
-              "name": "Data Structures, Java & Databases",
-              "topics": [
-                "Data Structures & Algorithms",
-                "Java Programming",
-                "SQL & NoSQL",
-                "Problem Solving — Level 2",
-                "GitHub Copilot, GPT & Basic LLM"
-              ]
+              "name": "Ninja Plus",
+              "track": "Core computer science",
+              "duration": "4 subjects",
+              "level": "",
+              "mode": "",
+              "blurb": "The computer science every technical round assumes you already have. Java as a working language, then the three that sit underneath the questions: how data is structured, how databases are built and queried, and how to tell one algorithm from another.",
+              "tint": "#B00E1B",
+              "subjects": [
+                "Java",
+                "Data Structures",
+                "DBMS",
+                "DAA"
+              ],
+              "highlights": [],
+              "photos": []
             },
             {
-              "name": "AI Ready",
-              "topics": [
-                "AI Ready Engineer Roadmap",
-                "Advanced Data Structures (ADS)",
-                "Advanced Problem Solving",
-                "AI Projects",
-                "The 3 C's — Claude, Codex, Copilot"
-              ]
+              "name": "Ninja Pro",
+              "track": "Industry tracks",
+              "duration": "7 subjects",
+              "level": "",
+              "mode": "",
+              "blurb": "Seven tracks, each one a job title. Cloud on AWS, analytics, security, full stack and mobile with Flutter — alongside ServiceNow and Salesforce, the two enterprise platforms that hire on the platform itself. Trainees pick a direction and go deep.",
+              "tint": "#8E0A15",
+              "subjects": [
+                "AWS",
+                "Data Analytics",
+                "Cyber Security",
+                "Full Stack Development",
+                "Flutter",
+                "ServiceNow",
+                "Salesforce"
+              ],
+              "highlights": [],
+              "photos": []
             },
             {
-              "name": "FDE Role",
-              "topics": [
-                "Forward Deployed Engineering",
-                "Deployment",
-                "AI Testing",
-                "AI Security",
-                "Placement Training"
-              ]
+              "name": "AI Ready Engineer",
+              "track": "Complete AI syllabus",
+              "duration": "7 subjects",
+              "level": "",
+              "mode": "",
+              "blurb": "The whole of AI, taught as a working practice rather than a topic. How large language models behave and where they fail, how to ground them with RAG, how to prompt precisely, how to build alongside them in Claude Code — and where the security of all of it ends.",
+              "tint": "#F05D29",
+              "subjects": [
+                "Claude Code",
+                "LLMs",
+                "RAG Systems",
+                "Generative AI",
+                "Vibe Coding",
+                "Prompt Engineering",
+                "AI Security"
+              ],
+              "highlights": [],
+              "photos": []
             },
             {
-              "name": "ServiceNow",
-              "topics": [
-                "ServiceNow Platform Overview",
-                "ServiceNow Instance & Navigation",
-                "Lists, Filters & Forms",
-                "Form Configuration",
-                "Incident Management",
-                "Change & Problem Management",
-                "Reporting & Dashboards",
-                "Service Catalog",
-                "Tables & Data Schema",
-                "Access Control",
-                "CMDB",
-                "UI Policies & Business Rules",
-                "Flow Designer",
-                "Application Development",
-                "Scripting Basics"
-              ]
+              "name": "Industry Readiness Program",
+              "track": "Aptitude & problem solving",
+              "duration": "1 subject",
+              "level": "",
+              "mode": "",
+              "blurb": "The round before the technical round. Aptitude and problem solving worked against the clock, because on the day the clock is the difficulty — and a trainee who has only ever solved untimed is meeting it for the first time in the exam hall.",
+              "tint": "#C41220",
+              "subjects": [
+                "Problem Solving"
+              ],
+              "highlights": [],
+              "photos": []
             },
             {
-              "name": "FSD",
-              "topics": [
-                "HTML & CSS",
-                "JavaScript",
-                "React",
-                "Backend Development",
-                "Databases",
-                "REST APIs",
-                "Git & GitHub",
-                "Full Stack Projects"
-              ]
+              "name": "LaunchPad",
+              "track": "Entry level",
+              "duration": "4 subjects",
+              "level": "",
+              "mode": "",
+              "blurb": "The first rung, for trainees starting from nothing. Basic C for the habit of thinking in ordered steps, and the tools an office actually runs on — so somebody is useful in their first week, whichever way they go afterwards.",
+              "tint": "#E8452C",
+              "subjects": [
+                "Basic C Programming",
+                "Excel",
+                "PowerPoint",
+                "Power BI"
+              ],
+              "highlights": [],
+              "photos": []
             },
             {
-              "name": "Flutter",
-              "topics": [
-                "Dart Programming",
-                "Flutter Fundamentals",
-                "UI Development",
-                "State Management",
-                "API Integration",
-                "Firebase",
-                "App Development Projects"
-              ]
-            },
-            {
-              "name": "AWS",
-              "topics": [
-                "Cloud Fundamentals",
-                "IAM",
-                "EC2",
-                "S3",
-                "RDS",
-                "VPC",
-                "AWS Deployment"
-              ]
+              "name": "Skill Sprint",
+              "track": "On demand",
+              "duration": "On demand",
+              "level": "",
+              "mode": "",
+              "blurb": "Short workshops, called rather than scheduled. A tool a team needs this month, a company stack before a drive, a gap a cohort has just found in itself — run in days instead of waiting for the next term to come round.",
+              "tint": "#CE1F2E",
+              "subjects": [],
+              "highlights": [],
+              "photos": []
             }
           ]
         }
       ],
       "createdAt": "2026-09-14T04:18:23.138Z",
-      "updatedAt": "2026-09-18T15:54:10.124Z"
+      "updatedAt": "2026-09-17T13:06:02.826Z"
     },
     {
       "id": "sec_284b3435656a4e16",
@@ -5817,7 +5839,7 @@
       "icon": "⬢",
       "iconKey": "handshake-check",
       "iconAssetId": null,
-      "order": 3,
+      "order": 4,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -6569,7 +6591,7 @@
       "icon": "",
       "iconKey": "seal-check",
       "iconAssetId": null,
-      "order": 4,
+      "order": 5,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -6836,7 +6858,7 @@
       "icon": "",
       "iconKey": "camera-photo",
       "iconAssetId": null,
-      "order": 13,
+      "order": 14,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -9346,7 +9368,7 @@
       "icon": "",
       "iconKey": "ceo-podium",
       "iconAssetId": null,
-      "order": 14,
+      "order": 1,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -10270,7 +10292,7 @@
       "icon": "✧",
       "iconKey": "event-sign",
       "iconAssetId": null,
-      "order": 11,
+      "order": 12,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -11542,7 +11564,7 @@
       "icon": "",
       "iconKey": "ai-figure",
       "iconAssetId": null,
-      "order": 5,
+      "order": 6,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -11563,159 +11585,72 @@
           "standfirst": "An intensive, hands-on journey from language-model foundations to shipping production-grade, agentic AI products.",
           "stats": [
             {
-              "value": "Offline",
-              "label": "Classroom Training"
+              "value": "16",
+              "label": "Modules"
             },
             {
               "value": "50+",
               "label": "AI tools & platforms"
-            },
-            {
-              "value": "300+",
-              "label": "Hours of Training"
             }
           ],
-          "credential": null,
+          "credential": {
+            "ring": "Foundations",
+            "name": "Claude Certified Architect",
+            "note": ""
+          },
           "partners": [
             {
               "name": "Claude Partner Network",
-              "note": "Member",
-              "logo": "Claude/claude-partner-network.jpeg"
+              "note": "Member"
             },
             {
               "name": "OpenAI Select Partner",
-              "note": "",
-              "logo": "Claude/openai-select-partner.jpeg"
-            },
-            {
-              "name": "Sarvam AI",
-              "note": "Partnership",
-              "logo": "Claude/sarvam-ai.jpeg"
+              "note": ""
             }
           ],
           "frames": [
             {
-              "kind": "modules",
-              "eyebrow": "The curriculum",
-              "title": "16 Modules. End to End.",
-              "subtitle": "The complete modern AI stack — foundations to deployment.",
+              "kind": "cards",
+              "eyebrow": "Why it stands out",
+              "title": "Built to make engineers, not attendees",
+              "subtitle": "",
               "columns": 2,
-              "figure": "",
-              "figureAlt": "",
-              "badge": "Claude/claude-certified-associate.png",
-              "badgeAlt": "Foundations — Claude Certified Associate",
               "items": [
                 {
-                  "title": "LLM Foundation",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
+                  "title": "Comprehensive 200-Hour Learning Journey",
+                  "body": "200 hours of structured, hands-on training across the full AI stack.",
+                  "icon": "clock",
+                  "logo": ""
                 },
                 {
-                  "title": "Generative AI",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
+                  "title": "Training by AI-Certified Experts",
+                  "body": "Every module taught by Claude-certified practitioners.",
+                  "icon": "certificate",
+                  "logo": ""
                 },
                 {
-                  "title": "AI Tools",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
+                  "title": "Internship Completion Letter",
+                  "body": "An official completion letter issued by our AI partners.",
+                  "icon": "document",
+                  "logo": ""
                 },
                 {
-                  "title": "Prompt Engineering",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
+                  "title": "Industry-Ready AI Engineers",
+                  "body": "Mentored by working engineers, so you graduate job-ready.",
+                  "icon": "users",
+                  "logo": ""
                 },
                 {
-                  "title": "GitHub & Version Control",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
+                  "title": "AIRE Learning Platform Access",
+                  "body": "Live classes, assessments and progress tracking in one portal.",
+                  "icon": "grid-4",
+                  "logo": ""
                 },
                 {
-                  "title": "Vibe Coding",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "Database",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "AI API Integration",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "RAG Systems",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "AI Agents",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "3 C's — Claude · Codex · Copilot",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "AI Security",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "Agentic AI",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "Deployment",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "LLM Creation",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
-                },
-                {
-                  "title": "Cloud AI",
-                  "body": "",
-                  "icon": "",
-                  "logo": "",
-                  "photo": ""
+                  "title": "AI Projects",
+                  "body": "Build and ship real AI products, from prompt to deployment.",
+                  "icon": "code",
+                  "logo": ""
                 }
               ],
               "chips": [],
@@ -11724,15 +11659,159 @@
               "contact": []
             },
             {
+              "kind": "modules",
+              "eyebrow": "The curriculum",
+              "title": "16 Modules. End to End.",
+              "subtitle": "The complete modern AI stack — foundations to deployment.",
+              "columns": 2,
+              "items": [
+                {
+                  "title": "LLM Foundation",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "Generative AI",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "AI Tools",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "Prompt Engineering",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "GitHub & Version Control",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "Vibe Coding",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "Database",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "AI API Integration",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "RAG Systems",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "AI Agents",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "3 C's — Claude · Codex · Copilot",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "AI Security",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "Agentic AI",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "Deployment",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "LLM Creation",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                },
+                {
+                  "title": "Cloud AI",
+                  "body": "",
+                  "icon": "",
+                  "logo": ""
+                }
+              ],
+              "chips": [],
+              "stats": [],
+              "lines": [],
+              "contact": []
+            },
+            {
+              "kind": "split",
+              "eyebrow": "Student benefits",
+              "title": "What a student walks away with",
+              "subtitle": "",
+              "columns": 2,
+              "items": [
+                {
+                  "title": "Not a Fast-Track Program",
+                  "body": "A steady, deliberate pace — time to absorb every concept properly.",
+                  "icon": "clock",
+                  "logo": ""
+                },
+                {
+                  "title": "Authorised AI Certifications",
+                  "body": "Earn the authorised Claude Associate Certification.",
+                  "icon": "certificate",
+                  "logo": ""
+                },
+                {
+                  "title": "Trained by AI-Certified Experts",
+                  "body": "Industry-ready, AI-certified practitioners teach every module.",
+                  "icon": "users",
+                  "logo": ""
+                },
+                {
+                  "title": "Internship Completion Letter",
+                  "body": "A completion letter issued and signed off by our AI partners.",
+                  "icon": "document",
+                  "logo": ""
+                }
+              ],
+              "chips": [],
+              "stats": [],
+              "lines": [],
+              "contact": [],
+              "figure": "Claude/claude-certified-architect-certificate.png",
+              "figureAlt": "Claude Certified Architect"
+            },
+            {
               "kind": "people",
               "eyebrow": "Who teaches it",
-              "title": "Claude Certified Architect Team",
+              "title": "Claude Certified Architect — 10 Team Members",
               "subtitle": "",
               "columns": 5,
-              "figure": "",
-              "figureAlt": "",
-              "badge": "Claude/claude-certified-architect.png",
-              "badgeAlt": "Foundations — Claude Certified Architect",
               "items": [
                 {
                   "title": "Sudhir",
@@ -11810,11 +11889,12 @@
               "lines": [],
               "contact": []
             }
-          ]
+          ],
+          "logo": "are/ai-ready-engineer-logo.png"
         }
       ],
       "createdAt": "2026-09-14T04:18:23.183Z",
-      "updatedAt": "2026-09-19T01:28:19.849Z"
+      "updatedAt": "2026-09-17T13:06:02.831Z"
     },
     {
       "id": "sec_70ab49dedfb7479c",
@@ -11827,7 +11907,7 @@
       "icon": "",
       "iconKey": "calendar",
       "iconAssetId": null,
-      "order": 8,
+      "order": 9,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -11843,8 +11923,6 @@
           "eyebrow": "Torii Minds",
           "title": "Project Week",
           "lead": "Project Week puts students into numbered teams with chart paper, laptops and a week — while Torii mentors move table to table as the ideas take shape.",
-          "logo": "ProjectWeek/project-week-wordmark.png",
-          "logoAlt": "Project Week",
           "ctaLabel": "See every photograph",
           "glow": "#F05D29",
           "glow2": "#D91823",
@@ -12039,7 +12117,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:50:52.376Z",
-      "updatedAt": "2026-09-18T15:25:38.589Z"
+      "updatedAt": "2026-09-17T13:06:02.866Z"
     },
     {
       "id": "sec_d34af78851b04f86",
@@ -12052,7 +12130,7 @@
       "icon": "",
       "iconKey": "route",
       "iconAssetId": null,
-      "order": 9,
+      "order": 10,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12069,8 +12147,6 @@
           "video": "film.mp4",
           "videoEyebrow": "Torii Minds",
           "videoTitle": "Project Street",
-          "videoLogo": "ProjectStreet/project-street-wordmark.png",
-          "videoLogoAlt": "Project Street",
           "videoCta": "Walk the street",
           "videoStart": 13,
           "eyebrow": "Torii Minds",
@@ -12274,7 +12350,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:50:52.388Z",
-      "updatedAt": "2026-09-18T15:17:19.423Z"
+      "updatedAt": "2026-09-17T13:06:02.875Z"
     },
     {
       "id": "sec_9383bf77b4c946fc",
@@ -12287,7 +12363,7 @@
       "icon": "",
       "iconKey": "grid-4",
       "iconAssetId": null,
-      "order": 7,
+      "order": 8,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12300,15 +12376,13 @@
             "w": 12,
             "h": 15
           },
-          "eyebrow": "",
-          "logo": "NTSquare/nt-square-wordmark.png",
-          "logoAlt": "NT Square",
-          "title": "",
+          "eyebrow": "NT Square",
+          "title": "Torii, on campus.\nStep IN. Stand OUT.",
           "glow": "#F05D29",
           "base": "NTSquare",
           "buttons": [
             {
-              "label": "See Inside",
+              "label": "See inside",
               "kind": "solid",
               "target": 6
             }
@@ -12394,7 +12468,7 @@
             }
           ],
           "deck": {
-            "label": "Get Git Experience Center",
+            "label": "GitHub Experience Center",
             "eyebrow": "NT Square",
             "title": "GitHub Experience Center",
             "photos": [
@@ -12463,7 +12537,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:50:52.401Z",
-      "updatedAt": "2026-09-18T15:33:03.015Z"
+      "updatedAt": "2026-09-17T13:06:02.883Z"
     },
     {
       "id": "sec_e7b1eee845884989",
@@ -12476,7 +12550,7 @@
       "icon": "",
       "iconKey": "rocket",
       "iconAssetId": null,
-      "order": 10,
+      "order": 11,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12497,23 +12571,23 @@
           "groups": [
             {
               "key": "beyond-boundaries",
-              "name": "Snowflake",
+              "name": "Beyond Boundaries",
               "shots": [
                 {
                   "src": "beyond-boundaries/01.jpg",
-                  "label": "Snowflake",
+                  "label": "Beyond Boundaries",
                   "w": 2048,
                   "h": 1151
                 },
                 {
                   "src": "beyond-boundaries/02.jpg",
-                  "label": "Snowflake",
+                  "label": "Beyond Boundaries",
                   "w": 1366,
                   "h": 911
                 },
                 {
                   "src": "beyond-boundaries/03.jpg",
-                  "label": "Snowflake",
+                  "label": "Beyond Boundaries",
                   "w": 800,
                   "h": 718
                 }
@@ -12578,7 +12652,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:50:52.410Z",
-      "updatedAt": "2026-09-18T12:26:31.947Z"
+      "updatedAt": "2026-09-17T13:06:02.893Z"
     },
     {
       "id": "sec_9709ee4e6c3a4b53",
@@ -12591,7 +12665,7 @@
       "icon": "",
       "iconKey": "code",
       "iconAssetId": null,
-      "order": 12,
+      "order": 13,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12639,6 +12713,71 @@
                   "role": "Demo user",
                   "user": "demo2@demo.com",
                   "pass": "torii@123"
+                }
+              ]
+            },
+            {
+              "name": "Torii Minds & JPath",
+              "tag": "The Torii learning platform and the JPath journey.",
+              "logo": "Showcase/logos/jpath.png",
+              "description": "The Torii learning platform and the JPath journey — the route a trainee takes from the first module to placement, and the site that carries it.",
+              "features": [
+                "The learning path end to end",
+                "Journey tracking",
+                "Programme catalogue",
+                "One sign-in across Torii"
+              ],
+              "stack": [
+                "Web",
+                "REST API"
+              ],
+              "links": {
+                "live": "https://toriiminds.com/",
+                "code": ""
+              },
+              "media": {
+                "type": "video",
+                "src": "platforms/torii-minds.mp4"
+              },
+              "site": "https://toriiminds.com/",
+              "logins": [
+                {
+                  "role": "Student",
+                  "user": "2000000018",
+                  "pass": "Torii@1234"
+                }
+              ]
+            },
+            {
+              "name": "OwlCoder",
+              "tag": "Coding practice and assessment.",
+              "logo": "Showcase/logos/owlcoder.png",
+              "description": "Coding practice and assessment: problem sets a trainee works through, run and scored automatically, with the record kept against their profile.",
+              "features": [
+                "Graded problem sets",
+                "Automatic evaluation",
+                "Attempt history per learner",
+                "Assessment mode for a batch"
+              ],
+              "stack": [
+                "Web",
+                "Judge service",
+                "REST API"
+              ],
+              "links": {
+                "live": "https://owlcoder.technicalhub.io/",
+                "code": ""
+              },
+              "media": {
+                "type": "video",
+                "src": "platforms/owlcoder.mp4"
+              },
+              "site": "https://owlcoder.technicalhub.io/",
+              "logins": [
+                {
+                  "role": "Student",
+                  "user": "2000000018",
+                  "pass": "Torii@1234"
                 }
               ]
             },
@@ -12743,7 +12882,7 @@
             {
               "name": "AI Anchor",
               "tag": "",
-              "logo": "Showcase/logos/ai-anchor.png",
+              "logo": "",
               "description": "",
               "features": [],
               "stack": [],
@@ -12751,10 +12890,7 @@
                 "live": "",
                 "code": ""
               },
-              "media": {
-                "type": "video",
-                "src": "platforms/ai-anchor.mp4"
-              },
+              "media": null,
               "site": "",
               "logins": []
             },
@@ -12772,77 +12908,12 @@
               "media": null,
               "site": "https://hibiplatform.com/",
               "logins": []
-            },
-            {
-              "name": "Torii Minds & JPath",
-              "tag": "The Torii learning platform and the JPath journey.",
-              "logo": "Showcase/logos/jpath.png",
-              "description": "The Torii learning platform and the JPath journey — the route a trainee takes from the first module to placement, and the site that carries it.",
-              "features": [
-                "The learning path end to end",
-                "Journey tracking",
-                "Programme catalogue",
-                "One sign-in across Torii"
-              ],
-              "stack": [
-                "Web",
-                "REST API"
-              ],
-              "links": {
-                "live": "https://toriiminds.com/",
-                "code": ""
-              },
-              "media": {
-                "type": "video",
-                "src": "platforms/torii-minds.mp4"
-              },
-              "site": "https://toriiminds.com/",
-              "logins": [
-                {
-                  "role": "Student",
-                  "user": "2000000018",
-                  "pass": "Torii@1234"
-                }
-              ]
-            },
-            {
-              "name": "OwlCoder",
-              "tag": "Coding practice and assessment.",
-              "logo": "Showcase/logos/owlcoder.png",
-              "description": "Coding practice and assessment: problem sets a trainee works through, run and scored automatically, with the record kept against their profile.",
-              "features": [
-                "Graded problem sets",
-                "Automatic evaluation",
-                "Attempt history per learner",
-                "Assessment mode for a batch"
-              ],
-              "stack": [
-                "Web",
-                "Judge service",
-                "REST API"
-              ],
-              "links": {
-                "live": "https://owlcoder.technicalhub.io/",
-                "code": ""
-              },
-              "media": {
-                "type": "video",
-                "src": "platforms/owlcoder.mp4"
-              },
-              "site": "https://owlcoder.technicalhub.io/",
-              "logins": [
-                {
-                  "role": "Student",
-                  "user": "2000000018",
-                  "pass": "Torii@1234"
-                }
-              ]
             }
           ]
         }
       ],
       "createdAt": "2026-09-14T04:50:52.424Z",
-      "updatedAt": "2026-09-18T16:13:33.407Z"
+      "updatedAt": "2026-09-17T15:34:57.393Z"
     },
     {
       "id": "sec_b545ee30b43143ba",
@@ -12855,7 +12926,7 @@
       "icon": "",
       "iconKey": "link",
       "iconAssetId": null,
-      "order": 6,
+      "order": 7,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12870,8 +12941,6 @@
           },
           "eyebrow": "",
           "title": "Torii Connect",
-          "logo": "Torii Connect/torii-connect-wordmark.png",
-          "logoAlt": "Torii Connect",
           "openLabel": "View photos",
           "backLabel": "Back to the folder",
           "glow": "#F05D29",
@@ -12906,7 +12975,7 @@
         }
       ],
       "createdAt": "2026-09-14T04:50:52.434Z",
-      "updatedAt": "2026-09-18T15:41:26.116Z"
+      "updatedAt": "2026-09-17T13:06:02.854Z"
     }
   ],
   "assets": [

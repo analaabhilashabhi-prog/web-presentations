@@ -99,9 +99,26 @@ const CAP_SMALL = 46;         // caption band: name only, on a tile under 400 wi
    back button. Moving the centre up to 420 and the height to 688 keeps the
    same foot and takes that ground: 420 + 344 = 764, and 420 - 344 = 76, just
    below the head. Every tile grows with it, because the widths above are
-   scaled down together only when the wall would be taller than this. */
-const WALL_CY = 428;
-const WALL_MAX_H = 700;
+   scaled down together only when the wall would be taller than this.
+
+   Then 428/700 put the head back at 78 and the whole slide's head — the
+   wordmark, which is 86px tall from y=34 — sat ON the first row of pictures
+   (2026-09-19: "they were going behind that Project Week logo and the back
+   button, it looks a bit clumsy"). The head's real floor is 120.
+
+   These two are set by MEASUREMENT and not by the arithmetic above them, twice
+   over. A tile's box is 13px deeper than the solved height at each end — the
+   paper's own outline and its shadow — so a wall computed to start at 147
+   draws from 134, and the first cut at 448/632 put the pictures 1px under the
+   wordmark, which is touching it. 466 and 606 draw from 150 to 782: 30px of
+   daylight under the mark, and 22 nominal px clear of the presenter bar on a
+   filled screen.
+
+   That costs the pictures about an eighth of their height, which is the trade —
+   a photograph a little smaller is worth more than a photograph with a logo
+   lying across it. */
+const WALL_CY = 466;
+const WALL_MAX_H = 606;
 
 function layoutWall(photos) {
   const n = photos.length;

@@ -349,6 +349,46 @@ export function CentersOfExcellence(block, { editing = false } = {}) {
   root.appendChild(detail);
 
   /**
+   * The wheel hands over on its own after seven seconds.
+   *
+   * It is the slide's first impression and it is worth watching, but nobody is
+   * going to walk to a laptop to press it in front of a room — so the orbit
+   * holds, collapses into the mark, and the wall of centres settles out of it
+   * unasked. Opening a centre from there is still a press: that is the part a
+   * presenter is choosing, and it is never done for them.
+   *
+   * Four things, the same four Torii Connect's folder had to learn:
+   *   - It happens once and it never goes back. Nothing puts the wheel up
+   *     again while somebody is talking about a centre.
+   *   - A hand yields it. Any press, key or wheel on the slide before the
+   *     timer runs cancels it outright, so a presenter who has already entered
+   *     — or who is deliberately holding on the wheel to talk about it — is
+   *     not overruled a second later.
+   *   - It takes no focus. `enterWall` is the answer to a press and there has
+   *     been no press; pulling the focus ring onto a card nobody asked for is
+   *     the kind of thing a room notices.
+   *   - `isConnected` is checked when the timer FIRES, never when it is set.
+   *     The schedule is made while this component is still being built, before
+   *     the caller has appended it, so at schedule time it is always false —
+   *     that exact mistake left the Events wheel sitting on photograph one.
+   */
+  const HOLD_MS = 7000;
+  if (!REDUCED?.matches) {
+    let hold = setTimeout(() => {
+      hold = 0;
+      if (root.isConnected) enterWall();
+    }, HOLD_MS);
+    const yieldToHand = () => {
+      if (!hold) return;
+      clearTimeout(hold);
+      hold = 0;
+    };
+    root.addEventListener('pointerdown', yieldToHand);
+    root.addEventListener('keydown', yieldToHand);
+    root.addEventListener('wheel', yieldToHand, { passive: true });
+  }
+
+  /**
    * The wall assembles itself in reading order rather than appearing all at
    * once. This runs when the orbit hands over, not on mount — the cards are
    * behind the wheel until then and animating them there would spend the whole

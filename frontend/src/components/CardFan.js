@@ -78,13 +78,43 @@ const OUTER_ANGLE = 15.2;   // degrees
 const DROP_POW = 1.55;
 const MAX_SPREAD = 200;
 
-/* The deck. A hand held in one hand: every card leans from the same pivot far
-   below the frame, so the tops splay and the bottoms nearly meet. */
-const DECK_W = 300;
-const DECK_H = 300;
-const DECK_PIVOT = 900;     // px below the top of a card, where the hand is held
-const DECK_STEP = 8;        // degrees a card
-const DECK_MAX_ANGLE = 36;  // the outermost cards never lean past this
+/* The deck is a ring, seen at an angle, turning for ever (2026-09-19, on
+   request: "they were not stacked correctly... make it a circle, circle like
+   shape... give some space and every photos need to be edge to edge... let them
+   circle loop in loop").
+ *
+ * It was a hand: every card at one point, leaning about a pivot 900px below the
+ * frame. Ten of them at 8 degrees apiece put 104px between neighbours that are
+ * 300px wide, so two thirds of every photograph was under the next one — which
+ * is exactly what "not stacked correctly" describes. Spreading a hand far enough
+ * that ten 300px cards touch needs 25 degrees a card, which is 249 degrees of
+ * arc: at that point it is not a hand any more, it is a circle. So it is one.
+ *
+ * Upright cards on an ellipse, which is a circle lying away from you. The two
+ * radii are not a shape chosen by eye — RX is what makes the photographs the
+ * size they are, and RY is what keeps them off the floor:
+ *
+ *   - Edge to edge is RX's job. At the front of the ring a card stands at x=0
+ *     and its neighbours at sin(36 degrees) x RX = 0.588 x RX either side. At
+ *     RX 560 that is 329 against cards 320 and 307 wide, so 15px of daylight
+ *     shows between them — a seam, not a gap, and nothing overlapping. Round
+ *     the sides of the ring they crowd and overlap, which is what the side of
+ *     a ring does and what the depth ordering is for.
+ *   - RY is bounded above and below. The ring stands 233px above its centre and
+ *     300 below it, so at 140 the whole of it is 533 tall and fits between the
+ *     head and the Back button on the 860 canvas AND on a filled 900 screen,
+ *     where the presenter bar takes 96 of the extra 40 back.
+ *
+ * A card's scale is its depth: the whole ramp from the far side of the ring to
+ * the near one, so the ring reads as a ring rather than as an oval of equal
+ * cards. Nothing is cropped by it — the card is square and so is the box.
+ */
+const DECK_W = 320;          // the nearest card; every other is this x its scale
+const DECK_H = 320;
+const DECK_RX = 560;         // the ring, across
+const DECK_RY = 140;         // the ring, deep — the amount it is lying away
+const DECK_FAR = 0.58;       // the scale of the card at the back of the ring
+const DECK_FAR_FADE = 0.78;  // and its opacity
 
 export function CardFan(block = {}) {
   const cards = (block.cards || []).filter((c) => c && c.src);
@@ -289,25 +319,18 @@ export function CardFan(block = {}) {
   function openDeck() {
     if (panel) return;
     const n = deck.length;
-    const mid = (n - 1) / 2;
-    const step = Math.min(DECK_STEP, mid > 0 ? DECK_MAX_ANGLE / mid : DECK_STEP);
     const hand = h('div', { class: 'cf-deck__hand', role: 'list' });
     const items = deck.map((p) => ({ url: urlOf(p), name: p.name || '' }));
     const dealt = [];
     deck.forEach((p, i) => {
-      const d = i - mid;
       const el = h('button', {
         class: 'cf-deck__card',
         type: 'button',
         role: 'listitem',
         'aria-label': p.name || `Photograph ${i + 1}`,
-        style: {
-          /* Dealt outward from the middle: the pile is the middle card's
-             place, and each card turns from there to its own lean. */
-          '--cf-deal': `${Math.round(d * step * 100) / 100}deg`,
-          '--cf-deal-delay': `${Math.round(Math.abs(d) * 70)}ms`,
-          zIndex: String(50 + i),
-        },
+        /* The entrance is staggered round the ring rather than outward from a
+           pile: each card arrives at the seat it is going to stand in. */
+        style: { '--cf-in-delay': `${Math.round(i * 55)}ms` },
         onclick: () => openLightbox(items, i),
       }, h('span', { class: 'cf-deck__face' },
         h('img', { src: urlOf(p), alt: p.name || '', draggable: 'false', decoding: 'async' })));
@@ -315,38 +338,55 @@ export function CardFan(block = {}) {
       hand.append(el);
     });
 
-    /* The dealt hand turns too (2026-09-18, on request: the same behaviour
-       behind the pill as in front of it). The deal itself is a CSS transition
-       on `--cf-deal`, so the turn is written into that same property and the
-       stylesheet carries it — one mechanism, not a second one racing it. The
-       angle wraps the short way, so a card passing the end of the fan comes
-       back at the other end rather than unwinding all the way round. */
+    /**
+     * The ring turns, one card every TURN_S, for ever.
+     *
+     * Three layers again, for the reason the fan in front of this panel has
+     * three: the button carries the seat (written by this loop, never
+     * animated), `.cf-deck__face` carries the entrance and the hover. A single
+     * transform written from two places is the trap, not the solution.
+     *
+     * `seat` is the only thing this loop knows how to do, so the entrance calls
+     * it once as well — a card must be in its seat before it is allowed to fade
+     * up, or the first frame shows ten photographs stacked in the middle, which
+     * is the very thing this replaced.
+     */
+    const seat = (el, k) => {
+      const a = (k / n) * Math.PI * 2;             // 0 is the right of the ring
+      const near = (1 - Math.cos(a)) / 2;          // 0 at the back, 1 at the front
+      const s = DECK_FAR + (1 - DECK_FAR) * near;
+      el.style.transform =
+        `translate(-50%, -50%) translate(${round(Math.sin(a) * DECK_RX)}px, ${round(-Math.cos(a) * DECK_RY)}px) scale(${round(s)})`;
+      /* Nearer is in front, and the ramp is the same one the scale uses, so a
+         card can never be drawn over the card it is standing behind. */
+      el.style.zIndex = String(100 + Math.round(near * 100));
+      el.style.opacity = (DECK_FAR_FADE + (1 - DECK_FAR_FADE) * near).toFixed(3);
+    };
+
     let dOff = 0;
     let dLast = 0;
     let dRaf = 0;
-    const dWrap = (x) => ((x + n / 2) % n + n) % n - n / 2;
+    const place = () => dealt.forEach((el, i) => seat(el, i + dOff));
     const turnDeck = (now) => {
       dRaf = 0;
       if (!panel || !panel.isConnected) return;
       const gap = dLast ? now - dLast : 0;
       const dt = gap > 0 && gap < 200 ? Math.min(0.05, gap / 1000) : 0.016;
       dLast = now;
+      /* A hand on the ring holds it — released by stillness, so a mouse left
+         lying on a three-metre screen does not stop it for the whole talk. */
       if (!dGrip.held) {
         dOff = (dOff + dt / TURN_S) % n;
-        dealt.forEach((el, i) => {
-          const dd = dWrap(i - dOff - mid);
-          el.style.setProperty('--cf-deal', `${Math.round(dd * step * 100) / 100}deg`);
-          el.style.zIndex = String(50 + Math.round(n - Math.abs(dd)));
-          el.style.opacity = (1 - Math.min(1, Math.max(0, (Math.abs(dd) / (n / 2) - FADE_AT) / (1 - FADE_AT)))).toFixed(3);
-        });
+        place();
       }
       dRaf = requestAnimationFrame(turnDeck);
     };
     const dGrip = pointerHold(hand, { onRelease: () => { dLast = 0; } });
+    place();
     if (!REDUCED?.matches && n > 1) {
-      /* After the deal, or the turn would fight the cards on their way out of
-         the pile — the deal's own stagger is up to 70ms a card. */
-      setTimeout(() => { if (panel) dRaf = requestAnimationFrame(turnDeck); }, 1100 + n * 70);
+      /* After the last card has arrived, so the turn never pulls a seat out
+         from under a card still fading into it. */
+      setTimeout(() => { if (panel) dRaf = requestAnimationFrame(turnDeck); }, 560 + n * 55);
     }
 
     panel = h('div', { class: 'cf-deck', role: 'dialog', 'aria-label': block.deck.title || block.deck.label || 'More photographs' },
@@ -356,6 +396,20 @@ export function CardFan(block = {}) {
           h('span', { text: block.deck.eyebrow })) : null,
         block.deck.title ? h('h3', { class: 'cf-deck__title', text: block.deck.title }) : null,
         h('p', { class: 'cf-deck__hint', text: `${n} photographs · press one to see it whole` })),
+      /* The section's own mark, in the corner the ring leaves empty (2026-09-19,
+         on request: "use that icon in that leftover space... in the right").
+         The ring is 1486px across the middle of a 1600px slide and its back
+         cards are small and high, so the two top corners are the only ground on
+         this panel with nothing on it. It is the same file the slide in front
+         carries, drawn smaller, so the panel is named by the same mark that
+         named the page it came out of. */
+      block.logo ? h('img', {
+        class: 'cf-deck__mark',
+        src: upload(block.logo),
+        alt: block.logoAlt || 'NT Square',
+        loading: 'eager',
+        decoding: 'async',
+      }) : null,
       hand,
       h('button', { class: 'cf-btn cf-btn--solid cf-deck__back', type: 'button', onclick: closeDeck }, 'Back to NT Square'));
     root.append(panel);
