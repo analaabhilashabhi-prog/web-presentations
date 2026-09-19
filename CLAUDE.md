@@ -374,6 +374,7 @@ still publishable only by hand.
 | `publish-project-street.cjs` | Torii's Project Street — the film and the thirty-two photographs, copied as they are, as the film screen and the thread board |
 | `publish-project-week.cjs` | Torii's Project Week — the nine collage photographs (re-encoded once, then reused) and the wall of sixteen more under them |
 | `publish-section-intros.cjs` | the title card on every row of both decks - the row's own title; `--clear` takes them off |
+| `apply-review-2026-09-19.cjs` | AI Ready Engineer's first cover card — "Offline · Classroom Training" in place of "16 Modules"; finds the card by its label, so a second run changes nothing |
 | `apply-review-2026-09-17b.cjs` | the review's second pass — the showcase cut to five products plus three named ones, the photographic badges off the register, the CEO's two figures |
 | `apply-review-2026-09-17.cjs` | Torii's content changes from the 2026-09-17 review — the Claude card, the CEO lines, About, the team and CoE orders, the film start, the Beyond and Certifications photograph |
 | `fix-uploads-path-case.cjs` | corrects the case of every stored `/uploads` path — run it before deploying, because Windows hides a wrong case and Linux does not |
@@ -2223,6 +2224,99 @@ mechanical one; the mechanism is ready for them.
 The overlays keep their own keys and should: `Lightbox`, and the viewers inside
 Certifications and Placements, bind in the capture phase and stop the event, so
 arrows walk the photographs while one is open and the deck stays where it is.
+
+## The wheel opens itself, and the hand became a ring
+
+Four changes on 2026-09-19, each on its own slide.
+
+**Centers of Excellence hands over after seven seconds.** The orbit is that
+slide's first impression and it is worth watching, but nobody is going to walk
+to a laptop to press it in front of a room — so it collapses into the mark on
+its own and the wall of twenty centres settles out of it. Opening a centre from
+there is still a press: that is the part a presenter is choosing, and it is
+never done for them. Four things, the same four Torii Connect's folder had to
+learn, and the fourth is the one that has now cost a measurement twice:
+
+  - It happens once and it never goes back.
+  - Any press, key or wheel on the slide before the timer runs cancels it
+    outright. Measured: a press at 1.2s leaves the orbit up at 10.2s.
+  - It takes no focus. `enterWall` is the answer to a press and there has been
+    no press. Measured presenting: the active element is still the deck root.
+  - **`isConnected` is checked when the timer FIRES, never when it is set.**
+    The schedule is made while the component is still being built, before the
+    caller has appended it, so at schedule time it is always false. That exact
+    mistake left the Events wheel sitting on photograph one.
+
+Measured, left alone: orbit at 1.5s and 5.5s, wall with all 20 cards revealed
+at 10s, in the editing view and presenting alike.
+
+**NT Square's GitHub Experience Center is a turning ring.** It was a hand: ten
+cards at one point, leaning about a pivot 900px below the frame, 8 degrees
+apiece. That puts 104px between neighbours that are 300px wide, so two thirds of
+every photograph was under the next one — which is what "they were not stacked
+correctly" describes. Spreading a hand far enough that ten 320px cards touch
+needs 25 degrees a card, which is 249 degrees of arc: at that point it is not a
+hand any more, it is a circle. So it is one.
+
+Upright cards on an ellipse — a circle lying away from you — turning one card
+every three seconds, for ever. The two radii are not a shape chosen by eye:
+
+  - **RX is what makes the photographs the size they are.** At the front of the
+    ring a card stands at x=0 and its neighbours at sin(36°) x RX either side.
+    At 560 that is 329 against cards 320 and 307 wide, so 15px of daylight shows
+    between them — a seam, not a gap.
+  - **RY is bounded at both ends, and the bound that binds is presenting.** The
+    ring stands 233px above its centre and 300 below, and the slide is *taller*
+    presenting while the bar takes 96 of it back. `top` is therefore
+    `calc(50% - var(--deck-bar-clear, 0px) * 0.55)`, not a flat percentage:
+    measured, 47px of daylight above and below on the 860 canvas, 15 and 25
+    presenting. A flat percentage puts the nearest card's foot on the Back
+    button on exactly the display the deck is shown on.
+
+**Round the sides of a ring, cards crowd — and only a hit test says by how
+much.** The first check measured the horizontal gap between angular neighbours
+and reported a 176px overlap, which sounds like the bug this replaced and is
+not: those two cards are at different heights. Sampling each card's own box on a
+12x12 grid and asking `elementFromPoint` what is on top gives the honest figure.
+Measured presenting: four cards wholly visible, the worst showing 37%, **every
+one of the ten clickable**, and each in turn at the front at full size within
+one 30-second lap. 7.0ms a frame, 0 of 85 over 16.7.
+
+**Three layers per card, again.** `.cf-deck__card` carries the seat, written by
+the rAF loop and never transitioned; `.cf-deck__face` carries the entrance and
+the hover. A transition on the button would put a second opinion on the same
+transform and the ring would lag its own loop. The entrance calls `seat` once
+before it fades anything up, or the first frame is ten photographs stacked in
+the middle — the very thing this replaced.
+
+**The section's wordmark takes the corner the ring leaves empty.** The ring is
+1372px across the middle of a 1600px slide and its far cards are small and high,
+so the two top corners are the only ground on that panel with nothing on it. It
+is the same file the slide in front carries, at 76px instead of 168. Measured: 0
+cards over it at any point in the turn.
+
+**Torii Connect's wall clears its own head.** It began at y=78 under a wordmark
+whose floor is 120, so the first row of pictures was behind the mark and the
+Back button. Both of the numbers that fix it are measured rather than derived,
+and the first attempt proves why: **a tile's box is 13px deeper than the solved
+height at each end**, its outline and its shadow, so a wall computed to start at
+147 draws from 134 — and a first cut at 448/632 put the pictures 1px under the
+mark, which is touching it. At 466 and 606 the wall draws from 150 to 782: 30px
+of daylight under the wordmark, 22 nominal px clear of the presenter bar, 0
+tiles intersecting either control, and worst aspect drift 0.4%. It costs the
+pictures an eighth of their height, which is the trade — a photograph a little
+smaller is worth more than a photograph with a logo lying across it.
+
+**AI Ready Engineer's first cover card is the delivery, not a count.** It read
+"16 · Modules" and now reads "Offline · Classroom Training", asked for twice.
+**No number is invented**: no count of offline sessions, days or hours has ever
+been supplied, and "Offline" is the whole of what was asked for and the whole of
+what is written. The frame behind it keeps its title, "16 Modules. End to End.",
+because the course still has sixteen of them — what changed is what the cover
+advertises, which is that the training is delivered in person. `OFFLINE` in
+`tools/apply-review-2026-09-19.cjs` is the one place to change the wording, and
+the tool finds the card by its label rather than its index, so a second run
+finds no "Modules" card and changes nothing.
 
 **Four Torii rows and one NGI row are switched off in the code** (2026-09-16),
 on request: Torii's Industry Alliances, History & Milestones, Success Stories
