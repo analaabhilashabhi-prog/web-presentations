@@ -6447,7 +6447,7 @@
       "icon": "",
       "iconKey": "partners",
       "iconAssetId": null,
-      "order": 17,
+      "order": 16,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -6836,7 +6836,7 @@
       "icon": "",
       "iconKey": "camera-photo",
       "iconAssetId": null,
-      "order": 14,
+      "order": 13,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -9184,7 +9184,7 @@
       "icon": "",
       "iconKey": "roadmap",
       "iconAssetId": null,
-      "order": 18,
+      "order": 17,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -9346,7 +9346,7 @@
       "icon": "",
       "iconKey": "ceo-podium",
       "iconAssetId": null,
-      "order": 15,
+      "order": 14,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -9463,7 +9463,7 @@
       "icon": "",
       "iconKey": "rosette",
       "iconAssetId": null,
-      "order": 19,
+      "order": 18,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -9749,7 +9749,7 @@
       "icon": "▲",
       "iconKey": "job-pin",
       "iconAssetId": null,
-      "order": 16,
+      "order": 15,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -10270,7 +10270,7 @@
       "icon": "✧",
       "iconKey": "event-sign",
       "iconAssetId": null,
-      "order": 12,
+      "order": 11,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -10928,7 +10928,7 @@
       "icon": "❞",
       "iconKey": "clapper",
       "iconAssetId": null,
-      "order": 20,
+      "order": 19,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -11542,7 +11542,7 @@
       "icon": "",
       "iconKey": "ai-figure",
       "iconAssetId": null,
-      "order": 6,
+      "order": 5,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -11827,7 +11827,7 @@
       "icon": "",
       "iconKey": "calendar",
       "iconAssetId": null,
-      "order": 9,
+      "order": 8,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12052,7 +12052,7 @@
       "icon": "",
       "iconKey": "route",
       "iconAssetId": null,
-      "order": 10,
+      "order": 9,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12287,7 +12287,7 @@
       "icon": "",
       "iconKey": "grid-4",
       "iconAssetId": null,
-      "order": 8,
+      "order": 7,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12476,7 +12476,7 @@
       "icon": "",
       "iconKey": "rocket",
       "iconAssetId": null,
-      "order": 11,
+      "order": 10,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12591,7 +12591,7 @@
       "icon": "",
       "iconKey": "code",
       "iconAssetId": null,
-      "order": 13,
+      "order": 12,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12855,7 +12855,7 @@
       "icon": "",
       "iconKey": "link",
       "iconAssetId": null,
-      "order": 7,
+      "order": 6,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12907,88 +12907,6 @@
       ],
       "createdAt": "2026-09-14T04:50:52.434Z",
       "updatedAt": "2026-09-18T15:41:26.116Z"
-    },
-    {
-      "id": "sec_0754bac046d94af2",
-      "orgId": "torii",
-      "parentId": null,
-      "key": "ai-partners",
-      "title": "AI Partners",
-      "subtitle": "",
-      "intro": "",
-      "icon": "",
-      "iconKey": "partners",
-      "iconAssetId": null,
-      "order": 5,
-      "hidden": false,
-      "status": "published",
-      "blocks": [
-        {
-          "id": "blk_21b9a5553d13497f",
-          "type": "scroll-stack",
-          "layout": {
-            "x": 0,
-            "y": 0,
-            "w": 12,
-            "h": 15
-          },
-          "eyebrow": "PARTNERSHIPS",
-          "title": "AI Partners",
-          "lead": "The platforms Torii builds and teaches on, and the standing each one is held at.",
-          "partners": [
-            {
-              "name": "Claude",
-              "note": "Claude Partner Network · Member",
-              "tagline": "Applied AI, agents & assistants",
-              "logo": "Claude/claude-partner-network.jpeg",
-              "logoAlt": "Claude Partner Network — Member",
-              "color": "#D97757",
-              "points": [
-                "10 Claude Certified Architect trainers",
-                "Claude Certified Associate for students",
-                "Centre of Excellence partner",
-                "Carried through the AI Ready Engineer curriculum"
-              ]
-            },
-            {
-              "name": "OpenAI",
-              "note": "OpenAI Select Partner",
-              "tagline": "Generative AI & LLMs",
-              "logo": "Claude/openai-select-partner.jpeg",
-              "logoAlt": "OpenAI Select Partner",
-              "color": "#10A37F",
-              "points": [
-                "Centre of Excellence partner",
-                "Generative AI across the curriculum"
-              ]
-            },
-            {
-              "name": "Sarvam AI",
-              "note": "Partnership",
-              "tagline": "Indian-language foundation models",
-              "logo": "Claude/sarvam-ai.jpeg",
-              "logoAlt": "sarvam",
-              "color": "#3F3F3F",
-              "points": []
-            },
-            {
-              "name": "GitHub",
-              "note": "GitHub Campus Program",
-              "tagline": "DevOps, source & collaboration",
-              "logo": "coe/github full.png",
-              "logoAlt": "GitHub",
-              "color": "#8B7ED8",
-              "points": [
-                "Centre of Excellence partner",
-                "GitHub Experience Center at NT Square",
-                "Student Developer Pack on campus"
-              ]
-            }
-          ]
-        }
-      ],
-      "createdAt": "2026-09-20T15:23:21.271Z",
-      "updatedAt": "2026-09-20T15:23:21.271Z"
     }
   ],
   "assets": [

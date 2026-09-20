@@ -62,6 +62,7 @@ export const BLOCK_TYPES = [
   'photo-folder',
   'project-showcase',
   'thread-board',
+  'scroll-stack',
 ];
 
 export const CARD_VARIANTS = ['plain', 'team', 'partner', 'program', 'placement', 'certification'];
@@ -119,6 +120,7 @@ const DEFAULT_SIZE = {
   'photo-folder': { w: 12, h: 15 },
   'project-showcase': { w: 12, h: 15 },
   'thread-board': { w: 12, h: 15 },
+  'scroll-stack': { w: 12, h: 15 },
 };
 
 const oneOf = (value, allowed, fallback) => (allowed.includes(value) ? value : fallback);
@@ -1358,6 +1360,42 @@ function normalizeBlock(raw, index = 0, depth = 0) {
        description field on a programme or on a topic, because the brief this
        was built to says there are none, and a field nobody fills is a field
        somebody fills later by accident. */
+    /* The AI partners, as a stack of pinned cards. Ported from the reactbits
+       Pro `ScrollStack` the way the accordion, the ribbon and the tilted wall
+       were: the behaviour, not the package. `npx shadcn add` has nothing here
+       to add to — no components.json, no package.json, no Tailwind — and there
+       is no network at presentation time. */
+    case 'scroll-stack':
+      block.eyebrow = text(raw.eyebrow, 80);
+      block.title = text(raw.title, 80);
+      block.lead = text(raw.lead, 300);
+      block.partners = (Array.isArray(raw.partners) ? raw.partners : [])
+        .map((p) => ({
+          name: text(p?.name, 60),
+          /* The badge line over the name — "Claude Partner Network · Member".
+             It is what the supplied lockup itself says, never a claim beyond
+             it. */
+          note: text(p?.note, 80),
+          tagline: text(p?.tagline, 120),
+          /* A file under /uploads, the same path rule every other block's media
+             field follows. */
+          logo: (() => {
+            const t = text(p?.logo, 240).replace(/^\/+/, '');
+            return /^[A-Za-z0-9][A-Za-z0-9 _.-]*(\/[A-Za-z0-9][A-Za-z0-9 _.-]*)*$/.test(t) ? t : '';
+          })(),
+          logoAlt: text(p?.logoAlt, 160),
+          /* The partner's own colour, measured off its mark. Only a well-formed
+             hex survives, because it is written into a style attribute. */
+          color: hexColor(p?.color),
+          points: (Array.isArray(p?.points) ? p.points : [])
+            .map((t) => text(t, 90))
+            .filter(Boolean)
+            .slice(0, 4),
+        }))
+        .filter((p) => p.name)
+        .slice(0, 8);
+      break;
+
     case 'curriculum-deck':
       block.eyebrow = text(raw.eyebrow, 80);
       block.title = text(raw.title, 80);

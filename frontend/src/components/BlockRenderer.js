@@ -36,6 +36,7 @@ import { PhotoRing } from './PhotoRing.js';
 import { EventOrbit } from './EventOrbit.js';
 import { TrainingShelf } from './TrainingShelf.js';
 import { CurriculumDeck } from './CurriculumDeck.js';
+import { ScrollStack } from './ScrollStack.js';
 import { PhotoCollage } from './PhotoCollage.js';
 import { ButtonRow, IconBox, LogoBox } from './Elements.js';
 import { TextBox, ImageBox, ProfileBox } from './MediaBoxes.js';
@@ -169,6 +170,9 @@ export function renderBlock(block, options = {}) {
 
     case 'curriculum-deck':
       return CurriculumDeck(block);
+
+    case 'scroll-stack':
+      return ScrollStack(block);
 
     /* The bookshelf. Torii's Trainings row is a `curriculum-deck` now
        (2026-09-18, on request), so nothing reaches this any more; it is kept
