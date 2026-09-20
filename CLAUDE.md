@@ -373,6 +373,7 @@ still publishable only by hand.
 | `publish-torii-connect.cjs` | Torii Connect — the three photographs, de-framed, as the folder that opens into a bento |
 | `publish-project-street.cjs` | Torii's Project Street — the film and the thirty-two photographs, copied as they are, as the film screen and the thread board |
 | `publish-project-week.cjs` | Torii's Project Week — the nine collage photographs (re-encoded once, then reused) and the wall of sixteen more under them |
+| `publish-ai-partners.cjs` | Torii's AI Partners — the four partners as the scroll stack; creates the row if it is missing and puts it before AI Ready Engineer |
 | `publish-section-intros.cjs` | the title card on every row of both decks - the row's own title; `--clear` takes them off |
 | `apply-review-2026-09-19.cjs` | AI Ready Engineer's first cover card — "Offline · Classroom Training" in place of "16 Modules"; finds the card by its label, so a second run changes nothing |
 | `apply-review-2026-09-17b.cjs` | the review's second pass — the showcase cut to five products plus three named ones, the photographic badges off the register, the CEO's two figures |
@@ -2317,6 +2318,113 @@ advertises, which is that the training is delivered in person. `OFFLINE` in
 `tools/apply-review-2026-09-19.cjs` is the one place to change the wording, and
 the tool finds the card by its label rather than its index, so a second run
 finds no "Modules" card and changes nothing.
+
+## AI Partners, and a stack ported rather than installed
+
+A sixth row on Torii (2026-09-20), between Certifications and AI Ready
+Engineer: the four AI partners as pinned cards that stack, turn and dissolve.
+`tools/publish-ai-partners.cjs` creates the row if it is not there and PATCHes
+it if it is, so a second run duplicates nothing, and it rebuilds the tab order
+from the order as it stands rather than from a list written into the tool — a
+hard-coded order is a tool that silently undoes whatever the last reorder did.
+
+**The install command was the ask, and it could not be run.** The request was
+`npx shadcn@latest add @reactbits-starter/scroll-stack-tw` against a
+`components.json` with the Pro registry and a licence key in the environment.
+There is no components.json here, no package.json, no Tailwind and no build
+step, and there is no network at presentation time — so a component that pulls
+a registry at install and its CSS at run could not be shown in the room at all.
+`ScrollStack.js` is the behaviour, ported the way `AccordionGallery`,
+`SkewedCarousel` and `TiltedTiles` were. That is now four.
+
+**It is not a real scroller, which is the one real difference from the
+reference.** The reference pins with `position: sticky` inside a tall scroller
+and reads `scrollTop` on every scroll event. Four keys run this deck: the right
+arrow walks what is *in* a tab and spills into the next tab once it is spent,
+so the stack has to be steppable card by card from the keyboard as well as
+scrollable — and two gestures writing `scrollTop` is the loop this deck has
+already stalled on once, where an eased step under a pixel asks for nothing and
+never lands. So there is one number. `pos` is the position in cards, eased
+toward `target` in a rAF loop, and every card's transform is a pure function of
+`i - pos`. The wheel writes `target`, the arrow keys write it through
+`slideSteps`, and neither has an opinion about how the stack moves.
+
+Two things fall out of that for free. **`pos` is clamped to the last card**, so
+the last card is always at zero depth and never recedes — the one special case
+the reference writes out by hand. And **z-order is never touched mid-flight**:
+a card's z-index is its index, written once, so the newest is in front because
+it is later in the list and no transition can catch a layer being reassigned
+under it.
+
+**The blur is off, and it was measured to zero rather than chosen.** Ablated
+one suspect at a time on a fresh load, driving the stack end to end:
+
+| what was removed | median | p90 |
+| --- | --- | --- |
+| nothing, blur at 2.4px | 16.7ms | **33.3ms** |
+| nothing, blur at 2.0px and two cards deep | 16.7ms | **33.3ms** |
+| the card shadow | 16.7ms | 16.7ms |
+| the stage mask | 16.7ms | 16.8ms |
+| the orbs | 16.7ms | 16.7ms |
+| **the blur** | 16.7ms | **16.7ms** |
+
+The expense is blurring a 720px card at all while it moves, not how much or how
+many — capping it at two cards deep changed nothing. A card behind is still
+lifted, scaled, turned and faded, which is four cues of depth, and only about
+34px of each ever shows past the card in front. `filter` is out of
+`will-change` for the same reason `letterReveal` had to drop it: naming it
+promotes every card to a compositor layer for as long as the declaration
+stands. And the loop writes `none`, never `blur(0px)` — a zero-radius blur is
+still a filter and still builds a compositing context.
+
+**The median is not the measurement on this harness.** Every row above reads
+16.7ms because that is this Chrome instance's vsync floor, and a *blank page*
+on it reports 40 of 94 frames "over 16.7". Earlier passes in this brief quote a
+6.9ms floor, which was a differently-configured instance. Read p90, and check
+the floor with a blank page before believing either.
+
+**Two things the first cut got wrong, both visible in one screenshot.**
+`letterReveal` hands back a CONTROLLER — `{ node, reveal, hide, rebuild }` —
+not an element, so appending its return value stringified it: the slide drew
+"PARTNERSHIPS[object Object]" with no title under it. It is `.node`, as
+`SlideView` already had it. And the marks were set 44px tall on a 64px plate,
+where three of these four are lockups with their own frame and white ground
+burned in — a badge set small reads as a sticker. 62px on an 86px plate is the
+height at which the smallest of them, OpenAI's, is still readable from a room.
+
+**A card is pinned by its top, not centred.** A partner with four points is
+taller than one with none, and a card centred instead would move its own head
+up and down as the copy changed. `transform-origin` is that same pin, so a
+receding card shrinks toward the line it is pinned on — without that the stack
+fans apart at the top instead of stacking.
+
+**Where the words and the colours come from**, because both are rules here:
+
+  - **The marks are the user's own.** Three are the partner lockups supplied
+    for AI Ready Engineer — Claude Partner Network (Member), OpenAI Select
+    Partner, the sarvam wordmark. GitHub has no partner lockup anywhere in the
+    library, so it takes the plain wordmark the Centres of Excellence wall
+    already draws. A partner with no artwork stands in type; nothing is
+    hand-drawn.
+  - **`note` is what the lockup itself prints.** GitHub's "GitHub Campus
+    Program" is the line on the pavilion signage in the NT Square photographs,
+    so it is the user's too.
+  - **`tagline` is the deck's own**, copied verbatim off the Centres of
+    Excellence block for Claude, OpenAI and GitHub.
+  - **`color` is measured.** Those three take the hex already stored against
+    them on that same block. Sarvam had none anywhere, so its mark was
+    measured: 60,684 ink pixels over a 1600x542 wordmark, mean **#3F3F3F**.
+  - **Sarvam's `points` are deliberately empty and its tagline is the one line
+    on the slide with no source.** Nothing about that partnership is written
+    down anywhere in this deck. An invented line on a partner's card is worse
+    on a college's screen than a short card, so the component draws no rule and
+    no list when there are none, and that line is the first thing to replace.
+
+Measured presenting at 1600x900: 16 tabs walk and fill at 900px and come back
+round; no second section head; all four marks loaded, 60–62px tall, none
+overflowing its plate; the right arrow takes three presses through the cards
+and leaves the tab on the fourth; the rail lights the card in front and jumps
+to any of them; p90 at the vsync floor; no console errors.
 
 **Four Torii rows and one NGI row are switched off in the code** (2026-09-16),
 on request: Torii's Industry Alliances, History & Milestones, Success Stories
