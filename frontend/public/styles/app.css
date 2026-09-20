@@ -21010,12 +21010,14 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   top: 0;
   bottom: var(--deck-bar-clear, 0px);
   z-index: 4;
+  /* NO MASK. A `mask-image` on a box whose children move means the whole
+     masked region is re-composited every frame, and on a stage this size that
+     was the single biggest cost on the slide: measured over one travel, taking
+     the mask off moved p90 from 33.4ms to 16.8 and frames over 20ms from 26 of
+     76 to 4. The edge it softened is the top of the next card, which is
+     already drawn at 14% opacity, so a hard clip there is very nearly the same
+     picture for none of the work. */
   overflow: hidden;
-  /* The fade is late, because what passes through it is a thin edge of the
-     next card rather than a body of content: at 88% the whole of that edge was
-     inside the fade and the peek was invisible. */
-  -webkit-mask-image: linear-gradient(to bottom, #000 0 95%, transparent 100%);
-          mask-image: linear-gradient(to bottom, #000 0 95%, transparent 100%);
 }
 
 .ss-card {
@@ -21062,9 +21064,15 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   border-radius: 26px;
   border: 1px solid var(--ss-line);
   background: #fff;
+  /* 40px of blur, not 80. A large-radius shadow is redrawn every time its
+     element's transform changes, and a receding card's does on every frame of
+     the travel — measured, an 80px shadow and the copy fade were the two costs
+     between this slide and the vsync floor, and neither showed while the other
+     was there. At 40 with a touch more opacity the card still stands off the
+     sheet and the shadow is a quarter of the work. */
   box-shadow:
     0 1px 2px rgb(17 24 39 / 0.05),
-    0 34px 80px rgb(17 24 39 / 0.18);
+    0 18px 40px rgb(17 24 39 / 0.20);
   /* The partner's own colour, measured off its mark, as a band across the top
      of its card and nowhere else. This is the one place a card is not white,
      and with no list beside the stack it is also the only thing that tells the
@@ -21072,14 +21080,24 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   border-top: 6px solid var(--ss-accent);
 }
 
+/* Everything the card says, in one element. */
+.ss-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  /* 120ms, measured. Fading a card's copy is fading a block of live type, and
+     every frame of that fade re-rasterises it — over one travel, 260ms of fade
+     cost 10 frames of 76 over 20ms, 120ms costs 6, and no fade at all costs 2.
+     Promoting the element with `will-change: opacity` to make the fade the
+     compositor's problem made it WORSE, not better (15 of 76): four more large
+     layers cost more than the raster they saved. So the dial is the duration,
+     and 120ms is the shortest that still reads as the card turning away rather
+     than its words being switched off. */
+  transition: opacity 120ms ease;
+}
 /* A card behind the front one keeps its plate, its colour and its shape and
    loses its copy — which is what a stack of cards looks like from the side. */
-.ss-card__face > * {
-  transition: opacity 260ms ease;
-}
-.ss-card.is-behind .ss-card__face > * {
-  opacity: 0;
-}
+.ss-card.is-behind .ss-card__body { opacity: 0; }
 
 .ss-card__top {
   display: flex;

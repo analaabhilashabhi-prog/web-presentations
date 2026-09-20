@@ -2424,6 +2424,57 @@ things that cost a measurement each:
     now a thin edge of the next card rather than a body of content, and at 88%
     the whole of that edge was inside the fade and the peek was invisible.
 
+**Square, and nothing with copy on it is ever scaled** (same day, on request:
+"they are a bit shaky while I'm scrolling, and they are not perfectly aligned,
+like they are some cross — I want it very clean, neat"). Two complaints, two
+different causes, and neither is the other's fix.
+
+  - **The cross was the rotation.** A receding card turned -1.7 degrees per
+    card behind — the reference's own flourish — so three cards deep meant
+    three top edges at three different angles. Square, the stack is
+    concentric. Measured: four rotations of 0.000 degrees, four centres all at
+    x=800, tops 34px apart, all four cards 1240 wide.
+  - **The shake was type being re-set, not a box being moved.** A composited
+    layer can be TRANSLATED for nothing: the browser rasterises the text once
+    and moves the finished layer, so a fractional offset is smooth. Changing
+    its SCALE invalidates that raster and lays out and draws every glyph again
+    at the new size, every frame, for the whole travel. So nothing with visible
+    copy is scaled here: a card on its way up only travels, and `is-behind`
+    fades a receding card's copy at 0.04 of a card — early, so the copy is
+    gone before the scale starts rather than 0.35 of a card later.
+
+**Then the travel still dropped a frame in ten, and it took an ablation and a
+noise floor to find out why.** Driving one travel on a fresh load, the same
+configuration measured 18–25 frames of 76 over 20ms five times running, so a
+reading of 4 was a real difference and not luck. Two things mattered and
+neither showed while the other was there:
+
+| what was changed | frames over 20ms, of 76 |
+| --- | --- |
+| nothing | 21 ± 3 |
+| the stage's `mask-image` off | 4 |
+| the copy fade made instant | 2 |
+| the card's shadow off | 16 |
+| the card's border-radius off | 34 — worse, and noise |
+| **both, as shipped** | **2–5** |
+
+  - **A `mask-image` on a box whose children move re-composites the whole
+    masked region every frame.** The stage's was softening the top edge of the
+    next card, which is already drawn at 14% opacity — a hard clip there is
+    very nearly the same picture for none of the work.
+  - **The fade's duration is the dial, and promoting the element is not.**
+    260ms of fading live type costs 10 frames of 76; 120ms costs 6; no fade
+    costs 2. `will-change: opacity` on the four card bodies, to make the fade
+    the compositor's problem, made it **worse** (15 of 76) — four more large
+    layers cost more than the raster they saved. This is the opposite of what
+    `letterReveal` needed, and the difference is one layer per card against one
+    per glyph.
+
+Where it ended, at 1600x900 on a Chrome whose own floor is 16.7ms: p90 16.7ms
+through a travel, 2–5 frames of 76 over 20ms, against 21 before. The team
+ribbon drifting on the same instance reads p90 16.8ms, which is what the floor
+looks like.
+
 **Where the words and the colours come from**, because both are rules here:
 
   - **The marks are the user's own.** Three are the partner lockups supplied

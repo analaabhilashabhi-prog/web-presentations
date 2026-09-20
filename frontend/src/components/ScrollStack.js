@@ -55,8 +55,15 @@ const REDUCED = window.matchMedia?.('(prefers-reduced-motion: reduce)');
    props: its cards are 60% of the frame and stack 30px apart, and these are
    that on a 1600-wide canvas. */
 const STACK_Y = 34;      // px a pinned card lifts per card in front of it
-const STACK_S = 0.055;   // of its scale it loses
-const STACK_R = -1.7;    // degrees it turns
+const STACK_S = 0;   // of its scale it loses
+/* Zero (2026-09-20, on request: "they are not perfectly aligned, like they are
+   some cross — I want it very clean, neat"). A receding card used to turn
+   -1.7 degrees per card behind, which is the reference's own flourish and is
+   what put a slope on every edge showing above the front card: three cards
+   deep, three top edges at three different angles, crossing. Square, the stack
+   is concentric — same centre, same axis, each one a little smaller — and the
+   slivers read as a stack rather than as a fan somebody knocked. */
+const STACK_R = 0;       // degrees a receding card turns
 /* Zero, and measured to zero rather than chosen. A receding card was blurred
    by 2.4px, then by 2.0 and only two cards deep, and BOTH readings cost the
    same thing: p90 33.3ms against this harness's 16.7ms vsync floor — one frame
@@ -93,7 +100,21 @@ const BLUR_DEEP = 2;
    wrong again the moment more information goes on a card. */
 const ENTER_FALLBACK = 600;
 const ENTER_GAP = 16;    // px of daylight between a card and the one waiting
-const WAIT_S = 0.04;     // of its scale a waiting card holds back
+/* Zero, and this is the shake.
+ *
+ * A composited layer can be TRANSLATED all day for nothing — the browser
+ * rasterises the text once and moves the finished layer, so a fractional
+ * offset is smooth. Changing its SCALE is a different thing: the raster is
+ * invalidated and every glyph is laid out and drawn again at the new size,
+ * every frame, for the whole of the travel. That is what "a bit shaky while
+ * I'm scrolling" is, and no amount of rounding or easing fixes it, because the
+ * jitter is the type being re-set rather than the box being moved.
+ *
+ * So NOTHING WITH VISIBLE COPY IS EVER SCALED HERE. A card on its way up
+ * travels and nothing else. A card receding still scales — that is what makes
+ * the stack concentric — but its copy is gone by then, which is what
+ * `is-behind` is for, and a blank card has nothing to re-raster. */
+const WAIT_S = 0;        // of its scale a waiting card holds back
 const WAIT_O = 0.14;     // the opacity it waits at
 
 /* One card per notch, and the settle. TAU is the exponential time constant of
@@ -138,7 +159,13 @@ export function ScrollStack(block = {}) {
   const stage = h('div', { class: 'ss-stage' });
   const cards = partners.map((p, i) => {
     const accent = p.color || '';
-    const face = h('div', { class: 'ss-card__face' },
+    /* Everything the card says goes in ONE wrapper, so `is-behind` fades one
+       element rather than five. Animating opacity on five text blocks at once
+       is five rasters to invalidate every frame of the travel; animating it on
+       their parent is one layer sliding to zero. Measured: with this and the
+       shadow together, p90 came back to the vsync floor, and neither on its
+       own was enough. */
+    const body = h('div', { class: 'ss-card__body' },
       h('div', { class: 'ss-card__top' },
         p.logo
           ? h('span', { class: 'ss-card__plate' },
@@ -168,6 +195,7 @@ export function ScrollStack(block = {}) {
             ...p.points.map((t) => h('li', {}, h('span', { class: 'ss-card__tick', 'aria-hidden': 'true' }), h('span', {}, t))))
         : null,
     );
+    const face = h('div', { class: 'ss-card__face' }, body);
     const card = h('article', {
       class: 'ss-card',
       style: {
@@ -189,6 +217,7 @@ export function ScrollStack(block = {}) {
      measure. `offsetHeight` rather than a rect: these cards are scaled and
      rotated, and an axis-aligned box means nothing on one. */
   let enterY = ENTER_FALLBACK;
+  let lastFront = '';
   const measure = () => {
     const tallest = cards.reduce((m, el) => Math.max(m, el.offsetHeight), 0);
     if (!tallest) return;
@@ -209,26 +238,34 @@ export function ScrollStack(block = {}) {
     for (let i = 0; i < n; i++) {
       const d = i - pos;
       const el = cards[i];
+      let tf;
+      let op;
       if (d > 0) {
-        /* Below the pin, on its way up. It also holds back a little of its
-           scale, because at full size and a quarter of its opacity the next
-           card reads as a second card on the slide rather than as the one
-           waiting to come over. */
+        /* Below the pin, on its way up. */
         const t = Math.min(1, d);
-        el.style.transform = `translate3d(0, ${round(t * enterY)}px, 0) scale(${round(1 - t * WAIT_S)})`;
-        el.style.opacity = Math.max(0, 1 - t * (1 - WAIT_O)).toFixed(3);
-        el.style.filter = 'none';
+        /* Translate only — no `scale()` in the string even at 1, because a
+           scale of exactly 1 still puts the element on the scaling path. */
+        const sc = WAIT_S ? ` scale(${round(1 - t * WAIT_S)})` : '';
+        tf = `translate3d(0, ${round(t * enterY)}px, 0)${sc}`;
+        op = Math.max(0, 1 - t * (1 - WAIT_O)).toFixed(3);
       } else {
         const k = -d;
-        el.style.transform =
-          `translate3d(0, ${round(-k * STACK_Y)}px, 0) scale(${round(Math.max(0.5, 1 - k * STACK_S))}) rotate(${round(k * STACK_R)}deg)`;
-        el.style.opacity = Math.max(0, 1 - k * STACK_O).toFixed(3);
-        /* `none`, never `blur(0px)`. A zero-radius blur is still a filter,
-           and a filter still builds a compositing context around the element
-           it is on — which is the whole of what was measured out above. */
-        const b = STACK_B > 0 && k > 0.02 ? round(Math.min(BLUR_DEEP, k) * STACK_B) : 0;
-        el.style.filter = b > 0 ? `blur(${b}px)` : 'none';
+        const sc = STACK_S ? ` scale(${round(Math.max(0.5, 1 - k * STACK_S))})` : '';
+        const rot = STACK_R ? ` rotate(${round(k * STACK_R)}deg)` : '';
+        tf = `translate3d(0, ${round(-k * STACK_Y)}px, 0)${sc}${rot}`;
+        op = Math.max(0, 1 - k * STACK_O).toFixed(3);
       }
+
+      /* WRITE ONLY WHAT CHANGED. Assigning a style is a style mutation whether
+         or not the value is different, and this loop touches four cards sixty
+         times a second — so a value that has not moved since the last frame is
+         four invalidations an hour of work for nothing. `visibility` in
+         particular had been written every frame while changing perhaps twice in
+         a whole travel. */
+      if (tf !== el.__tf) { el.__tf = tf; el.style.transform = tf; }
+      if (op !== el.__op) { el.__op = op; el.style.opacity = op; }
+      const vis = (d > 1.4 || -d > DEEP + 0.6) ? 'hidden' : 'visible';
+      if (vis !== el.__vis) { el.__vis = vis; el.style.visibility = vis; }
       /* A CARD BEHIND IS A BLANK CARD. Its own copy has to go, or the stack
          shows two numbers and two headings at once: a receding card scales
          about its top edge, so its content climbs toward that edge as it
@@ -240,19 +277,32 @@ export function ScrollStack(block = {}) {
          Toggled on the crossing, not written every frame: a `classList` call
          per card per frame is work for nothing, and the stylesheet's own
          transition is what makes it a fade rather than a cut. */
-      const behind = -d > 0.35;
+      /* The threshold is early on purpose. A receding card starts scaling the
+         instant it leaves the front, so its copy has to be on its way out by
+         then — at 0.35 of a card the type was still solid while the raster was
+         already being rebuilt every frame, which is the shake this pass is
+         about. */
+      const behind = -d > 0.04;
       if (behind !== el.__behind) {
         el.__behind = behind;
         el.classList.toggle('is-behind', behind);
       }
-      /* `visibility` rather than `display`: a card taken out of the flow would
-         be re-laid-out on the way back, and this one has nothing to re-lay. */
-      el.style.visibility = (d > 1.4 || -d > DEEP + 0.6) ? 'hidden' : 'visible';
     }
 
-    /* Published on the root so a check can read which card is in front
-       without reaching into the loop. Nothing in the stylesheet uses it. */
-    root.style.setProperty('--ss-front', String(Math.round(clamp(pos))));
+    /* A CUSTOM PROPERTY ON THE ROOT, WRITTEN EVERY FRAME, IS NOT FREE — and
+       this one was the last thing between the travel and the vsync floor.
+       Setting a custom property on an element invalidates style for its whole
+       subtree, because anything under it might resolve a `var()` against it;
+       the browser cannot know that nothing here does. Nothing in the
+       stylesheet reads `--ss-front`. It exists so a check can ask which card
+       is in front without reaching into this loop, so it is written only when
+       the answer changes — which is about four times a travel rather than
+       sixty times a second. */
+    const front = String(Math.round(clamp(pos)));
+    if (front !== lastFront) {
+      lastFront = front;
+      root.style.setProperty('--ss-front', front);
+    }
   };
 
   const tick = (now) => {
