@@ -20999,136 +20999,43 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   to   { transform: translate(-50%, -50%) translate(26px, -20px); }
 }
 
-/* ------------------------------------------------------------------- the head */
-.ss-head {
-  position: absolute;
-  left: 76px;
-  top: 64px;
-  width: 470px;
-  z-index: 5;
-}
-
-.ss-eyebrow {
-  margin: 0 0 14px;
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--ink, #111827);
-  animation: ss-in 520ms cubic-bezier(0.22, 0.7, 0.28, 1) both;
-}
-.ss-eyebrow__mark {
-  width: 15px;
-  height: 13px;
-  border-radius: 3px 3px 3px 7px;
-  background: var(--ss-accent);
-}
-
-.ss-title {
-  margin: 0;
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 62px;
-  line-height: 1.02;
-  letter-spacing: -0.03em;
-}
-
-.ss-lead {
-  margin: 20px 0 0;
-  max-width: 34ch;
-  font-size: 17px;
-  line-height: 1.55;
-  color: var(--muted, rgb(17 24 39 / 0.62));
-  animation: ss-in 620ms cubic-bezier(0.22, 0.7, 0.28, 1) 220ms both;
-}
-
-/* The rail: every partner named, the one in front lit. A control as well as an
-   indicator — a presenter who wants the fourth card should not have to press
-   three times to reach it. */
-.ss-rail {
-  list-style: none;
-  margin: 40px 0 0;
-  padding: 0;
-  border-top: 1px solid var(--ss-line);
-}
-.ss-rail__row {
-  border-bottom: 1px solid var(--ss-line);
-  animation: ss-rise 560ms cubic-bezier(0.22, 0.68, 0, 1) calc(320ms + var(--ss-i, 0) * 70ms) both;
-}
-.ss-rail__btn {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  width: 100%;
-  padding: 13px 4px;
-  border: 0;
-  background: none;
-  text-align: left;
-  cursor: pointer;
-  color: var(--muted, rgb(17 24 39 / 0.55));
-  transition: color 240ms ease, padding-left 300ms cubic-bezier(0.22, 0.7, 0.28, 1);
-}
-.ss-rail__n {
-  font-family: var(--mono, ui-monospace, monospace);
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  opacity: 0.8;
-}
-.ss-rail__name {
-  font-family: var(--display);
-  font-weight: 600;
-  font-size: 20px;
-  letter-spacing: -0.01em;
-}
-.ss-rail__btn:hover { color: var(--ink, #111827); }
-.ss-rail__btn:focus-visible { outline: 2px solid var(--ss-accent); outline-offset: 3px; }
-/* Selected is colour, not fill — the same rule the navigation pane follows. */
-.ss-rail__row.is-on .ss-rail__btn {
-  color: var(--ink, #111827);
-  padding-left: 16px;
-}
-.ss-rail__row.is-on .ss-rail__n { color: var(--ss-accent); opacity: 1; }
-.ss-rail__row {
-  position: relative;
-}
-.ss-rail__row::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 11px;
-  bottom: 11px;
-  width: 3px;
-  background: var(--ss-accent);
-  transform: scaleY(0);
-  transform-origin: 50% 50%;
-  transition: transform 320ms cubic-bezier(0.22, 0.7, 0.28, 1);
-}
-.ss-rail__row.is-on::before { transform: scaleY(1); }
-
 /* ------------------------------------------------------------------ the stack */
 /* The stage clips, so a card waiting below rises into the frame rather than
    appearing on the spot — and so the one behind it never reaches the presenter
    bar. `--deck-bar-clear` is 0 when the section is not presenting. */
 .ss-stage {
   position: absolute;
-  left: 600px;
-  right: 76px;
+  left: 0;
+  right: 0;
   top: 0;
   bottom: var(--deck-bar-clear, 0px);
   z-index: 4;
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(to bottom, #000 0 84%, transparent 100%);
-          mask-image: linear-gradient(to bottom, #000 0 84%, transparent 100%);
+  /* The fade is late, because what passes through it is a thin edge of the
+     next card rather than a body of content: at 88% the whole of that edge was
+     inside the fade and the peek was invisible. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0 95%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 0 95%, transparent 100%);
 }
 
 .ss-card {
   position: absolute;
   left: 50%;
-  top: 92px;
-  width: 720px;
-  margin-left: -360px;
+  /* 100, not less. A card three back has lifted 3 x STACK_Y = 78px, and the
+     stage clips at its own top — pinned any higher, the deepest card in the
+     stack loses its head to the clip instead of showing as a sliver. */
+  top: 88px;
+  width: 1240px;
+  margin-left: -620px;
+  /* Every card is the same size whatever it holds, which a stack needs and a
+     list does not: cards of different heights shuffle their own bottom edge as
+     the stack turns. A partner with nothing under its rule simply has air
+     there — which is where the rest of the information is going. */
+  min-height: 560px;
+  /* The card is a flex column so its face fills the min-height rather than
+     shrinking to its own copy — otherwise the box is 560 and the white card
+     inside it is whatever the words happen to need. */
+  display: flex;
   /* A card is as tall as its own content and is anchored by its TOP, which is
      what "pinned" means: a partner with four points is taller than one with
      none, and a card centred instead would move its own head up and down as
@@ -21150,16 +21057,28 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
 .ss-card__face {
   display: flex;
   flex-direction: column;
-  padding: 34px 40px 36px;
-  border-radius: 22px;
+  flex: 1 1 auto;
+  padding: 52px 64px 56px;
+  border-radius: 26px;
   border: 1px solid var(--ss-line);
   background: #fff;
   box-shadow:
     0 1px 2px rgb(17 24 39 / 0.05),
-    0 26px 60px rgb(17 24 39 / 0.16);
+    0 34px 80px rgb(17 24 39 / 0.18);
   /* The partner's own colour, measured off its mark, as a band across the top
-     of its card and nowhere else. This is the one place a card is not white. */
-  border-top: 4px solid var(--ss-accent);
+     of its card and nowhere else. This is the one place a card is not white,
+     and with no list beside the stack it is also the only thing that tells the
+     slivers of the cards behind apart. */
+  border-top: 6px solid var(--ss-accent);
+}
+
+/* A card behind the front one keeps its plate, its colour and its shape and
+   loses its copy — which is what a stack of cards looks like from the side. */
+.ss-card__face > * {
+  transition: opacity 260ms ease;
+}
+.ss-card.is-behind .ss-card__face > * {
+  opacity: 0;
 }
 
 .ss-card__top {
@@ -21179,8 +21098,8 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 86px;
-  padding: 0 14px;
+  height: 118px;
+  padding: 0 20px;
   border-radius: 12px;
   background: #fff;
   border: 1px solid var(--ss-line);
@@ -21192,7 +21111,7 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
    room. */
 .ss-card__plate img {
   display: block;
-  height: 62px;
+  height: 86px;
   width: auto;
   max-width: none;
   object-fit: contain;
@@ -21200,26 +21119,27 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
 /* No artwork anywhere in the library: the name in type, never a mark drawn by
    hand. */
 .ss-card__plate--type {
-  padding: 0 20px;
+  padding: 0 28px;
   font-family: var(--display);
   font-weight: 700;
-  font-size: 22px;
+  font-size: 32px;
   letter-spacing: -0.01em;
 }
 
+/* What the rail used to say, on the card: "01 / 04". */
 .ss-card__n {
   font-family: var(--mono, ui-monospace, monospace);
-  font-size: 12px;
+  font-size: 19px;
   letter-spacing: 0.14em;
-  color: var(--muted, rgb(17 24 39 / 0.45));
-  padding-top: 6px;
+  color: var(--muted, rgb(17 24 39 / 0.42));
+  padding-top: 12px;
 }
 
-.ss-card__id { margin-top: 26px; }
+.ss-card__id { margin-top: 40px; }
 .ss-card__note {
-  margin: 0 0 8px;
+  margin: 0 0 12px;
   font-family: var(--mono, ui-monospace, monospace);
-  font-size: 11.5px;
+  font-size: 15px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ss-accent);
@@ -21228,21 +21148,21 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   margin: 0;
   font-family: var(--display);
   font-weight: 700;
-  font-size: 42px;
+  font-size: 84px;
   line-height: 1.05;
   letter-spacing: -0.025em;
 }
 .ss-card__tag {
-  margin: 10px 0 0;
-  font-size: 17px;
-  line-height: 1.5;
+  margin: 14px 0 0;
+  font-size: 29px;
+  line-height: 1.4;
   color: var(--muted, rgb(17 24 39 / 0.62));
 }
 
 /* A rule that draws itself, the way every other head's does. */
 .ss-card__rule {
   height: 2px;
-  margin: 24px 0 20px;
+  margin: 38px 0 30px;
   background: var(--ss-accent);
   transform: scaleX(0);
   transform-origin: 0 50%;
@@ -21255,22 +21175,22 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   padding: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px 30px;
+  gap: 20px 56px;
 }
 .ss-card__points li {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  font-size: 15.5px;
-  line-height: 1.45;
+  gap: 14px;
+  font-size: 24px;
+  line-height: 1.4;
   color: var(--ink, #111827);
   animation: ss-rise 520ms cubic-bezier(0.22, 0.68, 0, 1) 540ms both;
 }
 .ss-card__tick {
   flex: 0 0 auto;
-  width: 7px;
-  height: 7px;
-  margin-top: 7px;
+  width: 10px;
+  height: 10px;
+  margin-top: 11px;
   border-radius: 2px;
   background: var(--ss-accent);
 }
@@ -21290,11 +21210,6 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
 
 @media (prefers-reduced-motion: reduce) {
   .ss-orb { animation: none; }
-  .ss-eyebrow,
-  .ss-lead,
-  .ss-rail__row,
   .ss-card__points li { animation: none; opacity: 1; transform: none; }
   .ss-card__rule { animation: none; transform: scaleX(1); }
-  .ss-rail__btn,
-  .ss-rail__row::before { transition: none; }
 }

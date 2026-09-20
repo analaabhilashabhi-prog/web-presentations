@@ -84,7 +84,15 @@ const BLUR_DEEP = 2;
 
 /* The approach. A waiting card sits ENTER_Y below the pin and is clipped by
    the stage, so it rises into the frame rather than fading in on the spot. */
-const ENTER_Y = 400;
+/* How far below the pin a waiting card sits. This is a FALLBACK, not the
+   figure: the real one is measured off the tallest card after mount, because
+   a waiting card has to clear the card in front of it and the card in front is
+   as tall as whatever is written on it. A constant was wrong the moment the
+   cards became the slide — at 600 against a 643px card, the next card drew a
+   14%-opacity wash over the bottom 43px of the one being read, and it will be
+   wrong again the moment more information goes on a card. */
+const ENTER_FALLBACK = 600;
+const ENTER_GAP = 16;    // px of daylight between a card and the one waiting
 const WAIT_S = 0.04;     // of its scale a waiting card holds back
 const WAIT_O = 0.14;     // the opacity it waits at
 
@@ -114,42 +122,17 @@ export function ScrollStack(block = {}) {
     h('span', { class: 'ss-orb ss-orb--b', 'aria-hidden': 'true' }),
   );
 
-  /* ------------------------------------------------------------------ head */
-  const head = h('header', { class: 'ss-head' });
-  if (block.eyebrow) {
-    head.append(h('p', { class: 'ss-eyebrow' },
-      h('span', { class: 'ss-eyebrow__mark', 'aria-hidden': 'true' }),
-      h('span', {}, block.eyebrow)));
-  }
-  /* `.node`, not the return value. `letterReveal` hands back a CONTROLLER —
-     { node, reveal, hide, rebuild } — and appending that object stringifies it
-     to "[object Object]" beside an eyebrow with no title under it, which is
-     exactly what the first cut of this slide drew. */
-  head.append(letterRevealPreset(block.title || 'AI Partners', 'heading', {
-    as: 'h2',
-    className: 'ss-title',
-    trigger: true,
-  }).node);
-  if (block.lead) head.append(h('p', { class: 'ss-lead' }, block.lead));
+  /* NO HEAD AND NO RAIL (2026-09-20, on request: "I don't want any list showing
+     in the left hand side... that cards need to be very big, covering the
+     maximum of the screen in the middle... only the cards need to be there").
+     The slide is the stack and nothing else. The block still CARRIES `eyebrow`
+     and `lead` — they are in the schema and in the published data — and nothing
+     draws them; putting the head back is this comment's worth of code. `title`
+     is still read, for the label a screen reader announces and for nothing
+     else.
 
-  /* The rail names every partner and says which one is in front. It is a
-     control as well as an indicator — a presenter who wants the fourth card
-     should not have to press three times to reach it. */
-  const rail = h('ol', { class: 'ss-rail' });
-  const railItems = partners.map((p, i) => {
-    const b = h('button', {
-      class: 'ss-rail__btn',
-      type: 'button',
-      onclick: () => goTo(i),
-    },
-      h('span', { class: 'ss-rail__n' }, String(i + 1).padStart(2, '0')),
-      h('span', { class: 'ss-rail__name' }, p.name));
-    const li = h('li', { class: 'ss-rail__row', style: { '--ss-i': String(i) } }, b);
-    rail.append(li);
-    return li;
-  });
-  head.append(rail);
-  root.append(head);
+     What the rail did, the card does for itself: its corner reads "01 / 04", so
+     a presenter still knows which of how many without a list beside it. */
 
   /* ----------------------------------------------------------------- stack */
   const stage = h('div', { class: 'ss-stage' });
@@ -169,7 +152,7 @@ export function ScrollStack(block = {}) {
           /* No artwork: the name in type on the same plate, never a mark drawn
              by hand. That is this deck's standing rule about vendor logos. */
           : h('span', { class: 'ss-card__plate ss-card__plate--type' }, p.name),
-        h('span', { class: 'ss-card__n' }, String(i + 1).padStart(2, '0')),
+        h('span', { class: 'ss-card__n' }, `${String(i + 1).padStart(2, '0')} / ${String(n).padStart(2, '0')}`),
       ),
       h('div', { class: 'ss-card__id' },
         p.note ? h('p', { class: 'ss-card__note' }, p.note) : null,
@@ -202,6 +185,19 @@ export function ScrollStack(block = {}) {
   /* ------------------------------------------------------------- the motion */
   /* Opens one card short of the first, so the stack arrives by rising into
      the pin rather than being there already. */
+  /* Measured, with the constant as the value until there is something to
+     measure. `offsetHeight` rather than a rect: these cards are scaled and
+     rotated, and an axis-aligned box means nothing on one. */
+  let enterY = ENTER_FALLBACK;
+  const measure = () => {
+    const tallest = cards.reduce((m, el) => Math.max(m, el.offsetHeight), 0);
+    if (!tallest) return;
+    const next = tallest + ENTER_GAP;
+    if (Math.abs(next - enterY) < 1) return;
+    enterY = next;
+    paint();
+  };
+
   let pos = REDUCED?.matches ? 0 : -0.85;
   let target = 0;
   let last = 0;
@@ -219,7 +215,7 @@ export function ScrollStack(block = {}) {
            card reads as a second card on the slide rather than as the one
            waiting to come over. */
         const t = Math.min(1, d);
-        el.style.transform = `translate3d(0, ${round(t * ENTER_Y)}px, 0) scale(${round(1 - t * WAIT_S)})`;
+        el.style.transform = `translate3d(0, ${round(t * enterY)}px, 0) scale(${round(1 - t * WAIT_S)})`;
         el.style.opacity = Math.max(0, 1 - t * (1 - WAIT_O)).toFixed(3);
         el.style.filter = 'none';
       } else {
@@ -233,14 +229,30 @@ export function ScrollStack(block = {}) {
         const b = STACK_B > 0 && k > 0.02 ? round(Math.min(BLUR_DEEP, k) * STACK_B) : 0;
         el.style.filter = b > 0 ? `blur(${b}px)` : 'none';
       }
+      /* A CARD BEHIND IS A BLANK CARD. Its own copy has to go, or the stack
+         shows two numbers and two headings at once: a receding card scales
+         about its top edge, so its content climbs toward that edge as it
+         shrinks and comes out above the card in front — measured, card 1's
+         "01 / 04" sat 6px clear of card 3's top edge and read as a ghost
+         beside "03 / 04". Padding cannot fix it for every depth, because the
+         climb grows with the scale.
+
+         Toggled on the crossing, not written every frame: a `classList` call
+         per card per frame is work for nothing, and the stylesheet's own
+         transition is what makes it a fade rather than a cut. */
+      const behind = -d > 0.35;
+      if (behind !== el.__behind) {
+        el.__behind = behind;
+        el.classList.toggle('is-behind', behind);
+      }
       /* `visibility` rather than `display`: a card taken out of the flow would
          be re-laid-out on the way back, and this one has nothing to re-lay. */
       el.style.visibility = (d > 1.4 || -d > DEEP + 0.6) ? 'hidden' : 'visible';
     }
 
-    const front = Math.round(clamp(pos));
-    railItems.forEach((li, i) => li.classList.toggle('is-on', i === front));
-    root.style.setProperty('--ss-front', String(front));
+    /* Published on the root so a check can read which card is in front
+       without reaching into the loop. Nothing in the stylesheet uses it. */
+    root.style.setProperty('--ss-front', String(Math.round(clamp(pos))));
   };
 
   const tick = (now) => {
@@ -333,6 +345,20 @@ export function ScrollStack(block = {}) {
   });
 
   paint();
+  measure();
+  /* Again once the marks have landed: a plate is 118px whether its image has
+     arrived or not, but a partner whose copy wraps to another line is taller
+     than it was at mount, and the card behind has to know. A picture that
+     fails resolves the same as one that loads — there is nothing to wait for
+     twice. */
+  const marks = [...root.querySelectorAll('.ss-card__plate img')];
+  let left = marks.length;
+  if (!left) requestAnimationFrame(measure);
+  marks.forEach((im) => {
+    const done = () => { if (--left <= 0) requestAnimationFrame(measure); };
+    if (im.complete) done();
+    else { im.addEventListener('load', done, { once: true }); im.addEventListener('error', done, { once: true }); }
+  });
   if (!REDUCED?.matches) kick();
 
   return root;

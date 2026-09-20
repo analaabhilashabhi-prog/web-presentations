@@ -2398,6 +2398,32 @@ up and down as the copy changed. `transform-origin` is that same pin, so a
 receding card shrinks toward the line it is pinned on — without that the stack
 fans apart at the top instead of stacking.
 
+**The cards are the slide** (same day, on request: "I don't want any list
+showing in the left hand side... that cards need to be very big, covering the
+maximum of the screen in the middle... only the cards need to be there"). The
+head — eyebrow, title, lead — and the rail of four names are gone, and one card
+is 1240x643 of a 1600x900 slide, pinned at y=88 with 61px of daylight above the
+presenter bar. The block still CARRIES `eyebrow` and `lead`, and nothing draws
+them; `title` is read for the label a screen reader announces and nothing else.
+What the rail did, the card does for itself: its corner reads "01 / 04". Three
+things that cost a measurement each:
+
+  - **How far a waiting card sits below the pin is measured, not a constant.**
+    At a fixed 600 against a card that turned out to be 643 tall, the next card
+    drew a 14%-opacity wash over the bottom 43px of the one being read. It is
+    the tallest card's own `offsetHeight` plus 16 now, taken after mount and
+    again once the marks have landed — which matters because the whole point of
+    this cut is that more information is going onto these cards.
+  - **A card behind is a blank card.** A receding card scales about its top
+    edge, so its content climbs toward that edge as it shrinks and comes out
+    above the card in front: measured, card 1's "01 / 04" sat 6px clear of card
+    3's top and read as a ghost beside "03 / 04". Padding cannot fix it at every
+    depth, because the climb grows with the scale. `is-behind` fades the face's
+    children instead, toggled on the crossing rather than written every frame.
+  - **The mask on the stage fades at 95%, not 88%.** What passes through it is
+    now a thin edge of the next card rather than a body of content, and at 88%
+    the whole of that edge was inside the fade and the peek was invisible.
+
 **Where the words and the colours come from**, because both are rules here:
 
   - **The marks are the user's own.** Three are the partner lockups supplied
