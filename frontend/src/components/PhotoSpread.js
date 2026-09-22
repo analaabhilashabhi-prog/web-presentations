@@ -74,10 +74,12 @@ const SLOTS = [
   { x: 1040, y: 535, w: 205, h: 142, tilt:  1.2 },  // landscape, over the middle's corner
 ];
 
-/* About a second a swap (on request: "between one second"), with a flight
-   that takes most of it — so the page is very nearly always in gentle motion,
-   which is the effect wanted, rather than a still page that jumps. */
-const SWAP_EVERY = 1150;   // ms between swaps
+/* Two seconds a swap. It was 1150 ("between one second", 2026-09-21) and was
+   then "changing too fast, slow them a bit" (2026-09-22) — so about twice
+   as long, with the same 640ms flight: the page still moves for a third of
+   the time rather than being a still that jumps, and each middle now holds
+   for a beat before the next print comes in. */
+const SWAP_EVERY = 2000;   // ms between swaps
 const FLIGHT = 640;        // ms, the stylesheet's transition; z-order is held for it
 const FIRST_SWAP = 2300;   // ms after mount — clear of the entrance
 

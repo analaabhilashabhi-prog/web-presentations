@@ -2695,6 +2695,11 @@ second"): the next slot round the ring comes to the middle and the middle goes
 to the slot it left — a swap, so no photograph is ever off the page. Measured
 over 8s: 7 changes, gaps 1114–1200ms. The flight is 640ms of that, so the page
 is very nearly always in gentle motion rather than a still one that jumps.
+**Then slowed to every 2.0s** (2026-09-22, "the pics were changing too fast,
+slow them a bit"): the same 640ms flight, so the page moves a third of the time
+and each middle holds for a beat. Measured presenting over 8s after the change:
+3 changes, gaps 1986 and 2002ms, 13 of 13 loaded, no console errors.
+`SWAP_EVERY` in `PhotoSpread.js` is the one dial.
 
 **The BOX is animated, not a transform — and that was the whole of "not
 smooth."** The first cut was a FLIP: the print laid out at its new box and
