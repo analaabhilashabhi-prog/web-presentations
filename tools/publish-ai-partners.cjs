@@ -61,10 +61,12 @@
  *     Claude Certified Architect trainers, the Claude Certified Associate card
  *     on AI Ready Engineer, the Centres of Excellence list, that curriculum's
  *     own "3 C's — Claude · Codex · Copilot" and "GitHub & Version Control"
- *     modules, the GitHub Experience Center at NT Square. SARVAM'S ARE
- *     DELIBERATELY EMPTY and the component draws no grid at all when there are
- *     none: an invented line on a partner's card is worse on a college's
- *     screen than a short card.
+ *     modules, the GitHub Experience Center at NT Square. Sarvam's WERE
+ *     deliberately empty for the same reason — nothing about that partnership
+ *     is in the deck — until the user asked for the card to be filled
+ *     (2026-09-22); its six points now describe Sarvam as Sarvam publishes
+ *     itself, with no figures, and are the first thing to replace with the
+ *     user's own words. The component still draws no grid when there are none.
  *
  *   - **`color` is measured, not chosen** — the hex already stored against
  *     each of the three on the Centres of Excellence block; sarvam's was
@@ -154,7 +156,23 @@ const BLOCK = {
       headline: 'Sarvam AI.',
       headlineAccent: 'Partnership.',
       color: '#3F3F3F',
-      points: [],
+      /* FILLED ON REQUEST (2026-09-22: "info in the sarvam ai also it was
+         empty"). Nothing about this partnership is written anywhere in the
+         deck, so these describe SARVAM as Sarvam describes itself publicly —
+         Indic-language foundation models, voice AI, the IndiaAI Mission
+         selection, open-weight releases, a developer platform — and the one
+         line about the partnership says only what this slide already says:
+         that it is one. No figure appears: no language count, no parameter
+         count, no customer. Replace any of these with the user's own words
+         the moment they arrive. */
+      points: [
+        { icon: 'globe', title: 'Indian Languages', body: 'Foundation models built for India’s languages, made in India.' },
+        { icon: 'volume', title: 'Voice AI', body: 'Speech recognition and speech synthesis for Indian languages.' },
+        { icon: 'flag', title: 'Sovereign AI', body: 'Selected under the IndiaAI Mission to build India’s own foundation model.' },
+        { icon: 'code', title: 'Open Weights', body: 'Models published for developers to run and fine-tune themselves.' },
+        { icon: 'tap-network', title: 'Developer Platform', body: 'APIs and agent tooling to build Indic-language applications on.' },
+        { icon: 'handshake-check', title: 'AI Partner', body: 'An AI partner of Torii Minds, beside Claude, OpenAI and GitHub.' },
+      ],
     },
     {
       name: 'GitHub',

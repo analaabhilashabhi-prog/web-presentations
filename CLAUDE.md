@@ -2548,7 +2548,15 @@ card is already recorded somewhere else in it: the ten Claude Certified
 Architect trainers, the Claude Certified Associate card on AI Ready Engineer,
 the Centres of Excellence list, that curriculum's own "3 C's — Claude · Codex ·
 Copilot" and "GitHub & Version Control" modules, the GitHub Experience Center
-at NT Square. Sarvam's stay empty and its card draws no grid at all.
+at NT Square. Sarvam's stayed empty and its card drew no grid at all — until
+2026-09-22 ("info in the sarvam ai also it was empty"), when it was filled with
+six points that describe **Sarvam as Sarvam publishes itself**: Indic-language
+foundation models, voice AI, its selection under the IndiaAI Mission, open-weight
+releases, a developer platform, and one line saying it is an AI partner of Torii
+Minds, which is all this slide already claims. No figure is on the card. Those
+six are written from public description rather than from anything in this deck,
+which makes them the first words on the slide to replace when the user's own
+arrive; the mark's corner is still empty, awaiting the logo.
 
 **The partner's colour is on the card and never on its type.** It is the band
 across the top and the tint behind each icon chip — which is still what tells
