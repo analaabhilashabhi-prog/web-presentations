@@ -1,7 +1,7 @@
 import { h } from '../utils/dom.js';
 import { upload } from '../utils/media.js';
 import { registerStepper } from '../utils/slideSteps.js';
-import { letterRevealPreset } from '../utils/letterReveal.js';
+import { icon, hasIcon } from '../utils/icons.js';
 
 /**
  * The AI partners, as a stack of pinned cards.
@@ -166,34 +166,86 @@ export function ScrollStack(block = {}) {
        shadow together, p90 came back to the vsync floor, and neither on its
        own was enough. */
     const body = h('div', { class: 'ss-card__body' },
-      h('div', { class: 'ss-card__top' },
+      /* --------------------------------------------------- the header row */
+      /* THE CREDENTIAL ON THE LEFT AND THE BRAND ON THE RIGHT, which is the
+         one place this card differs from the reference on purpose. The
+         reference has a small pill at that corner and its own starburst at the
+         other; here the left-hand thing is the partnership lockup the partner
+         actually issued, because "shown clearly" is what was asked of it, and
+         a badge is a picture rather than a word. */
+      h('header', { class: 'ss-card__top' },
         p.logo
-          ? h('span', { class: 'ss-card__plate' },
+          ? h('span', { class: 'ss-card__badge' },
               h('img', {
                 src: upload(p.logo),
-                alt: p.logoAlt || p.name,
+                alt: p.logoAlt || `${p.name} partnership`,
                 loading: 'eager',
                 decoding: 'async',
                 draggable: 'false',
               }))
-          /* No artwork: the name in type on the same plate, never a mark drawn
-             by hand. That is this deck's standing rule about vendor logos. */
-          : h('span', { class: 'ss-card__plate ss-card__plate--type' }, p.name),
+          /* No lockup for this partner: what the badge WOULD have said, set in
+             type on the same plate. GitHub has no partner badge anywhere in the
+             library and its standing is printed on the pavilion signage, so
+             this is the honest version of the same slot — never a badge drawn
+             by hand to fill it. */
+          : (p.note ? h('span', { class: 'ss-card__badge ss-card__badge--type' }, p.note) : null),
+        p.mark
+          ? h('span', { class: 'ss-card__mark' },
+              h('img', {
+                src: upload(p.mark),
+                alt: p.markAlt || p.name,
+                loading: 'eager',
+                decoding: 'async',
+                draggable: 'false',
+              }))
+          /* NO MARK, NO CORNER. The type fallback belongs on the badge
+             plate, where it stands in for a picture nobody has. Here it
+             would set the partner's name a second time, 40px above the
+             62px headline that already says it — and a vendor mark is
+             never drawn by hand to fill the gap. The corner is left
+             empty until the file arrives. */
+          : null,
+      ),
+
+      /* ----------------------------------------------------- the headline */
+      /* Two spans, two colours, one line — the reference's own device. Both
+         halves are supplied rather than split out of one string: a name with a
+         full stop in it would break any rule that guessed where the join is.
+         With neither supplied the partner's own name carries the line, so a
+         card published before these fields existed still reads. */
+      h('h3', { class: 'ss-card__head' },
+        h('span', {}, p.headline || `${p.name}.`),
+        p.headlineAccent ? h('span', { class: 'ss-card__head-accent' }, ` ${p.headlineAccent}`) : null,
+      ),
+      p.tagline ? h('p', { class: 'ss-card__lead' }, p.tagline) : null,
+
+      /* ------------------------------------------------- the points, as cards */
+      /* Numbered small cards rather than a two-column list of bullets, and
+         the count goes to the stylesheet as `--ss-cols` so the row can be
+         FIXED-WIDTH COLUMNS, CENTRED, rather than fractions of the row. On
+         `1fr` a partner with three points would get cards twice the size of
+         everybody else's, and a stack whose cards are not the same card with
+         less on it stops reading as a stack. `auto-fit` is the other trap
+         this deck already knows — it leaves a phantom column. */
+      p.points.length
+        ? h('ul', { class: 'ss-card__grid', style: { '--ss-cols': String(p.points.length) } },
+            ...p.points.map((pt, j) => h('li', { class: 'ss-pt', style: { '--ss-j': String(j) } },
+              h('span', { class: 'ss-pt__ic', 'aria-hidden': 'true' }, icon(pt.icon && hasIcon(pt.icon) ? pt.icon : 'dot', { class: 'ss-pt__glyph', size: 21 })),
+              h('span', { class: 'ss-pt__n', 'aria-hidden': 'true' }, String(j + 1).padStart(2, '0')),
+              pt.title ? h('h4', { class: 'ss-pt__t' }, pt.title) : null,
+              pt.body ? h('p', { class: 'ss-pt__b' }, pt.body) : null,
+            )))
+        : null,
+
+      /* ---------------------------------------------------------- the foot */
+      /* A hairline and the counter. What the rail used to say, on the card:
+         "01 / 04". `margin-top: auto` puts it on the floor of a card that is
+         taller than its own copy, so a partner with three points ends on the
+         same line as one with six rather than leaving its rule half way up. */
+      h('footer', { class: 'ss-card__foot' },
+        h('span', { class: 'ss-card__rule', 'aria-hidden': 'true' }),
         h('span', { class: 'ss-card__n' }, `${String(i + 1).padStart(2, '0')} / ${String(n).padStart(2, '0')}`),
       ),
-      h('div', { class: 'ss-card__id' },
-        p.note ? h('p', { class: 'ss-card__note' }, p.note) : null,
-        h('h3', { class: 'ss-card__name' }, p.name),
-        p.tagline ? h('p', { class: 'ss-card__tag' }, p.tagline) : null,
-      ),
-      /* The rule is a divider, so it is drawn only when there is something
-         under it to divide from. A card that ends on a rule reads as a card
-         somebody stopped writing. */
-      p.points.length ? h('div', { class: 'ss-card__rule', 'aria-hidden': 'true' }) : null,
-      p.points.length
-        ? h('ul', { class: 'ss-card__points' },
-            ...p.points.map((t) => h('li', {}, h('span', { class: 'ss-card__tick', 'aria-hidden': 'true' }), h('span', {}, t))))
-        : null,
     );
     const face = h('div', { class: 'ss-card__face' }, body);
     const card = h('article', {
@@ -401,7 +453,7 @@ export function ScrollStack(block = {}) {
      than it was at mount, and the card behind has to know. A picture that
      fails resolves the same as one that loads — there is nothing to wait for
      twice. */
-  const marks = [...root.querySelectorAll('.ss-card__plate img')];
+  const marks = [...root.querySelectorAll('.ss-card__badge img, .ss-card__mark img')];
   let left = marks.length;
   if (!left) requestAnimationFrame(measure);
   marks.forEach((im) => {

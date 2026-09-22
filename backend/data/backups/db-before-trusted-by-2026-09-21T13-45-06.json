@@ -13216,7 +13216,7 @@
       "status": "published",
       "blocks": [
         {
-          "id": "blk_cfab1a14f9764d17",
+          "id": "blk_10de325601344b7c",
           "type": "trust-fan",
           "layout": {
             "x": 0,
@@ -13227,13 +13227,6 @@
           "title": "Trusted By",
           "base": "TrustedBy",
           "logos": [
-            {
-              "src": "ycce.png",
-              "name": "Yeshwantrao Chavan College of Engineering",
-              "note": "",
-              "w": 861,
-              "h": 332
-            },
             {
               "src": "nagarjuna-group-of-institutions.png",
               "name": "Nagarjuna Group of Institutions",
@@ -13289,15 +13282,21 @@
               "note": "",
               "w": 795,
               "h": 382
+            },
+            {
+              "src": "ycce.png",
+              "name": "Yeshwantrao Chavan College of Engineering",
+              "note": "",
+              "w": 861,
+              "h": 332
             }
           ],
-          "countLabel": "trusted partners",
           "glow": "",
           "glow2": ""
         }
       ],
       "createdAt": "2026-09-21T13:33:31.822Z",
-      "updatedAt": "2026-09-21T13:48:31.396Z"
+      "updatedAt": "2026-09-21T13:33:31.822Z"
     }
   ],
   "assets": [

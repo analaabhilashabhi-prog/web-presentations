@@ -63,6 +63,8 @@ export const BLOCK_TYPES = [
   'project-showcase',
   'thread-board',
   'scroll-stack',
+  'photo-spread',
+  'trust-fan',
 ];
 
 export const CARD_VARIANTS = ['plain', 'team', 'partner', 'program', 'placement', 'certification'];
@@ -121,6 +123,8 @@ const DEFAULT_SIZE = {
   'project-showcase': { w: 12, h: 15 },
   'thread-board': { w: 12, h: 15 },
   'scroll-stack': { w: 12, h: 15 },
+  'photo-spread': { w: 12, h: 15 },
+  'trust-fan': { w: 12, h: 15 },
 };
 
 const oneOf = (value, allowed, fallback) => (allowed.includes(value) ? value : fallback);
@@ -160,6 +164,27 @@ const iconKey = (value) => {
 const hexColor = (value) => {
   const raw = String(value ?? '').trim();
   return /^#[0-9a-fA-F]{6}$/.test(raw) ? raw.toUpperCase() : '';
+};
+
+/**
+ * A path to a file under /uploads, and nothing else. The same expression a
+ * dozen media fields in this file already inline — lifted out because two
+ * fields on one partner now need it, and two copies of a security check is
+ * one copy too many. No leading slash (it is joined to the uploads root), no
+ * traversal, no scheme.
+ */
+const uploadPath = (value) => {
+  let t = String(value ?? '').trim().slice(0, 240);
+  while (t.startsWith('/')) t = t.slice(1);
+  /* Segment by segment rather than one expression with an escaped slash in
+     it: the parts a path may be made of, and nothing between them but the
+     separator. Empty segment, dot segment or stray character and it is not a
+     path this server will join to anything — a dot segment fails the
+     first character on its own, so traversal needs no clause of its own. */
+  const SEG = /^[A-Za-z0-9][A-Za-z0-9 _.-]*$/;
+  const parts = t ? t.split('/') : [];
+  if (!parts.length || parts.some((p) => !SEG.test(p))) return '';
+  return t;
 };
 
 const clampInt = (value, min, max, fallback) => {
@@ -1377,23 +1402,109 @@ function normalizeBlock(raw, index = 0, depth = 0) {
              it. */
           note: text(p?.note, 80),
           tagline: text(p?.tagline, 120),
-          /* A file under /uploads, the same path rule every other block's media
-             field follows. */
-          logo: (() => {
-            const t = text(p?.logo, 240).replace(/^\/+/, '');
-            return /^[A-Za-z0-9][A-Za-z0-9 _.-]*(\/[A-Za-z0-9][A-Za-z0-9 _.-]*)*$/.test(t) ? t : '';
-          })(),
+          /* A file under /uploads, by the same rule every media field here
+             follows. */
+          logo: uploadPath(p?.logo),
           logoAlt: text(p?.logoAlt, 160),
-          /* The partner's own colour, measured off its mark. Only a well-formed
-             hex survives, because it is written into a style attribute. */
-          color: hexColor(p?.color),
+          /* The BRAND mark, which is a different thing from the badge above and
+             is why both fields exist. `logo` is the partnership lockup — the
+             thing the partner issued, which is the credential — and `mark` is
+             the vendor's own symbol, which is what the eye finds the card by
+             from across a room. Drawn in the corner the reference puts its
+             starburst in. Unset, the card sets the name in type there instead;
+             a vendor mark is never hand-drawn here. */
+          mark: uploadPath(p?.mark),
+          markAlt: text(p?.markAlt, 160),
+          /* The headline, in two parts because it is set in two colours — the
+             first in ink and the second in the partner's own accent, which is
+             the reference's own device. Both are supplied rather than derived:
+             splitting a sentence on its first full stop would break on a name
+             that has one in it. */
+          headline: text(p?.headline, 80),
+          headlineAccent: text(p?.headlineAccent, 80),
+          /* A point is a small card now, not a bullet: an icon, a label and a
+             line under it. A PLAIN STRING STILL WORKS and becomes the line with
+             no label — the four partners published before this change carry
+             strings, and a normaliser that dropped them would have emptied the
+             slide the moment the server restarted. */
           points: (Array.isArray(p?.points) ? p.points : [])
-            .map((t) => text(t, 90))
-            .filter(Boolean)
-            .slice(0, 4),
+            .map((pt) => (typeof pt === 'string'
+              ? { title: '', body: text(pt, 90), icon: '' }
+              : {
+                title: text(pt?.title, 40),
+                body: text(pt?.body, 120),
+                icon: text(pt?.icon, 40),
+              }))
+            .filter((pt) => pt.title || pt.body)
+            .slice(0, 6),
         }))
         .filter((p) => p.name)
         .slice(0, 8);
+      break;
+
+    case 'photo-spread':
+      block.title = text(raw.title, 80);
+      /* The folder under /uploads the photographs hang off, the way
+         `placement-wall` and `photo-collage` carry theirs. */
+      block.base = (() => {
+        const t = text(raw.base, 80).replace(/^\/+|\/+$/g, '');
+        return /^[A-Za-z0-9][A-Za-z0-9 _-]*(\/[A-Za-z0-9][A-Za-z0-9 _-]*)*$/.test(t) ? t : '';
+      })();
+      /* Thirteen: the one in the middle and the twelve slots around it. The
+         component has exactly that many places, so a fourteenth would have
+         nowhere to stand. */
+      block.photos = (Array.isArray(raw.photos) ? raw.photos : [])
+        .map((p) => ({
+          src: text(p?.src, 240),
+          name: text(p?.name, 120),
+          /* An object-position, and only that: two percentages or keywords. */
+          focus: /^\s*(\d{1,3}%|left|center|right)\s+(\d{1,3}%|top|center|bottom)\s*$/.test(String(p?.focus || ''))
+            ? String(p.focus).trim() : '',
+          w: clampInt(p?.w, 1, 20000, 0),
+          h: clampInt(p?.h, 1, 20000, 0),
+        }))
+        .filter((p) => p.src)
+        .slice(0, 13);
+      /* The four notes on the timeline — a small label and a line each. */
+      block.notes = (Array.isArray(raw.notes) ? raw.notes : [])
+        .map((n) => ({ label: text(n?.label, 60), text: text(n?.text, 120) }))
+        .filter((n) => n.label || n.text)
+        .slice(0, 4);
+      /* The copy under the spread; a newline is a line break. */
+      block.copy = text(raw.copy, 400);
+      block.logo = uploadPath(raw.logo);
+      block.logoAlt = text(raw.logoAlt, 160);
+      block.badge = text(raw.badge, 24);
+      /* `*word*` picks a word out in the accent, the way the lockup does. */
+      block.tagline = text(raw.tagline, 80);
+      block.glow = text(raw.glow, 8) === 'none' ? 'none' : hexColor(raw.glow);
+      block.glow2 = hexColor(raw.glow2);
+      break;
+
+    case 'trust-fan':
+      block.title = text(raw.title, 80);
+      /* The folder under /uploads the marks hang off. */
+      block.base = (() => {
+        const t = text(raw.base, 80).replace(/^\/+|\/+$/g, '');
+        return /^[A-Za-z0-9][A-Za-z0-9 _-]*(\/[A-Za-z0-9][A-Za-z0-9 _-]*)*$/.test(t) ? t : '';
+      })();
+      /* A mark and the name under it, which is all a card carries. `note`
+         is a slot for a line under the name, drawn only when supplied. */
+      block.logos = (Array.isArray(raw.logos) ? raw.logos : [])
+        .map((l) => ({
+          src: text(l?.src, 240),
+          name: text(l?.name, 80),
+          note: text(l?.note, 80),
+          w: clampInt(l?.w, 1, 20000, 0),
+          h: clampInt(l?.h, 1, 20000, 0),
+        }))
+        .filter((l) => l.src)
+        .slice(0, 24);
+      /* The words after the count under the fan. The count is the list's
+         length, computed on the client — never stored, so never wrong. */
+      block.countLabel = text(raw.countLabel, 60);
+      block.glow = text(raw.glow, 8) === 'none' ? 'none' : hexColor(raw.glow);
+      block.glow2 = hexColor(raw.glow2);
       break;
 
     case 'curriculum-deck':

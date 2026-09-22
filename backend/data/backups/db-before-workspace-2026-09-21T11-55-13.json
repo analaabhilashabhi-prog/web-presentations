@@ -6447,7 +6447,7 @@
       "icon": "",
       "iconKey": "partners",
       "iconAssetId": null,
-      "order": 19,
+      "order": 18,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -6836,7 +6836,7 @@
       "icon": "",
       "iconKey": "camera-photo",
       "iconAssetId": null,
-      "order": 16,
+      "order": 15,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -9184,7 +9184,7 @@
       "icon": "",
       "iconKey": "roadmap",
       "iconAssetId": null,
-      "order": 20,
+      "order": 19,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -9346,7 +9346,7 @@
       "icon": "",
       "iconKey": "ceo-podium",
       "iconAssetId": null,
-      "order": 17,
+      "order": 16,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -9463,7 +9463,7 @@
       "icon": "",
       "iconKey": "rosette",
       "iconAssetId": null,
-      "order": 21,
+      "order": 20,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -9749,7 +9749,7 @@
       "icon": "▲",
       "iconKey": "job-pin",
       "iconAssetId": null,
-      "order": 18,
+      "order": 17,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -10270,7 +10270,7 @@
       "icon": "✧",
       "iconKey": "event-sign",
       "iconAssetId": null,
-      "order": 14,
+      "order": 13,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -10928,7 +10928,7 @@
       "icon": "❞",
       "iconKey": "clapper",
       "iconAssetId": null,
-      "order": 22,
+      "order": 21,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -11542,7 +11542,7 @@
       "icon": "",
       "iconKey": "ai-figure",
       "iconAssetId": null,
-      "order": 8,
+      "order": 7,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -11827,7 +11827,7 @@
       "icon": "",
       "iconKey": "calendar",
       "iconAssetId": null,
-      "order": 11,
+      "order": 10,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12052,7 +12052,7 @@
       "icon": "",
       "iconKey": "route",
       "iconAssetId": null,
-      "order": 12,
+      "order": 11,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12287,7 +12287,7 @@
       "icon": "",
       "iconKey": "grid-4",
       "iconAssetId": null,
-      "order": 10,
+      "order": 9,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12476,7 +12476,7 @@
       "icon": "",
       "iconKey": "rocket",
       "iconAssetId": null,
-      "order": 13,
+      "order": 12,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12591,7 +12591,7 @@
       "icon": "",
       "iconKey": "code",
       "iconAssetId": null,
-      "order": 15,
+      "order": 14,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -12855,7 +12855,7 @@
       "icon": "",
       "iconKey": "link",
       "iconAssetId": null,
-      "order": 9,
+      "order": 8,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -13084,7 +13084,7 @@
       "status": "published",
       "blocks": [
         {
-          "id": "blk_dfe34130f0d647f4",
+          "id": "blk_a1ab4d0219924cb3",
           "type": "photo-spread",
           "layout": {
             "x": 0,
@@ -13187,117 +13187,35 @@
               "h": 1334
             }
           ],
-          "notes": [],
-          "copy": "",
-          "logo": "torii-wordmark-de8205d983b44fd5.svg",
+          "notes": [
+            {
+              "label": "01 · The building",
+              "text": "Torii, from the road."
+            },
+            {
+              "label": "02 · The lecture hall",
+              "text": "A projector at the front, a laptop on every desk."
+            },
+            {
+              "label": "03 · The training floor",
+              "text": "Two screens over the rows, a trainer between them."
+            },
+            {
+              "label": "04 · The AI Centre of Excellence",
+              "text": "A wall lettered with Claude."
+            }
+          ],
+          "copy": "Where Torii teaches. A hall with a projector at the front and a laptop on every desk; a training floor with two screens over the rows and a trainer walking between them; and the AI Centre of Excellence, its wall lettered with Claude.",
+          "logo": "snapshot/torii-logo.png",
           "logoAlt": "Torii",
-          "badge": "",
-          "tagline": "",
+          "badge": "TORII",
+          "tagline": "Step *IN*. Stand *OUT*.",
           "glow": "",
           "glow2": ""
         }
       ],
       "createdAt": "2026-09-21T11:15:06.281Z",
-      "updatedAt": "2026-09-21T12:57:53.026Z"
-    },
-    {
-      "id": "sec_d1ad66451992483a",
-      "orgId": "torii",
-      "parentId": null,
-      "key": "trusted-by",
-      "title": "Trusted By",
-      "subtitle": "",
-      "intro": "",
-      "icon": "",
-      "iconKey": "handshake-check",
-      "iconAssetId": null,
-      "order": 7,
-      "hidden": false,
-      "status": "published",
-      "blocks": [
-        {
-          "id": "blk_cfab1a14f9764d17",
-          "type": "trust-fan",
-          "layout": {
-            "x": 0,
-            "y": 0,
-            "w": 12,
-            "h": 15
-          },
-          "title": "Trusted By",
-          "base": "TrustedBy",
-          "logos": [
-            {
-              "src": "ycce.png",
-              "name": "Yeshwantrao Chavan College of Engineering",
-              "note": "",
-              "w": 861,
-              "h": 332
-            },
-            {
-              "src": "nagarjuna-group-of-institutions.png",
-              "name": "Nagarjuna Group of Institutions",
-              "note": "",
-              "w": 658,
-              "h": 485
-            },
-            {
-              "src": "nagarjuna-college-of-engineering-and-technology.png",
-              "name": "Nagarjuna College of Engineering & Technology",
-              "note": "",
-              "w": 755,
-              "h": 371
-            },
-            {
-              "src": "nagarjuna-college-of-management-studies.png",
-              "name": "Nagarjuna College of Management Studies",
-              "note": "",
-              "w": 742,
-              "h": 358
-            },
-            {
-              "src": "nagarjuna-degree-college.png",
-              "name": "Nagarjuna Degree College",
-              "note": "",
-              "w": 393,
-              "h": 371
-            },
-            {
-              "src": "nagarjuna-pre-university-college.png",
-              "name": "Nagarjuna Pre-University College",
-              "note": "",
-              "w": 478,
-              "h": 371
-            },
-            {
-              "src": "nagarjuna-vidyaniketan.png",
-              "name": "Nagarjuna Vidyaniketan",
-              "note": "",
-              "w": 393,
-              "h": 371
-            },
-            {
-              "src": "geeta-university.png",
-              "name": "Geeta University",
-              "note": "",
-              "w": 814,
-              "h": 360
-            },
-            {
-              "src": "srkr-engineering-college.png",
-              "name": "SRKR Engineering College",
-              "note": "",
-              "w": 795,
-              "h": 382
-            }
-          ],
-          "countLabel": "trusted partners",
-          "glow": "",
-          "glow2": ""
-        }
-      ],
-      "createdAt": "2026-09-21T13:33:31.822Z",
-      "updatedAt": "2026-09-21T13:48:31.396Z"
+      "updatedAt": "2026-09-21T11:40:09.044Z"
     }
   ],
   "assets": [

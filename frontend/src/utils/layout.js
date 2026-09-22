@@ -51,6 +51,8 @@ export const DEFAULT_SIZE = {
   'training-shelf': { w: 12, h: 15 },
   'curriculum-deck': { w: 12, h: 15 },
   'photo-collage': { w: 12, h: 15 },
+  'photo-spread': { w: 12, h: 15 },
+  'trust-fan': { w: 12, h: 15 },
   'event-wheel': { w: 12, h: 15 },
   'photo-folder': { w: 12, h: 15 },
   'project-showcase': { w: 12, h: 15 },

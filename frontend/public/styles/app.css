@@ -21023,17 +21023,19 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
 .ss-card {
   position: absolute;
   left: 50%;
-  /* 100, not less. A card three back has lifted 3 x STACK_Y = 78px, and the
-     stage clips at its own top — pinned any higher, the deepest card in the
-     stack loses its head to the clip instead of showing as a sliver. */
-  top: 88px;
-  width: 1240px;
-  margin-left: -620px;
+  /* 104, and the figure is arithmetic rather than taste: the deepest card in
+     a four-card stack has lifted 3 x STACK_Y = 102px, and the stage clips at
+     its own top — pinned any higher, that card loses its band to the clip
+     instead of showing as the sliver that says the stack goes back further.
+     Keep this in step with STACK_Y and with how many cards there are. */
+  top: 104px;
+  width: 1420px;
+  margin-left: -710px;
   /* Every card is the same size whatever it holds, which a stack needs and a
      list does not: cards of different heights shuffle their own bottom edge as
      the stack turns. A partner with nothing under its rule simply has air
      there — which is where the rest of the information is going. */
-  min-height: 560px;
+  min-height: 664px;
   /* The card is a flex column so its face fills the min-height rather than
      shrinking to its own copy — otherwise the box is 560 and the white card
      inside it is whatever the words happen to need. */
@@ -21060,10 +21062,10 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  padding: 52px 64px 56px;
-  border-radius: 26px;
+  padding: 40px 52px 38px;
+  border-radius: 28px;
   border: 1px solid var(--ss-line);
-  background: #fff;
+  background: var(--ss-paper, #F1EDE7);
   /* 40px of blur, not 80. A large-radius shadow is redrawn every time its
      element's transform changes, and a receding card's does on every frame of
      the travel — measured, an 80px shadow and the copy fade were the two costs
@@ -21099,124 +21101,211 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
    loses its copy — which is what a stack of cards looks like from the side. */
 .ss-card.is-behind .ss-card__body { opacity: 0; }
 
+/* ------------------------------------------------------------- the header */
+/* The credential on the left and the brand mark on the right. The reference
+   puts a small pill at one corner and its own starburst at the other; the left
+   thing here is the partnership lockup the partner actually issued, because
+   showing that clearly is what the card is for. */
 .ss-card__top {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  gap: 32px;
+  min-height: 120px;
 }
 
-/* The mark on a white plate, SIZED BY HEIGHT AND NOTHING ELSE. `width: auto;
-   height: 100%; max-width: 100%` measured 100x53 on a 1.89:1 mark in a 30px box
-   the last time this was written: the percentage max-width resolves against the
-   plate, the width wins, the height follows the ratio out of the bottom and
-   `overflow: hidden` cuts it. Give the mark its own width and let the plate wrap
-   it. */
-.ss-card__plate {
+/* The lockup on a white plate. It has its own ground burned in — the Claude
+   badge is cream with an orange foot, OpenAI's is a black outline on white —
+   so the plate is a mount for a badge rather than a tint behind a glyph, and
+   the card's own warm paper would otherwise show through the corners of a
+   rectangle that is not quite square-cornered. */
+.ss-card__badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 118px;
-  padding: 0 20px;
-  border-radius: 12px;
+  height: 120px;
+  padding: 0 22px;
+  border-radius: 16px;
   background: #fff;
   border: 1px solid var(--ss-line);
 }
-/* Three of these four marks are lockups with their own frame and their own
-   white ground burned in, so the plate is a mount for a badge rather than a
-   tint behind a glyph — and a badge set small reads as a sticker. 62px is the
-   height at which the smallest of the four, OpenAI's, is still readable from a
-   room. */
-.ss-card__plate img {
+/* SIZED BY HEIGHT AND NOTHING ELSE. `width: auto; height: 100%; max-width:
+   100%` measured 100x53 on a 1.89:1 mark in a 30px box the last time this trap
+   was walked into: the percentage max-width resolves against the plate, the
+   width wins, the height follows the ratio out of the bottom, and `overflow:
+   hidden` cuts it. Give the mark its own width and let the plate wrap it. */
+.ss-card__badge img {
   display: block;
-  height: 86px;
+  height: 88px;
   width: auto;
   max-width: none;
   object-fit: contain;
 }
-/* No artwork anywhere in the library: the name in type, never a mark drawn by
-   hand. */
-.ss-card__plate--type {
-  padding: 0 28px;
+/* No lockup in the library for this partner: what the badge WOULD have said,
+   in type, on the same plate. Never a badge drawn by hand to fill the slot. */
+.ss-card__badge--type {
+  padding: 0 26px;
   font-family: var(--display);
   font-weight: 700;
-  font-size: 32px;
+  font-size: 25px;
   letter-spacing: -0.01em;
+  color: var(--ink, #111827);
 }
 
-/* What the rail used to say, on the card: "01 / 04". */
-.ss-card__n {
-  font-family: var(--mono, ui-monospace, monospace);
-  font-size: 19px;
-  letter-spacing: 0.14em;
-  color: var(--muted, rgb(17 24 39 / 0.42));
-  padding-top: 12px;
+/* The vendor's own symbol, in the corner the reference puts its starburst in —
+   and NOT on a plate. All three of these marks are transparent artwork, so a
+   white plate under them on warm paper would read as a sticker rather than as
+   a mark, which is the same thing the collapsed nav rail learned about the
+   brand logo. */
+.ss-card__mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  height: 120px;
 }
-
-.ss-card__id { margin-top: 40px; }
-.ss-card__note {
-  margin: 0 0 12px;
-  font-family: var(--mono, ui-monospace, monospace);
-  font-size: 15px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ss-accent);
+.ss-card__mark img {
+  display: block;
+  height: 104px;
+  width: auto;
+  max-width: none;
+  object-fit: contain;
 }
-.ss-card__name {
-  margin: 0;
+/* ----------------------------------------------------------- the headline */
+/* Two colours on one line, which is the reference's own device. The accent
+   half is `--accent-ink`, the DECK's readable orange, and not the partner's
+   own colour: three of these four colours are a vendor's brand hue measured
+   off its mark, and a brand hue is chosen to work on that vendor's ground
+   rather than on this one — GitHub's #8B7ED8 on warm paper is under 3:1 at any
+   size. The partner's colour is still on the card, on the band at its top and
+   in the tint behind each icon, where nothing has to be read through it. */
+.ss-card__head {
+  margin: 26px 0 0;
   font-family: var(--display);
   font-weight: 700;
-  font-size: 84px;
-  line-height: 1.05;
-  letter-spacing: -0.025em;
+  font-size: 62px;
+  line-height: 1.06;
+  letter-spacing: -0.028em;
+  color: var(--ink, #111827);
 }
-.ss-card__tag {
+.ss-card__head-accent { color: var(--accent-ink, #C2410C); }
+
+.ss-card__lead {
   margin: 14px 0 0;
-  font-size: 29px;
+  max-width: 900px;
+  font-size: 25px;
   line-height: 1.4;
   color: var(--muted, rgb(17 24 39 / 0.62));
 }
 
+/* ------------------------------------------------- the points, as cards */
+/* Fixed-width columns, centred, rather than fractions of the row: a partner
+   with three points and a partner with six have to read as the same card with
+   less on it. On `1fr` the partner with three would get cards twice everybody
+   else's size and the stack would stop looking like a stack. `--ss-cols` is
+   written by the component off the number of points it was given. */
+.ss-card__grid {
+  list-style: none;
+  margin: 34px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--ss-cols, 6), 204px);
+  justify-content: center;
+  gap: 16px;
+}
+
+.ss-pt {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 16px 18px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid var(--ss-line);
+  /* Outward from the left, a beat behind the rule. The delay is per card, off
+     `--ss-j`, so the row assembles rather than appearing. */
+  animation: ss-rise 520ms cubic-bezier(0.22, 0.68, 0, 1) calc(480ms + var(--ss-j, 0) * 60ms) both;
+}
+
+/* The tinted chip, done with a pseudo-element at low opacity rather than a
+   colour function. `color-mix()` and `rgb(from …)` would both say it in one
+   line and neither is worth a dependency on how new the browser in the room
+   is — this deck runs offline on whatever machine is plugged in. */
+.ss-pt__ic {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  color: var(--ss-accent);
+}
+.ss-pt__ic::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--ss-accent);
+  opacity: 0.13;
+}
+.ss-pt__glyph { position: relative; }
+
+/* The number in the corner, as the reference has it. */
+.ss-pt__n {
+  position: absolute;
+  top: 17px;
+  right: 16px;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  color: var(--accent-ink, #C2410C);
+}
+
+.ss-pt__t {
+  margin: 14px 0 0;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--ink, #111827);
+}
+.ss-pt__b {
+  margin: 7px 0 0;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--muted, rgb(17 24 39 / 0.62));
+}
+
+/* ---------------------------------------------------------------- the foot */
+/* `margin-top: auto` puts the rule on the floor of a card that is taller than
+   its own copy, so a partner with three points ends on the same line as one
+   with six rather than leaving its rule half way up the card. */
+.ss-card__foot {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  margin-top: auto;
+  padding-top: 26px;
+}
 /* A rule that draws itself, the way every other head's does. */
 .ss-card__rule {
+  flex: 1 1 auto;
   height: 2px;
-  margin: 38px 0 30px;
-  background: var(--ss-accent);
+  background: var(--accent-ink, #C2410C);
   transform: scaleX(0);
   transform-origin: 0 50%;
   animation: ss-rule 720ms cubic-bezier(0.22, 0.68, 0, 1) 420ms both;
 }
-
-.ss-card__points {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px 56px;
-}
-.ss-card__points li {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  font-size: 24px;
-  line-height: 1.4;
-  color: var(--ink, #111827);
-  animation: ss-rise 520ms cubic-bezier(0.22, 0.68, 0, 1) 540ms both;
-}
-.ss-card__tick {
+/* What the rail used to say, on the card: "01 / 04". */
+.ss-card__n {
   flex: 0 0 auto;
-  width: 10px;
-  height: 10px;
-  margin-top: 11px;
-  border-radius: 2px;
-  background: var(--ss-accent);
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 18px;
+  letter-spacing: 0.14em;
+  color: var(--muted, rgb(17 24 39 / 0.42));
 }
 
-@keyframes ss-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: none; }
-}
 @keyframes ss-rise {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: none; }
@@ -21228,6 +21317,362 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
 
 @media (prefers-reduced-motion: reduce) {
   .ss-orb { animation: none; }
-  .ss-card__points li { animation: none; opacity: 1; transform: none; }
+  .ss-pt { animation: none; opacity: 1; transform: none; }
   .ss-card__rule { animation: none; transform: scaleX(1); }
+}
+
+/* ==========================================================================
+   Workspace — the photo spread
+   Built to a reference image: one wide photograph a little left of centre and
+   small prints scattered around it, overlapping its edges, cut by the frame.
+   The reference's timeline of notes and its copy were built and then removed
+   on request; the slide is the photographs alone, on Torii's light sheet.
+
+   Every print's box is written by `PhotoSpread.js`; the transition below is
+   what carries a swap. THE BOX IS ANIMATED, NOT A TRANSFORM, on purpose: the
+   two boxes a print travels between are different shapes, and a scale between
+   them stretched the photograph and its border for the whole flight. Moving
+   the box lets `object-fit: cover` re-crop the picture frame by frame instead.
+   The deck's rule against animating boxes is about type being re-set every
+   frame — there is no type here. The entrance lives on `.sp-photo__rise` and
+   the tilt and hover on `.sp-photo__face`.
+   ========================================================================== */
+.sp-root {
+  --sp-ink: var(--ink, #111111);
+  --sp-paper: #FFFFFF;
+  --sp-accent: #F05D29;
+  position: relative;
+  /* A definite height, not a minimum: `.canvas-block > *` sets `flex: 1`, whose
+     `flex-basis: 0%` beats `height` on the main axis. Never a bare 860 — a slide
+     presenting is the screen's shape, and everything here is anchored to the
+     top in canvas px, so the extra rows fall below and nothing moves. */
+  flex: 0 0 auto;
+  height: var(--slide-h, 860px);
+  max-height: var(--slide-h, 860px);
+  overflow: hidden;
+  outline: none;
+  background: var(--sp-paper);
+  color: var(--sp-ink);
+  border-radius: var(--radius-lg);
+}
+
+/* ----------------------------------------------------------------- the wash */
+/* The organization's two measured colours, faint, where the ground shows.
+   Positioned by their centres so the core of each is somewhere the eye can
+   reach, and the drift repeats the centring translate in both keyframes — an
+   animation replaces the WHOLE transform. */
+.sp-glow {
+  --sp-glow: #F05D29;
+  --sp-glow-2: #D91823;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.sp-blob {
+  position: absolute;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, var(--sp-tint) 0%, transparent 100%);
+  animation: sp-blob-drift 46s ease-in-out infinite alternate both;
+}
+.sp-blob--a { width: 900px; height: 900px; left: 88%; top: 8%;  --sp-tint: rgb(240 93 41 / 0.11); }
+.sp-blob--b { width: 760px; height: 760px; left: 12%; top: 96%; --sp-tint: rgb(217 24 35 / 0.08); animation-delay: -17s; }
+@keyframes sp-blob-drift {
+  from { transform: translate(-50%, -50%) translate(0, 0); }
+  to   { transform: translate(-50%, -50%) translate(-24px, 18px); }
+}
+
+/* --------------------------------------------------------------- the prints */
+.sp-stage { position: absolute; inset: 0; }
+
+/* The box, and the flight: the four box properties, one ease, 640ms. The ease
+   is a symmetric in-out — a print leaves as gently as it arrives, and with a
+   swap every second or so the page reads as continuously, softly in motion
+   rather than as a still one that jumps. */
+.sp-photo {
+  position: absolute;
+  margin: 0;
+  transition:
+    left 640ms cubic-bezier(0.65, 0, 0.35, 1),
+    top 640ms cubic-bezier(0.65, 0, 0.35, 1),
+    width 640ms cubic-bezier(0.65, 0, 0.35, 1),
+    height 640ms cubic-bezier(0.65, 0, 0.35, 1);
+  z-index: 3;
+}
+.sp-photo.is-hero { z-index: 2; }
+/* A print in flight is over everything, both of them — they cross. */
+.sp-photo.is-flying { z-index: 20; }
+
+/* The entrance: prints drop a little onto the page, staggered in the order the
+   list is in — the middle first, then out through the ring. */
+.sp-photo__rise {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+.is-in .sp-photo__rise {
+  animation: sp-drop 880ms cubic-bezier(0.22, 0.68, 0, 1) calc(120ms + var(--sp-i, 0) * 90ms) both;
+}
+
+/* The print itself: a white border, a shadow, its own lean, and the photograph
+   filling it. The lean is the slot's, published as `--sp-tilt` on the figure,
+   so a print travelling to the middle straightens as it goes, on the same
+   clock as its box. */
+.sp-photo__face {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 6px;
+  margin: 0;
+  border: 0;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgb(17 24 39 / 0.10),
+    0 14px 30px rgb(17 24 39 / 0.18);
+  transform: rotate(var(--sp-tilt, 0deg));
+  transition: transform 640ms cubic-bezier(0.65, 0, 0.35, 1), box-shadow 300ms ease;
+  cursor: pointer;
+  overflow: hidden;
+  font: inherit;
+  color: inherit;
+}
+.sp-photo.is-hero .sp-photo__face { padding: 8px; border-radius: 5px; box-shadow: 0 2px 4px rgb(17 24 39 / 0.10), 0 24px 54px rgb(17 24 39 / 0.22); }
+.sp-photo__face:hover { transform: rotate(var(--sp-tilt, 0deg)) scale(1.03); box-shadow: 0 2px 4px rgb(17 24 39 / 0.12), 0 22px 44px rgb(17 24 39 / 0.26); }
+.sp-photo__face:focus-visible { outline: 3px solid var(--sp-accent); outline-offset: 2px; }
+.sp-photo__face img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 2px;
+}
+
+@keyframes sp-drop {
+  from { opacity: 0; transform: translateY(-16px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ----------------------------------------------------------------- the mark */
+/* The wordmark, centred under the middle in the band the prints leave empty
+   at the foot. SIZED BY HEIGHT ONLY — `width: auto; max-width: none` — so the
+   SVG keeps its own proportion, the trap every plate in this deck has walked
+   into once. 88px tall is 197 wide for this file, and its foot at 764 clears
+   a presenter bar that starts at 804. */
+.sp-logo {
+  position: absolute;
+  left: 720px;
+  top: 676px;
+  height: 88px;
+  width: auto;
+  max-width: none;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 4;
+}
+.is-in .sp-logo { animation: sp-logo 900ms cubic-bezier(0.22, 0.68, 0, 1) 1400ms both; }
+@keyframes sp-logo {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to   { opacity: 1; transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sp-blob { animation: none; }
+  .is-in .sp-logo { animation: none; opacity: 1; }
+  .is-in .sp-photo__rise { animation: none; opacity: 1; }
+  .sp-photo, .sp-photo__face { transition: none; }
+}
+
+
+/* ==========================================================================
+   Trusted By — the fan of cards in depth
+   Built to a reference image: tall cards standing in perspective, the middle
+   one square-on and full size, the rest turned toward it, set back and
+   dimmed. Every card's transform, opacity and z-index are written by
+   `TrustFan.js` every frame and NOTHING here transitions them — an eased
+   value in a rAF loop is the only motion, so a wheel can interrupt it
+   mid-flight without a jump. The entrance is in the loop too (the cards are
+   dealt out of the front one), so there is no second opinion on the
+   transform even for the first second.
+   ========================================================================== */
+.tf-root {
+  --tf-ink: var(--ink, #111111);
+  --tf-paper: #FFFFFF;
+  --tf-accent: #F05D29;
+  --tf-line: rgb(17 24 39 / 0.10);
+  position: relative;
+  /* A definite height, not a minimum: `.canvas-block > *` sets `flex: 1`, whose
+     `flex-basis: 0%` beats `height` on the main axis. Never a bare 860. */
+  flex: 0 0 auto;
+  height: var(--slide-h, 860px);
+  max-height: var(--slide-h, 860px);
+  overflow: hidden;
+  outline: none;
+  background: var(--tf-paper);
+  color: var(--tf-ink);
+  border-radius: var(--radius-lg);
+}
+
+/* The wash — the organization's two measured colours, faint, behind the row. */
+.tf-glow {
+  --tf-glow: #F05D29;
+  --tf-glow-2: #D91823;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.tf-blob {
+  position: absolute;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, var(--tf-tint) 0%, transparent 100%);
+  animation: tf-blob-drift 48s ease-in-out infinite alternate both;
+}
+.tf-blob--a { width: 980px; height: 980px; left: 78%; top: 88%; --tf-tint: rgb(240 93 41 / 0.12); }
+.tf-blob--b { width: 760px; height: 760px; left: 16%; top: 6%;  --tf-tint: rgb(217 24 35 / 0.08); animation-delay: -19s; }
+@keyframes tf-blob-drift {
+  from { transform: translate(-50%, -50%) translate(0, 0); }
+  to   { transform: translate(-50%, -50%) translate(22px, -18px); }
+}
+
+/* ----------------------------------------------------------------- the stage */
+/* One vanishing point for every card. The stage is the slide less the bar:
+   the cards are centred in it, so presenting — where the bar takes the last
+   96 nominal px — they centre on the frame the room actually sees. */
+.tf-stage {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: var(--deck-bar-clear, 0px);
+  perspective: 1500px;
+  perspective-origin: 50% 46%;
+  transform-style: preserve-3d;
+}
+
+/* The card is positioned at the stage's centre and MOVED BY THE LOOP; its own
+   margin centres its box, so the loop's translate is the pure offset. */
+.tf-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -240px 0 0 -200px;   /* half of 480 x 400 */
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  cursor: pointer;
+}
+
+/* The face: a white card with a soft shadow. The hover is here and only here,
+   so it never fights the loop for the card's own transform. */
+.tf-card__face {
+  width: 100%;
+  height: 100%;
+  border-radius: 22px;
+  background: #fff;
+  border: 1px solid var(--tf-line);
+  box-shadow:
+    0 1px 2px rgb(17 24 39 / 0.06),
+    0 22px 48px rgb(17 24 39 / 0.16);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 260ms ease, transform 260ms ease;
+}
+.tf-card.is-front .tf-card__face {
+  box-shadow:
+    0 2px 4px rgb(17 24 39 / 0.08),
+    0 34px 70px rgb(17 24 39 / 0.22);
+}
+.tf-card:hover .tf-card__face { transform: translateY(-4px); }
+
+/* "Every logo clearly": the plate is the top 320 of the card, the mark
+   contained in it with 30px of air, SIZED BY THE PLATE AND NEVER STRETCHED.
+   `max-width: none` because the stylesheet caps every image at its box, and
+   here the box is exactly what it should fill. */
+.tf-card__plate {
+  flex: 0 0 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  background: #fff;
+  border-bottom: 1px solid var(--tf-line);
+}
+.tf-card__plate img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+}
+
+.tf-card__body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 18px 28px 24px;
+  text-align: center;
+}
+.tf-card__name {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--tf-ink);
+}
+.tf-card__note {
+  margin: 8px 0 0;
+  font-size: 15px;
+  color: var(--muted, rgb(17 24 39 / 0.62));
+}
+
+/* ----------------------------------------------------------------- the count */
+/* How many, under the fan: the figure in the display face and the user's own
+   words beside it, centred in the band between the front card's foot (642)
+   and the presenter bar (804). It arrives after the deal. */
+.tf-count {
+  position: absolute;
+  left: 50%;
+  top: 690px;
+  transform: translateX(-50%);
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  white-space: nowrap;
+  opacity: 0;
+  animation: tf-count-in 800ms cubic-bezier(0.22, 0.68, 0, 1) 1300ms both;
+  pointer-events: none;
+}
+.tf-count__n {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 54px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--accent-ink, #BA481B);
+}
+.tf-count__label {
+  font-size: 22px;
+  color: var(--tf-ink);
+  opacity: 0.8;
+}
+@keyframes tf-count-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to   { opacity: 1; transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tf-blob { animation: none; }
+  .tf-card__face { transition: none; }
+  .tf-count { animation: none; opacity: 1; }
 }

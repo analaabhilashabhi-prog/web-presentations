@@ -233,24 +233,20 @@ plus `Signout`, `collapse` and `expand`. They are solid-fill artwork at mixed
 viewBoxes with no fill attributes, so `SideNav.artworkGlyph` paints each one as a CSS
 mask over `background: currentColor` — the glyph then takes whatever colour the row
 already has, with no second copy of the file and nothing to keep in step. Mapping
-lives in `NAV_ARTWORK`, keyed by section key. The pane reads `navicons-fit/`, not
-`navicons/`: the originals come from several sets at several weights (0.44 to 1.40 px
-of stroke at 21px, a 3.2x spread) and `tools/normalise-navicons.cjs` writes copies
-evened to one weight — scaling declared widths on stroked files, adding a stroke to
-filled outlines, iterating because the weight has to be measured off a raster. Run it
-after changing any original.
+lives in `NAV_ARTWORK`, keyed by section key. **The pane reads `navicons/`, the
+files as supplied** — `artworkUrl` in `SideNav.js` is the one place that says so.
+There was a pass that wrote weight-evened copies into `navicons-fit/` (the originals
+come from several sets at 0.44 to 1.40 px of stroke at 21px, a 3.2x spread, and
+`tools/normalise-navicons.cjs` scaled the thin ones up), and it ruined them: Events is
+a banner with EVENT lettered across it and the added stroke filled the letters in.
+An uneven column beats a column of blobs, so the pane went back to the originals.
+Corrected here 2026-09-22 — an earlier version of this paragraph said the pane read
+`navicons-fit/` and that losing it blanked every icon, and a whole folder was
+regenerated on the strength of it before `SideNav.js` was read. The folder is unused,
+is not in git, and can be deleted; the tool stays for a future set that needs it.
 
-`navicons-fit/` is generated and is **not** in git. If it goes missing every icon in
-the pane silently disappears, because a CSS mask whose file 404s paints nothing at all
-rather than falling back. It has been lost once already. One command restores it:
-
-```bash
-node tools/normalise-navicons.cjs --port <a headless Chrome debug port>
-```
-
-A key with no file a key with no file falls through to the
-line library in `utils/icons.js`, which still holds a drawn glyph for every row as a
-fallback.
+A key with no file falls through to the line library in `utils/icons.js`, which
+still holds a drawn glyph for every row as a fallback.
 
 Distinct on purpose: collapsed, the pane is an icon rail and the glyph is the only
 thing identifying a row.
@@ -374,6 +370,9 @@ still publishable only by hand.
 | `publish-project-street.cjs` | Torii's Project Street — the film and the thirty-two photographs, copied as they are, as the film screen and the thread board |
 | `publish-project-week.cjs` | Torii's Project Week — the nine collage photographs (re-encoded once, then reused) and the wall of sixteen more under them |
 | `publish-ai-partners.cjs` | Torii's AI Partners — the four partners as the scroll stack; creates the row if it is missing and puts it before AI Ready Engineer |
+| `create-workspace-row.cjs` | Torii’s Workspace — creates the row after Team and leaves it blank; writes no blocks, so a re-run never wipes the page once it is designed |
+| `publish-workspace.cjs` | Torii’s Workspace — the thirteen classroom photographs as the spread; no words on it, by request |
+| `publish-trusted-by.cjs` | Torii’s Trusted By — the nine institutions’ marks as the fan of cards in depth; creates the row if it is missing and puts it after AI Partners |
 | `publish-section-intros.cjs` | the title card on every row of both decks - the row's own title; `--clear` takes them off |
 | `apply-review-2026-09-19.cjs` | AI Ready Engineer's first cover card — "Offline · Classroom Training" in place of "16 Modules"; finds the card by its label, so a second run changes nothing |
 | `apply-review-2026-09-17b.cjs` | the review's second pass — the showcase cut to five products plus three named ones, the photographic badges off the register, the CEO's two figures |
@@ -383,7 +382,7 @@ still publishable only by hand.
 | `crop-image.cjs` | crops a photograph through headless Chrome's canvas — there is no image library and there is not going to be |
 | `drop-ncet.cjs` | removes the NCET organization and its sections, and renames NGI's tab — stop the server first; always backs up `db.json` |
 | `mirror-deck.cjs` | copies one organization's whole deck into another — `--replace` clears the target first; always backs up `db.json` to `backend/data/backups/` |
-| `normalise-navicons.cjs` | evens the weight of the supplied nav artwork into `navicons-fit/` |
+| `normalise-navicons.cjs` | evens the weight of the supplied nav artwork into `navicons-fit/` — **not used by the pane**, which reads the originals; kept for a future set |
 
 The `.xlsx` reader inside `publish-certifications.cjs` is self-contained — lift it
 rather than writing a third one.
@@ -2502,6 +2501,336 @@ round; no second section head; all four marks loaded, 60–62px tall, none
 overflowing its plate; the right arrow takes three presses through the cards
 and leaves the tab on the fourth; the rail lights the card in front and jumps
 to any of them; p90 at the vsync floor; no console errors.
+
+
+## A partner card is the reference's layout
+
+**The user supplied a reference image and asked for that card** (2026-09-21):
+a cream sheet, a mark in one corner, a two-colour headline, a lead, and a row
+of numbered white cards each with a tinted icon chip. Every partner card is
+now that, in Torii's own colours. Three things arrived with the ask — "I have
+the logos in my downloads", "the partnership photos we have, placed in the
+card to be shown clearly", and points about the partnership — and each one
+landed in its own slot:
+
+| slot | what is in it |
+| --- | --- |
+| top left | the partnership lockup the partner **issued** — the credential, 88px tall on a white plate |
+| top right | the vendor's own **brand mark**, in the corner the reference puts its starburst in |
+| the headline | two colours on one line, both halves stored |
+| the row | the points, as numbered cards rather than bullets |
+| the foot | a rule that draws itself, and "01 / 04" |
+
+**A badge and a mark are two different things, which is why there are two
+fields.** `logo` was carrying the Claude Partner Network lockup for Claude and
+OpenAI and the plain *GitHub wordmark* for GitHub — a credential in two slots
+and a brand mark in the third, all drawn the same size in the same plate. They
+are split now: `logo` is the thing the partner issued and `mark` is the
+vendor's symbol. GitHub has no partnership lockup anywhere in the library, so
+its `logo` is deliberately empty and the plate sets `note` in type — "GitHub
+Campus Program", which is what the pavilion signage at NT Square says. The old
+wordmark is not a credential and is no longer pretending to be one.
+
+The three marks are the user's own files, from their Downloads, filed under
+`uploads/partners/`. **Sarvam has no mark on purpose** — "I don't have the
+sarvam AI logo for now, we are going to do it later" — and with none, **that
+corner is left empty rather than falling back to type.** The type fallback is
+right on the badge plate, where it stands in for a picture nobody has; in the
+mark's corner it set the partner's name at 40px directly above the 62px
+headline that already says it. Nothing is hand-drawn either way.
+
+**"How difficult it is to be partnered" is written from the badges and stops
+there**, which is what the user chose when asked where those words should come
+from. The card states the standing — Partner Network Member, Select Partner,
+Campus Program — and makes no claim about how a tier is earned or how few hold
+it, because no such thing is written down in this deck. Every point on every
+card is already recorded somewhere else in it: the ten Claude Certified
+Architect trainers, the Claude Certified Associate card on AI Ready Engineer,
+the Centres of Excellence list, that curriculum's own "3 C's — Claude · Codex ·
+Copilot" and "GitHub & Version Control" modules, the GitHub Experience Center
+at NT Square. Sarvam's stay empty and its card draws no grid at all.
+
+**The partner's colour is on the card and never on its type.** It is the band
+across the top and the tint behind each icon chip — which is still what tells
+the slivers of the cards behind apart — and the headline's accent half, the
+point numbers and the foot rule take the deck's own `--accent-ink` instead. A
+brand hue is chosen to work on that vendor's ground rather than on this one:
+GitHub's `#8B7ED8` on warm paper is under 3:1 at any size. That is also the
+whole of "the colour we are using" — Torii's orange carries the type, the
+vendor's colour carries the card.
+
+Four things measured rather than chosen:
+
+  - **The card is 1420 wide, not 1240.** Six point cards have to stand in a row
+    across it; at 1240 the columns came out 188px, narrower than the words on
+    them. At 1420 of a 1600 slide they are 204 with 90px of margin down each
+    side, which is very nearly the reference's own proportion.
+  - **Fixed-width columns, centred — never `1fr`.** A partner with four points
+    and a partner with six have to read as the same card with less on it. On
+    fractions the one with four would get cards half again as wide and the
+    stack would stop looking like a stack. `--ss-cols` carries the count.
+  - **The pin moved from 88 to 104, and the old figure was stale arithmetic.**
+    Its comment justified 88 with "3 x STACK_Y = 78px" against a `STACK_Y`
+    that is 34, so the deepest card in a four-card stack lifted 102 and lost
+    its band to the stage's own top clip. Measured after: deepest card top at
+    2 against a stage top of 0, front card bottom 768 against a presenter bar
+    at 806.
+  - **Warm paper, not white**, with the point cards white on it. Two surfaces
+    are what make the six points read as objects ON the card rather than as
+    panels cut out of it; white on white needs a border to say the same thing
+    and still says it more quietly.
+
+Measured presenting at 1600x900, all four cards: contrast 15.2:1 for the
+headline's ink half and 4.47:1 for its accent half on the paper (62px display
+type against a 3:1 floor), 17.7:1 on a point title, 7.6:1 on a point body,
+6.5:1 on the lead and the counter; badges and marks all loaded, none
+overflowing its plate, 0 broken images; the right arrow takes three presses
+through the cards and leaves the tab on the fourth; no console errors. **The
+frame time was read against a blank page on the same instance and both are
+33.3ms** — that is this Chrome's own vsync floor and not the slide, which is
+exactly the trap the earlier pass on this section documented. A floor of 6.9
+and a floor of 16.7 are both quoted elsewhere in this brief; check it before
+believing either.
+
+`uploadPath` in `section.service.js` is new and lifted out of the expression a
+dozen media fields there inline, because two fields on one partner now need it
+and two copies of a security check is one too many. It validates segment by
+segment rather than with one expression carrying an escaped slash — a dot
+segment fails the first character on its own, so traversal needs no clause.
+
+## Workspace, a row waiting for its pictures (it has them now — see the section below)
+
+**A tab after Team, created empty** (2026-09-21, on request: "after team i want
+u to create the workspace tab in that i am gonna give u the pics of the work
+space"). `tools/create-workspace-row.cjs` makes it, places it and can be re-run
+without duplicating anything; it writes **no blocks**, so the slide opens on the
+deck's own "This section is blank" card until the photographs arrive. Nothing is
+designed before then and nothing stands in for them — a placeholder slide is the
+one thing worse than a blank one. Drop them in `incoming/Workspace/`.
+
+**"After Team" is the key `leadership-journey`, not the key `team`.** That is the
+trap this deck has documented twice and it bites hardest here: Centers of
+Excellence is the row keyed `team`, so anchoring on the obvious key would have
+put Workspace three places from where it was asked for. The tool prints the
+anchor's stored title before it writes anything, so a wrong one is visible in the
+dry run.
+
+**Published and blank, not a draft.** Six rows were created as drafts once
+(2026-09-14) and the user — who works in the presenter view — could not see them
+at all, so they could not tell the rows existed. Visible and honestly empty is
+the shape that was settled on. Before any real presentation with the content
+still missing, hide it: `node tools/presenter-visibility.cjs --hide workspace`,
+or add `workspace` to Torii's `HIDDEN_ROWS`, which hides it from an admin too.
+
+The glyph is `building` from the drawn line library. There is no artwork for this
+key in `uploads/navicons/` and none was invented; drop a `Workspace.svg` beside
+the others and add the `NAV_ARTWORK` mapping if one is supplied.
+
+Measured: the pane reads About · Team · **Workspace** · Trainings · Centres of
+Excellence, 17 rows; the URL holds rather than bouncing to About; the crumb reads
+"Torii › Workspace"; presenting it is 3 / 17 and the tab key walks through it; no
+console errors. One note for the next check of a new row — **the first pass
+reported it redirecting to About and the deck was innocent.** `Page.navigate` to
+a URL that differs only in its hash does not reload, so the page routed with the
+section list it had cached from before the row existed, found nothing and fell
+back to `sections[0]`. Load at the target and *then* reload.
+
+## Workspace is the travel-journal page
+
+**Built to a reference image the user supplied** (2026-09-21): a Texas tourism
+spread — a timeline strip across the top with four handwritten notes at four
+ticks, one wide photograph a little left of centre, small prints scattered round
+it and overlapping its edges, some cut by the frame, and under everything three
+lines of copy between a place-mark and a badge. A new block type,
+`photo-spread` (`PhotoSpread.js`, `tools/publish-workspace.cjs`), on the row
+`create-workspace-row.cjs` made.
+
+**Then every word came off it** (same day: "remove all this stuff… whatever
+text is there… I just want the photographs"). The timeline, the notes, the
+copy, the mark and the badge were built, measured and removed. The slide is
+the thirteen photographs on Torii's light sheet with its two measured colours
+washing behind, and nothing else — `innerText` on the root measures 0. The
+words that had been written (from the photographs, as placeholders) are kept
+as a record in `NOTES` and `COPY` in the publisher and are not sent; the schema
+still accepts `notes`, `copy`, `logo`, `badge` and `tagline` and the component
+draws none of them.
+
+**Then bigger** (same day: "more bigger pics i want"). With the words gone the
+800x452 middle and its prints read as a spread floating in a frame. The middle
+is 940x529 now and the prints about 1.3x, and the spread runs from y=95 to 748
+of the 804 rows above the presenter bar. **Laid out by hand, not scaled**: the
+first geometry scaled up 1.22 about its centre put the big right-hand print
+entirely off the frame — the right cluster is wide, and a uniform scale pushes
+its far edge out faster than it grows. Every slot was re-placed at its new
+size with the reference's character kept: the left three overlapping the
+middle's left edge, the right cluster dense beside it, three prints cut by the
+frame (the far-left one at x = −40, two on the right ending at 1645 and 1670).
+
+**Then the Torii wordmark under it** ("in the down i want torii logo") — the
+one thing on the slide that is not a photograph. It is the SAME SVG the
+navigation pane's head draws (`organizations[torii].logoAssetId`,
+`uploads/torii-wordmark-de8205d983b44fd5.svg`), so the deck says its own name
+one way, and the block carries it as `logo`, a path under /uploads. It stands
+centred under the middle at x=720 in the one band the prints leave empty at
+the foot, sized by height alone (88px, which is 197 wide for this file), and
+arrives last. Measured presenting: box 621,676 197x88, 0 prints touching it,
+42px clear of the bar, loaded.
+
+**The geometry is the reference's by proportion, not by aspect ratio.** Twelve
+slots and the middle, in canvas px, from the reference frame's positions and
+sizes. Its prints are tall portraits; these photographs are all 3:2, 4:3 or
+square, so the tall slots are 4:5 rather than 1:2 — every one of them would
+otherwise crop a face to a strip.
+
+**The prints trade places on their own, about once a second** ("between one
+second"): the next slot round the ring comes to the middle and the middle goes
+to the slot it left — a swap, so no photograph is ever off the page. Measured
+over 8s: 7 changes, gaps 1114–1200ms. The flight is 640ms of that, so the page
+is very nearly always in gentle motion rather than a still one that jumps.
+
+**The BOX is animated, not a transform — and that was the whole of "not
+smooth."** The first cut was a FLIP: the print laid out at its new box and
+scaled back onto the old one with `scale(sx, sy)`, released a frame later.
+Two things were wrong with it and neither is a jitter a profiler finds. The
+scale is non-uniform, because a 16:9 slot and a 4:5 slot are different shapes,
+so for the whole flight the photograph and its white border STRETCHED — faces
+widening and narrowing on the way. And the print going out was rasterised at
+its small destination box and shown six times larger for the first frames,
+blurred, sharpening as it shrank. Transitioning `left/top/width/height` instead
+relays two absolutely-positioned elements a frame, which costs nothing this
+harness can see, and inside each box `object-fit: cover` RE-CROPS the picture
+frame by frame rather than distorting it; the border stays 6px and the image is
+drawn at its true size on every frame. This deck's rule against animating
+boxes is about type being re-set every frame; there is no type on this slide.
+Traced one print by identity through one flight, presenting at 1600x900: 42
+frames over 683ms, width 265→940, largest single-frame step 50px at the peak of
+a symmetric in-out ease, mean 16.5, **0 reversals**, median frame 16.7ms, p90
+16.7, 0 frames over 40 — the floor of this Chrome. Both prints land to the
+pixel on the rectangles they set off for.
+
+Three layers a print all the same: `.sp-photo` the box and its transition,
+`.sp-photo__rise` the entrance, `.sp-photo__face` the tilt and the hover. The
+tilt is the slot's, published as `--sp-tilt`, so a print straightens as it
+travels to the middle, on the same 640ms clock as its box.
+
+The hold is `pointerHold`, so a hand parked on the slide stops it and a hand
+resting still on the desk does not. Measured: pointer over the slide 3s, the
+middle unchanged. A press on a print brings it to the middle at once; a press
+on the middle opens the viewer. `isConnected` is checked when the timer FIRES.
+
+**Forward walks the ring once, then leaves.** The stepper counts twelve — one
+turn in the middle for every print — and is spent; a ring has no ends, so
+"spent" is counted, as on the team ribbon. Measured presenting: the thirteenth
+press opens Trainings. Nothing binds an arrow on the root.
+
+**The entrance assembles**: the prints drop a little onto the page staggered by
+their order — the middle first, then out through the ring. Measured at 0.3s
+from mount: opacities 0.75, 0.41, 0, 0 … across the ring; all at 1 by 2.15s
+and the first swap waits until 2.3s so it never crosses the arrival.
+
+Three things about the photographs. **The building render opens in the
+middle** ("use the infrastructure one main photo"); it is square, so the 16:9
+slot frames it on the building (`focus: center 58%`). **Two arrived as social
+cards** with the Nagarjuna and AI Centre of Excellence lockups burned into a
+header band, cut off with `crop-image.cjs --top 225`. **Five are 8192px camera
+originals** at 12–16MB apiece, re-encoded to 2000 wide — twice the widest slot,
+because the same file opens full size in the viewer. All thirteen are renamed
+by what they show, because a slot is chosen for a photograph by its shape and
+subject and `1 (3).jpeg` says neither.
+
+Measured presenting at 1600×900: root 900, `--slide-h` 900, no second head, 13
+of 13 loaded, 12 prints, none under the bar, no console errors.
+
+Two harness lessons, both from this slide. **A check's clock starts when the
+component MOUNTS** — the first pass timed from the end of its own `sleep` after
+the reload, 2.5s after the slide was built, and read the entrance as over and
+the first swap as done. And **a flight is traced on one element, by identity**
+— following "whichever print is flying" hands off to the next swap's print
+mid-trace and reports the hand-off as a 534px jump and two reversals that no
+pixel ever made.
+
+## Trusted By is a fan of cards in depth
+
+**Built to a reference image the user supplied** (2026-09-21): a row of tall
+travel cards standing in perspective, the one in the middle square-on and full
+size, its neighbours turned toward it, set back and dimmed, the ones beyond
+more so. Its cards carry a photograph, a name and a paragraph; these carry an
+institution's mark on a white plate and its name under it, and nothing else —
+"that's all I want". A new block type, `trust-fan` (`TrustFan.js`,
+`tools/publish-trusted-by.cjs`, which creates the row and places it after AI
+Partners). The reference stands on a dark map; this stands on Torii's light
+sheet with its two measured colours washing behind.
+
+**One number moves.** `pos` is the row's position in cards, eased toward
+`target` in a rAF loop, and every card is placed each frame from its distance
+to `pos` taken the short way round — the row is a ring, so one step back from
+the first card is the last and it is never seen to stop. The wheel, the arrow
+keys (through `slideSteps`), a press on a card and the autoplay all write
+`target` and nothing else; no CSS transition touches a card's transform, so a
+wheel can interrupt a travel mid-flight without a jump. Even the entrance is
+in the loop: the cards open stacked on the front one and are dealt out of it
+over 1.1s by a `dealt` factor on every offset, so there is no second opinion
+on the transform for the first second either. Measured presenting, one wheel
+notch: the front card traced frame by frame, 87 moving frames of 91, largest
+single-frame step 18px, **0 reversals**, median 16.7ms, p90 16.7, 0 frames
+over 40 — the floor of this Chrome.
+
+**The fan, per card of distance**: 375px across, 22° of turn toward the middle
+(capped at 52), 230px back in Z under a 1500px perspective, 0.22 of opacity
+lost, drawn out to 2.7 cards. Measured at rest: five cards on screen at
+64–367 / 292–642 / **600–1000** / 958–1308 / 1233–1536, opacities 0.56, 0.78,
+1, 0.78, 0.56. **The step was 340 for one cut**, and at 340 the front card lay
+70px over its neighbour's inner edge — on a plate with 30px of air that is the
+first letters of the mark, "ge of Engineering" where the plate said "College".
+At 375 the overlap is 42px and the neighbours' marks read whole; the
+outermost pair are cut by the frame instead, as the reference's are. No blur
+anywhere — a `filter` on a moving card is the cost this deck measured on the
+scroll stack and took off; depth is turn, setback and dimming.
+
+**"Every logo clearly."** The plate is the top 320 of a 400x480 card and the
+mark is `contain`ed in it with 30px of air, sized by the plate and never
+stretched (`max-width: none`, or the stylesheet's image cap would have
+squeezed it). Measured: the front mark draws at 338x249, the two beside it at
+292x143 and 241x116, the two beyond still 230 wide. The card in the middle is
+at scale 1 and centred on the frame the room sees — the stage's `bottom` is
+`--deck-bar-clear`, so presenting it sits at y 162–642 with 164px above the
+bar, not centred on a frame the bar covers a ninth of.
+
+**The names are the marks' own.** All nine logos print the name of their
+institution and that is what each card says — nothing shortened, nothing
+added; YCCE's card takes the full name its logo prints under the initials.
+`note`, a line under the name, is in the schema and empty on all nine: nothing
+is written about what any of them is to Torii. The files are renamed by what
+they show, because `Vector Smart Object-3.png` says nothing. One needed a cut:
+`ngi.png` is a 1080x1080 canvas with the mark in a band across its middle,
+which contained in the plate would have been a sliver — its ink was measured
+through the canvas (x 271–848, y 318–722) and it is cropped to that plus 40px
+of air, to PNG so the transparency survives. Three arrive on a baked white
+ground with no alpha; the plate is white, so nothing shows.
+
+**Opens on YCCE**, with SRKR and Geeta to its left and NGI and its engineering
+college to its right — the user pointed at that scene and asked for the slide
+to start on it. A ring has no start, only a card it is opened on, so the
+publisher's list is the same ring rotated to put YCCE first; every neighbour
+is where it was.
+
+Plays itself one card every **4.6s** — 2.8 was "changing too fast… wait for
+some time so that we can explain", 6.5 was then "reduce that time a bit" —
+with the opening scene held 3.8s before the first turn. Measured gap between
+turns: 4603ms. Holds under `pointerHold` (parked 3.5s: unchanged), and the
+right arrow walks the ring once — nine presses — and leaves on the tenth,
+measured into AI Ready Engineer.
+
+**How many, under the fan** ("mention how many trusted partners"): the figure
+in the display face in `--accent-ink` and the user's own words beside it,
+centred in the band between the front card's foot and the presenter bar. The
+figure is `logos.length`, computed by the component and never stored, so it
+cannot disagree with the cards; the words are the block's `countLabel`.
+Measured presenting: "9 trusted partners" at 694,690 211x60, 48px under the
+front card, 56px above the bar, touching no card.
+`isConnected` is checked when the timer FIRES, and the rAF loop bails when the
+root leaves the document. 9 of 9 marks loaded, no second head, no console
+errors.
 
 **Four Torii rows and one NGI row are switched off in the code** (2026-09-16),
 on request: Torii's Industry Alliances, History & Milestones, Success Stories

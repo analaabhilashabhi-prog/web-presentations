@@ -14,40 +14,65 @@
  *   immediately before AI Ready Engineer. Run it twice and nothing is
  *   duplicated: the row is found by its key and PATCHed.
  *
+ * THE CARD IS THE REFERENCE'S LAYOUT (2026-09-21, on request)
+ * -----------------------------------------------------------
+ *   The user supplied a reference image — a cream card with a pill at one
+ *   corner and a starburst at the other, a two-colour headline, a lead, a row
+ *   of six numbered white cards each with a tinted icon chip, and a row of
+ *   chips under them. Each partner card is now that layout:
+ *
+ *     the credential, top left    the partnership lockup the partner ISSUED,
+ *                                 on a white plate, 68px tall. "The photos we
+ *                                 have... placed in the card to be shown
+ *                                 clearly" is what that slot is for. With no
+ *                                 lockup in the library the card sets what the
+ *                                 badge would have said in type instead.
+ *     the brand mark, top right   the vendor's own symbol, in the corner the
+ *                                 reference puts its starburst in. Supplied by
+ *                                 the user from their Downloads and filed
+ *                                 under uploads/partners/.
+ *     the headline                two colours on one line, both halves stored.
+ *     the points                  numbered cards, not bullets.
+ *
  * WHERE THE WORDS AND THE COLOURS COME FROM, because both are rules here
  * ---------------------------------------------------------------------
- *   - **The marks are the ones the user supplied**, already in the library.
- *     Three are the official partner lockups — Claude Partner Network (Member),
- *     OpenAI Select Partner, and the sarvam wordmark — filed under
- *     `uploads/Claude/` for the AI Ready Engineer slide. GitHub has no partner
- *     lockup anywhere, so it takes the plain GitHub wordmark from `uploads/coe`,
- *     which is the file the Centres of Excellence wall already draws. NOTHING
- *     IS HAND-DRAWN: a card with no artwork stands in type instead.
+ *   - **Every mark is the user's own.** claude-mark.svg, openai-mark.webp and
+ *     github-mark.png are the files they supplied; the two partnership lockups
+ *     and the sarvam wordmark were already in uploads/Claude/ for the AI Ready
+ *     Engineer slide. SARVAM HAS NO MARK ON PURPOSE — "I don't have the sarvam
+ *     AI logo for now" — so its card sets the name in type. NOTHING IS
+ *     HAND-DRAWN, which is this deck's standing rule about vendor logos.
  *
- *   - **`note` is what the lockup itself says**, never a claim beyond it.
- *     "Claude Partner Network · Member" is printed on the badge. GitHub's
- *     "GitHub Campus Program" is the line printed on the pavilion signage in
- *     the NT Square photographs, so it is the user's own too.
+ *   - **The headline is what the badge says, and nothing more.** "Partner
+ *     Network Member", "Select Partner", "Campus Program" are each printed on
+ *     the lockup or, for GitHub, on the pavilion signage in the NT Square
+ *     photographs. The reviewer asked for "how difficult it is to be
+ *     partnered" and chose to have those lines written from the badges only,
+ *     so the card states the STANDING and stops there. No claim about how a
+ *     tier is earned or how few hold it appears anywhere on this slide,
+ *     because no such thing is written down in this deck.
  *
- *   - **`tagline` is the deck's own.** Claude, OpenAI and GitHub each already
- *     carry one on the Centres of Excellence block and those are reused
- *     verbatim rather than rewritten. Sarvam has no entry anywhere in the deck;
- *     its line describes the vendor as the vendor publishes itself, which is
- *     the same licence the Certifications skills lines take, and it is the one
- *     line on this slide to replace first.
+ *   - **`tagline` is the deck's own**, copied verbatim off the Centres of
+ *     Excellence block for Claude, OpenAI and GitHub. Sarvam has no entry
+ *     anywhere in the deck; its line describes the vendor as the vendor
+ *     publishes itself, and it is the one line on this slide to replace first.
  *
- *   - **`color` is measured, not chosen.** Claude, OpenAI and GitHub take the
- *     hex already stored against them on the Centres of Excellence block.
- *     Sarvam had none, so its mark was measured: 60,684 ink pixels over a
- *     1600x542 wordmark, mean #3F3F3F.
+ *   - **Every point is written down somewhere else in this deck**: the ten
+ *     Claude Certified Architect trainers, the Claude Certified Associate card
+ *     on AI Ready Engineer, the Centres of Excellence list, that curriculum's
+ *     own "3 C's — Claude · Codex · Copilot" and "GitHub & Version Control"
+ *     modules, the GitHub Experience Center at NT Square. SARVAM'S ARE
+ *     DELIBERATELY EMPTY and the component draws no grid at all when there are
+ *     none: an invented line on a partner's card is worse on a college's
+ *     screen than a short card.
  *
- *   - **`points` hold only what the deck can already show.** Claude's four and
- *     GitHub's three are written down elsewhere in this deck — the ten
- *     Architect trainers, the two badges on AI Ready Engineer, the Centres of
- *     Excellence list, the Campus Program signage. SARVAM'S ARE DELIBERATELY
- *     EMPTY. Nothing about that partnership is recorded anywhere, and an
- *     invented line on a partner's card is worse on a college's screen than a
- *     short card. The component draws no rule and no list when there are none.
+ *   - **`color` is measured, not chosen** — the hex already stored against
+ *     each of the three on the Centres of Excellence block; sarvam's was
+ *     measured off its wordmark, 60,684 ink pixels, mean #3F3F3F. It is on the
+ *     band at the card's top and in the tint behind each icon, and NOT on any
+ *     type: a vendor's brand hue is chosen to work on that vendor's ground,
+ *     and GitHub's #8B7ED8 on this card's warm paper is under 3:1 at any size.
+ *     Type takes the deck's own `--accent-ink`.
  */
 const fs = require('fs');
 const path = require('path');
@@ -65,22 +90,35 @@ const BEFORE = 'ai-ready-engineer';
 const BLOCK = {
   type: 'scroll-stack',
   layout: { x: 0, y: 0, w: 12, h: 15 },
+  /* Carried, not drawn. The block still holds these two and the slide is the
+     cards alone; putting a head back is a line in the component. */
   eyebrow: 'PARTNERSHIPS',
   title: 'AI Partners',
   lead: 'The platforms Torii builds and teaches on, and the standing each one is held at.',
   partners: [
     {
       name: 'Claude',
+      /* The line the lockup itself prints, used as the badge's own type
+         fallback if the file ever goes missing. */
       note: 'Claude Partner Network · Member',
+      /* Verbatim off the Centres of Excellence block, not rewritten. */
       tagline: 'Applied AI, agents & assistants',
+      /* THE CREDENTIAL — the partnership lockup the partner issued. */
       logo: 'Claude/claude-partner-network.jpeg',
       logoAlt: 'Claude Partner Network — Member',
+      /* THE BRAND MARK — the vendor's own symbol, supplied by the user. */
+      mark: 'partners/claude-mark.svg',
+      markAlt: 'Claude',
+      headline: 'Claude.',
+      headlineAccent: 'Partner Network Member.',
       color: '#D97757',
       points: [
-        '10 Claude Certified Architect trainers',
-        'Claude Certified Associate for students',
-        'Centre of Excellence partner',
-        'Carried through the AI Ready Engineer curriculum',
+        { icon: 'handshake-check', title: 'Partner Network', body: 'Member tier of the Claude Partner Network.' },
+        { icon: 'users', title: 'Certified Architects', body: 'Ten Claude Certified Architect trainers on the team.' },
+        { icon: 'certificate', title: 'Student Certification', body: 'Claude Certified Associate, earned by students.' },
+        { icon: 'building', title: 'Centre of Excellence', body: 'A Centre of Excellence partner on campus.' },
+        { icon: 'book', title: 'In the Curriculum', body: 'Carried through the AI Ready Engineer programme.' },
+        { icon: 'code', title: "The 3 C's", body: 'Claude taught beside Codex and Copilot.' },
       ],
     },
     {
@@ -89,10 +127,16 @@ const BLOCK = {
       tagline: 'Generative AI & LLMs',
       logo: 'Claude/openai-select-partner.jpeg',
       logoAlt: 'OpenAI Select Partner',
+      mark: 'partners/openai-mark.webp',
+      markAlt: 'OpenAI',
+      headline: 'OpenAI.',
+      headlineAccent: 'Select Partner.',
       color: '#10A37F',
       points: [
-        'Centre of Excellence partner',
-        'Generative AI across the curriculum',
+        { icon: 'handshake-check', title: 'Select Partner', body: 'Select Partner — the tier printed on the lockup.' },
+        { icon: 'building', title: 'Centre of Excellence', body: 'A Centre of Excellence partner on campus.' },
+        { icon: 'book', title: 'In the Curriculum', body: 'Generative AI runs through the AI Ready Engineer programme.' },
+        { icon: 'code', title: "The 3 C's", body: 'Codex taught beside Claude and Copilot.' },
       ],
     },
     {
@@ -102,6 +146,13 @@ const BLOCK = {
       tagline: 'Indian-language foundation models',
       logo: 'Claude/sarvam-ai.jpeg',
       logoAlt: 'sarvam',
+      /* NO MARK ON PURPOSE (2026-09-21, on request: "I don't have the sarvam
+         AI logo for now, we are going to do it later"). With none, the card
+         sets the name in type in that corner. Nothing is traced by hand. */
+      mark: '',
+      markAlt: '',
+      headline: 'Sarvam AI.',
+      headlineAccent: 'Partnership.',
       color: '#3F3F3F',
       points: [],
     },
@@ -109,13 +160,25 @@ const BLOCK = {
       name: 'GitHub',
       note: 'GitHub Campus Program',
       tagline: 'DevOps, source & collaboration',
-      logo: 'coe/github full.png',
-      logoAlt: 'GitHub',
+      /* NO BADGE, DELIBERATELY EMPTY. There is no GitHub partnership lockup
+         anywhere in the library — the file that used to sit here was the plain
+         GitHub wordmark off the Centres of Excellence wall, which is a brand
+         mark rather than a credential and now has its own field. With the slot
+         empty the card sets `note` in type there, which is what the pavilion
+         signage at NT Square actually says. */
+      logo: '',
+      logoAlt: '',
+      mark: 'partners/github-mark.png',
+      markAlt: 'GitHub',
+      headline: 'GitHub.',
+      headlineAccent: 'Campus Program.',
       color: '#8B7ED8',
       points: [
-        'Centre of Excellence partner',
-        'GitHub Experience Center at NT Square',
-        'Student Developer Pack on campus',
+        { icon: 'handshake-check', title: 'Campus Program', body: 'GitHub Campus Program, named on the NT Square signage.' },
+        { icon: 'map-pin', title: 'Experience Center', body: 'A GitHub Experience Center at NT Square.' },
+        { icon: 'building', title: 'Centre of Excellence', body: 'A Centre of Excellence partner on campus.' },
+        { icon: 'cube', title: 'Student Developer Pack', body: 'Student Developer Pack on campus.' },
+        { icon: 'code', title: 'In the Curriculum', body: 'GitHub & Version Control, a module of its own.' },
       ],
     },
   ],
@@ -148,20 +211,26 @@ function request(method, p, body, cookie) {
      symptom of a wrong path is a blank plate — and on Linux a wrong CASE is a
      wrong path, which this deck has been caught by once already. */
   for (const p of BLOCK.partners) {
-    if (!p.logo) continue;
-    const abs = path.join(ROOT, 'backend/uploads', p.logo);
-    if (!fs.existsSync(abs)) throw new Error(`no such mark on disk: uploads/${p.logo}`);
-    const dir = path.dirname(abs);
-    const base = path.basename(abs);
-    if (!fs.readdirSync(dir).includes(base)) throw new Error(`case mismatch: uploads/${p.logo}`);
+    for (const rel of [p.logo, p.mark]) {
+      if (!rel) continue;
+      const abs = path.join(ROOT, 'backend/uploads', rel);
+      if (!fs.existsSync(abs)) throw new Error(`no such file on disk: uploads/${rel}`);
+      const dir = path.dirname(abs);
+      const base = path.basename(abs);
+      if (!fs.readdirSync(dir).includes(base)) throw new Error(`case mismatch: uploads/${rel}`);
+    }
   }
-  console.log(`  marks     ${BLOCK.partners.filter((p) => p.logo).length}/${BLOCK.partners.length} on disk, case checked`);
+  console.log(`  badges    ${BLOCK.partners.filter((p) => p.logo).length}/${BLOCK.partners.length} on disk, case checked`);
+  console.log(`  marks     ${BLOCK.partners.filter((p) => p.mark).length}/${BLOCK.partners.length} on disk, case checked`);
 
   console.log('');
   BLOCK.partners.forEach((p, i) => {
     console.log(`  ${String(i + 1).padStart(2, '0')}  ${p.name.padEnd(10)} ${p.color}  ${p.note}`);
-    console.log(`      ${p.tagline}`);
-    console.log(`      ${p.points.length ? p.points.join(' · ') : '(no points — nothing about this partner is written down yet)'}`);
+    console.log(`      ${p.headline} ${p.headlineAccent}   ·   ${p.tagline}`);
+    console.log(`      badge ${p.logo || '(type: ' + p.note + ')'}`);
+    console.log(`      mark  ${p.mark || '(type: ' + p.name + ')'}`);
+    p.points.forEach((pt, j) => console.log(`      ${String(j + 1).padStart(2, '0')} ${pt.title.padEnd(24)} ${pt.body}`));
+    if (!p.points.length) console.log('      (no points — nothing about this partner is written down yet)');
   });
 
   if (DRY) { console.log('\n  dry run — nothing written'); return; }
@@ -227,6 +296,8 @@ function request(method, p, body, cookie) {
   console.log('');
   console.log(`  read back  type      ${got.type}${got.type === 'scroll-stack' ? '' : '  !! NORMALISED AWAY — server not restarted?'}`);
   console.log(`             partners  ${(got.partners || []).map((p) => p.name).join(' · ') || '!! DROPPED'}`);
-  console.log(`             marks     ${(got.partners || []).filter((p) => p.logo).length} with a logo, ${(got.partners || []).filter((p) => p.color).length} with a colour`);
+  console.log(`             badges    ${(got.partners || []).filter((p) => p.logo).length} with a lockup, ${(got.partners || []).filter((p) => p.mark).length} with a brand mark`);
+  console.log(`             points    ${(got.partners || []).map((p) => `${p.name} ${(p.points || []).length}`).join(' · ')}`);
+  console.log(`             headlines ${(got.partners || []).every((p) => p.headline) ? 'all four stuck' : '!! DROPPED — server not restarted?'}`);
   console.log(`  tab order  ${back.map((s) => s.title).join(' > ')}`);
 })().catch((e) => { console.error('  ERROR ' + e.message); process.exitCode = 1; });

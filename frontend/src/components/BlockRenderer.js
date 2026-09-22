@@ -38,6 +38,8 @@ import { TrainingShelf } from './TrainingShelf.js';
 import { CurriculumDeck } from './CurriculumDeck.js';
 import { ScrollStack } from './ScrollStack.js';
 import { PhotoCollage } from './PhotoCollage.js';
+import { PhotoSpread } from './PhotoSpread.js';
+import { TrustFan } from './TrustFan.js';
 import { ButtonRow, IconBox, LogoBox } from './Elements.js';
 import { TextBox, ImageBox, ProfileBox } from './MediaBoxes.js';
 import { VideoBox } from './VideoBox.js';
@@ -183,6 +185,10 @@ export function renderBlock(block, options = {}) {
 
     case 'photo-collage':
       return PhotoCollage(block);
+    case 'photo-spread':
+      return PhotoSpread(block);
+    case 'trust-fan':
+      return TrustFan(block);
 
     case 'thread-board':
       return ThreadBoard(block);

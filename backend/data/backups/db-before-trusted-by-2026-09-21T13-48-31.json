@@ -13216,7 +13216,7 @@
       "status": "published",
       "blocks": [
         {
-          "id": "blk_cfab1a14f9764d17",
+          "id": "blk_78b5e98b988b47ca",
           "type": "trust-fan",
           "layout": {
             "x": 0,
@@ -13291,13 +13291,12 @@
               "h": 382
             }
           ],
-          "countLabel": "trusted partners",
           "glow": "",
           "glow2": ""
         }
       ],
       "createdAt": "2026-09-21T13:33:31.822Z",
-      "updatedAt": "2026-09-21T13:48:31.396Z"
+      "updatedAt": "2026-09-21T13:45:07.018Z"
     }
   ],
   "assets": [
