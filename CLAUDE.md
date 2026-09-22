@@ -2829,6 +2829,20 @@ turns: 4603ms. Holds under `pointerHold` (parked 3.5s: unchanged), and the
 right arrow walks the ring once — nine presses — and leaves on the tenth,
 measured into AI Ready Engineer.
 
+**Then the cards became the marks alone** (2026-09-22: "only the logo on the
+cards, that's it"). No name under the plate, no note: the card is 400x400
+rather than 400x480 and the plate is the whole face, with 40px of air above
+and below the mark and **48 at the sides** — not 36, because the front card
+lies 42px over each neighbour's inner edge and a mark drawn out to 36 lost its
+last letter under it (measured: "SRKR" read "SRKF"). The name is still stored,
+still the card's `aria-label` and the image's `alt`, and the `.tf-card__name`
+and `.tf-card__note` rules stay in the stylesheet for the day they come back;
+the component simply builds no body. The count line moved up with the card's
+foot, to 650. Measured presenting: front card 600,202 400x400, its mark drawn
+302x116, neighbours' marks 264 wide and whole, 9 of 9 loaded, the fan still
+turning on its own (front card 0 → 1 → 2 over 9s), wheel trace 0 reversals at
+the 16.7ms floor, no console errors.
+
 **How many, under the fan** ("mention how many trusted partners"): the figure
 in the display face in `--accent-ink` and the user's own words beside it,
 centred in the band between the front card's foot and the presenter bar. The

@@ -38,7 +38,12 @@ import { pointerHold } from '../utils/pointerHold.js';
    and 70% of its height; this is 400x480 on a 1600x860 canvas, shorter than
    the reference's because there is no paragraph under the name. */
 const CARD_W = 400;
-const CARD_H = 480;
+/* 400, not the 480 of the first cut: the card is THE MARK ALONE now
+   (2026-09-22, "only the logo on the cards, that's it"), so there is no name
+   under the plate and a tall card would be a mark over a blank band. Square,
+   and the plate is the whole card. The name is still stored and still read
+   by a screen reader (`aria-label`, `alt`); it is simply not drawn. */
+const CARD_H = 400;
 
 /* The fan. A card `d` from the front stands STEP_X px across, turns TURN
    degrees toward the middle, sets back SETBACK px in Z (the perspective does
@@ -111,10 +116,9 @@ export function TrustFan(block = {}) {
           loading: 'eager',
           decoding: 'async',
           draggable: 'false',
-        })),
-      h('div', { class: 'tf-card__body' },
-        l.name ? h('h3', { class: 'tf-card__name' }, l.name) : null,
-        l.note ? h('p', { class: 'tf-card__note' }, l.note) : null)));
+        }))));
+    /* No `.tf-card__body`: the name and the note are not drawn, on request.
+       The rules for them stay in the stylesheet for the day they come back. */
     /* A press on a card brings it to the front — the short way round. */
     card.addEventListener('click', () => {
       userMoved();

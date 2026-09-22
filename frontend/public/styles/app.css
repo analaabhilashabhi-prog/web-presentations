@@ -21561,7 +21561,7 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
   position: absolute;
   left: 50%;
   top: 50%;
-  margin: -240px 0 0 -200px;   /* half of 480 x 400 */
+  margin: -200px 0 0 -200px;   /* half of 400 x 400 — the card is the mark alone */
   transform-style: preserve-3d;
   backface-visibility: hidden;
   will-change: transform, opacity;
@@ -21595,14 +21595,20 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
    contained in it with 30px of air, SIZED BY THE PLATE AND NEVER STRETCHED.
    `max-width: none` because the stylesheet caps every image at its box, and
    here the box is exactly what it should fill. */
+/* The whole card, since 2026-09-22: no name under it, so the plate fills the
+   face and the rule that separated the two is gone. 36px of air, up from 30,
+   because the mark is the only thing on the card and the edge is closer. */
 .tf-card__plate {
-  flex: 0 0 320px;
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 30px;
+  /* 48 at the sides, not 36: the front card lies 42px over each neighbour's
+     inner edge, and a mark drawn out to 36 lost its last letter under it —
+     measured, "SRKR" read "SRKF". At 48 the mark ends inside the overlap. */
+  padding: 40px 48px;
   background: #fff;
-  border-bottom: 1px solid var(--tf-line);
 }
 .tf-card__plate img {
   display: block;
@@ -21642,7 +21648,7 @@ body.is-presenting .fit-slide__inner .slide--hero .hero--right {
 .tf-count {
   position: absolute;
   left: 50%;
-  top: 690px;
+  top: 650px;   /* 48px under a 400-tall front card whose foot is at 602 presenting */
   transform: translateX(-50%);
   margin: 0;
   display: flex;
