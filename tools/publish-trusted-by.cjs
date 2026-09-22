@@ -116,10 +116,12 @@ function pngSize(file) {
   console.log(`  marks     ${LOGOS.length} on disk, whole, case checked`);
   LOGOS.forEach((l, i) => console.log(`  ${String(i + 1).padStart(2, '0')}  ${l.name.padEnd(46)} ${l.src}  ${l.w}x${l.h}`));
 
-  /* `countLabel` is the words after the figure under the fan; the figure
-     itself is the length of LOGOS, computed by the component, never typed. The
-     words are the user's own ("how many trusted partners"). */
-  const BLOCK = { type: 'trust-fan', layout: { x: 0, y: 0, w: 12, h: 15 }, title: TITLE, base: BASE, logos: LOGOS, countLabel: 'trusted partners' };
+  /* No `countLabel`: the '9 trusted partners' line under the fan was asked for
+     on 2026-09-21 and taken off on 2026-09-22 ("i dont want this"). The
+     component still draws it when a label is sent, so putting it back is
+     `countLabel: 'trusted partners'` here and a re-run. The slide is the marks
+     and nothing else. */
+  const BLOCK = { type: 'trust-fan', layout: { x: 0, y: 0, w: 12, h: 15 }, title: TITLE, base: BASE, logos: LOGOS };
 
   if (DRY) { console.log('\n  dry run — nothing written'); return; }
 

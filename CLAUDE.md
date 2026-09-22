@@ -2843,6 +2843,12 @@ foot, to 650. Measured presenting: front card 600,202 400x400, its mark drawn
 turning on its own (front card 0 → 1 → 2 over 9s), wheel trace 0 reversals at
 the 16.7ms floor, no console errors.
 
+**And then the count came off too** (2026-09-22, a screenshot of "9 trusted
+partners" with "i dont want this"). The publisher sends no `countLabel`, so
+the component builds no `.tf-count`; the slide's `innerText` measures empty.
+The mechanism below stays — a label in the publisher and a re-run brings it
+back — but nothing on the slide now is a word.
+
 **How many, under the fan** ("mention how many trusted partners"): the figure
 in the display face in `--accent-ink` and the user's own words beside it,
 centred in the band between the front card's foot and the presenter bar. The
