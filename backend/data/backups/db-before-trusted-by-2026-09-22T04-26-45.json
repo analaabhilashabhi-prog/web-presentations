@@ -12919,7 +12919,7 @@
       "icon": "",
       "iconKey": "partners",
       "iconAssetId": null,
-      "order": 6,
+      "order": 7,
       "hidden": false,
       "status": "published",
       "blocks": [
@@ -13242,12 +13242,12 @@
       "icon": "",
       "iconKey": "handshake-check",
       "iconAssetId": null,
-      "order": 7,
+      "order": 6,
       "hidden": false,
       "status": "published",
       "blocks": [
         {
-          "id": "blk_c5abf38441e34d5d",
+          "id": "blk_38347b6bc92b4497",
           "type": "trust-fan",
           "layout": {
             "x": 0,
@@ -13328,7 +13328,7 @@
         }
       ],
       "createdAt": "2026-09-21T13:33:31.822Z",
-      "updatedAt": "2026-09-22T04:26:45.821Z"
+      "updatedAt": "2026-09-22T04:04:34.427Z"
     }
   ],
   "assets": [

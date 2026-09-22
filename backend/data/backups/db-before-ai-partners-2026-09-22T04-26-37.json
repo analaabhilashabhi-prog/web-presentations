@@ -12924,7 +12924,7 @@
       "status": "published",
       "blocks": [
         {
-          "id": "blk_8a651132a23241b4",
+          "id": "blk_b0b1ad315d8d4ab3",
           "type": "scroll-stack",
           "layout": {
             "x": 0,
@@ -13018,8 +13018,8 @@
               "tagline": "Indian-language foundation models",
               "logo": "Claude/sarvam-ai.jpeg",
               "logoAlt": "sarvam",
-              "mark": "partners/sarvam-mark.png",
-              "markAlt": "Sarvam AI",
+              "mark": "",
+              "markAlt": "",
               "headline": "Sarvam AI.",
               "headlineAccent": "Partnership.",
               "points": [
@@ -13097,7 +13097,7 @@
         }
       ],
       "createdAt": "2026-09-20T15:23:21.271Z",
-      "updatedAt": "2026-09-22T04:26:37.416Z"
+      "updatedAt": "2026-09-22T03:48:18.854Z"
     },
     {
       "id": "sec_d835dfe7ac2a4ce0",
@@ -13247,7 +13247,7 @@
       "status": "published",
       "blocks": [
         {
-          "id": "blk_c5abf38441e34d5d",
+          "id": "blk_38347b6bc92b4497",
           "type": "trust-fan",
           "layout": {
             "x": 0,
@@ -13328,7 +13328,7 @@
         }
       ],
       "createdAt": "2026-09-21T13:33:31.822Z",
-      "updatedAt": "2026-09-22T04:26:45.821Z"
+      "updatedAt": "2026-09-22T04:04:34.427Z"
     }
   ],
   "assets": [

@@ -2531,10 +2531,20 @@ its `logo` is deliberately empty and the plate sets `note` in type — "GitHub
 Campus Program", which is what the pavilion signage at NT Square says. The old
 wordmark is not a credential and is no longer pretending to be one.
 
-The three marks are the user's own files, from their Downloads, filed under
-`uploads/partners/`. **Sarvam has no mark on purpose** — "I don't have the
-sarvam AI logo for now, we are going to do it later" — and with none, **that
-corner is left empty rather than falling back to type.** The type fallback is
+**All four marks are the user's own files**, from their Downloads, filed under
+`uploads/partners/`. Sarvam's corner was deliberately empty for a day — "I
+don't have the sarvam AI logo for now, we are going to do it later" — and the
+mandala arrived on 2026-09-22. It is a true cut-out and needed no crop: 1254px
+square, 75.7% clear with all four corners at alpha 0, pure black ink reaching
+to within 2 to 4% of every edge. It is scaled to 420px, four times the 104 it
+is drawn at, **through `crop-image.cjs` so the alpha survives** — that tool
+writes PNG only when the output path ends `.png`, and a JPEG here would put a
+white box on the cream card. Measured on the card presenting: 104x104 at
+1263,54 of the 1420-wide card, the same slot the other three sit in, not
+overflowing its plate, loaded, no console errors.
+
+**With no mark, that corner is left empty rather than falling back to type**,
+and that is still what a partner with no artwork gets. The type fallback is
 right on the badge plate, where it stands in for a picture nobody has; in the
 mark's corner it set the partner's name at 40px directly above the 62px
 headline that already says it. Nothing is hand-drawn either way.

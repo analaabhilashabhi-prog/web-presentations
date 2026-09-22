@@ -39,9 +39,11 @@
  *   - **Every mark is the user's own.** claude-mark.svg, openai-mark.webp and
  *     github-mark.png are the files they supplied; the two partnership lockups
  *     and the sarvam wordmark were already in uploads/Claude/ for the AI Ready
- *     Engineer slide. SARVAM HAS NO MARK ON PURPOSE — "I don't have the sarvam
- *     AI logo for now" — so its card sets the name in type. NOTHING IS
- *     HAND-DRAWN, which is this deck's standing rule about vendor logos.
+ *     Engineer slide. Sarvam's mandala mark arrived on 2026-09-22 and is the
+ *     user's file too, so all four corners now carry the vendor's own symbol.
+ *     NOTHING IS HAND-DRAWN, which is this deck's standing rule about vendor
+ *     logos — a partner with no artwork still gets an empty corner rather
+ *     than a traced one.
  *
  *   - **The headline is what the badge says, and nothing more.** "Partner
  *     Network Member", "Select Partner", "Campus Program" are each printed on
@@ -148,11 +150,17 @@ const BLOCK = {
       tagline: 'Indian-language foundation models',
       logo: 'Claude/sarvam-ai.jpeg',
       logoAlt: 'sarvam',
-      /* NO MARK ON PURPOSE (2026-09-21, on request: "I don't have the sarvam
-         AI logo for now, we are going to do it later"). With none, the card
-         sets the name in type in that corner. Nothing is traced by hand. */
-      mark: '',
-      markAlt: '',
+      /* THE MARK ARRIVED (2026-09-22): the user's own `sarvam ai logo.png`,
+         the mandala symbol — 1254px, a true cut-out (75.7% clear, all four
+         corners at alpha 0), pure black ink filling its canvas to within 2-4%,
+         so nothing is cropped. Scaled to 420px, four times the 104px it is
+         drawn at, through `crop-image.cjs` so the transparency survives; a
+         JPEG here would put a white box on the cream card. That corner was
+         deliberately EMPTY until now ("I don't have the sarvam AI logo for
+         now, we are going to do it later") — the empty state is still what a
+         partner with no artwork gets, and nothing is ever traced by hand. */
+      mark: 'partners/sarvam-mark.png',
+      markAlt: 'Sarvam AI',
       headline: 'Sarvam AI.',
       headlineAccent: 'Partnership.',
       color: '#3F3F3F',
