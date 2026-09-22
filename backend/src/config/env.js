@@ -66,6 +66,15 @@ export const env = {
      remembered a variable. It was found doing exactly that. Set
      SHOW_LOGIN_HINT=1 for local work. */
   showLoginHint: readBool('SHOW_LOGIN_HINT', false),
+  /* On by default (2026-09-22, on request: "if anybody is opening with the
+     link the credentials need to be there by default... they just have to
+     click sign in"). /api/auth/me serves the PRESENTER's email and password to
+     anonymous callers so the sign-in form arrives filled in. The presenter is
+     read-only and the deck is a brochure, which is why this is a different
+     decision from SHOW_LOGIN_HINT: that one also publishes the ADMIN password,
+     and nothing here ever does. Set PRESENTER_PREFILL=0 to make presenters type
+     it. */
+  presenterPrefill: readBool('PRESENTER_PREFILL', true),
   /* Read here, not from process.env at the point of use: http.js was checking
      process.env directly, so COOKIE_SECURE=1 in a .env file was silently
      ignored and the cookie went out without Secure on an HTTPS deployment. */

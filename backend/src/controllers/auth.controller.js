@@ -21,7 +21,19 @@ export async function logout(req, res) {
 }
 
 export function me(req, res, ctx) {
-  sendJson(res, 200, { user: ctx.user, loginHint: env.showLoginHint ? hint() : null });
+  sendJson(res, 200, {
+    user: ctx.user,
+    loginHint: env.showLoginHint ? hint() : null,
+    /* The presenter's details only — never the admin's. See env.js. */
+    prefill: env.presenterPrefill ? prefill() : null,
+  });
+}
+
+function prefill() {
+  return {
+    email: env.seedUsers.presenter.email,
+    password: env.seedUsers.presenter.password,
+  };
 }
 
 function hint() {

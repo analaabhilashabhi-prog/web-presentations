@@ -6,6 +6,37 @@ run `node backend/src/server.js`.
 
 `render.yaml` at the repo root already carries the settings; Render reads it.
 
+## One click, from the repo
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/analaabhilashabhi-prog/web-presentations)
+
+That link opens Render with this repository and its `render.yaml` already
+selected. Sign in (GitHub is enough), give the service a name, type the two
+passwords it asks for, press **Apply**. About three minutes later the deck is at
+`https://<the name you gave it>.onrender.com`. Nothing else is needed; there is
+no build step and no configuration beyond that file.
+
+## Where it stands (2026-09-22)
+
+- `https://profile.technicalhub.io` is up and **serving a commit from before
+  2026-09-20** — none of the AI Partners, Workspace or Trusted By rows exist on
+  it, and its `/api/auth/me` still hands out the OLD `admin@org.local` login
+  hint. Whoever runs that host needs to `git pull` and restart; nothing in this
+  repository can do it for them.
+- `main` on GitHub is the whole deck as of this date. Push there and any host
+  that tracks `main` (Render does, automatically) is current within minutes.
+
+## The presenter signs in with one press
+
+`/api/auth/me` serves the **presenter's** email and password to anyone who
+opens the link, and the sign-in page arrives on Presenter with both boxes
+filled — pressing Sign in (or Enter) opens the deck. That was asked for: the
+deck is a brochure and the presenter can only read it. `PRESENTER_PREFILL=0`
+turns it off. The admin's password is **never** served this way; an admin
+switches the toggle and types it. It follows that `PRESENTER_PASSWORD` on a
+public deployment is public by design — choose it knowing that, and keep
+`ADMIN_PASSWORD` a real secret.
+
 ---
 
 ## Set the passwords, or the deploy publishes its own

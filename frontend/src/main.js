@@ -98,6 +98,7 @@ async function route() {
       const session = await authService.fetchSession();
       state.user = session.user;
       state.loginHint = session.loginHint;
+      state.prefill = session.prefill || null;
     } catch (err) {
       toastError(err.message);
     }

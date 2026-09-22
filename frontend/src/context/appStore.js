@@ -7,6 +7,9 @@ import * as contentService from '../services/contentService.js';
 export const state = {
   user: null,
   loginHint: null,
+  /* The presenter's sign-in details, served by /auth/me when PRESENTER_PREFILL
+     is on, so the form arrives filled in. Never the admin's. */
+  prefill: null,
   orgs: [],
   orgId: null,
   sections: [],

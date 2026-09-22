@@ -2832,6 +2832,42 @@ front card, 56px above the bar, touching no card.
 root leaves the document. 9 of 9 marks loaded, no second head, no console
 errors.
 
+## The presenter signs in with one press, and where "live" stands
+
+**The sign-in page opens on Presenter with both boxes filled** (2026-09-22, on
+request: "if anybody is opening with the link the credentials need to be there
+by default… they just have to click the sign in"). `/api/auth/me` now carries
+`prefill` — the presenter's email and password — whenever `PRESENTER_PREFILL`
+is on, which it is by default; `LoginPage` opens on that side of the toggle,
+fills the boxes from it and puts focus on the button, so the link opens and
+Enter opens the deck. Measured in headless Chrome on a fresh session: Presenter
+active, both boxes filled, focus on Sign in, Enter lands on `#/orgs` with the
+deck's landing page up; Admin clears both boxes and focuses the email;
+Presenter again refills them and refocuses the button; 0 console errors.
+
+**Only the presenter's, and that is a different decision from
+`SHOW_LOGIN_HINT`.** That older switch publishes the ADMIN password too and
+was found doing so on the live site, which is why it is off by default and
+documented as a leak. This one serves a read-only account to a brochure's
+readers, which is the user's call to make and they made it — with the
+consequence that `PRESENTER_PASSWORD` on a public deployment is public by
+design. The admin's is never served this way; an admin flips the toggle and
+types it. `PRESENTER_PREFILL=0` turns the fill off.
+
+**"Live" is two hosts, and this repository can reach one of them.**
+`https://profile.technicalhub.io` is up but serving a commit from before
+2026-09-20 — no AI Partners, Workspace or Trusted By, and its `/api/auth/me`
+still hands out the old `admin@org.local` hint. Whoever runs it has to
+`git pull` and restart; nothing here can. `render.yaml` at the root is a
+complete Render blueprint, and `DEPLOY.md` now carries a Deploy-to-Render link
+that opens Render on this repo: sign in, name it, type the two passwords, Apply.
+Pushing `main` is the release for any host that tracks it.
+
+**The push token was pasted into chat** (2026-09-22) and was used once on the
+command line, never written to `.git/config` or any file. It should be revoked
+on GitHub and a new one made when the next push is needed; a token that has
+been in a transcript is a token somebody else may have.
+
 **Four Torii rows and one NGI row are switched off in the code** (2026-09-16),
 on request: Torii's Industry Alliances, History & Milestones, Success Stories
 and Video Resumes, and NGI's Certifications — the user-supplied section that is
